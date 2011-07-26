@@ -4,48 +4,33 @@ namespace Emanate.Core.Output.DelcomVdi
 {
     public class MainForm
     {
-        private readonly DelcomHid Delcom = new DelcomHid();
-        private DelcomHid.HidTxPacketStruct TxCmd;
+        private readonly DelcomHid delcom = new DelcomHid();
+        private DelcomHid.HidTxPacketStruct txCmd;
         private string deviceName;
         private string deviceStatus;
-        private bool switchAudiConfirm;
         private bool @switch;
-        private string preScaler;
-        private string blueOffDuty;
-        private string blueOnDuty;
-        private string BluePower;
-        private string BuzzerFreq;
-        private string BuzzerRepeat;
-        private string BuzzerOnTime;
-        private string BuzzerOffTime;
-        private string RedOffDuty;
-        private string RedOnDuty;
-        private string RedPower;
-        private string GreenOffDuty;
-        private string GreenOnDuty;
-        private string GreenPower;
 
 
         public void Open()
         {
             // Current TID and SID are not supported
 
-            if (Delcom.Open() == 0)
+            if (delcom.Open() == 0)
             {
                 UInt32 serialNumber, version, date, month, year;
                 serialNumber = version = date = month = year = 0;
-                Delcom.GetDeviceInfo(ref serialNumber, ref version, ref date, ref month, ref year);
+                delcom.GetDeviceInfo(ref serialNumber, ref version, ref date, ref month, ref year);
                 year += 2000;
-                deviceName = "DeviceName: "+Delcom.GetDeviceName();
+                deviceName = "DeviceName: "+delcom.GetDeviceName();
                 deviceStatus = "Device Status: Found. SerialNumber=" + serialNumber.ToString() + " Version=" + version.ToString() + " " + month.ToString() + "/" + date.ToString() + "/" + year.ToString();
 
 
                 // Optionally -Enable event counter use that auto switch feature work
-                TxCmd.MajorCmd = 101;
-                TxCmd.MinorCmd = 38;
-                TxCmd.LSBData = 1;
-                TxCmd.MSBData = 0;
-                Delcom.SendCommand(TxCmd); 
+                txCmd.MajorCmd = 101;
+                txCmd.MinorCmd = 38;
+                txCmd.LSBData = 1;
+                txCmd.MSBData = 0;
+                delcom.SendCommand(txCmd); 
 
             }
             else
@@ -57,161 +42,63 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Close()
         {
-            Delcom.Close();
+            delcom.Close();
             deviceName = "DeviceName: offine";
             deviceStatus = "Device Closed.";
         }
 
         private Boolean IsPresent()
         {
-            return Delcom.IsOpen();
+            return delcom.IsOpen();
         }
 
 
-        public void GreenOff()
+        public void GreenOff(Color color)
         {
             if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 1;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 20;
+            txCmd.LSBData = (byte)color;
+            txCmd.MSBData = 0;
+            delcom.SendCommand(txCmd);  // always disable the flash mode 
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 1;
-            Delcom.SendCommand(TxCmd);
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 12;
+            txCmd.LSBData = 0;
+            txCmd.MSBData = (byte)color;
+            delcom.SendCommand(txCmd);
+        }     
+
+        public void GreenOn(Color color)
+        {
+            if (!IsPresent()) return;
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 20;
+            txCmd.LSBData = (byte)color;
+            txCmd.MSBData = 0;
+            delcom.SendCommand(txCmd);  // always disable the flash mode 
+
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 12;
+            txCmd.LSBData = (byte)color;
+            txCmd.MSBData = 0;
+            delcom.SendCommand(txCmd);
         }
 
-        public void GreenOn()
+        public void GreenFlash(Color color)
         {
             if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 1;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 20;
+            txCmd.LSBData = 0;
+            txCmd.MSBData = (byte)color;
+            delcom.SendCommand(txCmd);  // enable the flash mode 
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 1;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);
-        }
-
-        public void GreenFlash()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 1;
-            Delcom.SendCommand(TxCmd);  // enable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 1;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd); // and turn it on
-        }
-
-
-        public void RedOff()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 2;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 2;
-            Delcom.SendCommand(TxCmd);
-        }
-
-        public void RedOn()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 2;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 2;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);
-        }
-
-        public void RedFlash()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 2;
-            Delcom.SendCommand(TxCmd);  // enable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 2;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd); // and turn it on
-        }
-
-
-        public void BlueOff()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 4;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 4;
-            Delcom.SendCommand(TxCmd);
-        }
-
-        public void BlueOn()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 4;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 4;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd);
-        }
-
-        public void BlueFlash()
-        {
-            if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 20;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 4;
-            Delcom.SendCommand(TxCmd);  // enable the flash mode 
-
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 12;
-            TxCmd.LSBData = 4;
-            TxCmd.MSBData = 0;
-            Delcom.SendCommand(TxCmd); // and turn it on
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 12;
+            txCmd.LSBData = (byte)color;
+            txCmd.MSBData = 0;
+            delcom.SendCommand(txCmd); // and turn it on
         }
 
         public void GreenApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
@@ -219,22 +106,22 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
             
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 21;
-            TxCmd.LSBData = offDuty;
-            TxCmd.MSBData = onDuty;
-            Delcom.SendCommand(TxCmd); // Load the duty cycle
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 21;
+            txCmd.LSBData = offDuty;
+            txCmd.MSBData = onDuty;
+            delcom.SendCommand(txCmd); // Load the duty cycle
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 26;
-            TxCmd.LSBData = offset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 26;
+            txCmd.LSBData = offset;
+            delcom.SendCommand(txCmd); // Load the offset
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 34;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = power;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 34;
+            txCmd.LSBData = 0;
+            txCmd.MSBData = power;
+            delcom.SendCommand(txCmd); // Load the offset
         }
 
         public void RedApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
@@ -242,22 +129,22 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 22;
-            TxCmd.LSBData = offDuty;
-            TxCmd.MSBData = onDuty;
-            Delcom.SendCommand(TxCmd); // Load the duty cycle
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 22;
+            txCmd.LSBData = offDuty;
+            txCmd.MSBData = onDuty;
+            delcom.SendCommand(txCmd); // Load the duty cycle
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 27;
-            TxCmd.LSBData = offset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 27;
+            txCmd.LSBData = offset;
+            delcom.SendCommand(txCmd); // Load the offset
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 34;
-            TxCmd.LSBData = 1;
-            TxCmd.MSBData = power;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 34;
+            txCmd.LSBData = 1;
+            txCmd.MSBData = power;
+            delcom.SendCommand(txCmd); // Load the offset
         }
 
         public void BlueApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
@@ -265,22 +152,22 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 23;
-            TxCmd.LSBData = offDuty;
-            TxCmd.MSBData = onDuty;
-            Delcom.SendCommand(TxCmd); // Load the duty cycle
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 23;
+            txCmd.LSBData = offDuty;
+            txCmd.MSBData = onDuty;
+            delcom.SendCommand(txCmd); // Load the duty cycle
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 28;
-            TxCmd.LSBData = offset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 28;
+            txCmd.LSBData = offset;
+            delcom.SendCommand(txCmd); // Load the offset
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 34;
-            TxCmd.LSBData = 2;
-            TxCmd.MSBData = power;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 34;
+            txCmd.LSBData = 2;
+            txCmd.MSBData = power;
+            delcom.SendCommand(txCmd); // Load the offset
         }
 
         public void Sync(Byte greenOffset, Byte redOffset, Byte blueOffset)
@@ -288,82 +175,73 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
 
             // Alwasy reload the offset, as it is cleared each time
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 26;
-            TxCmd.LSBData = greenOffset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 26;
+            txCmd.LSBData = greenOffset;
+            delcom.SendCommand(txCmd); // Load the offset
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 27;
-            TxCmd.LSBData = redOffset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 27;
+            txCmd.LSBData = redOffset;
+            delcom.SendCommand(txCmd); // Load the offset
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 28;
-            TxCmd.LSBData = blueOffset;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 28;
+            txCmd.LSBData = blueOffset;
+            delcom.SendCommand(txCmd); // Load the offset
 
 
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 25;
-            TxCmd.LSBData = 7;      // Sync Green, red & blue
-            TxCmd.MSBData = 0;      // 0=off. 1=on - all on
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 25;
+            txCmd.LSBData = 7;      // Sync Green, red & blue
+            txCmd.MSBData = 0;      // 0=off. 1=on - all on
+            delcom.SendCommand(txCmd);  // always disable the flash mode 
         }
 
-        public void Prescaler()
+        public void Prescaler(Byte prescaler)
         {
             if (!IsPresent()) return;
-            Byte prescaler;
-            try
-            {
-                prescaler = Convert.ToByte(preScaler);
-            }
-            catch (Exception)
-            {
-                //MessageBox.Show("Prescaler out of range!\r\nPrescaler range 0-255\r\nUnits are in ms.\r\nDefault is 10ms", "Warning - Range Error!");
-                return; //exit
-            }
+            //MessageBox.Show("Prescaler out of range!\r\nPrescaler range 0-255\r\nUnits are in ms.\r\nDefault is 10ms", "Warning - Range Error!");
 
-            // Alwasy reload the offset, as it is clear each time
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 19;
-            TxCmd.LSBData = prescaler;
-            Delcom.SendCommand(TxCmd); // Load the offset
+            // Always reload the offset, as it is cleared each time
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 19;
+            txCmd.LSBData = prescaler;
+            delcom.SendCommand(txCmd); // Load the offset
         }
 
         public void UpdateSwitch()
         {
             uint port0 = 0;
             if (!IsPresent()) return;
-            Delcom.ReadPort0(ref port0);
+            delcom.ReadPort0(ref port0);
             @switch = (port0 & 0x1) != 0x01;
         }
 
-        public void SwitchAudiConfirm()
+        public void SwitchAudiConfirm(bool switchAudiConfirm)
         {
             if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 72;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 0;
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 72;
+            txCmd.LSBData = 0;
+            txCmd.MSBData = 0;
 
-            if (switchAudiConfirm) TxCmd.MSBData = 0x80;
-            else                            TxCmd.LSBData = 0x80;
-            Delcom.SendCommand(TxCmd); 
+            if (switchAudiConfirm) txCmd.MSBData = 0x80;
+            else                   txCmd.LSBData = 0x80;
+            delcom.SendCommand(txCmd); 
         }
 
         public void SwitchAutoClear(bool autoClear)
         {
             if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 72;
-            TxCmd.LSBData = 0;
-            TxCmd.MSBData = 0;
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 72;
+            txCmd.LSBData = 0;
+            txCmd.MSBData = 0;
 
-            if (autoClear) TxCmd.MSBData = 0x40;
-            else TxCmd.LSBData = 0x40;
-            Delcom.SendCommand(TxCmd); 
+            if (autoClear) txCmd.MSBData = 0x40;
+            else txCmd.LSBData = 0x40;
+            delcom.SendCommand(txCmd); 
         }
 
 
@@ -372,24 +250,32 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             //MessageBox.Show("Buzzer Paramters out of range!\r\nFreq 1-255 Value=1/(FreqHz*256E-6)\r\nRepeat 0-255 0=Continous, 255= Repeat forever.\r\nOnTime 0-100 Units ms.\r\nOffTime 0-100 Units ms.", "Warning - Range Error!");
 
-            TxCmd.MajorCmd = 102;
-            TxCmd.MinorCmd = 70;
-            TxCmd.LSBData = 1;          // Enable buzzer
-            TxCmd.MSBData = freq;       // =1/(freqHz*256us)
-            TxCmd.ExtData0 = repeat;    // repeat value
-            TxCmd.ExtData1 = onTime;    // On time
-            TxCmd.ExtData2 = offTime;   // Off time
+            txCmd.MajorCmd = 102;
+            txCmd.MinorCmd = 70;
+            txCmd.LSBData = 1;          // Enable buzzer
+            txCmd.MSBData = freq;       // =1/(freqHz*256us)
+            txCmd.ExtData0 = repeat;    // repeat value
+            txCmd.ExtData1 = onTime;    // On time
+            txCmd.ExtData2 = offTime;   // Off time
 
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
+            delcom.SendCommand(txCmd);  // always disable the flash mode 
         }
 
         public void StopBuzzer()
         {
             if (!IsPresent()) return;
-            TxCmd.MajorCmd = 101;
-            TxCmd.MinorCmd = 70;
-            TxCmd.LSBData = 0;      // 0=off. 1=on
-            Delcom.SendCommand(TxCmd);  // always disable the flash mode 
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 70;
+            txCmd.LSBData = 0;      // 0=off. 1=on
+            delcom.SendCommand(txCmd);  // always disable the flash mode 
         }
+    }
+
+    public enum Color : byte
+    {
+        Unknown = 0,
+        Green = 1,
+        Yellow = 2,
+        Red = 4
     }
 }
