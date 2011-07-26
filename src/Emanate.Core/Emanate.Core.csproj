@@ -40,8 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Output\DelcomVdi\Debugging.cs" />
+    <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
+    <Compile Include="Output\DelcomVdi\DelcomHID.cs" />
+    <Compile Include="Output\DelcomVdi\DeviceManagement.cs" />
+    <Compile Include="Output\DelcomVdi\DeviceManagementDeclarations.cs" />
+    <Compile Include="Output\DelcomVdi\FileIODeclarations.cs" />
+    <Compile Include="Output\DelcomVdi\Form1.cs" />
+    <Compile Include="Output\DelcomVdi\Hid.cs" />
+    <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Output\DelcomVdi\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
