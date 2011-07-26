@@ -20,8 +20,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 delcom.GetDeviceInfo(out serialNumber, out version, out date, out month, out year);
                 year += 2000;
                 DeviceName = "DeviceName: "+delcom.GetDeviceName();
-                DeviceStatus = "Device Status: Found. SerialNumber=" + serialNumber.ToString() + " Version=" + version.ToString() + " " + month.ToString() + "/" + date.ToString() + "/" + year.ToString();
-
+                DeviceStatus = string.Format("Device Status: Found. SerialNumber={0} Version={1} {2}/{3}/{4}", serialNumber, version, month, date, year);
 
                 // Optionally -Enable event counter use that auto switch feature work
                 txCmd.MajorCmd = 101;
@@ -29,7 +28,6 @@ namespace Emanate.Core.Output.DelcomVdi
                 txCmd.LSBData = 1;
                 txCmd.MSBData = 0;
                 delcom.SendCommand(txCmd); 
-
             }
             else
             {
@@ -49,7 +47,6 @@ namespace Emanate.Core.Output.DelcomVdi
         {
             return delcom.IsOpen();
         }
-
 
         public void GreenOff(Color color)
         {
@@ -141,7 +138,6 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.MinorCmd = Color.Yellow.OffsetId;
             txCmd.LSBData = blueOffset;
             delcom.SendCommand(txCmd); // Load the offset
-
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 25;
