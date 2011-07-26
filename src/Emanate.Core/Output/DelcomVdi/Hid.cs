@@ -1,18 +1,10 @@
-using Microsoft.Win32.SafeHandles; 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-///  <summary>
-///  For communicating with HID-class USB devices.
-///  The ReportIn class handles Input reports and Feature reports that carry data to the host.
-///  The ReportOut class handles Output reports and Feature reports that that carry data to the device.
-///  Other routines retrieve information about and configure the HID.
-///  </summary>
-///  
-
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {    
     internal sealed partial class Hid  
     {         
@@ -30,7 +22,6 @@ namespace HIDIOWINCS
         ///  <summary>
         ///  For reports the device sends to the host.
         ///  </summary>
-        
         internal abstract class ReportIn  
         {             
             ///  <summary>
@@ -39,7 +30,6 @@ namespace HIDIOWINCS
             ///  than as a Function because asynchronous reads use a callback method 
             ///  that can access parameters passed by ByRef but not Function return values.
             ///  </summary>
-            
             internal abstract void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] readBuffer, ref Boolean success );           
          }      
         
@@ -59,32 +49,23 @@ namespace HIDIOWINCS
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached.</param>
             ///  <param name="inFeatureReportBuffer"> contains the requested report.</param>
             ///  <param name="success"> read success</param>
-            
             internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inFeatureReportBuffer, ref Boolean success ) 
-            {                 
-                try 
-                { 
-                    //  ***
-                    //  API function: HidD_GetFeature
-                    //  Attempts to read a Feature report from the device.
+            {
+                //  ***
+                //  API function: HidD_GetFeature
+                //  Attempts to read a Feature report from the device.
                     
-                    //  Requires:
-                    //  A handle to a HID
-                    //  A pointer to a buffer containing the report ID and report
-                    //  The size of the buffer. 
+                //  Requires:
+                //  A handle to a HID
+                //  A pointer to a buffer containing the report ID and report
+                //  The size of the buffer. 
                     
-                    //  Returns: true on success, false on failure.
-                    //  ***                    
+                //  Returns: true on success, false on failure.
+                //  ***                    
                    
-                    success = HidD_GetFeature(hidHandle, inFeatureReportBuffer, inFeatureReportBuffer.Length); 
+                success = HidD_GetFeature(hidHandle, inFeatureReportBuffer, inFeatureReportBuffer.Length); 
                                         
-                    Debug.Print( "HidD_GetFeature success = " + success );                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                Debug.Print( "HidD_GetFeature success = " + success );
             }             
         }         
         
@@ -104,34 +85,25 @@ namespace HIDIOWINCS
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached. </param>
             ///  <param name="inputReportBuffer"> contains the requested report. </param>
             ///  <param name="success"> read success </param>
-            
             internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer, ref Boolean success ) 
-            {                 
-                try 
-                {                     
-                    //  ***
-                    //  API function: HidD_GetInputReport
+            {
+                //  ***
+                //  API function: HidD_GetInputReport
                     
-                    //  Purpose: Attempts to read an Input report from the device using a control transfer.
-                    //  Supported under Windows XP and later only.
+                //  Purpose: Attempts to read an Input report from the device using a control transfer.
+                //  Supported under Windows XP and later only.
                     
-                    //  Requires:
-                    //  A handle to a HID
-                    //  A pointer to a buffer containing the report ID and report
-                    //  The size of the buffer. 
+                //  Requires:
+                //  A handle to a HID
+                //  A pointer to a buffer containing the report ID and report
+                //  The size of the buffer. 
                     
-                    //  Returns: true on success, false on failure.
-                    //  ***
+                //  Returns: true on success, false on failure.
+                //  ***
                     
-                    success = HidD_GetInputReport(hidHandle, inputReportBuffer, inputReportBuffer.Length + 1); 
+                success = HidD_GetInputReport(hidHandle, inputReportBuffer, inputReportBuffer.Length + 1); 
                     
-                    Debug.Print( "HidD_GetInputReport success = " + success );                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                Debug.Print( "HidD_GetInputReport success = " + success );
             }      
         }         
         
@@ -150,51 +122,43 @@ namespace HIDIOWINCS
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
 
             internal void CancelTransfer(SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, IntPtr eventObject) 
-            {                 
-                try 
-                { 
-                    //  ***
-                    //  API function: CancelIo
+            {
+                //  ***
+                //  API function: CancelIo
                     
-                    //  Purpose: Cancels a call to ReadFile
+                //  Purpose: Cancels a call to ReadFile
                     
-                    //  Accepts: the device handle.
+                //  Accepts: the device handle.
                     
-                    //  Returns: True on success, False on failure.
-                    //  ***
+                //  Returns: True on success, False on failure.
+                //  ***
                     
-                    FileIO.CancelIo(readHandle);               
+                FileIO.CancelIo(readHandle);               
                                         
-                    Debug.WriteLine( "************ReadFile error*************" ); 
-                    String functionName = "CancelIo";
-                    Debug.WriteLine(MyDebugging.ResultOfAPICall(functionName)); 
-                    Debug.WriteLine( "" ); 
+                Debug.WriteLine( "************ReadFile error*************" ); 
+                String functionName = "CancelIo";
+                Debug.WriteLine(MyDebugging.ResultOfAPICall(functionName)); 
+                Debug.WriteLine( "" ); 
                     
-                    //  The failure may have been because the device was removed,
-                    //  so close any open handles and
-                    //  set myDeviceDetected=False to cause the application to
-                    //  look for the device on the next attempt.
+                //  The failure may have been because the device was removed,
+                //  so close any open handles and
+                //  set myDeviceDetected=False to cause the application to
+                //  look for the device on the next attempt.
                     
-                    if ( ( !( hidHandle.IsInvalid ) ) ) 
-                    { 
-                        hidHandle.Close(); 
-                    } 
-                    
-                    if ( ( !( readHandle.IsInvalid ) ) ) 
-                    { 
-                        readHandle.Close(); 
-                    } 
-                    
-                    if ( ( !( writeHandle.IsInvalid ) ) ) 
-                    { 
-                        writeHandle.Close(); 
-                    }                           
-                } 
-                catch ( Exception ex ) 
+                if ( ( !( hidHandle.IsInvalid ) ) ) 
                 { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                    hidHandle.Close(); 
+                } 
+                    
+                if ( ( !( readHandle.IsInvalid ) ) ) 
+                { 
+                    readHandle.Close(); 
+                } 
+                    
+                if ( ( !( writeHandle.IsInvalid ) ) ) 
+                { 
+                    writeHandle.Close(); 
+                }
             }             
             
             ///  <summary>
@@ -205,37 +169,29 @@ namespace HIDIOWINCS
             ///  <param name="eventObject"> the event object </param>
 
 			internal void PrepareForOverlappedTransfer(ref NativeOverlapped hidOverlapped, ref IntPtr eventObject) 
-            {                 
-                try 
-                { 
-                    //  ***
-                    //  API function: CreateEvent
+            {
+                //  ***
+                //  API function: CreateEvent
                     
-                    //  Purpose: Creates an event object for the overlapped structure used with ReadFile.
+                //  Purpose: Creates an event object for the overlapped structure used with ReadFile.
                     
-                    //  Accepts:
-                    //  A security attributes structure or IntPtr.Zero.
-                    //  Manual Reset = False (The system automatically resets the state to nonsignaled 
-                    //  after a waiting thread has been released.)
-                    //  Initial state = False (not signaled)
-                    //  An event object name (optional)
+                //  Accepts:
+                //  A security attributes structure or IntPtr.Zero.
+                //  Manual Reset = False (The system automatically resets the state to nonsignaled 
+                //  after a waiting thread has been released.)
+                //  Initial state = False (not signaled)
+                //  An event object name (optional)
                     
-                    //  Returns: a handle to the event object
-                    //  ***
+                //  Returns: a handle to the event object
+                //  ***
 
-                    eventObject = FileIO.CreateEvent(IntPtr.Zero, false, false, "");                     
+                eventObject = FileIO.CreateEvent(IntPtr.Zero, false, false, "");                     
                                     
-                    //  Set the members of the overlapped structure.
+                //  Set the members of the overlapped structure.
                     
-                    hidOverlapped.OffsetLow = 0; 
-                    hidOverlapped.OffsetHigh = 0; 
-                    hidOverlapped.EventHandle = eventObject;                                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                hidOverlapped.OffsetLow = 0; 
+                hidOverlapped.OffsetHigh = 0; 
+                hidOverlapped.EventHandle = eventObject;
             }             
             
             ///  <summary>
@@ -248,7 +204,6 @@ namespace HIDIOWINCS
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached. </param>
             ///  <param name="inputReportBuffer"> contains the requested report. </param>
             ///  <param name="success"> read success </param>
-            
             internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer, ref Boolean success ) 
             {                 
                 IntPtr eventObject = IntPtr.Zero;
@@ -256,124 +211,116 @@ namespace HIDIOWINCS
 				IntPtr nonManagedBuffer = IntPtr.Zero;
 				IntPtr nonManagedOverlapped = IntPtr.Zero;
                 Int32 numberOfBytesRead = 0; 
-                Int32 result = 0;   
-              
-                try 
-                { 
-                    //  Set up the overlapped structure for ReadFile.
+                Int32 result = 0;
+
+                //  Set up the overlapped structure for ReadFile.
                     
-                    PrepareForOverlappedTransfer( ref HidOverlapped, ref eventObject );
+                PrepareForOverlappedTransfer( ref HidOverlapped, ref eventObject );
 
-					// Allocate memory for the input buffer and overlapped structure. 
+                // Allocate memory for the input buffer and overlapped structure. 
 
-					nonManagedBuffer = Marshal.AllocHGlobal(inputReportBuffer.Length);
-					nonManagedOverlapped = Marshal.AllocHGlobal(Marshal.SizeOf(HidOverlapped));
-					Marshal.StructureToPtr(HidOverlapped, nonManagedOverlapped, false);			
+                nonManagedBuffer = Marshal.AllocHGlobal(inputReportBuffer.Length);
+                nonManagedOverlapped = Marshal.AllocHGlobal(Marshal.SizeOf(HidOverlapped));
+                Marshal.StructureToPtr(HidOverlapped, nonManagedOverlapped, false);			
                                         
-                    //  ***
-                    //  API function: ReadFile
-                    //  Purpose: Attempts to read an Input report from the device.
+                //  ***
+                //  API function: ReadFile
+                //  Purpose: Attempts to read an Input report from the device.
                     
-                    //  Accepts:
-                    //  A device handle returned by CreateFile
-                    //  (for overlapped I/O, CreateFile must have been called with FILE_FLAG_OVERLAPPED),
-                    //  A pointer to a buffer for storing the report.
-                    //  The Input report length in bytes returned by HidP_GetCaps,
-                    //  A pointer to a variable that will hold the number of bytes read. 
-                    //  An overlapped structure whose hEvent member is set to an event object.
+                //  Accepts:
+                //  A device handle returned by CreateFile
+                //  (for overlapped I/O, CreateFile must have been called with FILE_FLAG_OVERLAPPED),
+                //  A pointer to a buffer for storing the report.
+                //  The Input report length in bytes returned by HidP_GetCaps,
+                //  A pointer to a variable that will hold the number of bytes read. 
+                //  An overlapped structure whose hEvent member is set to an event object.
                     
-                    //  Returns: the report in ReadBuffer.
+                //  Returns: the report in ReadBuffer.
                     
-                    //  The overlapped call returns immediately, even if the data hasn't been received yet.
+                //  The overlapped call returns immediately, even if the data hasn't been received yet.
                     
-                    //  To read multiple reports with one ReadFile, increase the size of ReadBuffer
-                    //  and use NumberOfBytesRead to determine how many reports were returned.
-                    //  Use a larger buffer if the application can't keep up with reading each report
-                    //  individually. 
-                    //  ***                    
+                //  To read multiple reports with one ReadFile, increase the size of ReadBuffer
+                //  and use NumberOfBytesRead to determine how many reports were returned.
+                //  Use a larger buffer if the application can't keep up with reading each report
+                //  individually. 
+                //  ***                    
 					
-					success = FileIO.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
+                success = FileIO.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
  
-					if (!success)
+                if (!success)
+                {
+                    Debug.WriteLine("waiting for ReadFile");
+
+                    //  API function: WaitForSingleObject
+
+                    //  Purpose: waits for at least one report or a timeout.
+                    //  Used with overlapped ReadFile.
+
+                    //  Accepts:
+                    //  An event object created with CreateEvent
+                    //  A timeout value in milliseconds.
+
+                    //  Returns: A result code.
+
+                    result = FileIO.WaitForSingleObject(eventObject, 3000);
+
+                    //  Find out if ReadFile completed or timeout.
+
+                    switch (result)
                     {
-                        Debug.WriteLine("waiting for ReadFile");
+                        case (System.Int32)FileIO.WAIT_OBJECT_0:
 
-                        //  API function: WaitForSingleObject
+                            //  ReadFile has completed
 
-                        //  Purpose: waits for at least one report or a timeout.
-                        //  Used with overlapped ReadFile.
+                            success = true;
+                            Debug.WriteLine("ReadFile completed successfully.");
 
-                        //  Accepts:
-                        //  An event object created with CreateEvent
-                        //  A timeout value in milliseconds.
+                            // Get the number of bytes read.
 
-                        //  Returns: A result code.
+                            //  API function: GetOverlappedResult
 
-                        result = FileIO.WaitForSingleObject(eventObject, 3000);
-
-                        //  Find out if ReadFile completed or timeout.
-
-                        switch (result)
-                        {
-                            case (System.Int32)FileIO.WAIT_OBJECT_0:
-
-                                //  ReadFile has completed
-
-                                success = true;
-                                Debug.WriteLine("ReadFile completed successfully.");
-
-								// Get the number of bytes read.
-
-								//  API function: GetOverlappedResult
-
-								//  Purpose: gets the result of an overlapped operation.
+                            //  Purpose: gets the result of an overlapped operation.
 								
-								//  Accepts:
-								//  A device handle returned by CreateFile.
-								//  A pointer to an overlapped structure.
-								//  A pointer to a variable to hold the number of bytes read.
-								//  False to return immediately.
+                            //  Accepts:
+                            //  A device handle returned by CreateFile.
+                            //  A pointer to an overlapped structure.
+                            //  A pointer to a variable to hold the number of bytes read.
+                            //  False to return immediately.
 								
-								//  Returns: non-zero on success and the number of bytes read.	
+                            //  Returns: non-zero on success and the number of bytes read.	
 
-								FileIO.GetOverlappedResult(readHandle, nonManagedOverlapped, ref numberOfBytesRead, false);
+                            FileIO.GetOverlappedResult(readHandle, nonManagedOverlapped, ref numberOfBytesRead, false);
 
-                                break;
+                            break;
 
-                            case FileIO.WAIT_TIMEOUT:
+                        case FileIO.WAIT_TIMEOUT:
 
-                                //  Cancel the operation on timeout
+                            //  Cancel the operation on timeout
 
-                                CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
-                                Debug.WriteLine("Readfile timeout");
-                                success = false;
-                                myDeviceDetected = false;
-                                break;
-                            default:
+                            CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
+                            Debug.WriteLine("Readfile timeout");
+                            success = false;
+                            myDeviceDetected = false;
+                            break;
+                        default:
 
-                                //  Cancel the operation on other error.
+                            //  Cancel the operation on other error.
 
-                                CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
-                                Debug.WriteLine("Readfile undefined error");
-                                success = false;
-                                myDeviceDetected = false;
-                                break;
-                        }
-						
+                            CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
+                            Debug.WriteLine("Readfile undefined error");
+                            success = false;
+                            myDeviceDetected = false;
+                            break;
                     }
-					if (success)
-					{
-						// A report was received.
-						// Copy the received data to inputReportBuffer for the application to use.
+						
+                }
+                if (success)
+                {
+                    // A report was received.
+                    // Copy the received data to inputReportBuffer for the application to use.
 
-						Marshal.Copy(nonManagedBuffer, inputReportBuffer, 0, numberOfBytesRead);
-					}
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                    Marshal.Copy(nonManagedBuffer, inputReportBuffer, 0, numberOfBytesRead);
+                }
             }             
         } 
                 
@@ -414,37 +361,28 @@ namespace HIDIOWINCS
             ///  <returns>
             ///   True on success. False on failure.
             ///  </returns>            
-            
             internal override Boolean Write( Byte[] outFeatureReportBuffer, SafeFileHandle hidHandle ) 
             {                 
-                Boolean success = false; 
-                
-                try 
-                { 
-                    //  ***
-                    //  API function: HidD_SetFeature
+                Boolean success = false;
+
+                //  ***
+                //  API function: HidD_SetFeature
                     
-                    //  Purpose: Attempts to send a Feature report to the device.
+                //  Purpose: Attempts to send a Feature report to the device.
                     
-                    //  Accepts:
-                    //  A handle to a HID
-                    //  A pointer to a buffer containing the report ID and report
-                    //  The size of the buffer. 
+                //  Accepts:
+                //  A handle to a HID
+                //  A pointer to a buffer containing the report ID and report
+                //  The size of the buffer. 
                     
-                    //  Returns: true on success, false on failure.
-                    //  ***
+                //  Returns: true on success, false on failure.
+                //  ***
                                       
-                    success = HidD_SetFeature(hidHandle, outFeatureReportBuffer, outFeatureReportBuffer.Length); 
+                success = HidD_SetFeature(hidHandle, outFeatureReportBuffer, outFeatureReportBuffer.Length); 
                     
-                    Debug.Print( "HidD_SetFeature success = " + success ); 
+                Debug.Print( "HidD_SetFeature success = " + success ); 
                     
-                    return success;                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                return success;
             }             
         } 
                 
@@ -466,37 +404,27 @@ namespace HIDIOWINCS
             ///  </returns>            
             
             internal override Boolean Write( Byte[] outputReportBuffer, SafeFileHandle hidHandle ) 
-            {                 
-                Boolean success = false; 
-                
-                try 
-                { 
-                    //  ***
-                    //  API function: HidD_SetOutputReport
+            {
+                //  ***
+                //  API function: HidD_SetOutputReport
                     
-                    //  Purpose: 
-                    //  Attempts to send an Output report to the device using a control transfer.
-                    //  Requires Windows XP or later.
+                //  Purpose: 
+                //  Attempts to send an Output report to the device using a control transfer.
+                //  Requires Windows XP or later.
                     
-                    //  Accepts:
-                    //  A handle to a HID
-                    //  A pointer to a buffer containing the report ID and report
-                    //  The size of the buffer. 
+                //  Accepts:
+                //  A handle to a HID
+                //  A pointer to a buffer containing the report ID and report
+                //  The size of the buffer. 
                     
-                    //  Returns: true on success, false on failure.
-                    //  ***                    
+                //  Returns: true on success, false on failure.
+                //  ***                    
                    
-                    success = HidD_SetOutputReport(hidHandle, outputReportBuffer, outputReportBuffer.Length + 1); 
+                var success = HidD_SetOutputReport(hidHandle, outputReportBuffer, outputReportBuffer.Length + 1); 
                     
-                    Debug.Print( "HidD_SetOutputReport success = " + success ); 
+                Debug.Print( "HidD_SetOutputReport success = " + success ); 
                     
-                    return success;                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                return success;
             }           
         }       
         
@@ -521,48 +449,40 @@ namespace HIDIOWINCS
             internal override Boolean Write( Byte[] outputReportBuffer, SafeFileHandle writeHandle ) 
             {                 
                 Int32 numberOfBytesWritten = 0; 
-                Boolean success = false; 
-                
-                try 
+                Boolean success = false;
+
+                //  The host will use an interrupt transfer if the the HID has an interrupt OUT
+                //  endpoint (requires USB 1.1 or later) AND the OS is NOT Windows 98 Gold (original version). 
+                //  Otherwise the the host will use a control transfer.
+                //  The application doesn't have to know or care which type of transfer is used.
+                    
+                numberOfBytesWritten = 0; 
+                    
+                //  ***
+                //  API function: WriteFile
+                    
+                //  Purpose: writes an Output report to the device.
+                    
+                //  Accepts:
+                //  A handle returned by CreateFile
+                //  An integer to hold the number of bytes written.
+                    
+                //  Returns: True on success, False on failure.
+                //  ***
+                    
+                success = FileIO.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
+                    
+                Debug.Print( "WriteFile success = " + success ); 
+                    
+                if ( !( ( success ) ) ) 
                 { 
-                    //  The host will use an interrupt transfer if the the HID has an interrupt OUT
-                    //  endpoint (requires USB 1.1 or later) AND the OS is NOT Windows 98 Gold (original version). 
-                    //  Otherwise the the host will use a control transfer.
-                    //  The application doesn't have to know or care which type of transfer is used.
-                    
-                    numberOfBytesWritten = 0; 
-                    
-                    //  ***
-                    //  API function: WriteFile
-                    
-                    //  Purpose: writes an Output report to the device.
-                    
-                    //  Accepts:
-                    //  A handle returned by CreateFile
-                    //  An integer to hold the number of bytes written.
-                    
-                    //  Returns: True on success, False on failure.
-                    //  ***
-                    
-                    success = FileIO.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
-                    
-                    Debug.Print( "WriteFile success = " + success ); 
-                    
-                    if ( !( ( success ) ) ) 
-                    { 
                         
-                        if ( ( !( writeHandle.IsInvalid ) ) ) 
-                        { 
-                            writeHandle.Close(); 
-                        } 
-                    }                     
-                    return success;                     
-                } 
-                catch ( Exception ex ) 
-                { 
-                    DisplayException( MODULE_NAME, ex ); 
-                    throw ; 
-                }                 
+                    if ( ( !( writeHandle.IsInvalid ) ) ) 
+                    { 
+                        writeHandle.Close(); 
+                    } 
+                }                     
+                return success;
             }           
         } 
      
@@ -578,29 +498,21 @@ namespace HIDIOWINCS
         
         internal Boolean FlushQueue( SafeFileHandle hidHandle ) 
         {             
-            Boolean success = false; 
-            
-            try 
-            { 
-                //  ***
-                //  API function: HidD_FlushQueue
+            Boolean success = false;
+
+            //  ***
+            //  API function: HidD_FlushQueue
                 
-                //  Purpose: Removes any Input reports waiting in the buffer.
+            //  Purpose: Removes any Input reports waiting in the buffer.
                 
-                //  Accepts: a handle to the device.
+            //  Accepts: a handle to the device.
                 
-                //  Returns: True on success, False on failure.
-                //  ***
+            //  Returns: True on success, False on failure.
+            //  ***
                 
-                success = HidD_FlushQueue( hidHandle ); 
+            success = HidD_FlushQueue( hidHandle ); 
                 
-                return success;                 
-            } 
-            catch ( Exception ex ) 
-            { 
-                DisplayException( MODULE_NAME, ex ); 
-                throw ; 
-            }             
+            return success;
         }         
         
         ///  <summary>
@@ -612,11 +524,9 @@ namespace HIDIOWINCS
         ///  <returns>
         ///  An HIDP_CAPS structure.
         ///  </returns>
-        
         internal HIDP_CAPS GetDeviceCapabilities( SafeFileHandle hidHandle ) 
         {             
-            IntPtr preparsedData = new System.IntPtr(); 
-            Int32 result = 0; 
+            var preparsedData = new IntPtr();
             Boolean success = false; 
             //Byte[] valueCaps = new Byte[ 1024 ]; // (the array size is a guess)
 
@@ -654,7 +564,7 @@ namespace HIDIOWINCS
 				//  Returns: True on success, False on failure.
 				//  ***
 
-				result = HidP_GetCaps(preparsedData, ref Capabilities);
+				var result = HidP_GetCaps(preparsedData, ref Capabilities);
 				if ((result != 0))
 				{
 					Debug.WriteLine("");
@@ -698,13 +608,7 @@ namespace HIDIOWINCS
 					//result = HidP_GetValueCaps(HidP_Input, ref valueCaps[0], ref Capabilities.NumberInputValueCaps, preparsedData); 
 
 					// (To use this data, copy the ValueCaps byte array into an array of structures.)                   
-
 				}
-			}
-			catch (Exception ex)
-			{
-				DisplayException(MODULE_NAME, ex);
-				throw;
 			}
 			finally
 			{
@@ -738,32 +642,22 @@ namespace HIDIOWINCS
         ///  <returns>
         ///  A String describing the Usage.
         ///  </returns>
-        
         internal String GetHidUsage( HIDP_CAPS MyCapabilities ) 
-        {             
-            Int32 usage = 0; 
-            String usageDescription = ""; 
-            
-            try 
+        {
+            String usageDescription = "";
+
+            //  Create32-bit Usage from Usage Page and Usage ID.
+                
+            int usage = MyCapabilities.UsagePage * 256 + MyCapabilities.Usage; 
+                
+            if ( usage == Convert.ToInt32( 0X102 ) )
             { 
-                //  Create32-bit Usage from Usage Page and Usage ID.
+                usageDescription = "mouse"; } 
                 
-                usage = MyCapabilities.UsagePage * 256 + MyCapabilities.Usage; 
-                
-                if ( usage == Convert.ToInt32( 0X102 ) )
-                 { 
-                    usageDescription = "mouse"; } 
-                
-                if ( usage == Convert.ToInt32( 0X106 ) )
-                 { 
-                    usageDescription = "keyboard"; }                   
-            } 
-            catch ( Exception ex ) 
+            if ( usage == Convert.ToInt32( 0X106 ) )
             { 
-                DisplayException( MODULE_NAME, ex ); 
-                throw ; 
-            } 
-            
+                usageDescription = "keyboard"; }
+
             return usageDescription;             
         }         
         
@@ -777,45 +671,36 @@ namespace HIDIOWINCS
         ///  <returns>
         ///  True on success, False on failure.
         ///  </returns>
-        
         internal Boolean GetNumberOfInputBuffers( SafeFileHandle hidDeviceObject, ref Int32 numberOfInputBuffers ) 
         {             
-            Boolean success = false;
+            Boolean success;
 
-            try
+            if (!((IsWindows98Gold())))
             {
-                if (!((IsWindows98Gold())))
-                {
-                    //  ***
-                    //  API function: HidD_GetNumInputBuffers
+                //  ***
+                //  API function: HidD_GetNumInputBuffers
 
-                    //  Purpose: retrieves the number of Input reports the host can store.
-                    //  Not supported by Windows 98 Gold.
-                    //  If the buffer is full and another report arrives, the host drops the 
-                    //  ldest report.
+                //  Purpose: retrieves the number of Input reports the host can store.
+                //  Not supported by Windows 98 Gold.
+                //  If the buffer is full and another report arrives, the host drops the 
+                //  ldest report.
 
-                    //  Accepts: a handle to a device and an integer to hold the number of buffers. 
+                //  Accepts: a handle to a device and an integer to hold the number of buffers. 
 
-                    //  Returns: True on success, False on failure.
-                    //  ***
+                //  Returns: True on success, False on failure.
+                //  ***
 
-                    success = HidD_GetNumInputBuffers(hidDeviceObject, ref numberOfInputBuffers);
-                }
-                else
-                {
-                    //  Under Windows 98 Gold, the number of buffers is fixed at 2.
-
-                    numberOfInputBuffers = 2;
-                    success = true;
-                }
-
-                return success;
+                success = HidD_GetNumInputBuffers(hidDeviceObject, ref numberOfInputBuffers);
             }
-            catch (Exception ex)
+            else
             {
-                DisplayException( MODULE_NAME, ex ); 
-                throw ; 
-            }                       
+                //  Under Windows 98 Gold, the number of buffers is fixed at 2.
+
+                numberOfInputBuffers = 2;
+                success = true;
+            }
+
+            return success;
         } 
                 
         ///  <summary>
@@ -829,75 +714,57 @@ namespace HIDIOWINCS
         ///  <returns>
         ///  True on success. False on failure.
         ///  </returns>
-        
-        internal Boolean SetNumberOfInputBuffers( SafeFileHandle hidDeviceObject, Int32 numberBuffers ) 
-        {              
-            try 
+        internal Boolean SetNumberOfInputBuffers( SafeFileHandle hidDeviceObject, Int32 numberBuffers )
+        {
+            if ( !IsWindows98Gold() ) 
+            {                     
+                //  ***
+                //  API function: HidD_SetNumInputBuffers
+                    
+                //  Purpose: Sets the number of Input reports the host can store.
+                //  If the buffer is full and another report arrives, the host drops the 
+                //  oldest report.
+                    
+                //  Requires:
+                //  A handle to a HID
+                //  An integer to hold the number of buffers. 
+                    
+                //  Returns: true on success, false on failure.
+                //  ***
+                    
+                HidD_SetNumInputBuffers( hidDeviceObject, numberBuffers );
+                return true;                    
+            } 
+            else 
             { 
-                if ( !IsWindows98Gold() ) 
-                {                     
-                    //  ***
-                    //  API function: HidD_SetNumInputBuffers
+                //  Not supported under Windows 98 Gold.
                     
-                    //  Purpose: Sets the number of Input reports the host can store.
-                    //  If the buffer is full and another report arrives, the host drops the 
-                    //  oldest report.
-                    
-                    //  Requires:
-                    //  A handle to a HID
-                    //  An integer to hold the number of buffers. 
-                    
-                    //  Returns: true on success, false on failure.
-                    //  ***
-                    
-                    HidD_SetNumInputBuffers( hidDeviceObject, numberBuffers );
-                    return true;                    
-                } 
-                else 
-                { 
-                    //  Not supported under Windows 98 Gold.
-                    
-                    return false; 
-                }
-                            } 
-            catch ( Exception ex ) 
-            { 
-                DisplayException( MODULE_NAME, ex ); 
-                throw ; 
-            }            
-        } 
-                
+                return false; 
+            }
+        }
+
         ///  <summary>
         ///  Find out if the current operating system is Windows XP or later.
         ///  (Windows XP or later is required for HidD_GetInputReport and HidD_SetInputReport.)
         ///  </summary>
-        
         internal Boolean IsWindowsXpOrLater() 
-        {        
-            try 
-            { 
-                OperatingSystem myEnvironment = Environment.OSVersion; 
+        {
+            OperatingSystem myEnvironment = Environment.OSVersion; 
                 
-                //  Windows XP is version 5.1.
+            //  Windows XP is version 5.1.
                 
-                System.Version versionXP = new System.Version( 5, 1 );
+            var versionXP = new Version( 5, 1 );
 
-                if (myEnvironment.Version >= versionXP)                 
-                { 
-                    Debug.Write( "The OS is Windows XP or later." ); 
-                    return true; 
-                } 
-                else 
-                { 
-                    Debug.Write( "The OS is earlier than Windows XP." ); 
-                    return false; 
-                }                 
-            } 
-            catch ( Exception ex ) 
+            if (myEnvironment.Version >= versionXP)                 
             { 
-                DisplayException( MODULE_NAME, ex ); 
-                throw ; 
-            }          
+                Debug.Write( "The OS is Windows XP or later." ); 
+                return true; 
+            } 
+            else 
+            { 
+                Debug.Write( "The OS is earlier than Windows XP." ); 
+                return false; 
+            }
         }         
         
         ///  <summary>
@@ -910,56 +777,25 @@ namespace HIDIOWINCS
         
         internal Boolean IsWindows98Gold() 
         {
-            Boolean result = false;
-            try 
-            { 
-                OperatingSystem myEnvironment = Environment.OSVersion; 
+            Boolean result;
+            OperatingSystem myEnvironment = Environment.OSVersion; 
                 
-                //  Windows 98 Gold is version 4.10 with a build number less than 2183.
+            //  Windows 98 Gold is version 4.10 with a build number less than 2183.
                 
-                System.Version version98SE = new System.Version( 4, 10, 2183 );
+            var version98SE = new Version( 4, 10, 2183 );
 
-                if (myEnvironment.Version < version98SE)                
-                { 
-                    Debug.Write( "The OS is Windows 98 Gold." );
-                    result = true; 
-                } 
-                else 
-                { 
-                    Debug.Write( "The OS is more recent than Windows 98 Gold." );
-                    result = false; 
-                }
-                return result;
+            if (myEnvironment.Version < version98SE)                
+            { 
+                Debug.Write( "The OS is Windows 98 Gold." );
+                result = true; 
             } 
-            catch ( Exception ex ) 
+            else 
             { 
-                DisplayException( MODULE_NAME, ex ); 
-                throw ;                 
-            }                     
-        }         
-        
-        ///  <summary>
-        ///  Provides a central mechanism for exception handling.
-        ///  Displays a message box that describes the exception.
-        ///  </summary>
-        ///  
-        ///  <param name="moduleName">  the module where the exception occurred. </param>
-        ///  <param name="e"> the exception </param>
-        
-        internal static void DisplayException( String moduleName, Exception e ) 
-        {             
-            String message = null; 
-            String caption = null; 
-            
-            //  Create an error message.
-
-            message = "Exception: " + e.Message + "\r\n" + "Module: " + moduleName + "\r\n" + "Method: " + e.TargetSite.Name; 
-            
-            caption = "Unexpected Exception"; 
-            
-            //MessageBox.Show( message, caption, MessageBoxButtons.OK ); 
-            Debug.Write( message );             
-        }         
+                Debug.Write( "The OS is more recent than Windows 98 Gold." );
+                result = false; 
+            }
+            return result;
+        }
     } 
 }
 

@@ -1,10 +1,6 @@
 using System;
 
-///  <summary>
-///  Used only in Debug.Write statements.
-///  </summary>
-
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {    
     internal sealed partial class Debugging  
     {         
@@ -12,12 +8,11 @@ namespace HIDIOWINCS
         ///  Get text that describes the result of an API call.
         ///  </summary>
         ///  
-        ///  <param name="FunctionName"> the name of the API function. </param>
+        ///  <param name="functionName"> the name of the API function. </param>
         ///  
         ///  <returns>
         ///  The text.
         ///  </returns>
-          
         internal String ResultOfAPICall( String functionName ) 
         {             
             Int32 bytes = 0; 

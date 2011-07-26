@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {   
     internal sealed partial class Debugging  
     {         

@@ -1,29 +1,25 @@
-///  <summary>
-///  Routines for detecting devices and receiving device notifications.
-///  </summary>
-
 using System;
 using System.Runtime.InteropServices;
 
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {
-	sealed internal partial class DeviceManagement
+	sealed internal partial class DeviceManager
 	{
-		///  <summary>
-		///  Compares two device path names. Used to find out if the device name 
-		///  of a recently attached or removed device matches the name of a 
-		///  device the application is communicating with.
-		///  </summary>
-		///  
-		///  <param name="m"> a WM_DEVICECHANGE message. A call to RegisterDeviceNotification
-		///  causes WM_DEVICECHANGE messages to be passed to an OnDeviceChange routine.. </param>
-		///  <param name="mydevicePathName"> a device pathname returned by 
-		///  SetupDiGetDeviceInterfaceDetail in an SP_DEVICE_INTERFACE_DETAIL_DATA structure. </param>
-		///  
-		///  <returns>
-		///  True if the names match, False if not.
-		///  </returns>
-		///  
+		//  <summary>
+		//  Compares two device path names. Used to find out if the device name 
+		//  of a recently attached or removed device matches the name of a 
+		//  device the application is communicating with.
+		//  </summary>
+		//  
+		//  <param name="m"> a WM_DEVICECHANGE message. A call to RegisterDeviceNotification
+		//  causes WM_DEVICECHANGE messages to be passed to an OnDeviceChange routine.. </param>
+		//  <param name="mydevicePathName"> a device pathname returned by 
+		//  SetupDiGetDeviceInterfaceDetail in an SP_DEVICE_INTERFACE_DETAIL_DATA structure. </param>
+		//  
+		//  <returns>
+		//  True if the names match, False if not.
+		//  </returns>
+		//  
         //internal Boolean DeviceNameMatch(Message m, String mydevicePathName)
         //{
         //    Int32 stringSize;
@@ -98,18 +94,15 @@ namespace HIDIOWINCS
 		///   True if a device is found, False if not. 
 		///  </returns>
 
-		internal Boolean FindDeviceFromGuid(System.Guid myGuid, ref String[] devicePathName)
+		internal Boolean FindDeviceFromGuid(Guid myGuid, ref String[] devicePathName)
 		{
-			Int32 bufferSize = 0;
-			IntPtr detailDataBuffer = IntPtr.Zero;
-			Boolean deviceFound;
-			IntPtr deviceInfoSet = new System.IntPtr();
-			Boolean lastDevice = false;
-			Int32 memberIndex = 0;
-			SP_DEVICE_INTERFACE_DATA MyDeviceInterfaceData = new SP_DEVICE_INTERFACE_DATA();
-			Boolean success;
+			var bufferSize = 0;
+			var detailDataBuffer = IntPtr.Zero;
+		    var deviceInfoSet = new IntPtr();
+			var lastDevice = false;
+		    var deviceInterfaceData = new SP_DEVICE_INTERFACE_DATA();
 
-			try
+		    try
 			{
 				// ***
 				//  API function
@@ -131,14 +124,14 @@ namespace HIDIOWINCS
 
 				deviceInfoSet = SetupDiGetClassDevs(ref myGuid, IntPtr.Zero, IntPtr.Zero, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-				deviceFound = false;
-				memberIndex = 0;
+				var deviceFound = false;
+				int memberIndex = 0;
 
 				// The cbSize element of the MyDeviceInterfaceData structure must be set to
 				// the structure's size in bytes. 
 				// The size is 28 bytes for 32-bit code and 32 bits for 64-bit code.
 
-				MyDeviceInterfaceData.cbSize = Marshal.SizeOf(MyDeviceInterfaceData);
+				deviceInterfaceData.cbSize = Marshal.SizeOf(deviceInterfaceData);
 
 				do
 				{
@@ -165,19 +158,18 @@ namespace HIDIOWINCS
 					//  True on success.
 					// ***
 
-					success = SetupDiEnumDeviceInterfaces
-						(deviceInfoSet,
-						IntPtr.Zero,
-						ref myGuid,
-						memberIndex,
-						ref MyDeviceInterfaceData);
+					var success = SetupDiEnumDeviceInterfaces
+					    (deviceInfoSet,
+					     IntPtr.Zero,
+					     ref myGuid,
+					     memberIndex,
+					     ref deviceInterfaceData);
 
 					// Find out if a device information set was retrieved.
 
 					if (!success)
 					{
 						lastDevice = true;
-
 					}
 					else
 					{
@@ -207,13 +199,13 @@ namespace HIDIOWINCS
 						//  True on success.
 						// ***                     
 
-						success = SetupDiGetDeviceInterfaceDetail
-							(deviceInfoSet,
-							ref MyDeviceInterfaceData,
-							IntPtr.Zero,
-							0,
-							ref bufferSize,
-							IntPtr.Zero);
+						SetupDiGetDeviceInterfaceDetail
+						    (deviceInfoSet,
+						     ref deviceInterfaceData,
+						     IntPtr.Zero,
+						     0,
+						     ref bufferSize,
+						     IntPtr.Zero);
 
 						// Allocate memory for the SP_DEVICE_INTERFACE_DETAIL_DATA structure using the returned buffer size.
 
@@ -227,17 +219,17 @@ namespace HIDIOWINCS
 						// This time, pass a pointer to DetailDataBuffer
 						// and the returned required buffer size.
 
-						success = SetupDiGetDeviceInterfaceDetail
-							(deviceInfoSet,
-							ref MyDeviceInterfaceData,
-							detailDataBuffer,
-							bufferSize,
-							ref bufferSize,
-							IntPtr.Zero);
+						SetupDiGetDeviceInterfaceDetail
+						    (deviceInfoSet,
+						     ref deviceInterfaceData,
+						     detailDataBuffer,
+						     bufferSize,
+						     ref bufferSize,
+						     IntPtr.Zero);
 
 						// Skip over cbsize (4 bytes) to get the address of the devicePathName.
 
-						IntPtr pDevicePathName = new IntPtr(detailDataBuffer.ToInt32() + 4);
+						var pDevicePathName = new IntPtr(detailDataBuffer.ToInt32() + 4);
 
 						// Get the String containing the devicePathName.
 
@@ -248,17 +240,11 @@ namespace HIDIOWINCS
 					}
 					memberIndex = memberIndex + 1;
 				}
-				while (!((lastDevice == true)));
-
-				
+				while (!lastDevice);
 
 				return deviceFound;
 			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-				finally
+		    finally
 			{
 				if (detailDataBuffer != IntPtr.Zero) 
 				{
@@ -304,17 +290,16 @@ namespace HIDIOWINCS
 		{
 			// A DEV_BROADCAST_DEVICEINTERFACE header holds information about the request.
 
-			DEV_BROADCAST_DEVICEINTERFACE devBroadcastDeviceInterface = new DEV_BROADCAST_DEVICEINTERFACE();
-			IntPtr devBroadcastDeviceInterfaceBuffer = IntPtr.Zero;
-			Int32 size = 0;
+			var devBroadcastDeviceInterface = new DEV_BROADCAST_DEVICEINTERFACE();
+			var devBroadcastDeviceInterfaceBuffer = IntPtr.Zero;
 
-			try
+		    try
 			{
 				// Set the parameters in the DEV_BROADCAST_DEVICEINTERFACE structure.
 
 				// Set the size.
 
-				size = Marshal.SizeOf(devBroadcastDeviceInterface);
+				var size = Marshal.SizeOf(devBroadcastDeviceInterface);
 				devBroadcastDeviceInterface.dbcc_size = size;
 
 				// Request to receive notifications about a class of devices.
@@ -362,20 +347,9 @@ namespace HIDIOWINCS
 
 
 
-				if ((deviceNotificationHandle.ToInt32() == IntPtr.Zero.ToInt32()))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
+				return (deviceNotificationHandle.ToInt32() != IntPtr.Zero.ToInt32());
 			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-			finally
+		    finally
 			{
 				if (devBroadcastDeviceInterfaceBuffer != IntPtr.Zero)
 				{
@@ -396,29 +370,22 @@ namespace HIDIOWINCS
 
 		internal void StopReceivingDeviceNotifications(IntPtr deviceNotificationHandle)
 		{
-			try
-			{
-				// ***
-				//  API function
+		    // ***
+		    //  API function
 
-				//  summary
-				//  Stop receiving notification messages.
+		    //  summary
+		    //  Stop receiving notification messages.
 
-				//  parameters
-				//  Handle returned previously by RegisterDeviceNotification.  
+		    //  parameters
+		    //  Handle returned previously by RegisterDeviceNotification.  
 
-				//  returns
-				//  True on success.
-				// ***
+		    //  returns
+		    //  True on success.
+		    // ***
 
-				//  Ignore failures.
+		    //  Ignore failures.
 
-				DeviceManagement.UnregisterDeviceNotification(deviceNotificationHandle);
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+		    UnregisterDeviceNotification(deviceNotificationHandle);
 		}
 	}
 }

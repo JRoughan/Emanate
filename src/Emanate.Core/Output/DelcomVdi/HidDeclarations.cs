@@ -1,8 +1,8 @@
-using Microsoft.Win32.SafeHandles; 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {    
     internal sealed partial class Hid  
     {         
@@ -100,7 +100,7 @@ namespace HIDIOWINCS
         internal static extern Boolean HidD_GetInputReport( SafeFileHandle HidDeviceObject, Byte[] lpReportBuffer, Int32 ReportBufferLength );        
         
         [ DllImport( "hid.dll", SetLastError=true ) ]
-        internal static extern void HidD_GetHidGuid( ref System.Guid HidGuid );        
+        internal static extern void HidD_GetHidGuid( ref Guid HidGuid );        
        
         [ DllImport( "hid.dll", SetLastError=true ) ]
         internal static extern Boolean HidD_GetNumInputBuffers( SafeFileHandle HidDeviceObject, ref Int32 NumberBuffers );        

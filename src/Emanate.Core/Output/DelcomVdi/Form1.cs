@@ -5,24 +5,21 @@
 // Steps to make this project.
 // 1 Create your project
 // 2 Copy the follow file in the project source directory
-//      DelcomHID.cs, DeviceManagement.cs, DeviceManademenedDeclarations.cs
+//      DelcomHID.cs, DeviceManager.cs, DeviceManademenedDeclarations.cs
 //      FileIODeclarations.cs, Hid.cs, HidDeclarations.cs
 // 3 Add the above file to your project. Use add existing in Solution Explorer
 // 4 Add the following inside your namespace:
 //      DelcomHID Delcom = new DelcomHID();   // declare the Delcom class
 
- 
 
 using System;
-using HIDIOWINCS;
 
-namespace HIDVIWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {
-    public partial class MainForm
+    public class MainForm
     {
-
-        private DelcomHID Delcom = new DelcomHID();   // declare the Delcom class
-        private DelcomHID.HidTxPacketStruct TxCmd;
+        private DelcomHid Delcom = new DelcomHid();   // declare the Delcom class
+        private DelcomHid.HidTxPacketStruct TxCmd;
         private string label_DeviceName;
         private string label_DeviceStatus;
         private bool checkBox_SwitchAutoClear;
@@ -85,13 +82,10 @@ namespace HIDVIWINCS
 
         private Boolean IsPresent()
         {
-            if (Delcom.IsOpen()) return true;
-            //MessageBox.Show("Device not openned. Open device first!\r\nCommand canncelled.","Warning - Device Not Openned!");
-            return false;
+            return Delcom.IsOpen();
         }
 
 
-     
         private void button_GreenOff_Click(object sender, EventArgs e)
         {
             if (!IsPresent()) return;
@@ -497,9 +491,5 @@ namespace HIDVIWINCS
             TxCmd.LSBData = 0;      // 0=off. 1=on
             Delcom.SendCommand(TxCmd);  // always disable the flash mode 
         }
-
-        
-    
-
     }
 }

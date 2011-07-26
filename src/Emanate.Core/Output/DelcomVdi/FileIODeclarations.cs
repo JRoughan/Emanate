@@ -1,12 +1,8 @@
-using Microsoft.Win32.SafeHandles; 
+using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-    ///  <summary>
-///  API declarations relating to file I/O.
-///  </summary>
-
 using System;
 
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {   
     internal sealed class FileIO  
     {         

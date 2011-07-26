@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HIDIOWINCS
+namespace Emanate.Core.Output.DelcomVdi
 {
-	internal sealed partial class DeviceManagement
+	internal sealed partial class DeviceManager
 	{
 		///<summary >
 		// API declarations relating to device management (SetupDixxx and 
