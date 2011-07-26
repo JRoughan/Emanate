@@ -6,10 +6,9 @@ namespace Emanate.Core.Output.DelcomVdi
     {
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;
-        private string deviceName;
-        private string deviceStatus;
-        private bool @switch;
 
+        public string DeviceName { get; private set; }
+        public string DeviceStatus { get; private set; }
 
         public void Open()
         {
@@ -18,11 +17,10 @@ namespace Emanate.Core.Output.DelcomVdi
             if (delcom.Open() == 0)
             {
                 UInt32 serialNumber, version, date, month, year;
-                serialNumber = version = date = month = year = 0;
-                delcom.GetDeviceInfo(ref serialNumber, ref version, ref date, ref month, ref year);
+                delcom.GetDeviceInfo(out serialNumber, out version, out date, out month, out year);
                 year += 2000;
-                deviceName = "DeviceName: "+delcom.GetDeviceName();
-                deviceStatus = "Device Status: Found. SerialNumber=" + serialNumber.ToString() + " Version=" + version.ToString() + " " + month.ToString() + "/" + date.ToString() + "/" + year.ToString();
+                DeviceName = "DeviceName: "+delcom.GetDeviceName();
+                DeviceStatus = "Device Status: Found. SerialNumber=" + serialNumber.ToString() + " Version=" + version.ToString() + " " + month.ToString() + "/" + date.ToString() + "/" + year.ToString();
 
 
                 // Optionally -Enable event counter use that auto switch feature work
@@ -35,16 +33,16 @@ namespace Emanate.Core.Output.DelcomVdi
             }
             else
             {
-                deviceName = "DeviceName: offine";
-                deviceStatus = "Error: Unable to open device.";
+                DeviceName = "DeviceName: offine";
+                DeviceStatus = "Error: Unable to open device.";
             }
         }
 
         public void Close()
         {
             delcom.Close();
-            deviceName = "DeviceName: offine";
-            deviceStatus = "Device Closed.";
+            DeviceName = "DeviceName: offine";
+            DeviceStatus = "Device Closed.";
         }
 
         private Boolean IsPresent()
@@ -110,18 +108,18 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.MinorCmd = 21;
             txCmd.LSBData = offDuty;
             txCmd.MSBData = onDuty;
-            delcom.SendCommand(txCmd); // Load the duty cycle
+            delcom.SendCommand(txCmd); // Set the duty cycle
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 26;
             txCmd.LSBData = offset;
-            delcom.SendCommand(txCmd); // Load the offset
+            delcom.SendCommand(txCmd); // Set the offset
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 34;
             txCmd.LSBData = 0;
             txCmd.MSBData = power;
-            delcom.SendCommand(txCmd); // Load the offset
+            delcom.SendCommand(txCmd); // Set the power
         }
 
         public void RedApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
@@ -209,41 +207,6 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.LSBData = prescaler;
             delcom.SendCommand(txCmd); // Load the offset
         }
-
-        public void UpdateSwitch()
-        {
-            uint port0 = 0;
-            if (!IsPresent()) return;
-            delcom.ReadPort0(ref port0);
-            @switch = (port0 & 0x1) != 0x01;
-        }
-
-        public void SwitchAudiConfirm(bool switchAudiConfirm)
-        {
-            if (!IsPresent()) return;
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 72;
-            txCmd.LSBData = 0;
-            txCmd.MSBData = 0;
-
-            if (switchAudiConfirm) txCmd.MSBData = 0x80;
-            else                   txCmd.LSBData = 0x80;
-            delcom.SendCommand(txCmd); 
-        }
-
-        public void SwitchAutoClear(bool autoClear)
-        {
-            if (!IsPresent()) return;
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 72;
-            txCmd.LSBData = 0;
-            txCmd.MSBData = 0;
-
-            if (autoClear) txCmd.MSBData = 0x40;
-            else txCmd.LSBData = 0x40;
-            delcom.SendCommand(txCmd); 
-        }
-
 
         public void StartBuzzer(Byte freq, Byte repeat, Byte onTime, Byte offTime)
         {

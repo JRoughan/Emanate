@@ -60,34 +60,28 @@ namespace Emanate.Core.Output.DelcomVdi
         /// Reads the serial Number
         /// returns zero on sucess, else non-zero erro
         /// </summary>
-        public UInt32 GetDeviceInfo(ref UInt32 serialNumber, ref UInt32 version, ref UInt32 date, ref UInt32 month, ref UInt32 year)
+        public UInt32 GetDeviceInfo(out UInt32 serialNumber, out UInt32 version, out UInt32 date, out UInt32 month, out UInt32 year)
         {
-            try
+            var buffer = new Byte[16];
+            buffer[0] = 10;
+
+            if (Hid.HidD_GetFeature(deviceHandle, buffer, 8) == false)
             {
-                var buffer = new Byte[16];
-                buffer[0] = 10;
-
-                if (Hid.HidD_GetFeature(deviceHandle, buffer, 8) == false)
-                    return 1;
-
-                serialNumber = Convert.ToUInt32(buffer[0]);
-                serialNumber += Convert.ToUInt32(buffer[1] << 8);
-                serialNumber += Convert.ToUInt32(buffer[2] << 16);
-                serialNumber += Convert.ToUInt32(buffer[3] << 24);
-
-                // TODO: Check byte conversion is noop
-                version = Convert.ToUInt32(Convert.ToByte(buffer[4]));
-                date = Convert.ToUInt32(Convert.ToByte(buffer[5]));
-                month = Convert.ToUInt32(Convert.ToByte(buffer[6]));
-                year = Convert.ToUInt32(Convert.ToByte(buffer[7]));
-                return (0);
+                // TODO: Better exception
+                throw new Exception("TODO");
             }
 
-            catch (Exception)
-            {
-                //throw;
-                return (2);
-            }
+            serialNumber = Convert.ToUInt32(buffer[0]);
+            serialNumber += Convert.ToUInt32(buffer[1] << 8);
+            serialNumber += Convert.ToUInt32(buffer[2] << 16);
+            serialNumber += Convert.ToUInt32(buffer[3] << 24);
+
+            // TODO: Check byte conversion is noop
+            version = Convert.ToUInt32(Convert.ToByte(buffer[4]));
+            date = Convert.ToUInt32(Convert.ToByte(buffer[5]));
+            month = Convert.ToUInt32(Convert.ToByte(buffer[6]));
+            year = Convert.ToUInt32(Convert.ToByte(buffer[7]));
+            return (0);
         }
 
 
