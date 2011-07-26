@@ -56,14 +56,14 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
-            txCmd.LSBData = (byte)color;
+            txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
             delcom.SendCommand(txCmd);  // always disable the flash mode 
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 12;
             txCmd.LSBData = 0;
-            txCmd.MSBData = (byte)color;
+            txCmd.MSBData = color.SetId;
             delcom.SendCommand(txCmd);
         }     
 
@@ -72,13 +72,13 @@ namespace Emanate.Core.Output.DelcomVdi
             if (!IsPresent()) return;
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
-            txCmd.LSBData = (byte)color;
+            txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
             delcom.SendCommand(txCmd);  // always disable the flash mode 
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 12;
-            txCmd.LSBData = (byte)color;
+            txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
             delcom.SendCommand(txCmd);
         }
@@ -89,83 +89,37 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
             txCmd.LSBData = 0;
-            txCmd.MSBData = (byte)color;
+            txCmd.MSBData = color.SetId;
             delcom.SendCommand(txCmd);  // enable the flash mode 
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 12;
-            txCmd.LSBData = (byte)color;
+            txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
             delcom.SendCommand(txCmd); // and turn it on
         }
 
-        public void GreenApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
+        public void GreenApply(Color color, Byte offDuty, Byte onDuty, Byte offset, Byte power)
         {
             if (!IsPresent()) return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
             
             txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 21;
+            txCmd.MinorCmd = color.DutyId;
             txCmd.LSBData = offDuty;
             txCmd.MSBData = onDuty;
             delcom.SendCommand(txCmd); // Set the duty cycle
 
             txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 26;
+            txCmd.MinorCmd = color.OffsetId;
             txCmd.LSBData = offset;
             delcom.SendCommand(txCmd); // Set the offset
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 34;
-            txCmd.LSBData = 0;
+            txCmd.LSBData = color.PowerId;
             txCmd.MSBData = power;
             delcom.SendCommand(txCmd); // Set the power
-        }
-
-        public void RedApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
-        {
-            if (!IsPresent()) return;
-            //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 22;
-            txCmd.LSBData = offDuty;
-            txCmd.MSBData = onDuty;
-            delcom.SendCommand(txCmd); // Load the duty cycle
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 27;
-            txCmd.LSBData = offset;
-            delcom.SendCommand(txCmd); // Load the offset
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 34;
-            txCmd.LSBData = 1;
-            txCmd.MSBData = power;
-            delcom.SendCommand(txCmd); // Load the offset
-        }
-
-        public void BlueApply(Byte offDuty, Byte onDuty, Byte offset, Byte power)
-        {
-            if (!IsPresent()) return;
-            //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 23;
-            txCmd.LSBData = offDuty;
-            txCmd.MSBData = onDuty;
-            delcom.SendCommand(txCmd); // Load the duty cycle
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 28;
-            txCmd.LSBData = offset;
-            delcom.SendCommand(txCmd); // Load the offset
-
-            txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 34;
-            txCmd.LSBData = 2;
-            txCmd.MSBData = power;
-            delcom.SendCommand(txCmd); // Load the offset
         }
 
         public void Sync(Byte greenOffset, Byte redOffset, Byte blueOffset)
@@ -174,17 +128,17 @@ namespace Emanate.Core.Output.DelcomVdi
 
             // Alwasy reload the offset, as it is cleared each time
             txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 26;
+            txCmd.MinorCmd = Color.Green.OffsetId;
             txCmd.LSBData = greenOffset;
             delcom.SendCommand(txCmd); // Load the offset
 
             txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 27;
+            txCmd.MinorCmd = Color.Red.OffsetId;
             txCmd.LSBData = redOffset;
             delcom.SendCommand(txCmd); // Load the offset
 
             txCmd.MajorCmd = 101;
-            txCmd.MinorCmd = 28;
+            txCmd.MinorCmd = Color.Yellow.OffsetId;
             txCmd.LSBData = blueOffset;
             delcom.SendCommand(txCmd); // Load the offset
 
@@ -234,11 +188,23 @@ namespace Emanate.Core.Output.DelcomVdi
         }
     }
 
-    public enum Color : byte
+    public class Color
     {
-        Unknown = 0,
-        Green = 1,
-        Yellow = 2,
-        Red = 4
+        private Color(int setId, int dutyId, int offsetId, int powerId)
+        {
+            SetId = (byte)setId;
+            DutyId = (byte)dutyId;
+            OffsetId = (byte)offsetId;
+            PowerId = (byte)powerId;
+        }
+
+        public byte SetId { get; private set; }
+        public byte DutyId { get; private set; }
+        public byte OffsetId { get; private set; }
+        public byte PowerId { get; private set; }
+
+        public static Color Green = new Color(1, 21, 26, 0);
+        public static Color Yellow = new Color(2, 23, 28, 2);
+        public static Color Red = new Color(4, 22, 27, 1);
     }
 }
