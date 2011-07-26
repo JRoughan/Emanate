@@ -8,10 +8,6 @@ namespace Emanate.Core.Output.DelcomVdi
 {    
     internal sealed partial class Hid  
     {         
-        //  Used in error messages.
-        
-        private const String MODULE_NAME = "Hid"; 
-        
         internal HIDP_CAPS Capabilities; 
         internal HIDD_ATTRIBUTES DeviceAttributes; 
         
@@ -112,7 +108,7 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  </summary>
         
         internal class InputReportViaInterruptTransfer : ReportIn 
-        {          
+        {
             ///  <summary>
             ///  closes open handles to a device.
             ///  </summary>
@@ -120,7 +116,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <param name="hidHandle"> the handle for learning about the device and exchanging Feature reports. </param>
             ///  <param name="readHandle"> the handle for reading Input reports from the device. </param>
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
-
+            /// <param name="eventObject"></param>
             internal void CancelTransfer(SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, IntPtr eventObject) 
             {
                 //  ***

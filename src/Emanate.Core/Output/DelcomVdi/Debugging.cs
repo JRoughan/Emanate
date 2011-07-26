@@ -2,7 +2,7 @@ using System;
 
 namespace Emanate.Core.Output.DelcomVdi
 {    
-    internal sealed partial class Debugging  
+    internal partial class Debugging  
     {         
         ///  <summary>
         ///  Get text that describes the result of an API call.
@@ -14,21 +14,17 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  The text.
         ///  </returns>
         internal String ResultOfAPICall( String functionName ) 
-        {             
-            Int32 bytes = 0; 
-            Int32 resultCode = 0; 
-            String resultString = ""; 
-            
-            resultString = new String(Convert.ToChar( 0 ), 129 ); 
+        {
+            var resultString = new String(Convert.ToChar( 0 ), 129 ); 
             
             // Returns the result code for the last API call.
             
-            resultCode = System.Runtime.InteropServices.Marshal.GetLastWin32Error(); 
+            int resultCode = System.Runtime.InteropServices.Marshal.GetLastWin32Error(); 
             
             // Get the result message that corresponds to the code.
 
             Int64 temp = 0;          
-            bytes = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, ref temp, resultCode, 0, resultString, 128, 0); 
+            int bytes = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, ref temp, resultCode, 0, resultString, 128, 0); 
             
             // Subtract two characters from the message to strip the CR and LF.
             

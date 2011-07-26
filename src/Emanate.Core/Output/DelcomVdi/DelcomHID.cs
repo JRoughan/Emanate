@@ -47,12 +47,11 @@ namespace Emanate.Core.Output.DelcomVdi
 
 
         // Class variables
-        private SafeFileHandle myDeviceHandle;
-        private Boolean myDeviceDetected;
-        private String myDevicePathName;
-        private readonly DeviceManager myDeviceManager = new DeviceManager();
+        private SafeFileHandle deviceHandle;
+        private Boolean isDeviceDetected;
+        private String devicePathName;
+        private readonly DeviceManager deviceManager = new DeviceManager();
         private readonly Hid hid = new Hid();
-        private const String MODULE_NAME = "Delcom HID USB CS";
         private UInt32 matchingDevicesFound;
         private HidTxPacketStruct myTxHidPacket;
 
@@ -68,7 +67,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 var buffer = new Byte[16];
                 buffer[0] = 10;
 
-                if (Hid.HidD_GetFeature(myDeviceHandle, buffer, 8) == false)
+                if (Hid.HidD_GetFeature(deviceHandle, buffer, 8) == false)
                     return 1;
 
                 serialNumber = Convert.ToUInt32(buffer[0]);
@@ -84,7 +83,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 return (0);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -96,23 +95,16 @@ namespace Emanate.Core.Output.DelcomVdi
         /// Writes the ports values
         /// returns zero on sucess, else non-zero erro
         /// </summary>
-        public UInt32 SendCommand(HidTxPacketStruct TxCmd)
+        public UInt32 SendCommand(HidTxPacketStruct txCmd)
         {
 
             try
             {
-                int Length;
-                if (TxCmd.MajorCmd == 102)
-                    Length = 16;
-                else
-                    Length = 8;
-                if (Hid.HidD_SetFeature(myDeviceHandle, StructureToByteArray(TxCmd), Length) == false)
-                    return (1);
-                else
-                    return (0);
+                int length = txCmd.MajorCmd == 102 ? 16 : 8;
+                return Hid.HidD_SetFeature(deviceHandle, StructureToByteArray(txCmd), length) ? 0 : 1u;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -124,22 +116,18 @@ namespace Emanate.Core.Output.DelcomVdi
         /// Writes the ports values
         /// returns zero on sucess, else non-zero erro
         /// </summary>
-        public UInt32 WritePorts(UInt32 Port0, UInt32 Port1)
+        public UInt32 WritePorts(UInt32 port0, UInt32 port1)
         {
-
             try
             {
                 myTxHidPacket.MajorCmd = 101;
                 myTxHidPacket.MinorCmd = 10;
-                myTxHidPacket.LSBData = Convert.ToByte(Port0);
-                myTxHidPacket.MSBData = Convert.ToByte(Port1);
-                if (Hid.HidD_SetFeature(myDeviceHandle, StructureToByteArray(myTxHidPacket), 8) == false)
-                    return (1);
-                else
-                    return (0);
+                myTxHidPacket.LSBData = Convert.ToByte(port0);
+                myTxHidPacket.MSBData = Convert.ToByte(port1);
+                return Hid.HidD_SetFeature(deviceHandle, StructureToByteArray(myTxHidPacket), 8) ? (0) : (1u);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -152,21 +140,19 @@ namespace Emanate.Core.Output.DelcomVdi
         /// Reads the currenly value at port zero
         /// returns zero on sucess, else non-zero erro
         /// </summary>
-        public UInt32 ReadPort0(ref UInt32 Port0)
+        public UInt32 ReadPort0(ref UInt32 port0)
         {
             try
             {
                 var buffer = new Byte[16];
                 buffer[0] = 100;
-                if (Hid.HidD_GetFeature(myDeviceHandle, buffer, 8) == false)
+                if (!Hid.HidD_GetFeature(deviceHandle, buffer, 8))
                     return 1;
 
-                Port0 = Convert.ToUInt32(buffer[0]);
+                port0 = Convert.ToUInt32(buffer[0]);
                 return (0);
-
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -180,12 +166,11 @@ namespace Emanate.Core.Output.DelcomVdi
         /// </summary>
         public UInt32 ReadPorts(ref UInt32 port0, ref UInt32 port1)
         {
-
             try
             {
                 var buffer = new Byte[16];
                 buffer[0] = 100;
-                if (Hid.HidD_GetFeature(myDeviceHandle, buffer, 8) == false)
+                if (!Hid.HidD_GetFeature(deviceHandle, buffer, 8))
                     return 1;
 
                 port0 = Convert.ToUInt32(buffer[0]);
@@ -194,7 +179,7 @@ namespace Emanate.Core.Output.DelcomVdi
 
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -208,12 +193,12 @@ namespace Emanate.Core.Output.DelcomVdi
         {
             try
             {
-                if (!myDeviceHandle.IsClosed)
+                if (!deviceHandle.IsClosed)
                 {
-                    myDeviceHandle.Close();
+                    deviceHandle.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //throw;
                 return (2);
@@ -240,10 +225,7 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  </summary>
         public bool IsOpen()
         {
-            if (myDeviceHandle == null || myDeviceHandle.IsClosed || myDeviceHandle.IsClosed)
-                return (false);
-            else
-                return (true);
+            return deviceHandle != null && !deviceHandle.IsClosed;
         }
 
 
@@ -252,15 +234,15 @@ namespace Emanate.Core.Output.DelcomVdi
         /// Return zero on success,
         /// otherwise non-zero error
         ///  </summary>
-        public UInt32 OpenNthDevice(UInt32 NthDevice)
+        public UInt32 OpenNthDevice(UInt32 nthDevice)
         {
-            if (myDeviceHandle != null)
+            if (deviceHandle != null)
                 Close();    // if the device is already open, then close it first.
 
-            if (!FindTheHid(NthDevice))
+            if (!FindTheHid(nthDevice))
                 return (1);
-            myDeviceHandle = FileIO.CreateFile(myDevicePathName, FileIO.GENERIC_READ | FileIO.GENERIC_WRITE, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
-            if (myDeviceHandle.IsInvalid)
+            deviceHandle = FileIO.CreateFile(devicePathName, FileIO.GENERIC_READ | FileIO.GENERIC_WRITE, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
+            if (deviceHandle.IsInvalid)
                 return (2);
             return (0);  // device found
         }
@@ -269,7 +251,7 @@ namespace Emanate.Core.Output.DelcomVdi
         // Get the device name of the current device
         public string GetDeviceName()
         {
-            return (myDevicePathName);
+            return (devicePathName);
         }
 
         // Returns a count of the matching device on the current system
@@ -293,20 +275,20 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  <returns>
         ///   True if the device is detected, False if not detected.
         ///  </returns>
-        private Boolean FindTheHid(UInt32 NthDevice)
+        private Boolean FindTheHid(UInt32 nthDevice)
         {
-            var devicePathName = new String[512];      // Apr 20, 2009 - Increase size from 128 to 512.
+            var devicePathBuffer = new String[512];      // Apr 20, 2009 - Increase size from 128 to 512.
             var hidGuid = Guid.Empty;
 
             const UInt16 productId = 0xB080;
             const UInt16 vendorId = 0x0FC5;
             UInt32 matchingDevices = 0;
 
-            myDeviceDetected = false;
+            isDeviceDetected = false;
             Hid.HidD_GetHidGuid(ref hidGuid);       //Retrieves the interface class GUID for the HID class.
 
             //  Fill an array with the device path names of all attached HIDs.
-            var deviceFound = myDeviceManager.FindDeviceFromGuid(hidGuid, ref devicePathName);
+            var deviceFound = deviceManager.FindDeviceFromGuid(hidGuid, ref devicePathBuffer);
 
             //  If there is at least one HID, attempt to read the Vendor ID and Product ID
             //  of each device until there is a match or all devices have been examined.
@@ -316,7 +298,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 do
                 {
                     //  Open the device
-                    var hidHandle = FileIO.CreateFile(devicePathName[memberIndex], 0, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
+                    var hidHandle = FileIO.CreateFile(devicePathBuffer[memberIndex], 0, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
 
                     if (!hidHandle.IsInvalid)
                     {   //  Device openned, now find out if it's the device we want.
@@ -330,27 +312,27 @@ namespace Emanate.Core.Output.DelcomVdi
                             if ((hid.DeviceAttributes.VendorID == vendorId) & (hid.DeviceAttributes.ProductID == productId))
                             {
                                 matchingDevices++;
-                                myDeviceDetected = true;
+                                isDeviceDetected = true;
                             }
 
-                            if (myDeviceDetected && (matchingDevices == NthDevice))
+                            if (isDeviceDetected && (matchingDevices == nthDevice))
                             {
                                 // Device found
                                 //  Save the DevicePathName
-                                myDevicePathName = devicePathName[memberIndex];
+                                devicePathName = devicePathBuffer[memberIndex];
                                 hidHandle.Close();
                             }
                             else
                             {
                                 //  It's not a match, so close the handle. try the next one
-                                myDeviceDetected = false;
+                                isDeviceDetected = false;
                                 hidHandle.Close();
                             }
                         }
                         else
                         {
                             //  There was a problem in retrieving the information.
-                            myDeviceDetected = false;
+                            isDeviceDetected = false;
                             hidHandle.Close();
                         }
                     }
@@ -358,19 +340,18 @@ namespace Emanate.Core.Output.DelcomVdi
                     //  Keep looking until we find the device or there are no devices left to examine.
                     memberIndex = memberIndex + 1;
                 }
-                while (!((myDeviceDetected | (memberIndex == devicePathName.Length))));
+                while (!((isDeviceDetected | (memberIndex == devicePathBuffer.Length))));
             }
 
             matchingDevicesFound = matchingDevices; // save the device found count
 
-            return myDeviceDetected;
+            return isDeviceDetected;
         }
 
-        // Converts a Structure to byte[]
         static byte[] StructureToByteArray(object obj)
         {
             int len = Marshal.SizeOf(obj);
-            byte[] arr = new byte[len];
+            var arr = new byte[len];
             IntPtr ptr = Marshal.AllocHGlobal(len);
             Marshal.StructureToPtr(obj, ptr, true);
             Marshal.Copy(ptr, arr, 0, len);
@@ -378,17 +359,5 @@ namespace Emanate.Core.Output.DelcomVdi
             return arr;
 
         }
-
-        // Converts a byte[] to Structure
-        static void ByteArrayToStructure(byte[] bytearray, ref object obj)
-        {
-            int len = Marshal.SizeOf(obj);
-            IntPtr i = Marshal.AllocHGlobal(len);
-            Marshal.Copy(bytearray, 0, i, len);
-            obj = Marshal.PtrToStructure(i, obj.GetType());
-            Marshal.FreeHGlobal(i);
-
-        }
-
-    }   // end of the DelcomHID class
+    }
 }
