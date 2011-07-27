@@ -2,7 +2,7 @@ using System;
 
 namespace Emanate.Core.Output.DelcomVdi
 {
-    public class MainForm
+    public class Device : IDisposable
     {
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;
@@ -48,7 +48,7 @@ namespace Emanate.Core.Output.DelcomVdi
             return delcom.IsOpen();
         }
 
-        public void GreenOff(Color color)
+        public void TurnOff(Color color)
         {
             if (!IsPresent()) return;
             txCmd.MajorCmd = 101;
@@ -62,9 +62,16 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.LSBData = 0;
             txCmd.MSBData = color.SetId;
             delcom.SendCommand(txCmd);
-        }     
+        }
 
-        public void GreenOn(Color color)
+        private void TurnOff()
+        {
+            TurnOff(Color.Green);
+            TurnOff(Color.Yellow);
+            TurnOff(Color.Red);
+        }
+
+        public void TurnOn(Color color)
         {
             if (!IsPresent()) return;
             txCmd.MajorCmd = 101;
@@ -80,7 +87,7 @@ namespace Emanate.Core.Output.DelcomVdi
             delcom.SendCommand(txCmd);
         }
 
-        public void GreenFlash(Color color)
+        public void Flash(Color color)
         {
             if (!IsPresent()) return;
             txCmd.MajorCmd = 101;
@@ -96,7 +103,7 @@ namespace Emanate.Core.Output.DelcomVdi
             delcom.SendCommand(txCmd); // and turn it on
         }
 
-        public void GreenApply(Color color, Byte offDuty, Byte onDuty, Byte offset, Byte power)
+        public void Apply(Color color, Byte offDuty, Byte onDuty, Byte offset, Byte power)
         {
             if (!IsPresent()) return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
@@ -182,25 +189,24 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.LSBData = 0;      // 0=off. 1=on
             delcom.SendCommand(txCmd);  // always disable the flash mode 
         }
-    }
 
-    public class Color
-    {
-        private Color(int setId, int dutyId, int offsetId, int powerId)
+        protected void Dispose(bool disposing)
         {
-            SetId = (byte)setId;
-            DutyId = (byte)dutyId;
-            OffsetId = (byte)offsetId;
-            PowerId = (byte)powerId;
+            StopBuzzer();
+            TurnOff();
         }
 
-        public byte SetId { get; private set; }
-        public byte DutyId { get; private set; }
-        public byte OffsetId { get; private set; }
-        public byte PowerId { get; private set; }
+        
 
-        public static Color Green = new Color(1, 21, 26, 0);
-        public static Color Yellow = new Color(2, 23, 28, 2);
-        public static Color Red = new Color(4, 22, 27, 1);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~Device()
+        {
+            Dispose(false);
+        }
     }
 }

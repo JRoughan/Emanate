@@ -40,13 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Output\DelcomVdi\Color.cs" />
     <Compile Include="Output\DelcomVdi\Debugging.cs" />
     <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
     <Compile Include="Output\DelcomVdi\DelcomHid.cs" />
     <Compile Include="Output\DelcomVdi\DeviceManager.cs" />
     <Compile Include="Output\DelcomVdi\DeviceManagementDeclarations.cs" />
     <Compile Include="Output\DelcomVdi\FileIODeclarations.cs" />
-    <Compile Include="Output\DelcomVdi\Form1.cs" />
+    <Compile Include="Output\DelcomVdi\Device.cs" />
     <Compile Include="Output\DelcomVdi\Hid.cs" />
     <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
