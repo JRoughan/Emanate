@@ -11,10 +11,6 @@ namespace Emanate.Core.Output.DelcomVdi
         private HIDP_CAPS capabilities; 
         internal HIDD_ATTRIBUTES DeviceAttributes; 
         
-        //  For viewing results of API calls in debug.write statements:
-
-        private static readonly Debugging debugging = new Debugging(); 
-        
         ///  <summary>
         ///  For reports the device sends to the host.
         ///  </summary>
@@ -123,12 +119,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  ***
                     
                 FileIO.CancelIo(readHandle);               
-                                        
-                Debug.WriteLine( "************ReadFile error*************" ); 
-                String functionName = "CancelIo";
-                Debug.WriteLine(debugging.ResultOfAPICall(functionName)); 
-                Debug.WriteLine( "" ); 
-                    
+                                                           
                 //  The failure may have been because the device was removed,
                 //  so close any open handles and
                 //  set myDeviceDetected=False to cause the application to

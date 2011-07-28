@@ -41,8 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Output\DelcomVdi\Color.cs" />
-    <Compile Include="Output\DelcomVdi\Debugging.cs" />
-    <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
     <Compile Include="Output\DelcomVdi\DelcomHid.cs" />
     <Compile Include="Output\DelcomVdi\DeviceManager.cs" />
     <Compile Include="Output\DelcomVdi\DeviceManagementDeclarations.cs" />
