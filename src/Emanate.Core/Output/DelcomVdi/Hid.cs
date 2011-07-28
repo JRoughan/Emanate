@@ -7,13 +7,13 @@ using System.Threading;
 namespace Emanate.Core.Output.DelcomVdi
 {    
     internal sealed partial class Hid  
-    {         
-        internal HIDP_CAPS Capabilities; 
+    {
+        private HIDP_CAPS capabilities; 
         internal HIDD_ATTRIBUTES DeviceAttributes; 
         
         //  For viewing results of API calls in debug.write statements:
-        
-        internal static Debugging MyDebugging = new Debugging(); 
+
+        private static readonly Debugging debugging = new Debugging(); 
         
         ///  <summary>
         ///  For reports the device sends to the host.
@@ -26,7 +26,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  than as a Function because asynchronous reads use a callback method 
             ///  that can access parameters passed by ByRef but not Function return values.
             ///  </summary>
-            internal abstract void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] readBuffer, ref Boolean success );           
+            internal abstract bool Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] readBuffer);
          }      
         
         ///  <summary>
@@ -44,8 +44,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached.</param>
             ///  <param name="inFeatureReportBuffer"> contains the requested report.</param>
-            ///  <param name="success"> read success</param>
-            internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inFeatureReportBuffer, ref Boolean success ) 
+            internal override bool Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inFeatureReportBuffer) 
             {
                 //  ***
                 //  API function: HidD_GetFeature
@@ -59,9 +58,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  Returns: true on success, false on failure.
                 //  ***                    
                    
-                success = HidD_GetFeature(hidHandle, inFeatureReportBuffer, inFeatureReportBuffer.Length); 
-                                        
-                Debug.Print( "HidD_GetFeature success = " + success );
+                return HidD_GetFeature(hidHandle, inFeatureReportBuffer, inFeatureReportBuffer.Length);
             }             
         }         
         
@@ -80,8 +77,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached. </param>
             ///  <param name="inputReportBuffer"> contains the requested report. </param>
-            ///  <param name="success"> read success </param>
-            internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer, ref Boolean success ) 
+            internal override bool Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer) 
             {
                 //  ***
                 //  API function: HidD_GetInputReport
@@ -97,9 +93,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  Returns: true on success, false on failure.
                 //  ***
                     
-                success = HidD_GetInputReport(hidHandle, inputReportBuffer, inputReportBuffer.Length + 1); 
-                    
-                Debug.Print( "HidD_GetInputReport success = " + success );
+                return HidD_GetInputReport(hidHandle, inputReportBuffer, inputReportBuffer.Length + 1); 
             }      
         }         
         
@@ -116,8 +110,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <param name="hidHandle"> the handle for learning about the device and exchanging Feature reports. </param>
             ///  <param name="readHandle"> the handle for reading Input reports from the device. </param>
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
-            /// <param name="eventObject"></param>
-            internal void CancelTransfer(SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, IntPtr eventObject) 
+            private void CancelTransfer(SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle) 
             {
                 //  ***
                 //  API function: CancelIo
@@ -133,7 +126,7 @@ namespace Emanate.Core.Output.DelcomVdi
                                         
                 Debug.WriteLine( "************ReadFile error*************" ); 
                 String functionName = "CancelIo";
-                Debug.WriteLine(MyDebugging.ResultOfAPICall(functionName)); 
+                Debug.WriteLine(debugging.ResultOfAPICall(functionName)); 
                 Debug.WriteLine( "" ); 
                     
                 //  The failure may have been because the device was removed,
@@ -163,8 +156,7 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  
             ///  <param name="hidOverlapped"> the overlapped structure </param>
             ///  <param name="eventObject"> the event object </param>
-
-			internal void PrepareForOverlappedTransfer(ref NativeOverlapped hidOverlapped, ref IntPtr eventObject) 
+            private void PrepareForOverlappedTransfer(ref NativeOverlapped hidOverlapped, out IntPtr eventObject) 
             {
                 //  ***
                 //  API function: CreateEvent
@@ -199,25 +191,20 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <param name="writeHandle"> the handle for writing Output reports to the device. </param>
             ///  <param name="myDeviceDetected"> tells whether the device is currently attached. </param>
             ///  <param name="inputReportBuffer"> contains the requested report. </param>
-            ///  <param name="success"> read success </param>
-            internal override void Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer, ref Boolean success ) 
+            internal override bool Read( SafeFileHandle hidHandle, SafeFileHandle readHandle, SafeFileHandle writeHandle, ref Boolean myDeviceDetected, ref Byte[] inputReportBuffer) 
             {                 
-                IntPtr eventObject = IntPtr.Zero;
-				NativeOverlapped HidOverlapped = new NativeOverlapped();
-				IntPtr nonManagedBuffer = IntPtr.Zero;
-				IntPtr nonManagedOverlapped = IntPtr.Zero;
-                Int32 numberOfBytesRead = 0; 
-                Int32 result = 0;
+                IntPtr eventObject;
+				var hidOverlapped = new NativeOverlapped();
 
                 //  Set up the overlapped structure for ReadFile.
                     
-                PrepareForOverlappedTransfer( ref HidOverlapped, ref eventObject );
+                PrepareForOverlappedTransfer( ref hidOverlapped, out eventObject );
 
                 // Allocate memory for the input buffer and overlapped structure. 
 
-                nonManagedBuffer = Marshal.AllocHGlobal(inputReportBuffer.Length);
-                nonManagedOverlapped = Marshal.AllocHGlobal(Marshal.SizeOf(HidOverlapped));
-                Marshal.StructureToPtr(HidOverlapped, nonManagedOverlapped, false);			
+                var nonManagedBuffer = Marshal.AllocHGlobal(inputReportBuffer.Length);
+                var nonManagedOverlapped = Marshal.AllocHGlobal(Marshal.SizeOf(hidOverlapped));
+                Marshal.StructureToPtr(hidOverlapped, nonManagedOverlapped, false);			
                                         
                 //  ***
                 //  API function: ReadFile
@@ -240,8 +227,9 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  Use a larger buffer if the application can't keep up with reading each report
                 //  individually. 
                 //  ***                    
-					
-                success = FileIO.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
+
+                var numberOfBytesRead = 0;
+                var success = FileIO.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
  
                 if (!success)
                 {
@@ -258,13 +246,13 @@ namespace Emanate.Core.Output.DelcomVdi
 
                     //  Returns: A result code.
 
-                    result = FileIO.WaitForSingleObject(eventObject, 3000);
+                    var result = FileIO.WaitForSingleObject(eventObject, 3000);
 
                     //  Find out if ReadFile completed or timeout.
 
                     switch (result)
                     {
-                        case (System.Int32)FileIO.WAIT_OBJECT_0:
+                        case FileIO.WAIT_OBJECT_0:
 
                             //  ReadFile has completed
 
@@ -293,18 +281,16 @@ namespace Emanate.Core.Output.DelcomVdi
 
                             //  Cancel the operation on timeout
 
-                            CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
+                            CancelTransfer(hidHandle, readHandle, writeHandle);
                             Debug.WriteLine("Readfile timeout");
-                            success = false;
                             myDeviceDetected = false;
                             break;
                         default:
 
                             //  Cancel the operation on other error.
 
-                            CancelTransfer(hidHandle, readHandle, writeHandle, eventObject);
+                            CancelTransfer(hidHandle, readHandle, writeHandle);
                             Debug.WriteLine("Readfile undefined error");
-                            success = false;
                             myDeviceDetected = false;
                             break;
                     }
@@ -317,6 +303,7 @@ namespace Emanate.Core.Output.DelcomVdi
 
                     Marshal.Copy(nonManagedBuffer, inputReportBuffer, 0, numberOfBytesRead);
                 }
+                return success;
             }             
         } 
                 
@@ -344,7 +331,6 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  <summary>
         ///  For Feature reports the host sends to the device.
         ///  </summary>
-        
         internal class OutFeatureReport : ReportOut 
         {            
             ///  <summary>
@@ -357,10 +343,8 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  <returns>
             ///   True on success. False on failure.
             ///  </returns>            
-            internal override Boolean Write( Byte[] outFeatureReportBuffer, SafeFileHandle hidHandle ) 
-            {                 
-                Boolean success = false;
-
+            internal override bool Write( Byte[] outFeatureReportBuffer, SafeFileHandle hidHandle ) 
+            {
                 //  ***
                 //  API function: HidD_SetFeature
                     
@@ -374,7 +358,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  Returns: true on success, false on failure.
                 //  ***
                                       
-                success = HidD_SetFeature(hidHandle, outFeatureReportBuffer, outFeatureReportBuffer.Length); 
+                var success = HidD_SetFeature(hidHandle, outFeatureReportBuffer, outFeatureReportBuffer.Length); 
                     
                 Debug.Print( "HidD_SetFeature success = " + success ); 
                     
@@ -443,16 +427,13 @@ namespace Emanate.Core.Output.DelcomVdi
             ///  </returns>            
             
             internal override Boolean Write( Byte[] outputReportBuffer, SafeFileHandle writeHandle ) 
-            {                 
-                Int32 numberOfBytesWritten = 0; 
-                Boolean success = false;
-
+            {
                 //  The host will use an interrupt transfer if the the HID has an interrupt OUT
                 //  endpoint (requires USB 1.1 or later) AND the OS is NOT Windows 98 Gold (original version). 
                 //  Otherwise the the host will use a control transfer.
                 //  The application doesn't have to know or care which type of transfer is used.
                     
-                numberOfBytesWritten = 0; 
+                var numberOfBytesWritten = 0; 
                     
                 //  ***
                 //  API function: WriteFile
@@ -466,7 +447,7 @@ namespace Emanate.Core.Output.DelcomVdi
                 //  Returns: True on success, False on failure.
                 //  ***
                     
-                success = FileIO.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
+                var success = FileIO.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
                     
                 Debug.Print( "WriteFile success = " + success ); 
                     
@@ -492,10 +473,8 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  True on success, False on failure.
         ///  </returns>
         
-        internal Boolean FlushQueue( SafeFileHandle hidHandle ) 
-        {             
-            Boolean success = false;
-
+        internal Boolean FlushQueue( SafeFileHandle hidHandle )
+        {
             //  ***
             //  API function: HidD_FlushQueue
                 
@@ -505,12 +484,10 @@ namespace Emanate.Core.Output.DelcomVdi
                 
             //  Returns: True on success, False on failure.
             //  ***
-                
-            success = HidD_FlushQueue( hidHandle ); 
-                
-            return success;
-        }         
-        
+
+            return HidD_FlushQueue( hidHandle );
+        }
+
         ///  <summary>
         ///  Retrieves a structure with information about a device's capabilities. 
         ///  </summary>
@@ -523,7 +500,6 @@ namespace Emanate.Core.Output.DelcomVdi
         internal HIDP_CAPS GetDeviceCapabilities( SafeFileHandle hidHandle ) 
         {             
             var preparsedData = new IntPtr();
-            Boolean success = false; 
             //Byte[] valueCaps = new Byte[ 1024 ]; // (the array size is a guess)
 
 			try
@@ -542,7 +518,7 @@ namespace Emanate.Core.Output.DelcomVdi
 				//  True on success, False on failure.
 				//  ***
 
-				success = HidD_GetPreparsedData(hidHandle, ref preparsedData);
+				HidD_GetPreparsedData(hidHandle, ref preparsedData);
 
 				//  ***
 				//  API function: HidP_GetCaps
@@ -560,25 +536,25 @@ namespace Emanate.Core.Output.DelcomVdi
 				//  Returns: True on success, False on failure.
 				//  ***
 
-				var result = HidP_GetCaps(preparsedData, ref Capabilities);
+				var result = HidP_GetCaps(preparsedData, ref capabilities);
 				if ((result != 0))
 				{
 					Debug.WriteLine("");
-					Debug.WriteLine("  Usage: " + Convert.ToString(Capabilities.Usage, 16));
-					Debug.WriteLine("  Usage Page: " + Convert.ToString(Capabilities.UsagePage, 16));
-					Debug.WriteLine("  Input Report Byte Length: " + Capabilities.InputReportByteLength);
-					Debug.WriteLine("  Output Report Byte Length: " + Capabilities.OutputReportByteLength);
-					Debug.WriteLine("  Feature Report Byte Length: " + Capabilities.FeatureReportByteLength);
-					Debug.WriteLine("  Number of Link Collection Nodes: " + Capabilities.NumberLinkCollectionNodes);
-					Debug.WriteLine("  Number of Input Button Caps: " + Capabilities.NumberInputButtonCaps);
-					Debug.WriteLine("  Number of Input Value Caps: " + Capabilities.NumberInputValueCaps);
-					Debug.WriteLine("  Number of Input Data Indices: " + Capabilities.NumberInputDataIndices);
-					Debug.WriteLine("  Number of Output Button Caps: " + Capabilities.NumberOutputButtonCaps);
-					Debug.WriteLine("  Number of Output Value Caps: " + Capabilities.NumberOutputValueCaps);
-					Debug.WriteLine("  Number of Output Data Indices: " + Capabilities.NumberOutputDataIndices);
-					Debug.WriteLine("  Number of Feature Button Caps: " + Capabilities.NumberFeatureButtonCaps);
-					Debug.WriteLine("  Number of Feature Value Caps: " + Capabilities.NumberFeatureValueCaps);
-					Debug.WriteLine("  Number of Feature Data Indices: " + Capabilities.NumberFeatureDataIndices);
+					Debug.WriteLine("  Usage: " + Convert.ToString(capabilities.Usage, 16));
+					Debug.WriteLine("  Usage Page: " + Convert.ToString(capabilities.UsagePage, 16));
+					Debug.WriteLine("  Input Report Byte Length: " + capabilities.InputReportByteLength);
+					Debug.WriteLine("  Output Report Byte Length: " + capabilities.OutputReportByteLength);
+					Debug.WriteLine("  Feature Report Byte Length: " + capabilities.FeatureReportByteLength);
+					Debug.WriteLine("  Number of Link Collection Nodes: " + capabilities.NumberLinkCollectionNodes);
+					Debug.WriteLine("  Number of Input Button Caps: " + capabilities.NumberInputButtonCaps);
+					Debug.WriteLine("  Number of Input Value Caps: " + capabilities.NumberInputValueCaps);
+					Debug.WriteLine("  Number of Input Data Indices: " + capabilities.NumberInputDataIndices);
+					Debug.WriteLine("  Number of Output Button Caps: " + capabilities.NumberOutputButtonCaps);
+					Debug.WriteLine("  Number of Output Value Caps: " + capabilities.NumberOutputValueCaps);
+					Debug.WriteLine("  Number of Output Data Indices: " + capabilities.NumberOutputDataIndices);
+					Debug.WriteLine("  Number of Feature Button Caps: " + capabilities.NumberFeatureButtonCaps);
+					Debug.WriteLine("  Number of Feature Value Caps: " + capabilities.NumberFeatureValueCaps);
+					Debug.WriteLine("  Number of Feature Data Indices: " + capabilities.NumberFeatureDataIndices);
 
 					//  ***
 					//  API function: HidP_GetValueCaps
@@ -597,13 +573,9 @@ namespace Emanate.Core.Output.DelcomVdi
 					//  ***                    
 
 
-					Int32 vcSize = Capabilities.NumberInputValueCaps;
-					Byte[] valueCaps = new Byte[vcSize];
-					result = HidP_GetValueCaps(HidP_Input, valueCaps, ref vcSize, preparsedData);
-
-					//result = HidP_GetValueCaps(HidP_Input, ref valueCaps[0], ref Capabilities.NumberInputValueCaps, preparsedData); 
-
-					// (To use this data, copy the ValueCaps byte array into an array of structures.)                   
+					Int32 vcSize = capabilities.NumberInputValueCaps;
+					var valueCaps = new Byte[vcSize];
+					HidP_GetValueCaps(HidP_Input, valueCaps, ref vcSize, preparsedData);
 				}
 			}
 			finally
@@ -620,11 +592,11 @@ namespace Emanate.Core.Output.DelcomVdi
 
 				if (preparsedData != IntPtr.Zero)
 				{
-					success = HidD_FreePreparsedData(preparsedData);
+					HidD_FreePreparsedData(preparsedData);
 				}
 			} 
             
-            return Capabilities;             
+            return capabilities;             
         }         
         
         ///  <summary>
@@ -633,18 +605,18 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  Can be modified to detect other Usages.
         ///  </summary>
         ///  
-        ///  <param name="MyCapabilities"> a HIDP_CAPS structure retrieved with HidP_GetCaps. </param>
+        ///  <param name="myCapabilities"> a HIDP_CAPS structure retrieved with HidP_GetCaps. </param>
         ///  
         ///  <returns>
         ///  A String describing the Usage.
         ///  </returns>
-        internal String GetHidUsage( HIDP_CAPS MyCapabilities ) 
+        internal String GetHidUsage( HIDP_CAPS myCapabilities ) 
         {
-            String usageDescription = "";
+            var usageDescription = "";
 
             //  Create32-bit Usage from Usage Page and Usage ID.
                 
-            int usage = MyCapabilities.UsagePage * 256 + MyCapabilities.Usage; 
+            int usage = myCapabilities.UsagePage * 256 + myCapabilities.Usage; 
                 
             if ( usage == Convert.ToInt32( 0X102 ) )
             { 
@@ -712,31 +684,28 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  </returns>
         internal Boolean SetNumberOfInputBuffers( SafeFileHandle hidDeviceObject, Int32 numberBuffers )
         {
-            if ( !IsWindows98Gold() ) 
-            {                     
-                //  ***
-                //  API function: HidD_SetNumInputBuffers
-                    
-                //  Purpose: Sets the number of Input reports the host can store.
-                //  If the buffer is full and another report arrives, the host drops the 
-                //  oldest report.
-                    
-                //  Requires:
-                //  A handle to a HID
-                //  An integer to hold the number of buffers. 
-                    
-                //  Returns: true on success, false on failure.
-                //  ***
-                    
-                HidD_SetNumInputBuffers( hidDeviceObject, numberBuffers );
-                return true;                    
-            } 
-            else 
-            { 
+            if (IsWindows98Gold())
+            {
                 //  Not supported under Windows 98 Gold.
-                    
-                return false; 
+                return false;
             }
+
+            //  ***
+            //  API function: HidD_SetNumInputBuffers
+
+            //  Purpose: Sets the number of Input reports the host can store.
+            //  If the buffer is full and another report arrives, the host drops the 
+            //  oldest report.
+
+            //  Requires:
+            //  A handle to a HID
+            //  An integer to hold the number of buffers. 
+
+            //  Returns: true on success, false on failure.
+            //  ***
+
+            HidD_SetNumInputBuffers(hidDeviceObject, numberBuffers);
+            return true;
         }
 
         ///  <summary>
@@ -745,7 +714,7 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  </summary>
         internal Boolean IsWindowsXpOrLater() 
         {
-            OperatingSystem myEnvironment = Environment.OSVersion; 
+            var myEnvironment = Environment.OSVersion; 
                 
             //  Windows XP is version 5.1.
                 
@@ -755,12 +724,9 @@ namespace Emanate.Core.Output.DelcomVdi
             { 
                 Debug.Write( "The OS is Windows XP or later." ); 
                 return true; 
-            } 
-            else 
-            { 
-                Debug.Write( "The OS is earlier than Windows XP." ); 
-                return false; 
             }
+            Debug.Write( "The OS is earlier than Windows XP." ); 
+            return false;
         }         
         
         ///  <summary>
@@ -770,11 +736,10 @@ namespace Emanate.Core.Output.DelcomVdi
         ///  HidD_GetNumInputBuffers and HidD_SetNumInputBuffers
         ///  (Not yet tested on a Windows 98 Gold system.)
         ///  </summary>
-        
-        internal Boolean IsWindows98Gold() 
+        private Boolean IsWindows98Gold() 
         {
             Boolean result;
-            OperatingSystem myEnvironment = Environment.OSVersion; 
+            var myEnvironment = Environment.OSVersion; 
                 
             //  Windows 98 Gold is version 4.10 with a build number less than 2183.
                 

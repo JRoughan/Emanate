@@ -100,5 +100,31 @@ namespace Emanate.IntegrationTests
                 device.StopBuzzer();
             }
         }
+
+        [Test]
+        public void should_allow_all_lights_and_sound_at_once()
+        {
+            using (var device = new Device())
+            {
+                device.Open();
+                device.TurnOn(Color.Green);
+                device.TurnOn(Color.Yellow);
+                device.TurnOn(Color.Red);
+                device.StartBuzzer(50, 2, 20, 10);
+                Thread.Sleep(1000);
+            }
+        }
+
+        [Test]
+        public void x_should_turn_off_all_lights_and_sounds_when_finalized()
+        {
+            var device = new Device();
+            device.Open();
+            device.TurnOn(Color.Green);
+            device.TurnOn(Color.Yellow);
+            device.TurnOn(Color.Red);
+            device.StartBuzzer(150, 2, 20, 10);
+            Thread.Sleep(1000);
+        }
     }
 }
