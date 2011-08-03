@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\teamcity.cs" />
     <Compile Include="delcom_vdi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

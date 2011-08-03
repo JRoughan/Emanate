@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\TeamCity\TeamCity.cs" />
     <Compile Include="Output\DelcomVdi\Color.cs" />
     <Compile Include="Output\DelcomVdi\Debugging.cs" />
     <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
