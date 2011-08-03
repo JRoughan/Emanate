@@ -5,24 +5,6 @@ using System.Net;
 
 namespace Emanate.Core.Input.TeamCity
 {
-    public class TeamCityMonitor
-    {
-        private readonly TeamCityConnection connection;
-
-        public TeamCityMonitor(IConfiguration configuration)
-        {
-            connection = new TeamCityConnection(configuration);
-        }
-
-
-        public string GetProjects()
-        {
-            var uri = connection.CreateUri("/httpAuth/app/rest/projects");
-
-            return connection.Request(uri);
-        }
-    }
-
     public class TeamCityConnection
     {
         private readonly Uri baseUri;
@@ -47,10 +29,7 @@ namespace Emanate.Core.Input.TeamCity
 
         public Uri CreateUri(string relativeUrl)
         {
-            if (relativeUrl.StartsWith("/"))
-                relativeUrl = relativeUrl.Substring(1);
-
-            return new Uri(baseUri, relativeUrl);
+            return new Uri(baseUri, relativeUrl.TrimStart('/'));
         }
 
         public string Request(Uri uri)

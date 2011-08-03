@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IConfiguration.cs" />
-    <Compile Include="Input\TeamCity\TeamCity.cs" />
+    <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
+    <Compile Include="Input\TeamCity\TeamCityConnection.cs" />
     <Compile Include="Output\DelcomVdi\Color.cs" />
     <Compile Include="Output\DelcomVdi\Debugging.cs" />
     <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
