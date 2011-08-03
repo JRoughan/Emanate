@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Emanate.Core.Input.TeamCity
 {
-    public class TeamCityConnection
+    internal class TeamCityConnection
     {
         private readonly Uri baseUri;
         private readonly NetworkCredential networkCredential;

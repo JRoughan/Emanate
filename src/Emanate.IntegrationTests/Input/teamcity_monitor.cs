@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Emanate.IntegrationTests.Input
 {
     [TestFixture]
-    public class teamcity
+    public class teamcity_monitor
     {
         [Test]
         public void should_get_all_projects()
