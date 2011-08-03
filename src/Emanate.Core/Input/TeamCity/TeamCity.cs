@@ -7,7 +7,13 @@ namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor
     {
-        private readonly TeamCityConnection connection = new TeamCityConnection("xxx", false);
+        private readonly TeamCityConnection connection;
+
+        public TeamCityMonitor(IConfiguration configuration)
+        {
+            connection = new TeamCityConnection(configuration);
+        }
+
 
         public string GetProjects()
         {
@@ -20,11 +26,18 @@ namespace Emanate.Core.Input.TeamCity
     public class TeamCityConnection
     {
         private readonly Uri baseUri;
+        private NetworkCredential networkCredential;
 
-        public TeamCityConnection(string hostName, bool isSsl)
+        public TeamCityConnection(IConfiguration configuration)
         {
-            var protocol = isSsl ? "https" : "http";
-            baseUri = new Uri(string.Format(CultureInfo.InvariantCulture, "{0}://{1}", protocol, hostName));
+            var host = configuration.GetString("Host");
+            var isSslConnection = configuration.GetBool("IsSSL");
+            var protocol = isSslConnection ? "https" : "http";
+            baseUri = new Uri(string.Format(CultureInfo.InvariantCulture, "{0}://{1}", protocol, host));
+
+            var userName = configuration.GetString("User");
+            var password = configuration.GetString("Password");
+            networkCredential = new NetworkCredential(userName, password);
         }
 
         public Uri CreateUri(string relativeUrl)
@@ -40,7 +53,7 @@ namespace Emanate.Core.Input.TeamCity
             var webRequest = CreateWebRequest(uri);
             webRequest.Accept = "application/xml";
 
-            using (WebResponse webResponse = webRequest.GetResponse())
+            using (var webResponse = webRequest.GetResponse())
             using (var stream = webResponse.GetResponseStream())
             using (var reader = new StreamReader(stream))
                 return reader.ReadToEnd();
@@ -49,8 +62,7 @@ namespace Emanate.Core.Input.TeamCity
         public HttpWebRequest CreateWebRequest(Uri uri)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-            // HACK: Remove hardcoding
-            webRequest.Credentials = new NetworkCredential("xxx", "xxx");
+            webRequest.Credentials = networkCredential;
             webRequest.Proxy = null;
             return (webRequest);
         }
