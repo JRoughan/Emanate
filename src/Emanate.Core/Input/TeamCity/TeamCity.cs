@@ -26,7 +26,8 @@ namespace Emanate.Core.Input.TeamCity
     public class TeamCityConnection
     {
         private readonly Uri baseUri;
-        private NetworkCredential networkCredential;
+        private readonly NetworkCredential networkCredential;
+        private readonly bool isGuestAuthentication;
 
         public TeamCityConnection(IConfiguration configuration)
         {
@@ -35,9 +36,13 @@ namespace Emanate.Core.Input.TeamCity
             var protocol = isSslConnection ? "https" : "http";
             baseUri = new Uri(string.Format(CultureInfo.InvariantCulture, "{0}://{1}", protocol, host));
 
-            var userName = configuration.GetString("User");
-            var password = configuration.GetString("Password");
-            networkCredential = new NetworkCredential(userName, password);
+            isGuestAuthentication = configuration.GetBool("IsGuestAuthentication");
+            if (!isGuestAuthentication)
+            {
+                var userName = configuration.GetString("User");
+                var password = configuration.GetString("Password");
+                networkCredential = new NetworkCredential(userName, password);
+            }
         }
 
         public Uri CreateUri(string relativeUrl)
@@ -59,10 +64,13 @@ namespace Emanate.Core.Input.TeamCity
                 return reader.ReadToEnd();
         }
 
-        public HttpWebRequest CreateWebRequest(Uri uri)
+        private HttpWebRequest CreateWebRequest(Uri uri)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-            webRequest.Credentials = networkCredential;
+            
+            if (!isGuestAuthentication)
+                webRequest.Credentials = networkCredential;
+
             webRequest.Proxy = null;
             return (webRequest);
         }
