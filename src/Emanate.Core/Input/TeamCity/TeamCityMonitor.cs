@@ -1,6 +1,6 @@
 ﻿namespace Emanate.Core.Input.TeamCity
 {
-    public class TeamCityMonitor
+    public class TeamCityMonitor : IBuildMonitor
     {
         private readonly TeamCityConnection connection;
 
