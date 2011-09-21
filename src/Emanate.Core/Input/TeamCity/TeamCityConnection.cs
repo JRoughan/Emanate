@@ -13,16 +13,14 @@ namespace Emanate.Core.Input.TeamCity
 
         public TeamCityConnection(IConfiguration configuration)
         {
-            var host = configuration.GetString("Host");
-            var isSslConnection = configuration.GetBool("IsSSL");
-            var protocol = isSslConnection ? "https" : "http";
-            baseUri = new Uri(string.Format(CultureInfo.InvariantCulture, "{0}://{1}", protocol, host));
+            var rawUri = configuration.GetString("TeamCityUri");
+            baseUri = new Uri(rawUri);
 
-            isGuestAuthentication = configuration.GetBool("IsGuestAuthentication");
+            isGuestAuthentication = configuration.GetBool("TeamCityGuestAuthentication");
             if (!isGuestAuthentication)
             {
-                var userName = configuration.GetString("User");
-                var password = configuration.GetString("Password");
+                var userName = configuration.GetString("TeamCityUser");
+                var password = configuration.GetString("TeamCityPassword");
                 networkCredential = new NetworkCredential(userName, password);
             }
         }
@@ -46,7 +44,7 @@ namespace Emanate.Core.Input.TeamCity
         private HttpWebRequest CreateWebRequest(Uri uri)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-            
+
             if (!isGuestAuthentication)
                 webRequest.Credentials = networkCredential;
 

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+    <add key="TeamCityUri" value="server-name:port" />
+    <add key="TeamCityGuestAuthentication" value="false" />
+    <add key="TeamCityUser" value="Joe" />
+    <add key="TeamCityPassword" value="Password" />
+    <add key="TeamCityPollingInterval" value="60" />
+  </appSettings>
+</configuration>
