@@ -29,3 +29,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 src/Emanate.IntegrationTests/Security.config
 App.Config
+Emanate.Service.exe.config

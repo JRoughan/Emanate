@@ -48,6 +48,7 @@
     <Compile Include="Input\BuildState.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
     <Compile Include="Input\TeamCity\TeamCityConnection.cs" />
+    <Compile Include="Output\DelcomVdi\DelcomOutput.cs" />
     <Compile Include="Output\DelcomVdi\Color.cs" />
     <Compile Include="Output\DelcomVdi\Debugging.cs" />
     <Compile Include="Output\DelcomVdi\DebuggingDeclarations.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Output\DelcomVdi\Device.cs" />
     <Compile Include="Output\DelcomVdi\Hid.cs" />
     <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
+    <Compile Include="Output\IOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

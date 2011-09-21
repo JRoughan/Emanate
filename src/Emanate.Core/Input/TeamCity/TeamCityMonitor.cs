@@ -10,7 +10,6 @@ namespace Emanate.Core.Input.TeamCity
     public class TeamCityMonitor : IBuildMonitor
     {
         private readonly Timer timer;
-        private readonly IConfiguration configuration;
         private readonly TeamCityConnection connection;
         private readonly Dictionary<string, BuildState> monitoredBuilds;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
@@ -22,7 +21,6 @@ namespace Emanate.Core.Input.TeamCity
 
         public TeamCityMonitor(IConfiguration configuration)
         {
-            this.configuration = configuration;
             connection = new TeamCityConnection(configuration);
 
             monitoredBuilds = GetBuildIds(configuration.GetString("TeamCityBuilds")).ToDictionary(x => x, x => BuildState.Unknown);
@@ -30,6 +28,8 @@ namespace Emanate.Core.Input.TeamCity
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
         }
+
+        public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
         public BuildState CurrentState { get; private set; }
 
@@ -108,7 +108,14 @@ namespace Emanate.Core.Input.TeamCity
                     newState = buildState.State;
             }
 
-            CurrentState = newState;
+            if (CurrentState != newState)
+            {
+                var oldState = CurrentState;
+                CurrentState = newState;
+                var handler = StatusChanged;
+                if (handler != null)
+                    handler(this, new StatusChangedEventArgs(oldState, newState));
+            }
         }
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
@@ -138,4 +145,6 @@ namespace Emanate.Core.Input.TeamCity
             public BuildState State { get; set; }
         }
     }
+
+    
 }
