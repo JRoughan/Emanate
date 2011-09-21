@@ -6,5 +6,6 @@
     <add key="TeamCityUser" value="Joe" />
     <add key="TeamCityPassword" value="Password" />
     <add key="TeamCityPollingInterval" value="60" />
+    <add key="TeamCityBuilds" value="MyProject:MyConfiguration;MyProject:MyConfiguration2" />
   </appSettings>
 </configuration>

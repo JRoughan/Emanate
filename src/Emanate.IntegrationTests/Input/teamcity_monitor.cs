@@ -3,6 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Emanate.Core;
+using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using NUnit.Framework;
 
@@ -25,13 +26,22 @@ namespace Emanate.IntegrationTests.Input
         }
 
         [Test]
-        public void should_get_all_projects()
+        public void should_be_in_unknown_state_before_started()
         {
             var configuration = new ApplicationConfiguration();
             var monitor = new TeamCityMonitor(configuration);
-            var projects = monitor.GetProjects();
 
-            Assert.IsTrue(projects.Contains("Lync PBX"));
+            Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_run_update_when_started()
+        {
+            var configuration = new ApplicationConfiguration();
+            var monitor = new TeamCityMonitor(configuration);
+            monitor.BeginMonitoring();
+
+            Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
         }
     }
 }

@@ -44,6 +44,8 @@
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
+    <Compile Include="Input\TeamCity\BuildInfo.cs" />
+    <Compile Include="Input\BuildState.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
     <Compile Include="Input\TeamCity\TeamCityConnection.cs" />
     <Compile Include="Output\DelcomVdi\Color.cs" />
