@@ -1,11 +1,11 @@
 using Emanate.Core.Input;
-using Emanate.Core.Output.DelcomVdi;
 
-namespace Emanate.Core.Output
+namespace Emanate.Core.Output.DelcomVdi
 {
     public class DelcomOutput : IOutput
     {
         private readonly Device device;
+        private BuildState lastState;
 
         public DelcomOutput()
         {
@@ -15,6 +15,9 @@ namespace Emanate.Core.Output
 
         public void UpdateStatus(BuildState state)
         {
+            if (state == lastState)
+                return;
+
             switch (state)
             {
                 case BuildState.Succeeded:
@@ -26,13 +29,15 @@ namespace Emanate.Core.Output
                     device.TurnOn(Color.Red);
                     device.TurnOff(Color.Green);
                     device.TurnOff(Color.Yellow);
+                    device.StartBuzzer(100, 2, 20, 20);
                     break;
                 case BuildState.Running:
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Green);
-                    device.TurnOn(Color.Yellow);
+                    device.Flash(Color.Yellow);
                     break;
             }
+            lastState = state;
         }
     }
 }

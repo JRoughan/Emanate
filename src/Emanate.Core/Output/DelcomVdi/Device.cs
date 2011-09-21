@@ -7,20 +7,20 @@ namespace Emanate.Core.Output.DelcomVdi
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;
 
-        public string DeviceName { get; private set; }
-        public string DeviceStatus { get; private set; }
+        //public string DeviceName { get; private set; }
+        //public string DeviceStatus { get; private set; }
 
         public void Open()
         {
             // Current TID and SID are not supported
-
             if (delcom.Open() == 0)
             {
                 UInt32 serialNumber, version, date, month, year;
                 delcom.GetDeviceInfo(out serialNumber, out version, out date, out month, out year);
-                year += 2000;
-                DeviceName = "DeviceName: "+delcom.GetDeviceName();
-                DeviceStatus = string.Format("Device Status: Found. SerialNumber={0} Version={1} {2}/{3}/{4}", serialNumber, version, month, date, year);
+                //year += 2000;
+                
+                //DeviceName = "DeviceName: "+delcom.GetDeviceName();
+                //DeviceStatus = string.Format("Device Status: Found. SerialNumber={0} Version={1} {2}/{3}/{4}", serialNumber, version, month, date, year);
 
                 // Optionally -Enable event counter use that auto switch feature work
                 txCmd.MajorCmd = 101;
@@ -31,16 +31,17 @@ namespace Emanate.Core.Output.DelcomVdi
             }
             else
             {
-                DeviceName = "DeviceName: offine";
-                DeviceStatus = "Error: Unable to open device.";
+                throw new Exception("Device could not be opened.");
             }
         }
+
+        public bool IsOpen { get { return delcom.IsOpen(); } }
+
+        public string Name { get { return delcom.GetDeviceName(); } }
 
         public void Close()
         {
             delcom.Close();
-            DeviceName = "DeviceName: offine";
-            DeviceStatus = "Device Closed.";
         }
 
         private Boolean IsPresent()
@@ -195,8 +196,6 @@ namespace Emanate.Core.Output.DelcomVdi
             StopBuzzer();
             TurnOff();
         }
-
-        
 
         public void Dispose()
         {

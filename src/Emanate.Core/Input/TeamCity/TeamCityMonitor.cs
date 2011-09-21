@@ -108,14 +108,19 @@ namespace Emanate.Core.Input.TeamCity
                     newState = buildState.State;
             }
 
-            if (CurrentState != newState)
-            {
+            //if (CurrentState != newState)
+            //{
                 var oldState = CurrentState;
                 CurrentState = newState;
-                var handler = StatusChanged;
-                if (handler != null)
-                    handler(this, new StatusChangedEventArgs(oldState, newState));
-            }
+                OnStatusChanged(oldState, newState);
+            //}
+        }
+
+        private void OnStatusChanged(BuildState oldState, BuildState newState)
+        {
+            var handler = StatusChanged;
+            if (handler != null)
+                handler(this, new StatusChangedEventArgs(oldState, newState));
         }
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
@@ -145,6 +150,4 @@ namespace Emanate.Core.Input.TeamCity
             public BuildState State { get; set; }
         }
     }
-
-    
 }

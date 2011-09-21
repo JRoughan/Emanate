@@ -4,6 +4,7 @@ using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using Emanate.Core.Output;
+using Emanate.Core.Output.DelcomVdi;
 
 namespace Emanate.Service
 {
