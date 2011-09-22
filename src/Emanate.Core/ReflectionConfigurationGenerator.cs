@@ -24,11 +24,23 @@ namespace Emanate.Core
             foreach (var propertyInfo in properties)
             {
                 var keyAttribute = (KeyAttribute)propertyInfo.GetCustomAttributes(false).Single(a => typeof(KeyAttribute).IsAssignableFrom(a.GetType()));
-                var value = configurationStorage.GetString(keyAttribute.Key);
+                var value = LoadValue(keyAttribute.Key, propertyInfo.PropertyType);
                 propertyInfo.SetValue(config, value, null);
             }
 
             return config;
+        }
+
+        private object LoadValue(string key, Type propertyType)
+        {
+            if (propertyType == typeof(string))
+                return configurationStorage.GetString(key);
+            if (propertyType == typeof(int))
+                return configurationStorage.GetInt(key);
+            if (propertyType == typeof(bool))
+                return configurationStorage.GetBool(key);
+
+            throw new Exception("Unsupported property type");
         }
     }
 }
