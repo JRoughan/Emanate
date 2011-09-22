@@ -1,0 +1,34 @@
+﻿<Window x:Class="Emanate.Service.Admin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Admin="clr-namespace:Emanate.Service.Admin"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type Admin:PluginType}">
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Margin="0,0,10,0">
+            <Expander Header="Input" IsExpanded="True">
+                <ItemsControl ItemsSource="{Binding InputPlugins}" Padding="5">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Expander>
+            <Expander Header="Output" IsExpanded="True">
+                <ItemsControl ItemsSource="{Binding OutputPlugins}" Padding="5">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Expander>
+        </StackPanel>
+        <ContentControl Content="{Binding AdminPage}" />
+    </DockPanel>
+</Window>
