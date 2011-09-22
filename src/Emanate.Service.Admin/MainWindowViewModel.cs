@@ -32,8 +32,6 @@ namespace Emanate.Service.Admin
 
         public void Initialize()
         {
-            
-
             foreach (var plugin in pluginConfigurationLoader.Load())
             {
                 ConfigurationInfos.Add(plugin);
