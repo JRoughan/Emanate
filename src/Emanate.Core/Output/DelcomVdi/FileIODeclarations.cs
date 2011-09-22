@@ -5,13 +5,11 @@ using System;
 namespace Emanate.Core.Output.DelcomVdi
 {   
     internal sealed class FileIO  
-    {         
-        internal const Int32 FILE_FLAG_OVERLAPPED = 0X40000000; 
+    {
         internal const Int32 FILE_SHARE_READ = 1; 
         internal const Int32 FILE_SHARE_WRITE = 2; 
         internal const UInt32 GENERIC_READ = 0X80000000; 
-        internal const UInt32 GENERIC_WRITE = 0X40000000; 
-        internal const Int32 INVALID_HANDLE_VALUE = -1; 
+        internal const UInt32 GENERIC_WRITE = 0X40000000;
         internal const Int32 OPEN_EXISTING = 3; 
         internal const Int32 WAIT_TIMEOUT = 0X102;
 		internal const Int32 WAIT_OBJECT_0 = 0;         

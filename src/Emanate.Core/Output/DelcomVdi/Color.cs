@@ -15,8 +15,8 @@ namespace Emanate.Core.Output.DelcomVdi
         public byte OffsetId { get; private set; }
         public byte PowerId { get; private set; }
 
-        public static Color Green = new Color(1, 21, 26, 0);
-        public static Color Yellow = new Color(4, 23, 28, 2);
-        public static Color Red = new Color(2, 22, 27, 1);
+        public static readonly Color Green = new Color(1, 21, 26, 0);
+        public static readonly Color Yellow = new Color(4, 23, 28, 2);
+        public static readonly Color Red = new Color(2, 22, 27, 1);
     }
 }
