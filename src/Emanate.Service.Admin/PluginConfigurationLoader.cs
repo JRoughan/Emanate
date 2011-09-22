@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Emanate.Core;
 using Emanate.Core.Input.TeamCity;
 
@@ -42,6 +43,7 @@ namespace Emanate.Service.Admin
                 yield return new ConfigurationProperty
                                  {
                                      Name = propertyInfo.Name,
+                                     FriendlyName = Regex.Replace(propertyInfo.Name, "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 "),
                                      Key = keyAttribute.Key,
                                      Type = propertyInfo.PropertyType
                                  };
