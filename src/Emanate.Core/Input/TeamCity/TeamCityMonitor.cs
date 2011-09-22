@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -125,8 +124,13 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
         {
+            var runningBuilds = GetRunningBuildIds().ToList();
+
             foreach (var buildId in monitoredBuilds.Keys)
             {
+                if (runningBuilds.Contains(buildId))
+                    yield return new BuildInfo { BuildId = buildId, State = BuildState.Running};
+
                 var resultUri = connection.CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
                 var resultXml = connection.Request(resultUri);
 
@@ -142,6 +146,18 @@ namespace Emanate.Core.Input.TeamCity
                 var state = states.OrderByDescending(s => s.Id).Select(s => s.Status).First();
                 yield return new BuildInfo { BuildId = buildId, State = stateMap[state] };
             }
+        }
+
+        private IEnumerable<string> GetRunningBuildIds()
+        {
+            var runningUri = connection.CreateUri("httpAuth/app/rest/builds?locator=running:true");
+            var runningXml = connection.Request(runningUri);
+
+            var runningRoot = XElement.Parse(runningXml);
+
+            return //from buildTypesElement in runningRoot.Elements("builds")
+                   from buildElement in runningRoot.Elements("build")
+                   select buildElement.Attribute("buildTypeId").Value;
         }
 
         class BuildInfo

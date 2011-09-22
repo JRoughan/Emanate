@@ -21,14 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A2BCC8A45BDEA9DE3C30A2D24B35675D"
+        "MsmKey" = "8:_FB063D01D81865CD70C539235E9CB3AA"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A2BCC8A45BDEA9DE3C30A2D24B35675D"
+        "OwnerKey" = "8:_FB063D01D81865CD70C539235E9CB3AA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -156,14 +156,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A2BCC8A45BDEA9DE3C30A2D24B35675D"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FB063D01D81865CD70C539235E9CB3AA"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A2BCC8A45BDEA9DE3C30A2D24B35675D"
+                    "_FB063D01D81865CD70C539235E9CB3AA"
                     {
                     "Name" = "8:Emanate.Core.dll"
                     "Attributes" = "3:512"
@@ -244,7 +244,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate.Service.Installer"
         "ProductCode" = "8:{8442C8E0-3202-4851-B78F-CD92A84E5FFC}"
-        "PackageCode" = "8:{8D4586D8-6547-47B8-B5D9-5A5AD1D351AF}"
+        "PackageCode" = "8:{7CBA0E7E-202A-46D1-9D67-9DD24C8258F8}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -765,7 +765,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1963062684824D2A8E97F1558CB077F1"
             {
-            "SourcePath" = "8:..\\Emanate.Service\\obj\\x86\\Debug\\Emanate.Service.exe"
+            "SourcePath" = "8:..\\Emanate.Service\\obj\\Release\\Emanate.Service.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
