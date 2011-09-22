@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Net;
 
@@ -11,16 +10,16 @@ namespace Emanate.Core.Input.TeamCity
         private readonly NetworkCredential networkCredential;
         private readonly bool isGuestAuthentication;
 
-        public TeamCityConnection(IConfiguration configuration)
+        public TeamCityConnection(TeamCityConfiguration configuration)
         {
-            var rawUri = configuration.GetString("TeamCityUri");
+            var rawUri = configuration.TeamCityUri;
             baseUri = new Uri(rawUri);
 
-            isGuestAuthentication = configuration.GetBool("TeamCityGuestAuthentication");
+            isGuestAuthentication = configuration.IsUsingGuestAuthentication;
             if (!isGuestAuthentication)
             {
-                var userName = configuration.GetString("TeamCityUser");
-                var password = configuration.GetString("TeamCityPassword");
+                var userName = configuration.UserName;
+                var password = configuration.Password;
                 networkCredential = new NetworkCredential(userName, password);
             }
         }

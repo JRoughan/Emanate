@@ -41,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationConfiguration.cs" />
-    <Compile Include="IConfiguration.cs" />
+    <Compile Include="AppConfigStorage.cs" />
+    <Compile Include="IConfigurationGenerator.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\TeamCity\BuildInfo.cs" />
     <Compile Include="Input\BuildState.cs" />
+    <Compile Include="Input\TeamCity\ConfigurationAttribute.cs" />
+    <Compile Include="Input\TeamCity\KeyAttribute.cs" />
+    <Compile Include="Input\TeamCity\TeamCityConfiguration.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
     <Compile Include="Input\TeamCity\TeamCityConnection.cs" />
     <Compile Include="Output\DelcomVdi\DelcomOutput.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
     <Compile Include="Output\IOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionConfigurationGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

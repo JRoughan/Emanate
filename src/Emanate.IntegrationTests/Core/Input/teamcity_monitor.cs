@@ -5,6 +5,7 @@ using System.Reflection;
 using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
+using Moq;
 using NUnit.Framework;
 
 namespace Emanate.IntegrationTests.Input
@@ -28,8 +29,8 @@ namespace Emanate.IntegrationTests.Input
         [Test]
         public void should_be_in_unknown_state_before_started()
         {
-            var configuration = new ApplicationConfiguration();
-            var monitor = new TeamCityMonitor(configuration);
+            var configGenerator = new Mock<IConfigurationGenerator>();
+            var monitor = new TeamCityMonitor(configGenerator.Object);
 
             Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
         }
@@ -37,8 +38,8 @@ namespace Emanate.IntegrationTests.Input
         [Test]
         public void should_run_update_when_started()
         {
-            var configuration = new ApplicationConfiguration();
-            var monitor = new TeamCityMonitor(configuration);
+            var configGenerator = new Mock<IConfigurationGenerator>();
+            var monitor = new TeamCityMonitor(configGenerator.Object);
             monitor.BeginMonitoring();
 
             Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);

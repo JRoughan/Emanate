@@ -18,12 +18,14 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "SUCCESS", BuildState.Succeeded },
                                                               };
 
-        public TeamCityMonitor(IConfiguration configuration)
+        public TeamCityMonitor(IConfigurationGenerator configuration)
         {
-            connection = new TeamCityConnection(configuration);
+            var config = configuration.Generate<TeamCityConfiguration>();
 
-            monitoredBuilds = GetBuildIds(configuration.GetString("TeamCityBuilds")).ToDictionary(x => x, x => BuildState.Unknown);
-            var pollingInterval = configuration.GetInt("TeamCityPollingInterval") * 1000;
+            connection = new TeamCityConnection(config);
+
+            monitoredBuilds = GetBuildIds(config.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
+            var pollingInterval = config.PollingInterval * 1000;
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
         }

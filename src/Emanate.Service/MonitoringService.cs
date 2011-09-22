@@ -1,5 +1,4 @@
-﻿using System;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
 using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
@@ -16,9 +15,10 @@ namespace Emanate.Service
         public MonitoringService()
         {
             InitializeComponent();
-            var configuration = new ApplicationConfiguration();
+            var configStorage = new AppConfigStorage();
+            var configGenearator = new ReflectionConfigurationGenerator(configStorage);
             output = new DelcomOutput();
-            monitor = new TeamCityMonitor(configuration);
+            monitor = new TeamCityMonitor(configGenearator);
             monitor.StatusChanged += MonitorStatusChanged;
         }
 

@@ -2,7 +2,7 @@ using System.Configuration;
 
 namespace Emanate.Core
 {
-    public class ApplicationConfiguration : IConfiguration
+    public class AppConfigStorage : IConfigurationStorage
     {
         public string GetString(string key)
         {
