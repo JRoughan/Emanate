@@ -9,7 +9,7 @@
             <TextBlock Text="{Binding Name}" />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type Admin:ConfigurationProperty}">
+        <DataTemplate x:Key="stringTemplate">
             <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width=".5*" />
@@ -19,11 +19,33 @@
                 <TextBox Grid.Column="1" Text="{Binding Value}" />
             </Grid>
         </DataTemplate>
-        
+
+        <DataTemplate x:Key="integerTemplate">
+            <Grid Margin="0,2,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*" />
+                    <ColumnDefinition Width=".5*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding Name}" />
+                <TextBox Grid.Column="1" Text="{Binding Value}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="booleanTemplate">
+            <Grid Margin="0,2,0,0">
+                <CheckBox Content="{Binding Name}" IsChecked="{Binding Value}" />
+            </Grid>
+        </DataTemplate>
+
+        <Admin:PropertyTemplateSelector x:Key="propertyTemplateSelector"
+            StringTemplate="{StaticResource stringTemplate}"
+            IntegerTemplate="{StaticResource integerTemplate}"
+            BooleanTemplate="{StaticResource booleanTemplate}" />
+
     </Window.Resources>
     <DockPanel>
         <ListView x:Name="configInfos" ItemsSource="{Binding ConfigurationInfos}" Padding="5" />
-        <ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" Padding="5">
+        <ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" ItemTemplateSelector="{StaticResource propertyTemplateSelector}" Padding="5">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />
