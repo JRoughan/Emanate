@@ -4,7 +4,7 @@ namespace Emanate.Core.Input.TeamCity
     public class TeamCityConfiguration
     {
         [Key("TeamCityUri")]
-        public string TeamCityUri { get; set; }
+        public string Uri { get; set; }
 
         [Key("TeamCityPollingInterval")]
         public int PollingInterval { get; set; }

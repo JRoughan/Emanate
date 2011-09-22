@@ -12,7 +12,7 @@ namespace Emanate.Core.Input.TeamCity
 
         public TeamCityConnection(TeamCityConfiguration configuration)
         {
-            var rawUri = configuration.TeamCityUri;
+            var rawUri = configuration.Uri;
             baseUri = new Uri(rawUri);
 
             isGuestAuthentication = configuration.IsUsingGuestAuthentication;
