@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Emanate.Core.Input.TeamCity
 {
-    internal class TeamCityConnection
+    public class TeamCityConnection : ITeamCityConnection
     {
         private readonly Uri baseUri;
         private readonly NetworkCredential networkCredential;
@@ -50,5 +50,9 @@ namespace Emanate.Core.Input.TeamCity
             webRequest.Proxy = null;
             return (webRequest);
         }
+    }
+
+    public interface ITeamCityConnection
+    {
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input.TeamCity;
 
 namespace Emanate.Service.Admin

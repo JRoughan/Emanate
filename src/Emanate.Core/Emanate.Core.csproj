@@ -44,17 +44,18 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="AppConfigStorage.cs" />
-    <Compile Include="IConfigurationGenerator.cs" />
+    <Compile Include="Configuration\AppConfigStorage.cs" />
+    <Compile Include="Configuration\IConfigurationGenerator.cs" />
+    <Compile Include="Configuration\IConfigurationStorage.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\TeamCity\BuildInfo.cs" />
     <Compile Include="Input\BuildState.cs" />
-    <Compile Include="ConfigurationAttribute.cs" />
+    <Compile Include="Configuration\ConfigurationAttribute.cs" />
     <Compile Include="Input\TeamCity\KeyAttribute.cs" />
     <Compile Include="Input\TeamCity\TeamCityConfiguration.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
     <Compile Include="Input\TeamCity\TeamCityConnection.cs" />
-    <Compile Include="MissingKeyException.cs" />
+    <Compile Include="Configuration\MissingKeyException.cs" />
     <Compile Include="Output\DelcomVdi\DelcomOutput.cs" />
     <Compile Include="Output\DelcomVdi\Color.cs" />
     <Compile Include="Output\DelcomVdi\DelcomHid.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Output\DelcomVdi\HidDeclarations.cs" />
     <Compile Include="Output\IOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionConfigurationGenerator.cs" />
+    <Compile Include="Configuration\ReflectionConfigurationGenerator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

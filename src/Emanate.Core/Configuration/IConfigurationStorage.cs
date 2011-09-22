@@ -1,10 +1,5 @@
-﻿namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
-    public interface IConfigurationGenerator
-    {
-        T Generate<T>();
-    }
-
     public interface IConfigurationStorage
     {
         string GetString(string key);

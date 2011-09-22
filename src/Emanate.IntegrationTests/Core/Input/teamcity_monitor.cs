@@ -3,6 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using Moq;
@@ -36,7 +37,7 @@ namespace Emanate.IntegrationTests.Input
             var configGenerator = new Mock<IConfigurationGenerator>();
             configGenerator.Setup(g => g.Generate<TeamCityConfiguration>()).Returns(config);
 
-            var monitor = new TeamCityMonitor(configGenerator.Object);
+            var monitor = new TeamCityMonitor(null, configGenerator.Object);
 
             Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
         }
@@ -47,7 +48,7 @@ namespace Emanate.IntegrationTests.Input
             var config = new TeamCityConfiguration { Uri = teamCityUri, PollingInterval = 60 };
             var configGenerator = new Mock<IConfigurationGenerator>();
             configGenerator.Setup(g => g.Generate<TeamCityConfiguration>()).Returns(config);
-            var monitor = new TeamCityMonitor(configGenerator.Object);
+            var monitor = new TeamCityMonitor(null, configGenerator.Object);
             monitor.BeginMonitoring();
 
             Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);

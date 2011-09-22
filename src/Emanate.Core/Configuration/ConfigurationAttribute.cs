@@ -1,6 +1,6 @@
 using System;
 
-namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
     public class ConfigurationAttribute : Attribute
     {

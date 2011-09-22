@@ -1,3 +1,5 @@
+using Emanate.Core.Configuration;
+
 namespace Emanate.Core.Input.TeamCity
 {
     [Configuration("TeamCity")]

@@ -1,9 +1,6 @@
 ﻿using System.ServiceProcess;
-using Emanate.Core;
 using Emanate.Core.Input;
-using Emanate.Core.Input.TeamCity;
 using Emanate.Core.Output;
-using Emanate.Core.Output.DelcomVdi;
 
 namespace Emanate.Service
 {
@@ -12,19 +9,13 @@ namespace Emanate.Service
         private readonly IBuildMonitor monitor;
         private readonly IOutput output;
 
-        public MonitoringService()
+        public MonitoringService(IBuildMonitor monitor, IOutput output)
         {
             InitializeComponent();
-            var configStorage = new AppConfigStorage();
-            var configGenearator = new ReflectionConfigurationGenerator(configStorage);
-            output = new DelcomOutput();
-            monitor = new TeamCityMonitor(configGenearator);
-            monitor.StatusChanged += MonitorStatusChanged;
-        }
 
-        public void Start()
-        {
-            OnStart(null);
+            this.output = output;
+            this.monitor = monitor;
+            this.monitor.StatusChanged += MonitorStatusChanged;
         }
 
         private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Xml.Linq;
+using Emanate.Core.Configuration;
 
 namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {
+        private readonly ITeamCityConnection teamCityConnection;
         private readonly TeamCityConfiguration config;
         private bool isInitialized;
         private readonly Timer timer;
@@ -20,10 +22,9 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "SUCCESS", BuildState.Succeeded },
                                                               };
 
-        
-
-        public TeamCityMonitor(IConfigurationGenerator configuration)
+        public TeamCityMonitor(ITeamCityConnection teamCityConnection, IConfigurationGenerator configuration)
         {
+            this.teamCityConnection = teamCityConnection;
             config = configuration.Generate<TeamCityConfiguration>();
 
             var pollingInterval = config.PollingInterval * 1000;
@@ -143,12 +144,11 @@ namespace Emanate.Core.Input.TeamCity
 
                 var resultRoot = XElement.Parse(resultXml);
                 var states = from resultElement in resultRoot.Elements("build")
-                             select
-                                 new
-                                     {
-                                         Id = resultElement.Attribute("id").Value,
-                                         Status = resultElement.Attribute("status").Value
-                                     };
+                             select new
+                                        {
+                                            Id = resultElement.Attribute("id").Value,
+                                            Status = resultElement.Attribute("status").Value
+                                        };
 
                 var state = states.OrderByDescending(s => s.Id).Select(s => s.Status).First();
                 yield return new BuildInfo { BuildId = buildId, State = stateMap[state] };
@@ -162,8 +162,7 @@ namespace Emanate.Core.Input.TeamCity
 
             var runningRoot = XElement.Parse(runningXml);
 
-            return //from buildTypesElement in runningRoot.Elements("builds")
-                   from buildElement in runningRoot.Elements("build")
+            return from buildElement in runningRoot.Elements("build")
                    select buildElement.Attribute("buildTypeId").Value;
         }
 

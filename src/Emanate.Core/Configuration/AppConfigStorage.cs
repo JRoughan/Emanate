@@ -1,6 +1,6 @@
 using System.Configuration;
 
-namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
     public class AppConfigStorage : IConfigurationStorage
     {

@@ -26,11 +26,11 @@ namespace Emanate.IntegrationTests.Input
         //    typeof(ConfigurationManager).GetField("s_initState", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, 0);
         //}
 
-        [Test, Ignore("Need to find a way of getting app settings to support this test in R#")]
-        public void should()
-        {
-            var service = new MonitoringService();
-            service.Start();
-        }
+        //[Test, Ignore("Need to find a way of getting app settings to support this test in R#")]
+        //public void should()
+        //{
+        //    var service = new MonitoringService();
+        //    service.Start();
+        //}
     }
 }

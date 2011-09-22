@@ -1,5 +1,6 @@
 ﻿using System;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input.TeamCity;
 using Moq;
 using NUnit.Framework;

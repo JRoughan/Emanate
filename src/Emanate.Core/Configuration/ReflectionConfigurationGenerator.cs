@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Emanate.Core.Input.TeamCity;
 
-namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
     public class ReflectionConfigurationGenerator : IConfigurationGenerator
     {
