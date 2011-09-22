@@ -32,14 +32,14 @@ namespace Emanate.Service.Admin
             }
         }
 
-        private IEnumerable<ConfigProperty> GetConfigProperties(Type configType)
+        private IEnumerable<ConfigurationProperty> GetConfigProperties(Type configType)
         {
             var properties = configType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var propertyInfo in properties)
             {
                 var keyAttribute = (KeyAttribute)propertyInfo.GetCustomAttributes(false).Single(a => typeof(KeyAttribute).IsAssignableFrom(a.GetType()));
-                yield return new ConfigProperty
+                yield return new ConfigurationProperty
                                  {
                                      Name = propertyInfo.Name,
                                      Key = keyAttribute.Key,
