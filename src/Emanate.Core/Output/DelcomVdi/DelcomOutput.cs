@@ -10,11 +10,13 @@ namespace Emanate.Core.Output.DelcomVdi
         public DelcomOutput()
         {
             device = new Device();
-            device.Open();
         }
 
         public void UpdateStatus(BuildState state)
         {
+            if (!device.IsOpen)
+                device.Open();
+
             if (state == lastState)
                 return;
 

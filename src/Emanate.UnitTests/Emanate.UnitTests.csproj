@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\monitoring_service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\reflection_configuration_generator.cs" />
   </ItemGroup>
@@ -62,6 +64,10 @@
     <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.Service\Emanate.Service.csproj">
+      <Project>{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}</Project>
+      <Name>Emanate.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

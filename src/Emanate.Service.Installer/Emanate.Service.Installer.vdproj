@@ -21,20 +21,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1C65A031C56CBD5414BCC45DCCC11842"
+        "MsmKey" = "8:_23A1530D1A03638DE65CEEC0F0C2B98D"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7AB2DABAD3FFC3D28725C88A60B92221"
+        "MsmKey" = "8:_23A1530D1A03638DE65CEEC0F0C2B98D"
+        "OwnerKey" = "8:_329D1A335ED2D9F6B5FD59722957EF2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_329D1A335ED2D9F6B5FD59722957EF2A"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7AB2DABAD3FFC3D28725C88A60B92221"
-        "OwnerKey" = "8:_1C65A031C56CBD5414BCC45DCCC11842"
+        "MsmKey" = "8:_489CBA10F46D36D007E5AEBF310B3405"
+        "OwnerKey" = "8:_57D4EBC054B9F0C70BCE6400E1E0B6E6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_489CBA10F46D36D007E5AEBF310B3405"
+        "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_57D4EBC054B9F0C70BCE6400E1E0B6E6"
+        "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,13 +64,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1C65A031C56CBD5414BCC45DCCC11842"
+        "OwnerKey" = "8:_57D4EBC054B9F0C70BCE6400E1E0B6E6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7AB2DABAD3FFC3D28725C88A60B92221"
+        "OwnerKey" = "8:_489CBA10F46D36D007E5AEBF310B3405"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_329D1A335ED2D9F6B5FD59722957EF2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_23A1530D1A03638DE65CEEC0F0C2B98D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -203,14 +233,45 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1C65A031C56CBD5414BCC45DCCC11842"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_23A1530D1A03638DE65CEEC0F0C2B98D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate.Service.Admin, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4283.1794, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1C65A031C56CBD5414BCC45DCCC11842"
+                    "_23A1530D1A03638DE65CEEC0F0C2B98D"
+                    {
+                    "Name" = "8:Emanate.Core.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Emanate.Core.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_329D1A335ED2D9F6B5FD59722957EF2A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Emanate.Service.Admin, Version=0.2.4283.1795, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_329D1A335ED2D9F6B5FD59722957EF2A"
                     {
                     "Name" = "8:Emanate.Service.Admin.exe"
                     "Attributes" = "3:512"
@@ -234,20 +295,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7AB2DABAD3FFC3D28725C88A60B92221"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_489CBA10F46D36D007E5AEBF310B3405"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Autofac, Version=2.5.2.830, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7AB2DABAD3FFC3D28725C88A60B92221"
+                    "_489CBA10F46D36D007E5AEBF310B3405"
                     {
-                    "Name" = "8:Emanate.Core.dll"
+                    "Name" = "8:Autofac.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Emanate.Core.dll"
+            "SourcePath" = "8:Autofac.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_57D4EBC054B9F0C70BCE6400E1E0B6E6"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Autofac.Configuration, Version=2.5.2.830, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_57D4EBC054B9F0C70BCE6400E1E0B6E6"
+                    {
+                    "Name" = "8:Autofac.Configuration.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Autofac.Configuration.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
@@ -322,7 +414,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate.Service.Installer"
         "ProductCode" = "8:{8442C8E0-3202-4851-B78F-CD92A84E5FFC}"
-        "PackageCode" = "8:{7CBA0E7E-202A-46D1-9D67-9DD24C8258F8}"
+        "PackageCode" = "8:{B157BABD-8C74-4489-9B26-9DB5E2C4EC92}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -843,7 +935,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1963062684824D2A8E97F1558CB077F1"
             {
-            "SourcePath" = "8:..\\Emanate.Service\\obj\\Debug\\Emanate.Service.exe"
+            "SourcePath" = "8:..\\Emanate.Service\\obj\\Release\\Emanate.Service.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"

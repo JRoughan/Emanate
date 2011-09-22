@@ -1,6 +1,5 @@
 ﻿using System.ServiceProcess;
 using Autofac;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
@@ -30,6 +29,7 @@ namespace Emanate.Service
             builder.RegisterType<AppConfigStorage>().As<IConfigurationStorage>();
             builder.RegisterType<ReflectionConfigurationGenerator>().As<IConfigurationGenerator>();
             builder.RegisterType<DelcomOutput>().As<IOutput>();
+            builder.Register(c => c.Resolve<IConfigurationGenerator>().Generate<TeamCityConfiguration>()).SingleInstance();
 
             return builder.Build();
         }

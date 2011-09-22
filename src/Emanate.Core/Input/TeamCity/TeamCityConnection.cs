@@ -12,7 +12,7 @@ namespace Emanate.Core.Input.TeamCity
 
         public TeamCityConnection(TeamCityConfiguration configuration)
         {
-            var rawUri = configuration.Uri;
+            var rawUri = configuration.Uri ?? "http://localhost";
             baseUri = new Uri(rawUri);
 
             isGuestAuthentication = configuration.IsUsingGuestAuthentication;
@@ -54,5 +54,7 @@ namespace Emanate.Core.Input.TeamCity
 
     public interface ITeamCityConnection
     {
+        Uri CreateUri(string relativeUrl);
+        string Request(Uri uri);
     }
 }

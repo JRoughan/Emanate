@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Xml.Linq;
-using Emanate.Core.Configuration;
 
 namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {
         private readonly ITeamCityConnection teamCityConnection;
-        private readonly TeamCityConfiguration config;
+        private readonly TeamCityConfiguration configuration;
         private bool isInitialized;
         private readonly Timer timer;
-        private TeamCityConnection connection;
         private Dictionary<string, BuildState> monitoredBuilds;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
@@ -22,12 +20,14 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "SUCCESS", BuildState.Succeeded },
                                                               };
 
-        public TeamCityMonitor(ITeamCityConnection teamCityConnection, IConfigurationGenerator configuration)
+        public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityConfiguration configuration)
         {
             this.teamCityConnection = teamCityConnection;
-            config = configuration.Generate<TeamCityConfiguration>();
+            this.configuration = configuration;
 
-            var pollingInterval = config.PollingInterval * 1000;
+            var pollingInterval = configuration.PollingInterval * 1000;
+            if (pollingInterval < 1)
+                pollingInterval = 30000; // default to 30 seconds
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
         }
@@ -39,8 +39,8 @@ namespace Emanate.Core.Input.TeamCity
         // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
         {
-            var uri = connection.CreateUri("/httpAuth/app/rest/projects");
-            var projectXml = connection.Request(uri);
+            var uri = teamCityConnection.CreateUri("/httpAuth/app/rest/projects");
+            var projectXml = teamCityConnection.Request(uri);
             var projectRoot = XElement.Parse(projectXml);
 
             var configParts = builds.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -66,8 +66,8 @@ namespace Emanate.Core.Input.TeamCity
 
                 var buildNames = projectValues.Where(pv => pv.Name == projectName).Select(pv => pv.Id);
 
-                var buildUri = connection.CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
-                var buildXml = connection.Request(buildUri);
+                var buildUri = teamCityConnection.CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
+                var buildXml = teamCityConnection.Request(buildUri);
                 var builtRoot = XElement.Parse(buildXml);
 
                 var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
@@ -87,8 +87,7 @@ namespace Emanate.Core.Input.TeamCity
         {
             if (!isInitialized)
             {
-                connection = new TeamCityConnection(config);
-                monitoredBuilds = GetBuildIds(config.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
+                monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
                 isInitialized = true;
             }
 
@@ -139,8 +138,8 @@ namespace Emanate.Core.Input.TeamCity
                 if (runningBuilds.Contains(buildId))
                     yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
 
-                var resultUri = connection.CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
-                var resultXml = connection.Request(resultUri);
+                var resultUri = teamCityConnection.CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
+                var resultXml = teamCityConnection.Request(resultUri);
 
                 var resultRoot = XElement.Parse(resultXml);
                 var states = from resultElement in resultRoot.Elements("build")
@@ -157,8 +156,8 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<string> GetRunningBuildIds()
         {
-            var runningUri = connection.CreateUri("httpAuth/app/rest/builds?locator=running:true");
-            var runningXml = connection.Request(runningUri);
+            var runningUri = teamCityConnection.CreateUri("httpAuth/app/rest/builds?locator=running:true");
+            var runningXml = teamCityConnection.Request(runningUri);
 
             var runningRoot = XElement.Parse(runningXml);
 
