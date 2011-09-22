@@ -8,9 +8,11 @@ namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {
+        private readonly TeamCityConfiguration config;
+        private bool isInitialized;
         private readonly Timer timer;
-        private readonly TeamCityConnection connection;
-        private readonly Dictionary<string, BuildState> monitoredBuilds;
+        private TeamCityConnection connection;
+        private Dictionary<string, BuildState> monitoredBuilds;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "RUNNING", BuildState.Running },
@@ -18,13 +20,12 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "SUCCESS", BuildState.Succeeded },
                                                               };
 
+        
+
         public TeamCityMonitor(IConfigurationGenerator configuration)
         {
-            var config = configuration.Generate<TeamCityConfiguration>();
+            config = configuration.Generate<TeamCityConfiguration>();
 
-            connection = new TeamCityConnection(config);
-
-            monitoredBuilds = GetBuildIds(config.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
             var pollingInterval = config.PollingInterval * 1000;
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
@@ -46,7 +47,7 @@ namespace Emanate.Core.Input.TeamCity
             var projectValues = configParts.Select(p =>
                                                       {
                                                           var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                                          return new {Name = parts[0], Id = parts[1]};
+                                                          return new { Name = parts[0], Id = parts[1] };
                                                       });
 
             var projectNames = projectValues.Select(pv => pv.Name).Distinct();
@@ -83,6 +84,13 @@ namespace Emanate.Core.Input.TeamCity
 
         public void BeginMonitoring()
         {
+            if (!isInitialized)
+            {
+                connection = new TeamCityConnection(config);
+                monitoredBuilds = GetBuildIds(config.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
+                isInitialized = true;
+            }
+
             UpdateBuildStates();
             timer.Start();
         }
@@ -109,12 +117,9 @@ namespace Emanate.Core.Input.TeamCity
                     newState = buildState.State;
             }
 
-            //if (CurrentState != newState)
-            //{
-                var oldState = CurrentState;
-                CurrentState = newState;
-                OnStatusChanged(oldState, newState);
-            //}
+            var oldState = CurrentState;
+            CurrentState = newState;
+            OnStatusChanged(oldState, newState);
         }
 
         private void OnStatusChanged(BuildState oldState, BuildState newState)
@@ -131,7 +136,7 @@ namespace Emanate.Core.Input.TeamCity
             foreach (var buildId in monitoredBuilds.Keys)
             {
                 if (runningBuilds.Contains(buildId))
-                    yield return new BuildInfo { BuildId = buildId, State = BuildState.Running};
+                    yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
 
                 var resultUri = connection.CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
                 var resultXml = connection.Request(resultUri);

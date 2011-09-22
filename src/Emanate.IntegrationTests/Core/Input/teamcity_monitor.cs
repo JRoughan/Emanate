@@ -13,6 +13,9 @@ namespace Emanate.IntegrationTests.Input
     [TestFixture]
     public class teamcity_monitor
     {
+        // This should
+        private string teamCityUri = "http://teamcityuri";
+
         [TestFixtureSetUp]
         public void SetUp()
         {
@@ -29,7 +32,10 @@ namespace Emanate.IntegrationTests.Input
         [Test]
         public void should_be_in_unknown_state_before_started()
         {
+            var config = new TeamCityConfiguration { TeamCityUri = "http://dummy", PollingInterval = 60 };
             var configGenerator = new Mock<IConfigurationGenerator>();
+            configGenerator.Setup(g => g.Generate<TeamCityConfiguration>()).Returns(config);
+
             var monitor = new TeamCityMonitor(configGenerator.Object);
 
             Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
@@ -38,7 +44,9 @@ namespace Emanate.IntegrationTests.Input
         [Test]
         public void should_run_update_when_started()
         {
+            var config = new TeamCityConfiguration { TeamCityUri = teamCityUri, PollingInterval = 60 };
             var configGenerator = new Mock<IConfigurationGenerator>();
+            configGenerator.Setup(g => g.Generate<TeamCityConfiguration>()).Returns(config);
             var monitor = new TeamCityMonitor(configGenerator.Object);
             monitor.BeginMonitoring();
 

@@ -46,7 +46,7 @@
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\TeamCity\BuildInfo.cs" />
     <Compile Include="Input\BuildState.cs" />
-    <Compile Include="Input\TeamCity\ConfigurationAttribute.cs" />
+    <Compile Include="ConfigurationAttribute.cs" />
     <Compile Include="Input\TeamCity\KeyAttribute.cs" />
     <Compile Include="Input\TeamCity\TeamCityConfiguration.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />

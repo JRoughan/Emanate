@@ -1,6 +1,6 @@
 using System;
 
-namespace Emanate.Core.Input.TeamCity
+namespace Emanate.Core
 {
     public class ConfigurationAttribute : Attribute
     {

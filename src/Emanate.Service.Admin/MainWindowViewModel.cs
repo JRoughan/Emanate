@@ -5,11 +5,12 @@ namespace Emanate.Service.Admin
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly PluginLoader pluginLoader;
+        private readonly PluginConfigurationLoader pluginConfigurationLoader;
 
         public MainWindowViewModel()
         {
-            pluginLoader = new PluginLoader();
+            pluginConfigurationLoader = new PluginConfigurationLoader();
+            ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,36 +24,20 @@ namespace Emanate.Service.Admin
 
         public void Initialize()
         {
-            var plugins = pluginLoader.Load();
-            foreach (var plugin in plugins.BuildMonitorPlugins)
+            foreach (var plugin in pluginConfigurationLoader.Load())
             {
-                InputPlugins.Add(plugin);
-            }
-            foreach (var plugin in plugins.OutputPlugins)
-            {
-                OutputPlugins.Add(plugin);
+                ConfigurationInfos.Add(plugin);
             }
         }
 
-        private ObservableCollection<PluginType> inputPlugins = new ObservableCollection<PluginType>();
-        public ObservableCollection<PluginType> InputPlugins
+        private ObservableCollection<ConfigurationInfo> configurationInfos;
+        public ObservableCollection<ConfigurationInfo> ConfigurationInfos
         {
-            get { return inputPlugins; }
-            set
+            get { return configurationInfos; }
+            private set
             {
-                inputPlugins = value;
-                OnPropertyChanged("InputPlugins");
-            }
-        }
-
-        private ObservableCollection<PluginType> outputPlugins = new ObservableCollection<PluginType>();
-        public ObservableCollection<PluginType> OutputPlugins
-        {
-            get { return outputPlugins; }
-            set
-            {
-                outputPlugins = value;
-                OnPropertyChanged("OutputPlugins");
+                configurationInfos = value;
+                OnPropertyChanged("ConfigurationInfos");
             }
         }
     }
