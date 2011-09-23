@@ -11,7 +11,7 @@ namespace Emanate.IntegrationTests
         public void should_open_single_attached_device()
         {
             using (var device = new Device())
-                Assert.DoesNotThrow(device.Open);
+                Assert.DoesNotThrow(() => device.Open());
         }
 
         [Test]

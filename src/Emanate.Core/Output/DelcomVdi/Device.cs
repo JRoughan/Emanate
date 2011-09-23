@@ -10,29 +10,26 @@ namespace Emanate.Core.Output.DelcomVdi
         //public string DeviceName { get; private set; }
         //public string DeviceStatus { get; private set; }
 
-        public void Open()
+        public bool Open()
         {
-            // Current TID and SID are not supported
-            if (delcom.Open() == 0)
-            {
-                UInt32 serialNumber, version, date, month, year;
-                delcom.GetDeviceInfo(out serialNumber, out version, out date, out month, out year);
-                //year += 2000;
-                
-                //DeviceName = "DeviceName: "+delcom.GetDeviceName();
-                //DeviceStatus = string.Format("Device Status: Found. SerialNumber={0} Version={1} {2}/{3}/{4}", serialNumber, version, month, date, year);
+            if (delcom.Open() != 0)
+                return false;
 
-                // Optionally -Enable event counter use that auto switch feature work
-                txCmd.MajorCmd = 101;
-                txCmd.MinorCmd = 38;
-                txCmd.LSBData = 1;
-                txCmd.MSBData = 0;
-                delcom.SendCommand(txCmd); 
-            }
-            else
-            {
-                throw new Exception("Device could not be opened.");
-            }
+            // Current TID and SID are not supported
+            UInt32 serialNumber, version, date, month, year;
+            delcom.GetDeviceInfo(out serialNumber, out version, out date, out month, out year);
+            //year += 2000;
+
+            //DeviceStatus = string.Format("Device Status: Found. SerialNumber={0} Version={1} {2}/{3}/{4}", serialNumber, version, month, date, year);
+
+            // Optionally -Enable event counter use that auto switch feature work
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 38;
+            txCmd.LSBData = 1;
+            txCmd.MSBData = 0;
+            delcom.SendCommand(txCmd);
+
+            return true;
         }
 
         public bool IsOpen { get { return delcom.IsOpen(); } }
@@ -41,6 +38,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Close()
         {
+            StopBuzzer();
+            TurnOff();
             delcom.Close();
         }
 
@@ -51,8 +50,10 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void TurnOff(Color color)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             txCmd.MajorCmd = 101;
+
             txCmd.MinorCmd = 20;
             txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
@@ -74,7 +75,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void TurnOn(Color color)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
             txCmd.LSBData = color.SetId;
@@ -90,7 +92,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Flash(Color color)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
             txCmd.LSBData = 0;
@@ -106,9 +109,10 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Apply(Color color, Byte offDuty, Byte onDuty, Byte offset, Byte power)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             //MessageBox.Show("LED Paramters out of range!\r\nDuty 0-255\r\nOffet 0-255.\r\nPower 0-100", "Warning - Range Error!");
-            
+
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = color.DutyId;
             txCmd.LSBData = offDuty;
@@ -129,7 +133,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Sync(Byte greenOffset, Byte redOffset, Byte blueOffset)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
 
             // Alwasy reload the offset, as it is cleared each time
             txCmd.MajorCmd = 101;
@@ -156,7 +161,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void Prescaler(Byte prescaler)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             //MessageBox.Show("Prescaler out of range!\r\nPrescaler range 0-255\r\nUnits are in ms.\r\nDefault is 10ms", "Warning - Range Error!");
 
             // Always reload the offset, as it is cleared each time
@@ -168,7 +174,8 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void StartBuzzer(Byte freq, Byte repeat, Byte onTime, Byte offTime)
         {
-            if (!IsPresent()) return;
+            if (!IsPresent())
+                return;
             //MessageBox.Show("Buzzer Paramters out of range!\r\nFreq 1-255 Value=1/(FreqHz*256E-6)\r\nRepeat 0-255 0=Continous, 255= Repeat forever.\r\nOnTime 0-100 Units ms.\r\nOffTime 0-100 Units ms.", "Warning - Range Error!");
 
             txCmd.MajorCmd = 102;
@@ -193,8 +200,7 @@ namespace Emanate.Core.Output.DelcomVdi
 
         protected void Dispose(bool disposing)
         {
-            StopBuzzer();
-            TurnOff();
+            Close();
         }
 
         public void Dispose()
