@@ -24,12 +24,36 @@ namespace Emanate.Core.Input.TeamCity
             }
         }
 
-        public Uri CreateUri(string relativeUrl)
+        public string GetProjects()
+        {
+            var uri = CreateUri("/httpAuth/app/rest/projects");
+            return Request(uri);
+        }
+
+        public string GetProject(string projectId)
+        {
+            var buildUri = CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
+            return Request(buildUri);
+        }
+
+        public string GetRunningBuilds()
+        {
+            var runningUri = CreateUri("httpAuth/app/rest/builds?locator=running:true");
+            return Request(runningUri);
+        }
+
+        public string GetBuild(string buildId)
+        {
+            var resultUri = CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
+            return Request(resultUri);
+        }
+
+        private Uri CreateUri(string relativeUrl)
         {
             return new Uri(baseUri, relativeUrl.TrimStart('/'));
         }
 
-        public string Request(Uri uri)
+        private string Request(Uri uri)
         {
             var webRequest = CreateWebRequest(uri);
             webRequest.Accept = "application/xml";
@@ -50,11 +74,5 @@ namespace Emanate.Core.Input.TeamCity
             webRequest.Proxy = null;
             return (webRequest);
         }
-    }
-
-    public interface ITeamCityConnection
-    {
-        Uri CreateUri(string relativeUrl);
-        string Request(Uri uri);
     }
 }

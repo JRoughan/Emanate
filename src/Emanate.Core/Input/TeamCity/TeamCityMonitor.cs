@@ -39,8 +39,7 @@ namespace Emanate.Core.Input.TeamCity
         // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
         {
-            var uri = teamCityConnection.CreateUri("/httpAuth/app/rest/projects");
-            var projectXml = teamCityConnection.Request(uri);
+            var projectXml = teamCityConnection.GetProjects();
             var projectRoot = XElement.Parse(projectXml);
 
             var configParts = builds.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -66,8 +65,7 @@ namespace Emanate.Core.Input.TeamCity
 
                 var buildNames = projectValues.Where(pv => pv.Name == projectName).Select(pv => pv.Id);
 
-                var buildUri = teamCityConnection.CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
-                var buildXml = teamCityConnection.Request(buildUri);
+                var buildXml = teamCityConnection.GetProject(projectId);
                 var builtRoot = XElement.Parse(buildXml);
 
                 var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
@@ -138,8 +136,7 @@ namespace Emanate.Core.Input.TeamCity
                 if (runningBuilds.Contains(buildId))
                     yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
 
-                var resultUri = teamCityConnection.CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
-                var resultXml = teamCityConnection.Request(resultUri);
+                var resultXml = teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
                 var states = from resultElement in resultRoot.Elements("build")
@@ -156,9 +153,7 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<string> GetRunningBuildIds()
         {
-            var runningUri = teamCityConnection.CreateUri("httpAuth/app/rest/builds?locator=running:true");
-            var runningXml = teamCityConnection.Request(runningUri);
-
+            var runningXml = teamCityConnection.GetRunningBuilds();
             var runningRoot = XElement.Parse(runningXml);
 
             return from buildElement in runningRoot.Elements("build")

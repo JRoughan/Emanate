@@ -53,6 +53,7 @@
     <Compile Include="Input\BuildState.cs" />
     <Compile Include="Configuration\ConfigurationAttribute.cs" />
     <Compile Include="Configuration\KeyAttribute.cs" />
+    <Compile Include="Input\TeamCity\ITeamCityConnection.cs" />
     <Compile Include="Input\TeamCity\TeamCityConfiguration.cs" />
     <Compile Include="Input\TeamCity\TeamCityMonitor.cs" />
     <Compile Include="Input\TeamCity\TeamCityConnection.cs" />

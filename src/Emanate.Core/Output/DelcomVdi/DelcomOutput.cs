@@ -16,10 +16,9 @@ namespace Emanate.Core.Output.DelcomVdi
 
         private void ListenForDeviceConnectionChanges()
         {
-            var watcher = new ManagementEventWatcher();
-            var query = new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType=2");
+            var attachedDeviceQuery = new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType=2");
+            var watcher = new ManagementEventWatcher(attachedDeviceQuery);
             watcher.EventArrived += ReAttachDeviceIfRequired;
-            watcher.Query = query;
             watcher.Start();
         }
 
