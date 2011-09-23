@@ -147,8 +147,17 @@ namespace Emanate.Core.Input.TeamCity
                                         };
 
                 var state = states.OrderByDescending(s => s.Id).Select(s => s.Status).First();
-                yield return new BuildInfo { BuildId = buildId, State = stateMap[state] };
+                yield return new BuildInfo { BuildId = buildId, State = ConvertState(state) };
             }
+        }
+
+        private BuildState ConvertState(string state)
+        {
+            BuildState convertedState;
+            if (stateMap.TryGetValue(state, out convertedState))
+                return convertedState;
+
+            throw new NotSupportedException(string.Format("State '{0}' is not supported.", state));
         }
 
         private IEnumerable<string> GetRunningBuildIds()

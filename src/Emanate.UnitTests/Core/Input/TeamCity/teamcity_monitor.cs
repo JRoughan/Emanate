@@ -142,7 +142,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             configuration.BuildsToMonitor = "ProjectName1:BuildName1";
             var monitor = new TeamCityMonitor(connection.Object, configuration);
 
-            Assert.Throws<Exception>(monitor.BeginMonitoring);
+            Assert.Throws<NotSupportedException>(monitor.BeginMonitoring);
         }
     }
 }
