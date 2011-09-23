@@ -1,23 +1,61 @@
+using System.Management;
 using Emanate.Core.Input;
 
 namespace Emanate.Core.Output.DelcomVdi
 {
     public class DelcomOutput : IOutput
     {
-        private readonly Device device;
+        private Device device;
         private BuildState lastState;
 
         public DelcomOutput()
         {
             device = new Device();
+            ListenForDeviceConnectionChanges();
+        }
+
+        private void ListenForDeviceConnectionChanges()
+        {
+            var watcher = new ManagementEventWatcher();
+            var query = new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType=2");
+            watcher.EventArrived += ReAttachDeviceIfRequired;
+            watcher.Query = query;
+            watcher.Start();
+        }
+
+        void ReAttachDeviceIfRequired(object sender, EventArrivedEventArgs e)
+        {
+            lock (device)
+            {
+                if (device == null)
+                    device = new Device();
+                else
+                {
+                    var tempDevice = new Device();
+                    if (tempDevice.Name != device.Name)
+                    {
+                        device.Dispose();
+                        device = tempDevice;
+                    }
+                }
+            }
+            UpdateStatus(lastState, true);
         }
 
         public void UpdateStatus(BuildState state)
         {
-            if (!device.IsOpen)
-                device.Open();
+            UpdateStatus(state, false);
+        }
 
-            if (state == lastState)
+        public void UpdateStatus(BuildState state, bool force)
+        {
+            lock (device)
+            {
+                if (!device.IsOpen)
+                    device.Open();
+            }
+
+            if (!force && state == lastState)
                 return;
 
             switch (state)
