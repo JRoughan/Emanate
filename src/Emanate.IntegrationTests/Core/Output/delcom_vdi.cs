@@ -2,7 +2,7 @@
 using Emanate.Core.Output.DelcomVdi;
 using NUnit.Framework;
 
-namespace Emanate.IntegrationTests
+namespace Emanate.IntegrationTests.Core.Output
 {
     [TestFixture]
     public class delcom_vdi

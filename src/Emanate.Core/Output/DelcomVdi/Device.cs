@@ -2,7 +2,7 @@ using System;
 
 namespace Emanate.Core.Output.DelcomVdi
 {
-    public class Device : IDisposable
+    class Device : IDisposable
     {
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;

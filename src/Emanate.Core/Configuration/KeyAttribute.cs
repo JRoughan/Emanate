@@ -1,6 +1,6 @@
 using System;
 
-namespace Emanate.Core.Input.TeamCity
+namespace Emanate.Core.Configuration
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple=false)]
     public class KeyAttribute : Attribute

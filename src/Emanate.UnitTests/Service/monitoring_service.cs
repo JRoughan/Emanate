@@ -4,7 +4,7 @@ using Emanate.Service;
 using Moq;
 using NUnit.Framework;
 
-namespace Emanate.UnitTests.Core
+namespace Emanate.UnitTests.Service
 {
     [TestFixture]
     public class monitoring_service

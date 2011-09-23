@@ -1,14 +1,6 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Reflection;
-using Emanate.Core;
-using Emanate.Core.Input;
-using Emanate.Core.Input.TeamCity;
-using Emanate.Service;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace Emanate.IntegrationTests.Input
+namespace Emanate.IntegrationTests.Service
 {
     [TestFixture]
     public class monitoring_service

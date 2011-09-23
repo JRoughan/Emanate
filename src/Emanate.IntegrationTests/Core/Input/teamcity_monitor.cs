@@ -6,7 +6,7 @@ using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using NUnit.Framework;
 
-namespace Emanate.IntegrationTests.Input
+namespace Emanate.IntegrationTests.Core.Input
 {
     [TestFixture]
     public class teamcity_monitor

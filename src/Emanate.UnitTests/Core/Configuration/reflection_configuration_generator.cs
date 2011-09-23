@@ -1,11 +1,10 @@
 ﻿using System;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input.TeamCity;
 using Moq;
 using NUnit.Framework;
 
-namespace Emanate.UnitTests.Core
+namespace Emanate.UnitTests.Core.Configuration
 {
     [TestFixture]
     public class reflection_configuration_generator

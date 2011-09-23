@@ -1,6 +1,6 @@
 namespace Emanate.Core.Output.DelcomVdi
 {
-    public class Color
+    class Color
     {
         private Color(int setId, int dutyId, int offsetId, int powerId)
         {
