@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ServiceProcess;
 
@@ -8,6 +9,7 @@ namespace Emanate.Service.Admin
     {
         private readonly PluginConfigurationLoader pluginConfigurationLoader;
         private readonly ServiceController service;
+        private bool serviceIsInstalled;
 
         public MainWindowViewModel()
         {
@@ -17,12 +19,23 @@ namespace Emanate.Service.Admin
 
             // TODO: Dynamically determine service name
             service = new ServiceController("MonitoringService");
+            try
+            {
+                Status = service.DisplayName + " is running";
+                serviceIsInstalled = true;
+            }
+            catch (Exception)
+            {
+                Status = service.DisplayName + " is not installed";
+                serviceIsInstalled = false;
+            }
+ 
             pluginConfigurationLoader = new PluginConfigurationLoader();
             ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
@@ -35,6 +48,17 @@ namespace Emanate.Service.Admin
             foreach (var plugin in pluginConfigurationLoader.Load())
             {
                 ConfigurationInfos.Add(plugin);
+            }
+        }
+
+        private string status;
+        public string Status
+        {
+            get { return status; }
+            set
+            {
+                status = value;
+                OnPropertyChanged("Status");
             }
         }
 
@@ -54,7 +78,7 @@ namespace Emanate.Service.Admin
 
         private bool CanStartService()
         {
-            return service.Status == ServiceControllerStatus.Stopped;
+            return serviceIsInstalled && service.Status == ServiceControllerStatus.Stopped;
         }
 
         private void StartService()
@@ -68,7 +92,7 @@ namespace Emanate.Service.Admin
 
         private bool CanStopService()
         {
-            return service.CanStop && service.Status == ServiceControllerStatus.Running;
+            return serviceIsInstalled && service.CanStop && service.Status == ServiceControllerStatus.Running;
         }
 
         private void StopService()
