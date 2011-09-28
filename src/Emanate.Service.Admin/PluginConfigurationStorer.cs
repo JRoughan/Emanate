@@ -10,7 +10,7 @@ using Emanate.Core.Configuration;
 
 namespace Emanate.Service.Admin
 {
-    class PluginConfigurationLoader
+    class PluginConfigurationStorer
     {
         public IEnumerable<ConfigurationInfo> Load()
         {
@@ -34,6 +34,20 @@ namespace Emanate.Service.Admin
                     yield return new ConfigurationInfo(configurationAttribute.Name, properties);
                 }
             }
+        }
+
+        public void Save(IEnumerable<ConfigurationInfo> configurations)
+        {
+            var appConfig = GetServiceConfiguration();
+
+            appConfig.AppSettings.Settings.Clear();
+            foreach (var property in configurations.SelectMany(c => c.Properties))
+            {
+                var value = property.Value != null ? property.Value.ToString() : "";
+                appConfig.AppSettings.Settings.Add(property.Key,value);
+            }
+
+            appConfig.Save(ConfigurationSaveMode.Full);
         }
 
         private static Configuration GetServiceConfiguration()

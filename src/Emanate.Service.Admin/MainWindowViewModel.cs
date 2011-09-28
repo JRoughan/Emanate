@@ -7,21 +7,24 @@ namespace Emanate.Service.Admin
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly PluginConfigurationLoader pluginConfigurationLoader;
+        private readonly PluginConfigurationStorer pluginConfigurationStorer;
         private readonly ServiceController service;
-        private bool serviceIsInstalled;
+        private readonly bool serviceIsInstalled;
 
         public MainWindowViewModel()
         {
             startCommand = new DelegateCommand(StartService, CanStartService);
             stopCommand = new DelegateCommand(StopService, CanStopService);
             restartCommand = new DelegateCommand(RestartService, CanStopService);
+            saveCommand = new DelegateCommand(SaveAndExit);
+            applyCommand = new DelegateCommand(SaveConfiguration);
+            cancelCommand = new DelegateCommand(OnCloseRequested);
 
             // TODO: Dynamically determine service name
             service = new ServiceController("MonitoringService");
             try
             {
-                Status = service.DisplayName + " is running";
+                Status = service.DisplayName + " is installed";
                 serviceIsInstalled = true;
             }
             catch (Exception)
@@ -30,10 +33,12 @@ namespace Emanate.Service.Admin
                 serviceIsInstalled = false;
             }
  
-            pluginConfigurationLoader = new PluginConfigurationLoader();
+            pluginConfigurationStorer = new PluginConfigurationStorer();
             ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
 
         }
+
+        public event EventHandler CloseRequested;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
@@ -45,7 +50,7 @@ namespace Emanate.Service.Admin
 
         public void Initialize()
         {
-            foreach (var plugin in pluginConfigurationLoader.Load())
+            foreach (var plugin in pluginConfigurationStorer.Load())
             {
                 ConfigurationInfos.Add(plugin);
             }
@@ -108,6 +113,33 @@ namespace Emanate.Service.Admin
         {
             StopService();
             StartService();
+        }
+
+        private readonly DelegateCommand saveCommand;
+        public DelegateCommand SaveCommand { get { return saveCommand; } }
+
+        private void SaveAndExit()
+        {
+            SaveConfiguration();
+            OnCloseRequested();
+        }
+
+        private readonly DelegateCommand applyCommand;
+        public DelegateCommand ApplyCommand { get { return applyCommand; } }
+
+        private void SaveConfiguration()
+        {
+            pluginConfigurationStorer.Save(configurationInfos);
+        }
+
+        private readonly DelegateCommand cancelCommand;
+        public DelegateCommand CancelCommand { get { return cancelCommand; } }
+
+        private void OnCloseRequested()
+        {
+            var handler = CloseRequested;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
     }
 }

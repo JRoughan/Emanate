@@ -53,7 +53,7 @@
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Text="{Binding Status}" />
             <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
-            <Button Content="Cancel" IsCancel="True"  Margin="10" Padding="10"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10"/>
             <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10"/>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" ItemTemplateSelector="{StaticResource propertyTemplateSelector}" Padding="5">
