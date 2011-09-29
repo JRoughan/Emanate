@@ -1,4 +1,6 @@
-﻿namespace Emanate.Core.Configuration
+﻿using System;
+
+namespace Emanate.Core.Configuration
 {
     public interface IConfigurationGenerator
     {

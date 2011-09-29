@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Emanate.Core.Input.TeamCity;
 
 namespace Emanate.Core.Configuration
 {
