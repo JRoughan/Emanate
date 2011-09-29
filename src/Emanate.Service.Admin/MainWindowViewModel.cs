@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Reflection;
 using System.ServiceProcess;
 
 namespace Emanate.Service.Admin
@@ -21,7 +22,7 @@ namespace Emanate.Service.Admin
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
             // TODO: Dynamically determine service name
-            service = new ServiceController("MonitoringService");
+            service = new ServiceController("Emanate Monitor");
             try
             {
                 Status = service.DisplayName + " service is installed";
