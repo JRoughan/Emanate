@@ -65,6 +65,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ProductInfo.cs">
+      <Link>Properties\ProductInfo.cs</Link>
+    </Compile>
     <Compile Include="Core\Input\teamcity_monitor.cs" />
     <Compile Include="Core\Output\delcom_vdi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
