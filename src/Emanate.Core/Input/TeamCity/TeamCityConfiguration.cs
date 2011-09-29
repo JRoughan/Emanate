@@ -14,7 +14,7 @@ namespace Emanate.Core.Input.TeamCity
         [Key("TeamCityUser")]
         public string UserName { get; set; }
 
-        [Key("TeamCityPassword")]
+        [Key("TeamCityPassword", IsPassword=true)]
         public string Password { get; set; }
 
         [Key("TeamCityGuestAuthentication")]

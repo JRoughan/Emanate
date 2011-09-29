@@ -16,8 +16,15 @@
                     <ColumnDefinition Width=".7*" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="{Binding FriendlyName}" />
-                <TextBox Grid.Column="1" Text="{Binding Value}" />
+                <TextBox x:Name="textInput" Grid.Column="1" Text="{Binding Value}" />
+                <PasswordBox x:Name="passwordInput" Grid.Column="1" Visibility="Collapsed" Tag="{Binding}" Initialized="PasswordInputInitialized" />
             </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsPassword}" Value="True">
+                    <Setter TargetName="textInput" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="passwordInput" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
 
         <DataTemplate x:Key="integerTemplate">
@@ -53,10 +60,12 @@
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Text="{Binding Status}" />
             <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
-            <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10"/>
-            <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10" />
+            <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10" />
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" ItemTemplateSelector="{StaticResource propertyTemplateSelector}" Padding="5">
+        <ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" 
+                      ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
+                      Padding="5">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel ScrollViewer.VerticalScrollBarVisibility="Auto" />

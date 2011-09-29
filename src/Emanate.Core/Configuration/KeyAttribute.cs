@@ -11,5 +11,7 @@ namespace Emanate.Core.Configuration
         {
             Key = key;
         }
+
+        public bool IsPassword { get; set; }
     }
 }
