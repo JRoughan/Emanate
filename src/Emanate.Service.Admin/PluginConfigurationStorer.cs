@@ -71,13 +71,15 @@ namespace Emanate.Service.Admin
             foreach (var propertyInfo in properties)
             {
                 var keyAttribute = (KeyAttribute)propertyInfo.GetCustomAttributes(false).Single(a => typeof(KeyAttribute).IsAssignableFrom(a.GetType()));
-                var value = appConfig.AppSettings.Settings[keyAttribute.Key].Value;
+                var element = appConfig.AppSettings.Settings[keyAttribute.Key];//.Value;
+                var value = element != null ? element.Value : null;
                 yield return new ConfigurationProperty
                                  {
                                      Name = propertyInfo.Name,
                                      FriendlyName = Regex.Replace(propertyInfo.Name, "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 "),
                                      Key = keyAttribute.Key,
                                      Type = propertyInfo.PropertyType,
+                                     IsPassword = keyAttribute.IsPassword,
                                      Value = value
                                  };
 
