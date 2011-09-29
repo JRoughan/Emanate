@@ -16,20 +16,20 @@ namespace Emanate.Service.Admin
             startCommand = new DelegateCommand(StartService, CanStartService);
             stopCommand = new DelegateCommand(StopService, CanStopService);
             restartCommand = new DelegateCommand(RestartService, CanStopService);
-            saveCommand = new DelegateCommand(SaveAndExit);
-            applyCommand = new DelegateCommand(SaveConfiguration);
+            saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
+            applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
             // TODO: Dynamically determine service name
             service = new ServiceController("MonitoringService");
             try
             {
-                Status = service.DisplayName + " is installed";
+                Status = service.DisplayName + " service is installed";
                 serviceIsInstalled = true;
             }
             catch (Exception)
             {
-                Status = service.DisplayName + " is not installed";
+                Status = "Service is not installed";
                 serviceIsInstalled = false;
             }
  
@@ -50,6 +50,9 @@ namespace Emanate.Service.Admin
 
         public void Initialize()
         {
+            if (!serviceIsInstalled)
+                return;
+
             foreach (var plugin in pluginConfigurationStorer.Load())
             {
                 ConfigurationInfos.Add(plugin);
@@ -130,6 +133,11 @@ namespace Emanate.Service.Admin
         private void SaveConfiguration()
         {
             pluginConfigurationStorer.Save(configurationInfos);
+        }
+
+        private bool CanFindServiceConfiguration()
+        {
+            return serviceIsInstalled;
         }
 
         private readonly DelegateCommand cancelCommand;
