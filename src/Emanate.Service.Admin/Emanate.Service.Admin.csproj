@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Emanate.Service.Admin</RootNamespace>
-    <AssemblyName>Emanate.Service.Admin</AssemblyName>
+    <AssemblyName>Emanate Administration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
