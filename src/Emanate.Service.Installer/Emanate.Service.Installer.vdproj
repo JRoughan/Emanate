@@ -46,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A2BCC8A45BDEA9DE3C30A2D24B35675D"
-        "OwnerKey" = "8:_D8267095717FE9BA47DAA1D022AF6EBA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A2BCC8A45BDEA9DE3C30A2D24B35675D"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,20 +57,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D8267095717FE9BA47DAA1D022AF6EBA"
-        "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D8267095717FE9BA47DAA1D022AF6EBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -299,7 +281,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4290.20989, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4290.22692, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A2BCC8A45BDEA9DE3C30A2D24B35675D"
@@ -357,37 +339,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D8267095717FE9BA47DAA1D022AF6EBA"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate Administration, Version=0.2.4290.22261, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_D8267095717FE9BA47DAA1D022AF6EBA"
-                    {
-                    "Name" = "8:Emanate Administration.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Emanate Administration.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -418,7 +369,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_C9E8AF70A2A2471EAA69D6BB04C663D1"
             {
-            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -445,7 +396,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate"
         "ProductCode" = "8:{8442C8E0-3202-4851-B78F-CD92A84E5FFC}"
-        "PackageCode" = "8:{5FBDD69C-035D-4DE6-8DB0-CF50B29EF1E2}"
+        "PackageCode" = "8:{E888B047-1E4B-4886-8AFA-8AC4B280A359}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -459,7 +410,7 @@
         "Title" = "8:Emanate"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Jared Roughan"
-        "Keywords" = "8:"
+        "Keywords" = "8:Emanate;Build;Monitor"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:_8EE58EF834BA4BE8A19D22C4CCD6C482"
