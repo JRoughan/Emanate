@@ -1,6 +1,6 @@
 ﻿namespace Emanate.Service
 {
-    partial class MonitoringService
+    partial class EmanateService
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Emanate Monitor";
+            // 
+            // MonitoringService
+            // 
+            this.ServiceName = "EmanateService";
+
         }
 
         #endregion

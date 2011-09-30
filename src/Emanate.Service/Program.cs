@@ -23,7 +23,7 @@ namespace Emanate.Service
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<MonitoringService>();
+            builder.RegisterType<EmanateService>();
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
             builder.RegisterType<TeamCityMonitor>().As<IBuildMonitor>();
             builder.RegisterType<AppConfigStorage>().As<IConfigurationStorage>();
@@ -37,7 +37,7 @@ namespace Emanate.Service
         public void Run()
         {
             var container = CreateContainer();
-            var service = container.Resolve<MonitoringService>();
+            var service = container.Resolve<EmanateService>();
 
             var servicesToRun = new ServiceBase[] { service };
             ServiceBase.Run(servicesToRun);

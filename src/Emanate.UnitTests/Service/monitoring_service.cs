@@ -14,7 +14,7 @@ namespace Emanate.UnitTests.Service
         {
             var monitor = new Mock<IBuildMonitor>();
             var output = new Mock<IOutput>();
-            var service = new MonitoringService(monitor.Object, output.Object);
+            var service = new EmanateService(monitor.Object, output.Object);
         }
     }
 }

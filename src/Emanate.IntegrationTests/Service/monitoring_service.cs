@@ -21,7 +21,7 @@ namespace Emanate.IntegrationTests.Service
         //[Test, Ignore("Need to find a way of getting app settings to support this test in R#")]
         //public void should()
         //{
-        //    var service = new MonitoringService();
+        //    var service = new EmanateService();
         //    service.Start();
         //}
     }

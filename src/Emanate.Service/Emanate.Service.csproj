@@ -64,11 +64,11 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="MonitoringService.cs">
+    <Compile Include="EmanateService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MonitoringService.Designer.cs">
-      <DependentUpon>MonitoringService.cs</DependentUpon>
+    <Compile Include="EmanateService.Designer.cs">
+      <DependentUpon>EmanateService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -91,6 +91,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="EmanateService.resx">
+      <DependentUpon>EmanateService.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>

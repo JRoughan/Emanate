@@ -55,7 +55,7 @@ namespace Emanate.Service.Admin
             var mc = new ManagementClass("Win32_Service");
             foreach (ManagementObject mo in mc.GetInstances())
             {
-                if (mo.GetPropertyValue("Name").ToString() == "Emanate Monitor")
+                if (mo.GetPropertyValue("Name").ToString() == "EmanateService")
                 {
                     var pathToServiceExe = mo.GetPropertyValue("PathName").ToString().Trim('"');
                     return ConfigurationManager.OpenExeConfiguration(pathToServiceExe);

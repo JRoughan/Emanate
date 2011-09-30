@@ -39,8 +39,8 @@
             // 
             // monitoringServiceInstaller
             // 
-            this.monitoringServiceInstaller.DisplayName = "MonitoringService";
-            this.monitoringServiceInstaller.ServiceName = "MonitoringService";
+            this.monitoringServiceInstaller.DisplayName = "Emanate Monitoring Service";
+            this.monitoringServiceInstaller.ServiceName = "EmanateService";
             this.monitoringServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

@@ -4,12 +4,12 @@ using Emanate.Core.Output;
 
 namespace Emanate.Service
 {
-    public partial class MonitoringService : ServiceBase
+    public partial class EmanateService : ServiceBase
     {
         private readonly IBuildMonitor monitor;
         private readonly IOutput output;
 
-        public MonitoringService(IBuildMonitor monitor, IOutput output)
+        public EmanateService(IBuildMonitor monitor, IOutput output)
         {
             InitializeComponent();
 

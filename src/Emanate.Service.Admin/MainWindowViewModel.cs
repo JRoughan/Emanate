@@ -22,7 +22,7 @@ namespace Emanate.Service.Admin
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
             // TODO: Dynamically determine service name
-            service = new ServiceController("Emanate Monitor");
+            service = new ServiceController("EmanateService");
             try
             {
                 Status = service.DisplayName + " service is installed";
