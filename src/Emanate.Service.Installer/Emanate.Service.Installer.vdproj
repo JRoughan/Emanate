@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_CA48DC5CDB5BD0B55E4001D64BF7FD68"
         "OwnerKey" = "8:_1963062684824D2A8E97F1558CB077F1"
         "MsmSig" = "8:_UNDEFINED"
@@ -277,6 +283,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B006C656747A46A2B30CCC86D3C3A14B"
+            {
+            "SourcePath" = "8:..\\..\\resources\\Banner.bmp"
+            "TargetName" = "8:Banner.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA48DC5CDB5BD0B55E4001D64BF7FD68"
             {
             "AssemblyRegister" = "3:1"
@@ -407,7 +433,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate"
         "ProductCode" = "8:{8442C8E0-3202-4851-B78F-CD92A84E5FFC}"
-        "PackageCode" = "8:{005EB6D8-91FC-4B34-9903-8106952F7685}"
+        "PackageCode" = "8:{20AB5F31-B9DA-4E1D-96EB-3D3009A19358}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -643,7 +669,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -788,7 +815,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -836,7 +864,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -871,7 +900,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -908,7 +938,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B006C656747A46A2B30CCC86D3C3A14B"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
