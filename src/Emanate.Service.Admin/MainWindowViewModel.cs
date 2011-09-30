@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Reflection;
 using System.ServiceProcess;
 
 namespace Emanate.Service.Admin
@@ -11,6 +10,7 @@ namespace Emanate.Service.Admin
         private readonly PluginConfigurationStorer pluginConfigurationStorer;
         private readonly ServiceController service;
         private readonly bool serviceIsInstalled;
+        private readonly BackgroundWorker statusUpdateWorker = new BackgroundWorker();
 
         public MainWindowViewModel()
         {
@@ -20,6 +20,9 @@ namespace Emanate.Service.Admin
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
+
+            statusUpdateWorker.DoWork += UpdateServiceStatus;
+            statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
 
             // TODO: Dynamically determine service name
             service = new ServiceController("EmanateService");
@@ -37,6 +40,25 @@ namespace Emanate.Service.Admin
             pluginConfigurationStorer = new PluginConfigurationStorer();
             ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
 
+        }
+
+        void DisplayNewStatus(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Status = "Could not update service";
+                return;
+            }
+
+            Status = ((ServiceControllerStatus)e.Result).ToString();
+        }
+
+        void UpdateServiceStatus(object sender, DoWorkEventArgs e)
+        {
+            var args = (StatusUpdateArgs)e.Argument;
+            args.Method(service);
+            service.WaitForStatus(args.FinalStatus, TimeSpan.FromSeconds(30));
+            e.Result = service.Status;
         }
 
         public event EventHandler CloseRequested;
@@ -87,13 +109,25 @@ namespace Emanate.Service.Admin
 
         private bool CanStartService()
         {
-            return serviceIsInstalled && service.Status == ServiceControllerStatus.Stopped;
+            return serviceIsInstalled && !statusUpdateWorker.IsBusy && service.Status == ServiceControllerStatus.Stopped;
+        }
+
+        class StatusUpdateArgs
+        {
+            public StatusUpdateArgs(Action<ServiceController> method, ServiceControllerStatus finalStatus)
+            {
+                Method = method;
+                FinalStatus = finalStatus;
+            }
+
+            public ServiceControllerStatus FinalStatus { get; private set; }
+            public Action<ServiceController> Method { get; private set; }
         }
 
         private void StartService()
         {
-            service.Start();
-            service.WaitForStatus(ServiceControllerStatus.Running);
+            var args = new StatusUpdateArgs(s => s.Start(), ServiceControllerStatus.Running);
+            statusUpdateWorker.RunWorkerAsync(args);
         }
 
         private readonly DelegateCommand stopCommand;
@@ -101,13 +135,13 @@ namespace Emanate.Service.Admin
 
         private bool CanStopService()
         {
-            return serviceIsInstalled && service.CanStop && service.Status == ServiceControllerStatus.Running;
+            return serviceIsInstalled && !statusUpdateWorker.IsBusy && service.CanStop && service.Status == ServiceControllerStatus.Running;
         }
 
         private void StopService()
         {
-            service.Stop();
-            service.WaitForStatus(ServiceControllerStatus.Stopped);
+            var args = new StatusUpdateArgs(s => s.Stop(), ServiceControllerStatus.Stopped);
+            statusUpdateWorker.RunWorkerAsync(args);
         }
 
         private readonly DelegateCommand restartCommand;
@@ -115,8 +149,8 @@ namespace Emanate.Service.Admin
 
         private void RestartService()
         {
-            StopService();
-            StartService();
+            var args = new StatusUpdateArgs(s => { s.Stop(); s.WaitForStatus(ServiceControllerStatus.Stopped); s.Start(); }, ServiceControllerStatus.Running);
+            statusUpdateWorker.RunWorkerAsync(args);
         }
 
         private readonly DelegateCommand saveCommand;
