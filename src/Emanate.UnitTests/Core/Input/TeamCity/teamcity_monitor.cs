@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
+using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using Moq;
 using NUnit.Framework;
+using Timer = System.Timers.Timer;
 
 namespace Emanate.UnitTests.Core.Input.TeamCity
 {
@@ -260,14 +263,25 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         [Test]
         public void should_not_fail_if_processing_time_longer_than_polling_interval()
         {
+            var firstUpdate = true;
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
             var mockConnection = new Mock<ITeamCityConnection>();
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
-            mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => Thread.Sleep(1500)).Returns<string>(connection.GetBuild);
+            mockConnection.Setup(c => c.GetBuild(It.IsAny<string>()))
+                .Callback(() => { if (!firstUpdate) { Thread.Sleep(1000); } firstUpdate = false; })
+                .Returns<string>(connection.GetBuild);
             mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
+            var timerField = monitor.GetType().GetField("timer", BindingFlags.NonPublic | BindingFlags.Instance);
+            var timer = (Timer)timerField.GetValue(monitor);
+            timer.Interval = 1;
+            timerField.SetValue(monitor, timer);
+
+            //var lockField = monitor.GetType().GetField("lockingInterval", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var timeSpan = (TimeSpan)lockField.GetValue(monitor);
+            //timer.Interval = 1;
 
             monitor.BeginMonitoring();
 
