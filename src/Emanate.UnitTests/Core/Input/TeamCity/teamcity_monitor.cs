@@ -40,14 +40,25 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("BuildName1id"));
-            Assert.That(monitor.MonitoredProjects.Contains("BuildName2id"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
         }
 
-        
+        [Test, Ignore]
+        public void should_match_projects_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+        }
 
         [Test]
-        public void should_monitor_single_matching_project_if_multiple_projects_exist()
+        public void should_only_monitor_matching_projects()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2;ProjectName3:BuildName3");
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
@@ -55,7 +66,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
         }
 
         [Test]
@@ -73,7 +86,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         public void should_fail_if_build_status_unknown()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
-            connection.SetBuildStatus("BuildName1id", "XXX");
+            connection.SetBuildStatus("BuildName1", "XXX");
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
 
@@ -83,23 +96,90 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
     internal class MockTeamCityConnection : ITeamCityConnection
     {
-        private readonly Dictionary<string, List<string>> projects = new Dictionary<string, List<string>>();
-        private readonly Dictionary<string, string> buildStates = new Dictionary<string, string>();
+        private static int projectInstances;
+        private static int buildInstances;
+
+        private readonly Dictionary<ProjectInfo, List<BuildInfo>> projects = new Dictionary<ProjectInfo, List<BuildInfo>>();
+
+        class ProjectInfo
+        {
+            public ProjectInfo(string name)
+            {
+                Name = name;
+                Id = "project" + ++projectInstances;
+            }
+
+            public string Id { get; private set; }
+            public string Name { get; private set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
+                return Id.Equals(((ProjectInfo)obj).Id);
+                
+            }
+
+            public override int GetHashCode()
+            {
+                return Id.GetHashCode();
+            }
+        }
+
+        class BuildInfo
+        {
+            public BuildInfo(string name)
+            {
+                Name = name;
+                Id = "bt" + ++buildInstances;
+                Status = "SUCCESS";
+            }
+
+            public string Id { get; private set; }
+            public string Name { get; private set; }
+
+            public string Status { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
+                return Id.Equals(((ProjectInfo)obj).Id);
+
+            }
+
+            public override int GetHashCode()
+            {
+                return Id.GetHashCode();
+            }
+        }
 
         public MockTeamCityConnection(string projectsAndBuilds)
         {
+            projectInstances = 0;
+            buildInstances = 0;
+
             var pairParts = projectsAndBuilds.Split(new[] { ';' });
             foreach (var pairPart in pairParts)
             {
                 var parts = pairPart.Split(new[] { ':' });
-                List<string> builds;
-                if (!projects.TryGetValue(parts[0], out builds))
+
+                var pi = new ProjectInfo(parts[0]);
+                List<BuildInfo> builds;
+                if (!projects.TryGetValue(pi, out builds))
                 {
-                    builds = new List<string>();
-                    projects.Add(parts[0], builds);
+                    builds = new List<BuildInfo>();
+                    projects.Add(pi, builds);
                 }
 
-                builds.AddRange(parts[1].Split(new[] { ',' }));
+                var buildNames = parts[1].Split(new[] { ',' });
+                builds.AddRange(buildNames.Select(b => new BuildInfo(b)));
             }
         }
 
@@ -110,7 +190,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             sb.AppendLine(@"<projects>");
             foreach (var project in projects.Keys)
             {
-                sb.AppendFormat(@"<project name=""{0}"" id=""{1}"" />{2}", project, project + "id", Environment.NewLine);
+                sb.AppendFormat(@"<project name=""{0}"" id=""{1}"" />{2}", project.Name, project.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</projects>");
             return sb.ToString();
@@ -118,14 +198,14 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
         public string GetProject(string projectId)
         {
-            var project = projects.Single(p => p.Key + "id" == projectId);
+            var project = projects.Single(p => p.Key.Id == projectId);
             var sb = new StringBuilder();
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
-            sb.AppendFormat(@"<project name=""{0}"" id=""{1}"">{2}", project.Key, project.Key + "id", Environment.NewLine);
+            sb.AppendFormat(@"<project name=""{0}"" id=""{1}"">{2}", project.Key.Name, project.Key.Id, Environment.NewLine);
             sb.AppendLine(@"<buildTypes>");
             foreach (var build in project.Value)
             {
-                sb.AppendFormat(@"<buildType id=""{0}"" name=""{1}"" />{2}", build + "id", build, Environment.NewLine);
+                sb.AppendFormat(@"<buildType id=""{0}"" name=""{1}"" />{2}", build.Id, build.Name, Environment.NewLine);
             }
             sb.AppendLine(@"</buildTypes>");
             sb.AppendLine(@"</project>");
@@ -143,22 +223,23 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
             sb.AppendLine(@"<builds>");
 
-            // TODO: Allow more than one build in history
-            string status;
-            if (!buildStates.TryGetValue(buildId, out status))
-                status = "SUCCESS";
-            sb.AppendFormat(@"<build id=""999"" status=""{0}"" buildTypeId=""{1}"" /> {2}", status, buildId, Environment.NewLine);
-
+            // TODO: Simulate more than one build in history?
+            var builds = projects.SelectMany(p => p.Value.Where(b => b.Id == buildId));
+            foreach (var build in builds)
+            {
+                sb.AppendFormat(@"<build id=""999"" status=""{0}"" buildTypeId=""{1}"" /> {2}", build.Status, build.Id, Environment.NewLine);
+            }
             sb.AppendLine(@"</builds>");
             return sb.ToString();
         }
 
-        public void SetBuildStatus(string buildid, string status)
+        public void SetBuildStatus(string buildName, string status)
         {
-            if (buildStates.ContainsKey(buildid))
-                buildStates[buildid] = status;
-            else
-                buildStates.Add(buildid, status);
+            var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));
+            foreach (var build in builds)
+            {
+                build.Status = status;
+            }
         }
     }
 }
