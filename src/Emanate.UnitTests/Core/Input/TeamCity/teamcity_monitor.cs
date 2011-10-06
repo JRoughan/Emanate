@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Emanate.Core.Input;
 using Emanate.Core.Input.TeamCity;
 using Moq;
@@ -52,6 +53,58 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             monitor.BeginMonitoring();
 
             Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_monitor_multiple_projects()
+        {
+            var connection = new Mock<ITeamCityConnection>();
+            string projectsXml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?> 
+<projects>
+  <project name=""ProjectName1"" id=""project1"" /> 
+  <project name=""ProjectName2"" id=""project2"" /> 
+</projects>";
+            string project1Xml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?> 
+<project name=""ProjectName1"" id=""project1"">
+  <buildTypes>
+    <buildType id=""bt1"" name=""BuildName1"" /> 
+  </buildTypes>
+</project>";
+            string project2Xml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?> 
+<project name=""ProjectName2"" id=""project2"">
+  <buildTypes>
+    <buildType id=""bt2"" name=""BuildName1"" /> 
+  </buildTypes>
+</project>";
+            string runningBuildsXml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?><builds count=""0""></builds>";
+            string build1Xml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?> 
+<builds>
+  <build id=""811"" status=""SUCCESS"" buildTypeId=""bt1"" /> 
+</builds>";
+            string build2Xml =
+@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?> 
+<builds>
+  <build id=""811"" status=""SUCCESS"" buildTypeId=""bt1"" /> 
+</builds>";
+            connection.Setup(c => c.GetProjects()).Returns(projectsXml);
+            connection.Setup(c => c.GetProject("project1")).Returns(project1Xml);
+            connection.Setup(c => c.GetProject("project2")).Returns(project2Xml);
+            connection.Setup(c => c.GetRunningBuilds()).Returns(runningBuildsXml);
+            connection.Setup(c => c.GetBuild("bt1")).Returns(build1Xml);
+            connection.Setup(c => c.GetBuild("bt2")).Returns(build2Xml);
+            var configuration = new TeamCityConfiguration();
+            configuration.BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName1";
+            var monitor = new TeamCityMonitor(connection.Object, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
         }
 
         [Test]
