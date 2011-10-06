@@ -225,6 +225,39 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_stop_polling_when_end_monitoring_calls()
+        {
+            int buildChecks = 0;
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var mockConnection = new Mock<ITeamCityConnection>();
+            mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
+            mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
+            mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
+            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
+            var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
+
+            monitor.BeginMonitoring();
+
+            var sw = new Stopwatch();
+            sw.Start();
+            do { Thread.Sleep(500); }
+            while (buildChecks < 2 && sw.ElapsedMilliseconds < 5000);
+            sw.Stop();
+
+            var numberOfChecks = buildChecks;
+
+            monitor.EndMonitoring();
+
+            sw.Start();
+            do { Thread.Sleep(500); }
+            while (sw.ElapsedMilliseconds < 5000);
+            sw.Stop();
+
+            Assert.AreEqual(numberOfChecks, buildChecks);
+        }
+
+        [Test]
         public void should_not_fail_if_processing_time_longer_than_polling_interval()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
@@ -242,6 +275,16 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             sw.Start();
             do { Thread.Sleep(500); }
             while (sw.ElapsedMilliseconds < 5000);
+        }
+
+        [Test]
+        public void should_ignore_calls_to_end_monitoring_if_not_currently_running()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            Assert.DoesNotThrow(monitor.EndMonitoring);
         }
     }
 }
