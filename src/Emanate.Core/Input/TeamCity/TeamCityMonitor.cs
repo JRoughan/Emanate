@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Linq;
 
@@ -12,7 +13,7 @@ namespace Emanate.Core.Input.TeamCity
         private readonly TeamCityConfiguration configuration;
         private bool isInitialized;
         private readonly Timer timer;
-        private Dictionary<string, BuildState> monitoredBuilds;
+        private Dictionary<string, BuildState> buildStates;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "RUNNING", BuildState.Running },
@@ -34,6 +35,11 @@ namespace Emanate.Core.Input.TeamCity
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
+        public IEnumerable<string> MonitoredProjects
+        {
+            get { return buildStates.Keys; }
+        }
+
         public BuildState CurrentState { get; private set; }
 
         // TODO: Allow more than one build per project (i.e. duplicate keys)
@@ -47,14 +53,14 @@ namespace Emanate.Core.Input.TeamCity
             var projectValues = configParts.Select(p =>
                                                       {
                                                           var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                                          return new { Name = parts[0], Id = parts[1] };
+                                                          return new { Project = parts[0], Build = parts[1] };
                                                       });
 
-            var projectNames = projectValues.Select(pv => pv.Name).Distinct();
+            var projectNames = projectValues.Select(pv => pv.Project).Distinct();
 
             var projectElements =
                 from projectElement in projectRoot.Elements("project")
-                where projectNames.Contains(projectElement.Attribute("name").Value)
+                where projectNames.Any(p => Regex.IsMatch(projectElement.Attribute("name").Value, p))
                 select projectElement;
 
             // TODO: Optimize to only issue builds request once per project
@@ -63,7 +69,7 @@ namespace Emanate.Core.Input.TeamCity
                 var projectName = projectElement.Attribute("name").Value;
                 var projectId = projectElement.Attribute("id").Value;
 
-                var buildNames = projectValues.Where(pv => pv.Name == projectName).Select(pv => pv.Id);
+                var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
 
                 var buildXml = teamCityConnection.GetProject(projectId);
                 var builtRoot = XElement.Parse(buildXml);
@@ -85,7 +91,8 @@ namespace Emanate.Core.Input.TeamCity
         {
             if (!isInitialized)
             {
-                monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
+                var monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor);
+                buildStates = monitoredBuilds.ToDictionary(x => x, x => BuildState.Unknown);
                 isInitialized = true;
             }
 
@@ -110,7 +117,7 @@ namespace Emanate.Core.Input.TeamCity
             var newState = BuildState.Unknown;
             foreach (var buildState in newStates.ToList())
             {
-                monitoredBuilds[buildState.BuildId] = buildState.State;
+                buildStates[buildState.BuildId] = buildState.State;
                 if ((int)buildState.State > (int)newState)
                     newState = buildState.State;
             }
@@ -131,7 +138,7 @@ namespace Emanate.Core.Input.TeamCity
         {
             var runningBuilds = GetRunningBuildIds().ToList();
 
-            foreach (var buildId in monitoredBuilds.Keys)
+            foreach (var buildId in buildStates.Keys)
             {
                 if (runningBuilds.Contains(buildId))
                     yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
