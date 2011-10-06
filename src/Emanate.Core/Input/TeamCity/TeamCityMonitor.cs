@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
+using Timer = System.Timers.Timer;
 
 namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {
+        private readonly object pollingLock = new object();
+        private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly TeamCityConfiguration configuration;
         private bool isInitialized;
@@ -29,6 +33,9 @@ namespace Emanate.Core.Input.TeamCity
             var pollingInterval = configuration.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
+
+            lockingInterval = TimeSpan.FromSeconds(pollingInterval / 2.0);
+
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
         }
@@ -69,7 +76,7 @@ namespace Emanate.Core.Input.TeamCity
                 from projectElement in projectRoot.Elements("project")
                 let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
                 where p != null
-                select new {Name = p, Id = projectElement.Attribute("id").Value};
+                select new { Name = p, Id = projectElement.Attribute("id").Value };
 
             // TODO: Optimize to only issue builds request once per project
             foreach (var projectElement in projectElements)
@@ -96,7 +103,7 @@ namespace Emanate.Core.Input.TeamCity
             }
         }
 
-        
+
 
         public void BeginMonitoring()
         {
@@ -118,7 +125,17 @@ namespace Emanate.Core.Input.TeamCity
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)
         {
-            UpdateBuildStates();
+            if (!Monitor.TryEnter(pollingLock, lockingInterval))
+                return;
+
+            try
+            {
+                UpdateBuildStates();
+            }
+            finally
+            {
+                Monitor.Exit(pollingLock);
+            }
         }
 
         private void UpdateBuildStates()
