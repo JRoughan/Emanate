@@ -12,6 +12,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         private static int buildInstances;
 
         private readonly Dictionary<ProjectInfo, List<BuildInfo>> projects = new Dictionary<ProjectInfo, List<BuildInfo>>();
+        private string runningBuild;
 
         class ProjectInfo
         {
@@ -32,7 +33,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 }
 
                 return Id.Equals(((ProjectInfo)obj).Id);
-                
+
             }
 
             public override int GetHashCode()
@@ -126,7 +127,15 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
         public string GetRunningBuilds()
         {
-            return @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?><builds count=""0""></builds>";
+            if (runningBuild == null)
+                return @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?><builds count=""0""></builds>";
+
+            var sb = new StringBuilder();
+            sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
+            sb.AppendLine(@"<builds count=""1"">");
+            sb.AppendFormat(@"<build buildTypeId=""{0}"" />", runningBuild);
+            sb.AppendLine(@"</builds>");
+            return sb.ToString();
         }
 
         public string GetBuild(string buildId)
@@ -152,6 +161,13 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             {
                 build.Status = status;
             }
+        }
+
+        public void SetRunningBuild(string buildName)
+        {
+            var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));
+            if (builds.Any())
+                runningBuild = builds.First().Id;
         }
     }
 }

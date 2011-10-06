@@ -103,8 +103,6 @@ namespace Emanate.Core.Input.TeamCity
             }
         }
 
-
-
         public void BeginMonitoring()
         {
             if (!isInitialized)
