@@ -44,8 +44,20 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             Assert.That(monitor.MonitoredProjects.Contains("bt2"));
         }
 
-        [Test, Ignore]
+        [Test]
         public void should_match_projects_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+        }
+
+        [Test]
+        public void should_match_multiple_projects_by_wildcard()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName1");
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };

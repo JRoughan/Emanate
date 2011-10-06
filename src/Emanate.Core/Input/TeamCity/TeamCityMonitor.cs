@@ -42,6 +42,13 @@ namespace Emanate.Core.Input.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
+
+        private static bool IsWildcardMatch(string project, string pattern)
+        {
+            var regexPattern = "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
+            return Regex.IsMatch(project, regexPattern);
+        }
+
         // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
         {
@@ -60,14 +67,15 @@ namespace Emanate.Core.Input.TeamCity
 
             var projectElements =
                 from projectElement in projectRoot.Elements("project")
-                where projectNames.Any(p => Regex.IsMatch(projectElement.Attribute("name").Value, p))
-                select projectElement;
+                let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
+                where p != null
+                select new {Name = p, Id = projectElement.Attribute("id").Value};
 
             // TODO: Optimize to only issue builds request once per project
             foreach (var projectElement in projectElements)
             {
-                var projectName = projectElement.Attribute("name").Value;
-                var projectId = projectElement.Attribute("id").Value;
+                var projectName = projectElement.Name;
+                var projectId = projectElement.Id;
 
                 var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
 
@@ -86,6 +94,8 @@ namespace Emanate.Core.Input.TeamCity
                 }
             }
         }
+
+        
 
         public void BeginMonitoring()
         {
