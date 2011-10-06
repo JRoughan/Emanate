@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
+using Timer = System.Timers.Timer;
 
 namespace Emanate.Core.Input.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {
+        private readonly object pollingLock = new object();
+        private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly TeamCityConfiguration configuration;
         private bool isInitialized;
         private readonly Timer timer;
-        private Dictionary<string, BuildState> monitoredBuilds;
+        private Dictionary<string, BuildState> buildStates;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "RUNNING", BuildState.Running },
@@ -28,13 +33,28 @@ namespace Emanate.Core.Input.TeamCity
             var pollingInterval = configuration.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
+
+            lockingInterval = TimeSpan.FromSeconds(pollingInterval / 2.0);
+
             timer = new Timer(pollingInterval);
             timer.Elapsed += PollTeamCityStatus;
         }
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
+        public IEnumerable<string> MonitoredProjects
+        {
+            get { return buildStates.Keys; }
+        }
+
         public BuildState CurrentState { get; private set; }
+
+
+        private static bool IsWildcardMatch(string project, string pattern)
+        {
+            var regexPattern = "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
+            return Regex.IsMatch(project, regexPattern);
+        }
 
         // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
@@ -47,30 +67,32 @@ namespace Emanate.Core.Input.TeamCity
             var projectValues = configParts.Select(p =>
                                                       {
                                                           var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                                          return new { Name = parts[0], Id = parts[1] };
+                                                          return new { Project = parts[0], Build = parts[1] };
                                                       });
 
-            var projectNames = projectValues.Select(pv => pv.Name).Distinct();
+            var projectNames = projectValues.Select(pv => pv.Project).Distinct();
 
             var projectElements =
                 from projectElement in projectRoot.Elements("project")
-                where projectNames.Contains(projectElement.Attribute("name").Value)
-                select projectElement;
+                let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
+                where p != null
+                select new { Name = p, Id = projectElement.Attribute("id").Value };
 
             // TODO: Optimize to only issue builds request once per project
             foreach (var projectElement in projectElements)
             {
-                var projectName = projectElement.Attribute("name").Value;
-                var projectId = projectElement.Attribute("id").Value;
+                var projectName = projectElement.Name;
+                var projectId = projectElement.Id;
 
-                var buildNames = projectValues.Where(pv => pv.Name == projectName).Select(pv => pv.Id);
+                var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
 
                 var buildXml = teamCityConnection.GetProject(projectId);
                 var builtRoot = XElement.Parse(buildXml);
 
                 var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
                                     from buildElement in buildTypesElement.Elements("buildType")
-                                    where buildNames.Contains(buildElement.Attribute("name").Value)
+                                    let b = buildNames.FirstOrDefault(b => IsWildcardMatch(buildElement.Attribute("name").Value, b))
+                                    where b != null
                                     select buildElement;
 
 
@@ -81,11 +103,14 @@ namespace Emanate.Core.Input.TeamCity
             }
         }
 
+
+
         public void BeginMonitoring()
         {
             if (!isInitialized)
             {
-                monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor).ToDictionary(x => x, x => BuildState.Unknown);
+                var monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor);
+                buildStates = monitoredBuilds.ToDictionary(x => x, x => BuildState.Unknown);
                 isInitialized = true;
             }
 
@@ -100,7 +125,17 @@ namespace Emanate.Core.Input.TeamCity
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)
         {
-            UpdateBuildStates();
+            if (!Monitor.TryEnter(pollingLock, lockingInterval))
+                return;
+
+            try
+            {
+                UpdateBuildStates();
+            }
+            finally
+            {
+                Monitor.Exit(pollingLock);
+            }
         }
 
         private void UpdateBuildStates()
@@ -110,7 +145,7 @@ namespace Emanate.Core.Input.TeamCity
             var newState = BuildState.Unknown;
             foreach (var buildState in newStates.ToList())
             {
-                monitoredBuilds[buildState.BuildId] = buildState.State;
+                buildStates[buildState.BuildId] = buildState.State;
                 if ((int)buildState.State > (int)newState)
                     newState = buildState.State;
             }
@@ -131,7 +166,7 @@ namespace Emanate.Core.Input.TeamCity
         {
             var runningBuilds = GetRunningBuildIds().ToList();
 
-            foreach (var buildId in monitoredBuilds.Keys)
+            foreach (var buildId in buildStates.Keys)
             {
                 if (runningBuilds.Contains(buildId))
                     yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };

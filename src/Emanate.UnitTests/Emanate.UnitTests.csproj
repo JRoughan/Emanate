@@ -56,6 +56,7 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="Core\Input\TeamCity\MockTeamCityConnection.cs" />
     <Compile Include="Core\Input\TeamCity\teamcity_monitor.cs" />
     <Compile Include="Service\monitoring_service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
