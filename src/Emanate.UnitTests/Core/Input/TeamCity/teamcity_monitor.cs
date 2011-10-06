@@ -70,6 +70,101 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_only_monitor_matches_when_using_wildcard_for_projects()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName1;NotProjectName2:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+        }
+
+        [Test]
+        public void should_match_build_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+        }
+
+        [Test]
+        public void should_match_multiple_builds_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2;ProjectName1:BuildName3");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:Build*" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt3"));
+        }
+
+        [Test]
+        public void should_only_monitor_matches_when_using_wildcard_for_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2;ProjectName2:NotBuildName3");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:Build*" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+        }
+
+        [Test]
+        public void should_match_project_and_build_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName*" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+        }
+
+        [Test]
+        public void should_match_multiple_projects_and_builds_by_wildcard()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName*" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+        }
+
+        [Test]
+        public void should_only_monitor_matches_when_using_wildcard_for_projects_and_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2;NotProjectName:BuildName2;ProjectName3:NotBuildName;NotProjectName:NotBuildName");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName*" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt4"));
+            Assert.That(!monitor.MonitoredProjects.Contains("bt5"));
+        }
+
+        [Test]
         public void should_only_monitor_matching_projects()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2;ProjectName3:BuildName3");

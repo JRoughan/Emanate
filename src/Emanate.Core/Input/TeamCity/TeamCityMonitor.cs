@@ -84,7 +84,8 @@ namespace Emanate.Core.Input.TeamCity
 
                 var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
                                     from buildElement in buildTypesElement.Elements("buildType")
-                                    where buildNames.Contains(buildElement.Attribute("name").Value)
+                                    let b = buildNames.FirstOrDefault(b => IsWildcardMatch(buildElement.Attribute("name").Value, b))
+                                    where b != null
                                     select buildElement;
 
 
