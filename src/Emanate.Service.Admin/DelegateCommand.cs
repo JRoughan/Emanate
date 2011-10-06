@@ -17,9 +17,7 @@ namespace Emanate.Service.Admin
         }
 
         public DelegateCommand(Action execute)
-            : this(execute, () => true)
-        {
-        }
+            : this(execute, () => true) { }
 
         public DelegateCommand(Action execute, Func<bool> canExecute)
         {
@@ -54,9 +52,7 @@ namespace Emanate.Service.Admin
         }
 
         public DelegateCommand(Action<T> execute)
-            : this(execute, parameter => true)
-        {
-        }
+            : this(execute, parameter => true) { }
 
         public DelegateCommand(Action<T> execute, Func<T, bool> canExecute)
         {

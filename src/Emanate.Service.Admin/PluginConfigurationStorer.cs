@@ -12,10 +12,12 @@ namespace Emanate.Service.Admin
 {
     class PluginConfigurationStorer
     {
+        private Configuration appConfig;
+
         public IEnumerable<ConfigurationInfo> Load()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var appConfig = GetServiceConfiguration();
+            appConfig = GetServiceConfiguration();
 
             foreach (var file in Directory.EnumerateFiles(currentFolder, "*.dll"))
             {
@@ -38,7 +40,8 @@ namespace Emanate.Service.Admin
 
         public void Save(IEnumerable<ConfigurationInfo> configurations)
         {
-            var appConfig = GetServiceConfiguration();
+            if (appConfig == null)
+                throw new InvalidOperationException("Cannot save configuration before it's been loaded");
 
             appConfig.AppSettings.Settings.Clear();
             foreach (var property in configurations.SelectMany(c => c.Properties))
@@ -71,7 +74,7 @@ namespace Emanate.Service.Admin
             foreach (var propertyInfo in properties)
             {
                 var keyAttribute = (KeyAttribute)propertyInfo.GetCustomAttributes(false).Single(a => typeof(KeyAttribute).IsAssignableFrom(a.GetType()));
-                var element = appConfig.AppSettings.Settings[keyAttribute.Key];//.Value;
+                var element = appConfig.AppSettings.Settings[keyAttribute.Key];
                 var value = element != null ? element.Value : null;
                 yield return new ConfigurationProperty
                                  {
