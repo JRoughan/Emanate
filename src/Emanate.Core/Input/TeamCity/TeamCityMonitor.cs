@@ -164,25 +164,27 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
         {
-            var runningBuilds = GetRunningBuildIds().ToList();
-
             foreach (var buildId in buildStates.Keys)
             {
-                if (runningBuilds.Contains(buildId))
-                    yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
-
                 var resultXml = teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
                 var states = from resultElement in resultRoot.Elements("build")
                              select new
                                         {
-                                            Id = resultElement.Attribute("id").Value,
+                                            Id = int.Parse(resultElement.Attribute("id").Value),
+                                            IsRunning = resultElement.Attribute("running")!= null,
                                             Status = resultElement.Attribute("status").Value
                                         };
 
-                var state = states.OrderByDescending(s => s.Id).Select(s => s.Status).First();
-                yield return new BuildInfo { BuildId = buildId, State = ConvertState(state) };
+                
+                var build = states.OrderByDescending(s => s.Id).First();
+                var state = ConvertState(build.Status);
+
+                if (build.IsRunning && state == BuildState.Succeeded)
+                    state = BuildState.Running;
+
+                yield return new BuildInfo { BuildId = buildId, State = state };
             }
         }
 
@@ -193,15 +195,6 @@ namespace Emanate.Core.Input.TeamCity
                 return convertedState;
 
             throw new NotSupportedException(string.Format("State '{0}' is not supported.", state));
-        }
-
-        private IEnumerable<string> GetRunningBuildIds()
-        {
-            var runningXml = teamCityConnection.GetRunningBuilds();
-            var runningRoot = XElement.Parse(runningXml);
-
-            return from buildElement in runningRoot.Elements("build")
-                   select buildElement.Attribute("buildTypeId").Value;
         }
 
         class BuildInfo

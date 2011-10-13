@@ -36,15 +36,9 @@ namespace Emanate.Core.Input.TeamCity
             return Request(buildUri);
         }
 
-        public string GetRunningBuilds()
-        {
-            var runningUri = CreateUri("httpAuth/app/rest/builds?locator=running:true");
-            return Request(runningUri);
-        }
-
         public string GetBuild(string buildId)
         {
-            var resultUri = CreateUri(string.Format("httpAuth/app/rest/buildTypes/id:{0}/builds", buildId));
+            var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0})", buildId));
             return Request(resultUri);
         }
 

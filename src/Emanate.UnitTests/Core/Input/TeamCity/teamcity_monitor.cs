@@ -210,7 +210,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
             mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
-            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
 
@@ -232,7 +231,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
             mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => Thread.Sleep(1500)).Returns<string>(connection.GetBuild);
-            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
 
@@ -242,6 +240,58 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             sw.Start();
             do { Thread.Sleep(500); }
             while (sw.ElapsedMilliseconds < 5000);
+        }
+
+        [Test]
+        public void should_return_success_if_build_is_successful()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_build_has_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_build_is_still_running_and_successful_so_far()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_build_is_still_running_but_has_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "FAILURE", true);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
         }
     }
 }

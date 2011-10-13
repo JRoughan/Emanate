@@ -52,8 +52,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             public string Id { get; private set; }
             public string Name { get; private set; }
-
             public string Status { get; set; }
+
+            public bool IsRunning { get; set; }
 
             public override bool Equals(object obj)
             {
@@ -124,11 +125,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             return sb.ToString();
         }
 
-        public string GetRunningBuilds()
-        {
-            return @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?><builds count=""0""></builds>";
-        }
-
         public string GetBuild(string buildId)
         {
             var sb = new StringBuilder();
@@ -139,18 +135,20 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Id == buildId));
             foreach (var build in builds)
             {
-                sb.AppendFormat(@"<build id=""999"" status=""{0}"" buildTypeId=""{1}"" /> {2}", build.Status, build.Id, Environment.NewLine);
+                var runningXml = build.IsRunning ? @"running=""true"" percentageComplete=""35""" : "";
+                sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</builds>");
             return sb.ToString();
         }
 
-        public void SetBuildStatus(string buildName, string status)
+        public void SetBuildStatus(string buildName, string status, bool isRunning = false)
         {
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));
             foreach (var build in builds)
             {
                 build.Status = status;
+                build.IsRunning = isRunning;
             }
         }
     }
