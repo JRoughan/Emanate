@@ -140,15 +140,12 @@ namespace Emanate.Core.Input.TeamCity
 
         private void UpdateBuildStates()
         {
-            var newStates = GetNewBuildStates();
+            var newStates = GetNewBuildStates().ToList();
 
-            var newState = BuildState.Unknown;
-            foreach (var buildState in newStates.ToList())
-            {
+            foreach (var buildState in newStates)
                 buildStates[buildState.BuildId] = buildState.State;
-                if ((int)buildState.State > (int)newState)
-                    newState = buildState.State;
-            }
+
+            var newState = (BuildState)newStates.Max(s => (int)s.State);
 
             var oldState = CurrentState;
             CurrentState = newState;

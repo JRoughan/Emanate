@@ -293,5 +293,73 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
         }
+
+        [Test]
+        public void should_return_success_if_all_builds_successful()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_all_builds_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "FAILURE");
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_any_build_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_any_build_running_when_others_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_any_build_running_when_others_succeeded()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            connection.SetBuildStatus("BuildName2", "SUCCESS");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
     }
 }
