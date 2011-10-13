@@ -131,7 +131,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
             sb.AppendLine(@"<builds>");
 
-            // TODO: Simulate more than one build in history?
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Id == buildId));
             foreach (var build in builds)
             {

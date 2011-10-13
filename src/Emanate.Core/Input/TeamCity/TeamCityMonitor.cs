@@ -169,16 +169,13 @@ namespace Emanate.Core.Input.TeamCity
                 var resultXml = teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
-                var states = from resultElement in resultRoot.Elements("build")
-                             select new
-                                        {
-                                            Id = int.Parse(resultElement.Attribute("id").Value),
-                                            IsRunning = resultElement.Attribute("running")!= null,
-                                            Status = resultElement.Attribute("status").Value
-                                        };
-
+                var buildXml = resultRoot.Elements("build").Single();
+                var build = new
+                {
+                    IsRunning = buildXml.Attribute("running") != null,
+                    Status = buildXml.Attribute("status").Value
+                };
                 
-                var build = states.OrderByDescending(s => s.Id).First();
                 var state = ConvertState(build.Status);
 
                 if (build.IsRunning && state == BuildState.Succeeded)
