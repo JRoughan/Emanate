@@ -4,6 +4,6 @@ namespace Emanate.Core.Output
 {
     public interface IOutput
     {
-        void UpdateStatus(BuildState state);
+        void UpdateStatus(BuildState state, bool force = false);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Emanate.Core.Configuration;
-using Emanate.Core.Input.TeamCity;
 using Moq;
 using NUnit.Framework;
 
@@ -43,6 +42,18 @@ namespace Emanate.UnitTests.Core.Configuration
             var config = configurationBuilder.Generate<BooleanValueConfig>();
 
             Assert.AreEqual(true, config.Value1);
+        }
+
+        [Test]
+        public void should_set_non_writable_properties()
+        {
+            var storage = new Mock<IConfigurationStorage>();
+            storage.Setup(s => s.GetString("Key1")).Returns("MyValue");
+            var configurationBuilder = new ReflectionConfigurationGenerator(storage.Object);
+
+            var config = configurationBuilder.Generate<NonWritablePropertyConfig>();
+
+            Assert.AreEqual("MyValue", config.Value1);
         }
 
         [Test]
@@ -89,5 +100,11 @@ namespace Emanate.UnitTests.Core.Configuration
     class MissingKeyConfig
     {
         public string Value1 { get; set; }
+    }
+
+    class NonWritablePropertyConfig
+    {
+        [Key("Key1")]
+        public string Value1 { get; private set; }
     }
 }

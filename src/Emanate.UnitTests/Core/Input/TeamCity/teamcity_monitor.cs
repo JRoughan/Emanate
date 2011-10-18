@@ -321,6 +321,34 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_return_error_if_any_build_is_in_error()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            connection.SetBuildStatus("BuildName2", "ERROR");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Error, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_error_if_all_builds_are_in_error()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "ERROR");
+            connection.SetBuildStatus("BuildName2", "ERROR");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Error, monitor.CurrentState);
+        }
+
+        [Test]
         public void should_return_failure_if_any_build_failed()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");

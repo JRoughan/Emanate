@@ -41,12 +41,7 @@ namespace Emanate.Core.Output.DelcomVdi
             UpdateStatus(lastState, true);
         }
 
-        public void UpdateStatus(BuildState state)
-        {
-            UpdateStatus(state, false);
-        }
-
-        public void UpdateStatus(BuildState state, bool force)
+        public void UpdateStatus(BuildState state, bool force = false)
         {
             lock (device)
             {
@@ -64,6 +59,7 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.TurnOn(Color.Green);
                     device.TurnOff(Color.Yellow);
                     break;
+                case BuildState.Error:
                 case BuildState.Failed:
                     device.TurnOn(Color.Red);
                     device.TurnOff(Color.Green);
@@ -74,6 +70,9 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Green);
                     device.Flash(Color.Yellow);
+                    break;
+                default:
+                    device.Flash(Color.Red);
                     break;
             }
             lastState = state;

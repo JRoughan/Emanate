@@ -5,6 +5,7 @@ namespace Emanate.Core.Input
         Unknown = 0,
         Succeeded,
         Failed,
+        Error,
         Running
     }
 }
