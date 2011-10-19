@@ -193,8 +193,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         public void should_fail_if_build_missing_in_config()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
-            var configuration = new TeamCityConfiguration();
-            configuration.BuildsToMonitor = "ProjectName1";
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
 
             Assert.Throws<IndexOutOfRangeException>(monitor.BeginMonitoring);
@@ -398,6 +397,23 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             monitor.BeginMonitoring();
 
             Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_only_get_project_info_once_per_project()
+        {
+            int numberOfCalls = 0;
+            var fakeValueProvider = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var connection = new Mock<ITeamCityConnection>();
+            connection.Setup(c => c.GetBuild(It.IsAny<string>())).Returns<string>(fakeValueProvider.GetBuild);
+            connection.Setup(c => c.GetProjects()).Returns(fakeValueProvider.GetProjects);
+            connection.Setup(c => c.GetProject(It.IsAny<string>())).Callback(() => numberOfCalls++).Returns<string>(fakeValueProvider.GetProject);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1:BuildName2" };
+            var monitor = new TeamCityMonitor(connection.Object, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(1, numberOfCalls);
         }
     }
 }

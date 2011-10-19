@@ -83,12 +83,14 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             {
                 var parts = pairPart.Split(new[] { ':' });
 
-                var pi = new ProjectInfo(parts[0]);
+                var projectName = parts[0];
+                var projectInfo = projects.Select(kvp => kvp.Key).SingleOrDefault(p => p.Name == projectName) ?? new ProjectInfo(projectName);
+
                 List<BuildInfo> builds;
-                if (!projects.TryGetValue(pi, out builds))
+                if (!projects.TryGetValue(projectInfo, out builds))
                 {
                     builds = new List<BuildInfo>();
-                    projects.Add(pi, builds);
+                    projects.Add(projectInfo, builds);
                 }
 
                 var buildNames = parts[1].Split(new[] { ',' });
