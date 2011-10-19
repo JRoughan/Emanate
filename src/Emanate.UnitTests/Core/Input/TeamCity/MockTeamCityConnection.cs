@@ -63,7 +63,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                     return false;
                 }
 
-                return Id.Equals(((ProjectInfo)obj).Id);
+                return Id.Equals(((BuildInfo)obj).Id);
 
             }
 
@@ -94,7 +94,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 }
 
                 var buildNames = parts[1].Split(new[] { ',' });
-                builds.AddRange(buildNames.Select(b => new BuildInfo(b)));
+                var newBuildNames = buildNames.Except(builds.Select(x => x.Name));
+                builds.AddRange(newBuildNames.Select(b => new BuildInfo(b)));
             }
         }
 

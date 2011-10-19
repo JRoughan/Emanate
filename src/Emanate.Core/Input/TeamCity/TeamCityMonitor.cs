@@ -43,7 +43,7 @@ namespace Emanate.Core.Input.TeamCity
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
-        public IEnumerable<string> MonitoredProjects
+        public IEnumerable<string> MonitoredBuilds
         {
             get { return buildStates.Keys; }
         }
@@ -57,7 +57,6 @@ namespace Emanate.Core.Input.TeamCity
             return Regex.IsMatch(project, regexPattern);
         }
 
-        // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
         {
             var projectXml = teamCityConnection.GetProjects();
@@ -79,7 +78,6 @@ namespace Emanate.Core.Input.TeamCity
                 where p != null
                 select new { Name = p, Id = projectElement.Attribute("id").Value };
 
-            // TODO: Optimize to only issue builds request once per project
             foreach (var projectElement in projectElements)
             {
                 var projectName = projectElement.Name;
@@ -103,8 +101,6 @@ namespace Emanate.Core.Input.TeamCity
                 }
             }
         }
-
-
 
         public void BeginMonitoring()
         {

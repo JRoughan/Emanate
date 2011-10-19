@@ -51,8 +51,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -76,22 +76,22 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
         public void should_only_monitor_matches_when_using_wildcard_for_projects()
         {
-            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName1;NotProjectName2:BuildName1");
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName1;NotProjectName:BuildName1");
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -115,9 +115,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -129,9 +129,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -155,8 +155,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
@@ -168,11 +168,11 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt4"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt5"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt4"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt5"));
         }
 
         [Test]
@@ -184,9 +184,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -414,6 +414,18 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             monitor.BeginMonitoring();
 
             Assert.AreEqual(1, numberOfCalls);
+        }
+
+        [Test]
+        public void should_ignore_duplicate_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(1, monitor.MonitoredBuilds.Count());
         }
     }
 }
