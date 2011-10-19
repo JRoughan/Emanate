@@ -198,7 +198,7 @@ namespace Emanate.Core.Output.DelcomVdi
             delcom.SendCommand(txCmd);  // always disable the flash mode 
         }
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             Close();
         }

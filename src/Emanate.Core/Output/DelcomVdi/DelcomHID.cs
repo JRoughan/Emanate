@@ -351,7 +351,6 @@ namespace Emanate.Core.Output.DelcomVdi
             Marshal.Copy(ptr, arr, 0, len);
             Marshal.FreeHGlobal(ptr);
             return arr;
-
         }
     }
 }

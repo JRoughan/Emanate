@@ -143,8 +143,15 @@ namespace Emanate.Core.Input.TeamCity
         {
             var newStates = GetNewBuildStates().ToList();
 
+            if (!newStates.Any())
+            {
+                // TODO: Log warning
+                return;
+            }
+
             foreach (var buildState in newStates)
                 buildStates[buildState.BuildId] = buildState.State;
+
 
             var newState = (BuildState)newStates.Max(s => (int)s.State);
 

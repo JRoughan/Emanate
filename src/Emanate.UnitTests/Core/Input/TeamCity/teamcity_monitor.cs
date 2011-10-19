@@ -21,6 +21,16 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_not_fail_if_no_builds_match()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "NotProjectName1:NotBuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            Assert.DoesNotThrow(monitor.BeginMonitoring);
+        }
+
+        [Test]
         public void should_monitor_single_project()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
@@ -29,7 +39,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
         }
 
         [Test]
