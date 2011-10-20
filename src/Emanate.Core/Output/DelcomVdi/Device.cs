@@ -77,6 +77,7 @@ namespace Emanate.Core.Output.DelcomVdi
         {
             if (!IsPresent())
                 return;
+
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 20;
             txCmd.LSBData = color.SetId;
@@ -88,6 +89,12 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
             delcom.SendCommand(txCmd);
+
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 34;
+            txCmd.LSBData = color.PowerId;
+            txCmd.MSBData = color.PowerLevel;
+            delcom.SendCommand(txCmd); // Set the power
         }
 
         public void Flash(Color color)
