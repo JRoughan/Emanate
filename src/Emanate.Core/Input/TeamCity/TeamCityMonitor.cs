@@ -139,17 +139,15 @@ namespace Emanate.Core.Input.TeamCity
         {
             var newStates = GetNewBuildStates().ToList();
 
-            if (!newStates.Any())
+            var newState = BuildState.Unknown;
+
+            if (newStates.Any())
             {
-                // TODO: Log warning
-                return;
+                foreach (var buildState in newStates)
+                    buildStates[buildState.BuildId] = buildState.State;
+
+                newState = (BuildState)newStates.Max(s => (int)s.State);
             }
-
-            foreach (var buildState in newStates)
-                buildStates[buildState.BuildId] = buildState.State;
-
-
-            var newState = (BuildState)newStates.Max(s => (int)s.State);
 
             var oldState = CurrentState;
             CurrentState = newState;
@@ -170,19 +168,22 @@ namespace Emanate.Core.Input.TeamCity
                 var resultXml = teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
-                var buildXml = resultRoot.Elements("build").Single();
-                var build = new
+                var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
+                if (buildXml != null)
                 {
-                    IsRunning = buildXml.Attribute("running") != null,
-                    Status = buildXml.Attribute("status").Value
-                };
-                
-                var state = ConvertState(build.Status);
+                    var build = new
+                                    {
+                                        IsRunning = buildXml.Attribute("running") != null,
+                                        Status = buildXml.Attribute("status").Value
+                                    };
 
-                if (build.IsRunning && state == BuildState.Succeeded)
-                    state = BuildState.Running;
+                    var state = ConvertState(build.Status);
 
-                yield return new BuildInfo { BuildId = buildId, State = state };
+                    if (build.IsRunning && state == BuildState.Succeeded)
+                        state = BuildState.Running;
+
+                    yield return new BuildInfo {BuildId = buildId, State = state};
+                }
             }
         }
 

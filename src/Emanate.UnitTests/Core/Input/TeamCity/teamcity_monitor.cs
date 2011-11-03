@@ -278,6 +278,40 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_return_unknown_if_there_are_no_matching_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_unknown_if_build_is_removed()
+        {
+            int buildChecks = 0;
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var mockConnection = new Mock<ITeamCityConnection>();
+            mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
+            mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
+            mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
+            var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
+            monitor.BeginMonitoring();
+
+            connection.RemoveAllBuilds();
+            var checksBeforeRemove = buildChecks;
+
+            do { Thread.Sleep(100); }
+            while (buildChecks == checksBeforeRemove);
+
+            Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
         public void should_return_running_if_build_is_still_running_and_successful_so_far()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");

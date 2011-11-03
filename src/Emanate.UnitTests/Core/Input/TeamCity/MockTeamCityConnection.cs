@@ -153,5 +153,13 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 build.IsRunning = isRunning;
             }
         }
+
+        public void RemoveAllBuilds()
+        {
+            foreach (var project in projects)
+            {
+                project.Value.Clear();
+            }
+        }
     }
 }
