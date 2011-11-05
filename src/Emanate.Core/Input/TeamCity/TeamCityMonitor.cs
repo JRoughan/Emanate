@@ -21,6 +21,7 @@ namespace Emanate.Core.Input.TeamCity
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "RUNNING", BuildState.Running },
+                                                                  { "ERROR", BuildState.Error },
                                                                   { "FAILURE", BuildState.Failed },
                                                                   { "SUCCESS", BuildState.Succeeded },
                                                               };
@@ -42,7 +43,7 @@ namespace Emanate.Core.Input.TeamCity
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
-        public IEnumerable<string> MonitoredProjects
+        public IEnumerable<string> MonitoredBuilds
         {
             get { return buildStates.Keys; }
         }
@@ -56,7 +57,6 @@ namespace Emanate.Core.Input.TeamCity
             return Regex.IsMatch(project, regexPattern);
         }
 
-        // TODO: Allow more than one build per project (i.e. duplicate keys)
         private IEnumerable<string> GetBuildIds(string builds)
         {
             var projectXml = teamCityConnection.GetProjects();
@@ -78,7 +78,6 @@ namespace Emanate.Core.Input.TeamCity
                 where p != null
                 select new { Name = p, Id = projectElement.Attribute("id").Value };
 
-            // TODO: Optimize to only issue builds request once per project
             foreach (var projectElement in projectElements)
             {
                 var projectName = projectElement.Name;
@@ -138,14 +137,16 @@ namespace Emanate.Core.Input.TeamCity
 
         private void UpdateBuildStates()
         {
-            var newStates = GetNewBuildStates();
+            var newStates = GetNewBuildStates().ToList();
 
             var newState = BuildState.Unknown;
-            foreach (var buildState in newStates.ToList())
+
+            if (newStates.Any())
             {
-                buildStates[buildState.BuildId] = buildState.State;
-                if ((int)buildState.State > (int)newState)
-                    newState = buildState.State;
+                foreach (var buildState in newStates)
+                    buildStates[buildState.BuildId] = buildState.State;
+
+                newState = (BuildState)newStates.Max(s => (int)s.State);
             }
 
             var oldState = CurrentState;
@@ -162,25 +163,27 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
         {
-            var runningBuilds = GetRunningBuildIds().ToList();
-
             foreach (var buildId in buildStates.Keys)
             {
-                if (runningBuilds.Contains(buildId))
-                    yield return new BuildInfo { BuildId = buildId, State = BuildState.Running };
-
                 var resultXml = teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
-                var states = from resultElement in resultRoot.Elements("build")
-                             select new
-                                        {
-                                            Id = resultElement.Attribute("id").Value,
-                                            Status = resultElement.Attribute("status").Value
-                                        };
+                var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
+                if (buildXml != null)
+                {
+                    var build = new
+                                    {
+                                        IsRunning = buildXml.Attribute("running") != null,
+                                        Status = buildXml.Attribute("status").Value
+                                    };
 
-                var state = states.OrderByDescending(s => s.Id).Select(s => s.Status).First();
-                yield return new BuildInfo { BuildId = buildId, State = ConvertState(state) };
+                    var state = ConvertState(build.Status);
+
+                    if (build.IsRunning && state == BuildState.Succeeded)
+                        state = BuildState.Running;
+
+                    yield return new BuildInfo {BuildId = buildId, State = state};
+                }
             }
         }
 
@@ -191,15 +194,6 @@ namespace Emanate.Core.Input.TeamCity
                 return convertedState;
 
             throw new NotSupportedException(string.Format("State '{0}' is not supported.", state));
-        }
-
-        private IEnumerable<string> GetRunningBuildIds()
-        {
-            var runningXml = teamCityConnection.GetRunningBuilds();
-            var runningRoot = XElement.Parse(runningXml);
-
-            return from buildElement in runningRoot.Elements("build")
-                   select buildElement.Attribute("buildTypeId").Value;
         }
 
         class BuildInfo

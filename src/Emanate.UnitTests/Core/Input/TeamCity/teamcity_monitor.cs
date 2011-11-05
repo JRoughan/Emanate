@@ -12,12 +12,24 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
     [TestFixture]
     public class teamcity_monitor
     {
+        // TODO: Ignore dupe monitored builds
+
         [Test]
         public void should_not_use_connection_until_monitoring_starts()
         {
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1" };
 
             Assert.DoesNotThrow(() => new TeamCityMonitor(null, configuration));
+        }
+
+        [Test]
+        public void should_not_fail_if_no_builds_match()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "NotProjectName1:NotBuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            Assert.DoesNotThrow(monitor.BeginMonitoring);
         }
 
         [Test]
@@ -29,7 +41,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
         }
 
         [Test]
@@ -41,8 +53,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
@@ -54,7 +66,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -66,22 +78,22 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
         public void should_only_monitor_matches_when_using_wildcard_for_projects()
         {
-            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName1;NotProjectName2:BuildName1");
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName1;NotProjectName:BuildName1");
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName*:BuildName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -93,7 +105,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -105,9 +117,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -119,9 +131,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
@@ -133,7 +145,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
         }
 
         [Test]
@@ -145,8 +157,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
         }
 
         [Test]
@@ -158,11 +170,11 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt4"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt5"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt4"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt5"));
         }
 
         [Test]
@@ -174,17 +186,16 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             monitor.BeginMonitoring();
 
-            Assert.That(monitor.MonitoredProjects.Contains("bt1"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt2"));
-            Assert.That(!monitor.MonitoredProjects.Contains("bt3"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt2"));
+            Assert.That(!monitor.MonitoredBuilds.Contains("bt3"));
         }
 
         [Test]
         public void should_fail_if_build_missing_in_config()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
-            var configuration = new TeamCityConfiguration();
-            configuration.BuildsToMonitor = "ProjectName1";
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
 
             Assert.Throws<IndexOutOfRangeException>(monitor.BeginMonitoring);
@@ -210,7 +221,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
             mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
-            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
 
@@ -233,7 +243,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
             mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
-            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
 
@@ -265,7 +274,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
             mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
             mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => Thread.Sleep(1500)).Returns<string>(connection.GetBuild);
-            mockConnection.Setup(c => c.GetRunningBuilds()).Returns(connection.GetRunningBuilds);
             var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
             var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
 
@@ -321,21 +329,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
-        public void should_set_status_running_if_single_build_currently_running()
-        {
-            var buildStatus = BuildState.Unknown;
-            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
-            connection.SetRunningBuild("BuildName1");
-            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
-            var monitor = new TeamCityMonitor(connection, configuration);
-            monitor.StatusChanged += (s, e) => buildStatus = e.NewState;
-
-            monitor.BeginMonitoring();
-
-            Assert.AreEqual(BuildState.Running, buildStatus);
-        }
-
-        [Test]
         public void should_set_status_failed_if_single_build_fails()
         {
             var buildStatus = BuildState.Unknown;
@@ -379,21 +372,216 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             Assert.AreEqual(BuildState.Failed, buildStatus);
         }
 
+
         [Test]
-        public void should_set_status_running_if_any_build_currently_running()
+        public void should_return_success_if_build_is_successful()
         {
-            var buildStatus = BuildState.Unknown;
-            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2;ProjectName3:BuildName3");
-            connection.SetRunningBuild("BuildName1");
-            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2;ProjectName3:BuildName3" };
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
             var monitor = new TeamCityMonitor(connection, configuration);
-            monitor.StatusChanged += (s, e) => buildStatus = e.NewState;
 
             monitor.BeginMonitoring();
 
-            Assert.AreEqual(BuildState.Running, buildStatus);
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
         }
 
-        // TODO: Ignore dupe monitored builds
+        [Test]
+        public void should_return_failure_if_build_has_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_unknown_if_there_are_no_matching_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_unknown_if_build_is_removed()
+        {
+            int buildChecks = 0;
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var mockConnection = new Mock<ITeamCityConnection>();
+            mockConnection.Setup(c => c.GetProjects()).Returns(connection.GetProjects);
+            mockConnection.Setup(c => c.GetProject(It.IsAny<string>())).Returns<string>(connection.GetProject);
+            mockConnection.Setup(c => c.GetBuild(It.IsAny<string>())).Callback(() => buildChecks++).Returns<string>(connection.GetBuild);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1", PollingInterval = 1 };
+            var monitor = new TeamCityMonitor(mockConnection.Object, configuration);
+            monitor.BeginMonitoring();
+
+            connection.RemoveAllBuilds();
+            var checksBeforeRemove = buildChecks;
+
+            do { Thread.Sleep(100); }
+            while (buildChecks == checksBeforeRemove);
+
+            Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_build_is_still_running_and_successful_so_far()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_build_is_still_running_but_has_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            connection.SetBuildStatus("BuildName1", "FAILURE", true);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_success_if_all_builds_successful()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Succeeded, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_all_builds_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "FAILURE");
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_error_if_any_build_is_in_error()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            connection.SetBuildStatus("BuildName2", "ERROR");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Error, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_error_if_all_builds_are_in_error()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "ERROR");
+            connection.SetBuildStatus("BuildName2", "ERROR");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Error, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_failure_if_any_build_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS");
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Failed, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_any_build_running_when_others_failed()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            connection.SetBuildStatus("BuildName2", "FAILURE");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_return_running_if_any_build_running_when_others_succeeded()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName2:BuildName2");
+            connection.SetBuildStatus("BuildName1", "SUCCESS", true);
+            connection.SetBuildStatus("BuildName2", "SUCCESS");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName2:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(BuildState.Running, monitor.CurrentState);
+        }
+
+        [Test]
+        public void should_only_get_project_info_once_per_project()
+        {
+            int numberOfCalls = 0;
+            var fakeValueProvider = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var connection = new Mock<ITeamCityConnection>();
+            connection.Setup(c => c.GetBuild(It.IsAny<string>())).Returns<string>(fakeValueProvider.GetBuild);
+            connection.Setup(c => c.GetProjects()).Returns(fakeValueProvider.GetProjects);
+            connection.Setup(c => c.GetProject(It.IsAny<string>())).Callback(() => numberOfCalls++).Returns<string>(fakeValueProvider.GetProject);
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1:BuildName2" };
+            var monitor = new TeamCityMonitor(connection.Object, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(1, numberOfCalls);
+        }
+
+        [Test]
+        public void should_ignore_duplicate_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1:BuildName1" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.AreEqual(1, monitor.MonitoredBuilds.Count());
+        }
     }
 }

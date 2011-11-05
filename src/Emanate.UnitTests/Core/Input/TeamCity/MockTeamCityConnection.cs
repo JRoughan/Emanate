@@ -12,7 +12,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         private static int buildInstances;
 
         private readonly Dictionary<ProjectInfo, List<BuildInfo>> projects = new Dictionary<ProjectInfo, List<BuildInfo>>();
-        private string runningBuild;
 
         class ProjectInfo
         {
@@ -53,8 +52,9 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
             public string Id { get; private set; }
             public string Name { get; private set; }
-
             public string Status { get; set; }
+
+            public bool IsRunning { get; set; }
 
             public override bool Equals(object obj)
             {
@@ -63,7 +63,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                     return false;
                 }
 
-                return Id.Equals(((ProjectInfo)obj).Id);
+                return Id.Equals(((BuildInfo)obj).Id);
 
             }
 
@@ -83,16 +83,19 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             {
                 var parts = pairPart.Split(new[] { ':' });
 
-                var pi = new ProjectInfo(parts[0]);
+                var projectName = parts[0];
+                var projectInfo = projects.Select(kvp => kvp.Key).SingleOrDefault(p => p.Name == projectName) ?? new ProjectInfo(projectName);
+
                 List<BuildInfo> builds;
-                if (!projects.TryGetValue(pi, out builds))
+                if (!projects.TryGetValue(projectInfo, out builds))
                 {
                     builds = new List<BuildInfo>();
-                    projects.Add(pi, builds);
+                    projects.Add(projectInfo, builds);
                 }
 
                 var buildNames = parts[1].Split(new[] { ',' });
-                builds.AddRange(buildNames.Select(b => new BuildInfo(b)));
+                var newBuildNames = buildNames.Except(builds.Select(x => x.Name));
+                builds.AddRange(newBuildNames.Select(b => new BuildInfo(b)));
             }
         }
 
@@ -125,49 +128,38 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             return sb.ToString();
         }
 
-        public string GetRunningBuilds()
-        {
-            if (runningBuild == null)
-                return @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?><builds count=""0""></builds>";
-
-            var sb = new StringBuilder();
-            sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
-            sb.AppendLine(@"<builds count=""1"">");
-            sb.AppendFormat(@"<build buildTypeId=""{0}"" />", runningBuild);
-            sb.AppendLine(@"</builds>");
-            return sb.ToString();
-        }
-
         public string GetBuild(string buildId)
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
             sb.AppendLine(@"<builds>");
 
-            // TODO: Simulate more than one build in history?
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Id == buildId));
             foreach (var build in builds)
             {
-                sb.AppendFormat(@"<build id=""999"" status=""{0}"" buildTypeId=""{1}"" /> {2}", build.Status, build.Id, Environment.NewLine);
+                var runningXml = build.IsRunning ? @"running=""true"" percentageComplete=""35""" : "";
+                sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</builds>");
             return sb.ToString();
         }
 
-        public void SetBuildStatus(string buildName, string status)
+        public void SetBuildStatus(string buildName, string status, bool isRunning = false)
         {
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));
             foreach (var build in builds)
             {
                 build.Status = status;
+                build.IsRunning = isRunning;
             }
         }
 
-        public void SetRunningBuild(string buildName)
+        public void RemoveAllBuilds()
         {
-            var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));
-            if (builds.Any())
-                runningBuild = builds.First().Id;
+            foreach (var project in projects)
+            {
+                project.Value.Clear();
+            }
         }
     }
 }
