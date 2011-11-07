@@ -23,6 +23,58 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
         }
 
         [Test]
+        public void should_ignore_leading_spaces_for_projects()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1; ProjectName1:BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+        }
+
+        [Test]
+        public void should_ignore_trailing_spaces_for_projects()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1 :BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+        }
+
+        [Test]
+        public void should_ignore_leading_spaces_for_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1: BuildName2" };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+        }
+
+        [Test]
+        public void should_ignore_trailing_spaces_for_builds()
+        {
+            var connection = new MockTeamCityConnection("ProjectName1:BuildName1;ProjectName1:BuildName2");
+            var configuration = new TeamCityConfiguration { BuildsToMonitor = "ProjectName1:BuildName1;ProjectName1:BuildName2 " };
+            var monitor = new TeamCityMonitor(connection, configuration);
+
+            monitor.BeginMonitoring();
+
+            Assert.That(monitor.MonitoredBuilds.Contains("bt1"));
+            Assert.That(monitor.MonitoredBuilds.Contains("bt2"));
+        }
+
+        [Test]
         public void should_not_fail_if_no_builds_match()
         {
             var connection = new MockTeamCityConnection("ProjectName1:BuildName1");

@@ -23,7 +23,7 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "RUNNING", BuildState.Running },
                                                                   { "ERROR", BuildState.Error },
                                                                   { "FAILURE", BuildState.Failed },
-                                                                  { "SUCCESS", BuildState.Succeeded },
+                                                                  { "SUCCESS", BuildState.Succeeded }
                                                               };
 
         public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityConfiguration configuration)
@@ -67,7 +67,7 @@ namespace Emanate.Core.Input.TeamCity
             var projectValues = configParts.Select(p =>
                                                       {
                                                           var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                                          return new { Project = parts[0], Build = parts[1] };
+                                                          return new { Project = parts[0].Trim(), Build = parts[1].Trim() };
                                                       });
 
             var projectNames = projectValues.Select(pv => pv.Project).Distinct();
