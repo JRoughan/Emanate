@@ -337,13 +337,14 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             var timerField = monitor.GetType().GetField("timer", BindingFlags.NonPublic | BindingFlags.Instance);
             var timer = (Timer)timerField.GetValue(monitor);
             timer.Interval = 1;
-            timerField.SetValue(monitor, timer);
             monitor.BeginMonitoring();
 
             var sw = new Stopwatch();
             sw.Start();
             do { Thread.Sleep(500); }
             while (sw.ElapsedMilliseconds < 5000);
+
+            timer.Enabled = false;
         }
 
         [Test]
