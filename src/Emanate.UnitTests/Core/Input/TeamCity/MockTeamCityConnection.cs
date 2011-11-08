@@ -8,17 +8,17 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 {
     internal class MockTeamCityConnection : ITeamCityConnection
     {
-        private static int projectInstances;
-        private static int buildInstances;
+        private readonly int projectInstances;
+        private int buildInstances;
 
         private readonly Dictionary<ProjectInfo, List<BuildInfo>> projects = new Dictionary<ProjectInfo, List<BuildInfo>>();
 
         class ProjectInfo
         {
-            public ProjectInfo(string name)
+            public ProjectInfo(string name, int id)
             {
                 Name = name;
-                Id = "project" + ++projectInstances;
+                Id = "project" + id;
             }
 
             public string Id { get; private set; }
@@ -43,10 +43,10 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
         class BuildInfo
         {
-            public BuildInfo(string name)
+            public BuildInfo(string name, int id)
             {
                 Name = name;
-                Id = "bt" + ++buildInstances;
+                Id = "bt" + id;
                 Status = "SUCCESS";
             }
 
@@ -84,7 +84,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 var parts = pairPart.Split(new[] { ':' });
 
                 var projectName = parts[0];
-                var projectInfo = projects.Select(kvp => kvp.Key).SingleOrDefault(p => p.Name == projectName) ?? new ProjectInfo(projectName);
+                var projectInfo = projects.Select(kvp => kvp.Key).SingleOrDefault(p => p.Name == projectName) ?? new ProjectInfo(projectName, ++projectInstances);
 
                 List<BuildInfo> builds;
                 if (!projects.TryGetValue(projectInfo, out builds))
@@ -95,7 +95,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
                 var buildNames = parts[1].Split(new[] { ',' });
                 var newBuildNames = buildNames.Except(builds.Select(x => x.Name));
-                builds.AddRange(newBuildNames.Select(b => new BuildInfo(b)));
+                builds.AddRange(newBuildNames.Select(b => new BuildInfo(b, ++buildInstances)));
             }
         }
 
