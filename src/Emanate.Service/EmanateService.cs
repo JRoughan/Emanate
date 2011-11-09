@@ -20,7 +20,7 @@ namespace Emanate.Service
 
         private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)
         {
-            output.UpdateStatus(e.NewState);
+            output.UpdateStatus(e.NewState, e.TimeStamp);
         }
 
         protected override void OnStart(string[] args)

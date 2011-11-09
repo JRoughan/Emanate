@@ -1,3 +1,4 @@
+using System;
 using System.Management;
 using Emanate.Core.Input;
 
@@ -7,6 +8,8 @@ namespace Emanate.Core.Output.DelcomVdi
     {
         private Device device;
         private BuildState lastState;
+        private DateTimeOffset lastUpdateTime;
+        private const int minutesTillFullDim = 24*60; // 1 full day
 
         public DelcomOutput()
         {
@@ -38,10 +41,10 @@ namespace Emanate.Core.Output.DelcomVdi
                     }
                 }
             }
-            UpdateStatus(lastState, true);
+            UpdateStatus(lastState, lastUpdateTime);
         }
 
-        public void UpdateStatus(BuildState state, bool force = false)
+        public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
             lock (device)
             {
@@ -49,21 +52,18 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.Open();
             }
 
-            if (!force && state == lastState)
-                return;
-
             switch (state)
             {
                 case BuildState.Succeeded:
                     device.TurnOff(Color.Red);
-                    device.TurnOn(Color.Green);
                     device.TurnOff(Color.Yellow);
+                    TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:
-                    device.TurnOn(Color.Red);
                     device.TurnOff(Color.Green);
                     device.TurnOff(Color.Yellow);
+                    TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
                     device.StartBuzzer(100, 2, 20, 20);
                     break;
                 case BuildState.Running:
@@ -76,6 +76,21 @@ namespace Emanate.Core.Output.DelcomVdi
                     break;
             }
             lastState = state;
+            lastUpdateTime = timeStamp;
+        }
+
+        private void TurnOnColorWithCustomPowerLevel(Color color, DateTimeOffset timeStamp)
+        {
+            var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
+            if (minutesSinceLastBuild > minutesTillFullDim)
+            {
+                device.TurnOn(color, color.MinPower);
+            }
+            else
+            {
+                var power = color.MaxPower - (minutesSinceLastBuild/minutesTillFullDim) * (color.MaxPower - color.MinPower);
+                device.TurnOn(color, (byte)power);
+            }
         }
     }
 }

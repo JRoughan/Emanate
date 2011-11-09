@@ -75,6 +75,11 @@ namespace Emanate.Core.Output.DelcomVdi
 
         public void TurnOn(Color color)
         {
+            TurnOn(color, color.MaxPower);
+        }
+
+        public void TurnOn(Color color, byte power)
+        {
             if (!IsPresent())
                 return;
 
@@ -82,7 +87,7 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.MinorCmd = 20;
             txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
-            delcom.SendCommand(txCmd);  // always disable the flash mode 
+            delcom.SendCommand(txCmd);  // always disable the flash mode
 
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 12;
@@ -93,7 +98,7 @@ namespace Emanate.Core.Output.DelcomVdi
             txCmd.MajorCmd = 101;
             txCmd.MinorCmd = 34;
             txCmd.LSBData = color.PowerId;
-            txCmd.MSBData = color.PowerLevel;
+            txCmd.MSBData = power;
             delcom.SendCommand(txCmd); // Set the power
         }
 

@@ -647,7 +647,6 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             Assert.AreEqual(1, monitor.MonitoredBuilds.Count());
         }
 
-        [Test]
         public void xxx()
         {
             var input = "20111109T115710+1300";

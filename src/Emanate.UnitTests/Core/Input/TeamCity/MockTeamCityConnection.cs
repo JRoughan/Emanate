@@ -138,7 +138,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             foreach (var build in builds)
             {
                 var runningXml = build.IsRunning ? @"running=""true"" percentageComplete=""35""" : "";
-                sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
+                sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" startDate=""20000101T120000+1300"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</builds>");
             return sb.ToString();
