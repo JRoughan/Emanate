@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -644,6 +645,15 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             monitor.BeginMonitoring();
 
             Assert.AreEqual(1, monitor.MonitoredBuilds.Count());
+        }
+
+        [Test]
+        public void xxx()
+        {
+            var input = "20111109T115710+1300";
+            //var x = DateTimeOffset.Parse(input);
+            var y = DateTimeOffset.ParseExact(input, "yyyyMMdd'T'HHmmsszzz", CultureInfo.InvariantCulture);
+            var z = y.ToLocalTime();
         }
     }
 }

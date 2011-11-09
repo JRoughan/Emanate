@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,6 +13,7 @@ namespace Emanate.Core.Input.TeamCity
     public class TeamCityMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
+        private const string m_teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly TeamCityConfiguration configuration;
@@ -25,6 +27,7 @@ namespace Emanate.Core.Input.TeamCity
                                                                   { "FAILURE", BuildState.Failed },
                                                                   { "SUCCESS", BuildState.Succeeded }
                                                               };
+
 
         public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityConfiguration configuration)
         {
@@ -140,6 +143,7 @@ namespace Emanate.Core.Input.TeamCity
             var newStates = GetNewBuildStates().ToList();
 
             var newState = BuildState.Unknown;
+            var timeStamp = DateTimeOffset.Now;
 
             if (newStates.Any())
             {
@@ -147,18 +151,20 @@ namespace Emanate.Core.Input.TeamCity
                     buildStates[buildState.BuildId] = buildState.State;
 
                 newState = (BuildState)newStates.Max(s => (int)s.State);
+
+                timeStamp = newStates.Max(s => s.TimeStamp);
             }
 
             var oldState = CurrentState;
             CurrentState = newState;
-            OnStatusChanged(oldState, newState);
+            OnStatusChanged(oldState, newState, timeStamp);
         }
 
-        private void OnStatusChanged(BuildState oldState, BuildState newState)
+        private void OnStatusChanged(BuildState oldState, BuildState newState, DateTimeOffset timeStamp)
         {
             var handler = StatusChanged;
             if (handler != null)
-                handler(this, new StatusChangedEventArgs(oldState, newState));
+                handler(this, new StatusChangedEventArgs(oldState, newState, timeStamp));
         }
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
@@ -174,7 +180,8 @@ namespace Emanate.Core.Input.TeamCity
                     var build = new
                                     {
                                         IsRunning = buildXml.Attribute("running") != null,
-                                        Status = buildXml.Attribute("status").Value
+                                        Status = buildXml.Attribute("status").Value,
+                                        TimeStamp = DateTimeOffset.ParseExact(buildXml.Attribute("startDate").Value, m_teamCityDateFormat, CultureInfo.InvariantCulture)
                                     };
 
                     var state = ConvertState(build.Status);
@@ -182,7 +189,7 @@ namespace Emanate.Core.Input.TeamCity
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
 
-                    yield return new BuildInfo {BuildId = buildId, State = state};
+                    yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
                 }
             }
         }
@@ -200,6 +207,7 @@ namespace Emanate.Core.Input.TeamCity
         {
             public string BuildId { get; set; }
             public BuildState State { get; set; }
+            public DateTimeOffset TimeStamp { get; set; }
         }
     }
 }

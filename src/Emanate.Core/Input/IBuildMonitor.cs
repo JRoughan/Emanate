@@ -14,11 +14,13 @@ namespace Emanate.Core.Input
     {
         public BuildState OldState { get; private set; }
         public BuildState NewState { get; private set; }
+        public DateTimeOffset TimeStamp { get; private set; }
 
-        public StatusChangedEventArgs(BuildState oldState, BuildState newState)
+        public StatusChangedEventArgs(BuildState oldState, BuildState newState, DateTimeOffset timeStamp)
         {
             OldState = oldState;
             NewState = newState;
+            TimeStamp = timeStamp;
         }
     }
 }

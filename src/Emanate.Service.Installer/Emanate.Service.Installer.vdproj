@@ -70,12 +70,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FB063D01D81865CD70C539235E9CB3AA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8EE58EF834BA4BE8A19D22C4CCD6C482"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -89,6 +83,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_03882E8D0287DBA3B704BCD7BC0E7BB3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FB063D01D81865CD70C539235E9CB3AA"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -338,7 +338,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4290.23855, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4328.21841, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_FB063D01D81865CD70C539235E9CB3AA"
@@ -432,15 +432,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate"
-        "ProductCode" = "8:{8442C8E0-3202-4851-B78F-CD92A84E5FFC}"
-        "PackageCode" = "8:{20AB5F31-B9DA-4E1D-96EB-3D3009A19358}"
+        "ProductCode" = "8:{5D09DD28-66EC-4A2C-A0AB-CB0D54BC1D64}"
+        "PackageCode" = "8:{9116CE41-E49B-4432-A41C-911FA7555405}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.2"
         "Manufacturer" = "8:JRoughan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
