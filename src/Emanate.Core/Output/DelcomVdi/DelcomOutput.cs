@@ -8,8 +8,9 @@ namespace Emanate.Core.Output.DelcomVdi
     {
         private Device device;
         private BuildState lastState;
+        private BuildState lastCompletedState;
         private DateTimeOffset lastUpdateTime;
-        private const int minutesTillFullDim = 24*60; // 1 full day
+        private const int minutesTillFullDim = 24 * 60; // 1 full day
 
         public DelcomOutput()
         {
@@ -64,12 +65,15 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.TurnOff(Color.Green);
                     device.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
-                    device.StartBuzzer(100, 2, 20, 20);
+                    if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
+                        device.StartBuzzer(100, 2, 20, 20);
                     break;
                 case BuildState.Running:
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Green);
                     device.Flash(Color.Yellow);
+                    if (lastState != BuildState.Running)
+                        lastCompletedState = lastState;
                     break;
                 default:
                     device.Flash(Color.Red);
@@ -88,7 +92,7 @@ namespace Emanate.Core.Output.DelcomVdi
             }
             else
             {
-                var power = color.MaxPower - (minutesSinceLastBuild/minutesTillFullDim) * (color.MaxPower - color.MinPower);
+                var power = color.MaxPower - (minutesSinceLastBuild / minutesTillFullDim) * (color.MaxPower - color.MinPower);
                 device.TurnOn(color, (byte)power);
             }
         }
