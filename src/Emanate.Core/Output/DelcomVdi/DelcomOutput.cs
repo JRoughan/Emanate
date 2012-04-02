@@ -7,7 +7,6 @@ namespace Emanate.Core.Output.DelcomVdi
     public class DelcomOutput : IOutput
     {
         private Device device;
-        private BuildState lastState;
         private BuildState lastCompletedState;
         private DateTimeOffset lastUpdateTime;
         private const int minutesTillFullDim = 24 * 60; // 1 full day
@@ -42,7 +41,7 @@ namespace Emanate.Core.Output.DelcomVdi
                     }
                 }
             }
-            UpdateStatus(lastState, lastUpdateTime);
+            UpdateStatus(lastCompletedState, lastUpdateTime);
         }
 
         public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
@@ -59,6 +58,7 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
+                    lastCompletedState = state;;
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:
@@ -67,19 +67,18 @@ namespace Emanate.Core.Output.DelcomVdi
                     TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
                     if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
                         device.StartBuzzer(100, 2, 20, 20);
+                    lastCompletedState = state;
                     break;
                 case BuildState.Running:
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Green);
                     device.Flash(Color.Yellow);
-                    if (lastState != BuildState.Running)
-                        lastCompletedState = lastState;
                     break;
                 default:
                     device.Flash(Color.Red);
                     break;
             }
-            lastState = state;
+            lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
             lastUpdateTime = timeStamp;
         }
 

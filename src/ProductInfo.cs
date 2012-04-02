@@ -5,4 +5,4 @@
 [assembly: AssemblyCopyright("Copyright © JRoughan 2011")]
 [assembly: AssemblyTrademark("")]
 
-[assembly: AssemblyVersion("0.2.*")]
+[assembly: AssemblyVersion("0.3.*")]

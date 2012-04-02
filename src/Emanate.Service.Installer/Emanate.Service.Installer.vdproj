@@ -338,7 +338,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4328.21841, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Emanate.Core, Version=0.2.4476.21627, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_FB063D01D81865CD70C539235E9CB3AA"
@@ -432,15 +432,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Emanate"
-        "ProductCode" = "8:{5D09DD28-66EC-4A2C-A0AB-CB0D54BC1D64}"
-        "PackageCode" = "8:{9116CE41-E49B-4432-A41C-911FA7555405}"
+        "ProductCode" = "8:{29D1E5D9-8A65-4D24-8385-08FEB4DD5427}"
+        "PackageCode" = "8:{B4A35CF4-4948-45E5-AC91-07EEA86EE550}"
         "UpgradeCode" = "8:{F79BFAA8-1666-4EC4-A60D-AED67A22685C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.2"
+        "ProductVersion" = "8:0.3"
         "Manufacturer" = "8:JRoughan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -973,7 +973,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1963062684824D2A8E97F1558CB077F1"
             {
-            "SourcePath" = "8:..\\Emanate.Service\\obj\\Release\\Emanate.exe"
+            "SourcePath" = "8:..\\Emanate.Service\\obj\\Debug\\Emanate.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
@@ -1001,7 +1001,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8EE58EF834BA4BE8A19D22C4CCD6C482"
             {
-            "SourcePath" = "8:..\\Emanate.Service.Admin\\obj\\Release\\Emanate Administration.exe"
+            "SourcePath" = "8:..\\Emanate.Service.Admin\\obj\\Debug\\Emanate Administration.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C9E8AF70A2A2471EAA69D6BB04C663D1"
