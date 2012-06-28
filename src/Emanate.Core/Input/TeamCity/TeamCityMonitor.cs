@@ -203,6 +203,7 @@ namespace Emanate.Core.Input.TeamCity
             throw new NotSupportedException(string.Format("State '{0}' is not supported.", state));
         }
 
+        [DebuggerDisplay("{BuildId} - {State}")]
         class BuildInfo
         {
             public string BuildId { get; set; }
