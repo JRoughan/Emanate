@@ -54,6 +54,11 @@ namespace Emanate.Core.Output.DelcomVdi
 
             switch (state)
             {
+                case BuildState.Unknown:
+                    device.TurnOn(Color.Red);
+                    device.TurnOn(Color.Green);
+                    device.TurnOff(Color.Yellow);
+                    break;
                 case BuildState.Succeeded:
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Yellow);

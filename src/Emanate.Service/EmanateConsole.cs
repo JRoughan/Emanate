@@ -1,3 +1,4 @@
+using System.Threading;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 
@@ -7,6 +8,7 @@ namespace Emanate.Service
     {
         private readonly IBuildMonitor monitor;
         private readonly IOutput output;
+        private bool isRunning;
 
         public EmanateConsole(IBuildMonitor monitor, IOutput output)
         {
@@ -15,19 +17,23 @@ namespace Emanate.Service
             this.monitor.StatusChanged += MonitorStatusChanged;
         }
 
-        private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)
-        {
-            output.UpdateStatus(e.NewState, e.TimeStamp);
-        }
-
         public void Start()
         {
+            isRunning = true;
             monitor.BeginMonitoring();
+            SpinWait.SpinUntil(() => !isRunning);
         }
 
         public void Stop()
         {
             monitor.EndMonitoring();
+
+            isRunning = false;
+        }
+
+        private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            output.UpdateStatus(e.NewState, e.TimeStamp);
         }
     }
 }
