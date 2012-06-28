@@ -23,6 +23,7 @@ namespace Emanate.Core.Input.TeamCity
         private Dictionary<string, BuildState> buildStates;
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
+                                                                  { "UNKNOWN", BuildState.Unknown },
                                                                   { "RUNNING", BuildState.Running },
                                                                   { "ERROR", BuildState.Error },
                                                                   { "FAILURE", BuildState.Failed },
