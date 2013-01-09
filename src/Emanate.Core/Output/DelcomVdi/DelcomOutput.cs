@@ -76,8 +76,17 @@ namespace Emanate.Core.Output.DelcomVdi
                     break;
                 case BuildState.Running:
                     device.TurnOff(Color.Red);
-                    device.TurnOff(Color.Green);
-                    device.Flash(Color.Yellow);
+
+                    if (lastCompletedState == BuildState.Succeeded)
+                    {
+                        device.TurnOff(Color.Yellow);
+                        device.Flash(Color.Green);
+                    }
+                    else
+                    {
+                        device.TurnOff(Color.Green);
+                        device.Flash(Color.Yellow);
+                    }
                     break;
                 default:
                     device.Flash(Color.Red);
