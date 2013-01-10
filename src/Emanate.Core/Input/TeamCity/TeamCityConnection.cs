@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 
@@ -38,7 +38,12 @@ namespace Emanate.Core.Input.TeamCity
 
         public string GetBuild(string buildId)
         {
-            var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0}),count:1", buildId));
+            return GetBuilds(buildId, 1);
+        }
+
+        public string GetBuilds(string buildId, int count)
+        {
+            var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0}),count:" + count, buildId));
             return Request(resultUri);
         }
 

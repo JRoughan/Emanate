@@ -144,6 +144,22 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             return sb.ToString();
         }
 
+        public string GetBuilds(string buildId, int count)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
+            sb.AppendLine(@"<builds>");
+
+            var builds = projects.SelectMany(p => p.Value.Where(b => b.Id == buildId));
+            foreach (var build in builds)
+            {
+                var runningXml = build.IsRunning ? @"running=""true"" percentageComplete=""35""" : "";
+                sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" startDate=""20000101T120000+1300"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
+            }
+            sb.AppendLine(@"</builds>");
+            return sb.ToString();
+        }
+
         public void SetBuildStatus(string buildName, string status, bool isRunning = false)
         {
             var builds = projects.SelectMany(p => p.Value.Where(b => b.Name == buildName));

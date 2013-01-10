@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -21,6 +21,7 @@ namespace Emanate.Core.Input.TeamCity
         private bool isInitialized;
         private readonly Timer timer;
         private Dictionary<string, BuildState> buildStates;
+        private Dictionary<string, string> lastRunningBuildIds = new Dictionary<string,string>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "UNKNOWN", BuildState.Unknown },
@@ -117,6 +118,8 @@ namespace Emanate.Core.Input.TeamCity
             }
 
             UpdateBuildStates();
+            // Run twice on startup, because if any builds are running we need two passes to get last and current state
+            UpdateBuildStates();
             timer.Start();
         }
 
@@ -171,14 +174,41 @@ namespace Emanate.Core.Input.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates()
         {
-            foreach (var buildId in buildStates.Keys)
+            foreach (var buildConfigId in buildStates.Keys)
             {
-                var resultXml = teamCityConnection.GetBuild(buildId);
+                var resultXml = teamCityConnection.GetBuilds(buildConfigId, 2);
 
                 var resultRoot = XElement.Parse(resultXml);
-                var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
+                var builds = resultRoot.Elements("build");
+                var buildXml = builds.FirstOrDefault(); // Need to check for null in case build no longer exists
                 if (buildXml != null)
                 {
+                    if (buildXml.Attribute("running") != null)
+                    {
+                        string currentRunningBuildId = buildXml.Attribute("id").Value;
+                        if (!lastRunningBuildIds.ContainsKey(buildConfigId) 
+                            || (!String.IsNullOrEmpty(lastRunningBuildIds[buildConfigId]) && lastRunningBuildIds[buildConfigId] != currentRunningBuildId))
+                        {
+                            // We missed the point where the last build ended, so find that build if possible
+                            var list = builds.ToList();
+                            if (list.Count > 1)
+                            {
+                                var previousBuildXML = list[1];
+                                if (previousBuildXML != null)
+                                    buildXml = previousBuildXML;
+                            }
+                            lastRunningBuildIds[buildConfigId] = "";
+                        }
+                        else
+                        {
+                            lastRunningBuildIds[buildConfigId] = currentRunningBuildId;
+                        }
+                    }
+                    else
+                    {
+                        lastRunningBuildIds[buildConfigId] = "";
+                    }
+                    
                     var build = new
                                     {
                                         IsRunning = buildXml.Attribute("running") != null,
@@ -191,7 +221,7 @@ namespace Emanate.Core.Input.TeamCity
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
 
-                    yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
+                    yield return new BuildInfo { BuildId = buildConfigId, State = state, TimeStamp = build.TimeStamp};
                 }
             }
         }

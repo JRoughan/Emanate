@@ -5,5 +5,6 @@ namespace Emanate.Core.Input.TeamCity
         string GetProjects();
         string GetProject(string projectId);
         string GetBuild(string buildId);
+        string GetBuilds(string buildId, int count);
     }
 }
