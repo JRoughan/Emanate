@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Emanate.TeamCity.Configuration.ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:configuration="clr-namespace:Emanate.TeamCity.Configuration"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance configuration:ConfigurationViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width=".5*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Uri" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Uri}"></TextBox>
+
+        <CheckBox Grid.Row="1" Grid.Column="0" Content="Requires Authentication" IsChecked="{Binding RequiresAuthentication}" />
+
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" IsEnabled="{Binding RequiresAuthentication}" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*" />
+                    <ColumnDefinition Width=".5*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="UserName" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserName}"></TextBox>
+                <Label Grid.Row="1" Grid.Column="0" Content="Password" />
+                <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="PasswordInput"></PasswordBox>
+            </Grid>
+        </GroupBox>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Polling Interval" />
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding PollingInterval}"></TextBox>
+
+    </Grid>
+</UserControl>

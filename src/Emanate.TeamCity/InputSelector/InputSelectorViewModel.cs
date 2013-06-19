@@ -10,8 +10,8 @@ namespace Emanate.TeamCity.InputSelector
             var project = new ProjectViewModel();
             project.Id = "MyProjectId";
             project.Name = "MyProjectName";
-            project.Configurations.Add(new ConfigurationViewModel { Id = "MyConfigId", Name = "MyConfigName" });
-            project.Configurations.Add(new ConfigurationViewModel { Id = "MyConfigId2", Name = "MyConfigName2" });
+            project.Configurations.Add(new ProjectConfigurationViewModel { Id = "MyConfigId", Name = "MyConfigName" });
+            project.Configurations.Add(new ProjectConfigurationViewModel { Id = "MyConfigId2", Name = "MyConfigName2" });
             Projects.Add(project);
         }
 

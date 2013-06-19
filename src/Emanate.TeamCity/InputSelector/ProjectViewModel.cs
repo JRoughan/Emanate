@@ -28,8 +28,8 @@ namespace Emanate.TeamCity.InputSelector
             }
         }
 
-        private ObservableCollection<ConfigurationViewModel> configurations = new ObservableCollection<ConfigurationViewModel>();
-        public ObservableCollection<ConfigurationViewModel> Configurations
+        private ObservableCollection<ProjectConfigurationViewModel> configurations = new ObservableCollection<ProjectConfigurationViewModel>();
+        public ObservableCollection<ProjectConfigurationViewModel> Configurations
         {
             get { return configurations; }
             set { configurations = value; OnPropertyChanged("Configurations"); }

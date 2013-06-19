@@ -2,7 +2,7 @@ using Emanate.Core;
 
 namespace Emanate.TeamCity.InputSelector
 {
-    public class ConfigurationViewModel : ViewModel
+    public class ProjectConfigurationViewModel : ViewModel
     {
         public string Id { get; set; }
 

@@ -6,9 +6,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
         d:DataContext="{d:DesignInstance admin:MainWindowViewModel}"
-        Title="Emanate Admin" Height="600" Width="800">
+        Title="Emanate Admin" Height="400" Width="600">
     <Window.Resources>
-        
+
         <DataTemplate DataType="{x:Type admin:ConfigurationInfo}">
             <TextBlock Text="{Binding Name}" />
         </DataTemplate>
@@ -55,17 +55,27 @@
 
     </Window.Resources>
     <DockPanel>
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Right">
-            <admin:ServiceAdminView DockPanel.Dock="Top" Height="32" Width="64" />
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border SnapsToDevicePixels="True">
+                <admin:ServiceAdminView Height="32" Width="64"  />
+            </Border>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
+                <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10" />
+                <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10" />
+            </StackPanel>
         </Grid>
-        <!--<ListView DockPanel.Dock="Left" x:Name="configInfos" ItemsSource="{Binding ConfigurationInfos}" Padding="5" />-->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
-            <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10" />
-            <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10" />
-        </StackPanel>
-        <ContentPresenter Content="{Binding InputSelector}" />
-        <!--<ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" 
+        <TabControl>
+            <TabItem Header="Settings">
+
+                <!--<ListView DockPanel.Dock="Left" x:Name="configInfos" ItemsSource="{Binding ConfigurationInfos}" Padding="5" />-->
+
+                <ContentPresenter Content="{Binding InputSelector}" />
+                <!--<ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" 
                       ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
                       Padding="5">
             <ItemsControl.ItemsPanel>
@@ -74,6 +84,16 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>-->
-        
+
+            </TabItem>
+            <TabItem Header="Configuration">
+                <DockPanel>
+                    <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" Margin="5" DisplayMemberPath="Name" />
+                    <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem}" />
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+
     </DockPanel>
+
 </Window>

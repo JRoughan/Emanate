@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using Emanate.Core;
 
@@ -40,16 +41,16 @@ namespace Emanate.Service.Admin
             }
         }
 
-        //private ObservableCollection<ConfigurationInfo> configurationInfos;
-        //public ObservableCollection<ConfigurationInfo> ConfigurationInfos
-        //{
-        //    get { return configurationInfos; }
-        //    private set
-        //    {
-        //        configurationInfos = value;
-        //        OnPropertyChanged("ConfigurationInfos");
-        //    }
-        //}
+        private ObservableCollection<UserControl> configurations = new ObservableCollection<UserControl>();
+        public ObservableCollection<UserControl> Configurations
+        {
+            get { return configurations; }
+            private set
+            {
+                configurations = value;
+                OnPropertyChanged("Configurations");
+            }
+        }
 
         
         private readonly DelegateCommand saveCommand;
