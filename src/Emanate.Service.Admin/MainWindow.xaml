@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
         d:DataContext="{d:DesignInstance admin:MainWindowViewModel}"
-        Title="Emanate Admin" Height="400" Width="600">
+        Title="Emanate Admin" Height="600" Width="800">
     <DockPanel>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
@@ -14,7 +14,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Border SnapsToDevicePixels="True">
-                <admin:ServiceAdminView Height="32" Width="64"  />
+                <admin:ServiceAdminView Height="32" Width="64" Margin="20,0"  />
             </Border>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
@@ -23,32 +23,26 @@
             </StackPanel>
         </Grid>
         <TabControl>
-            <TabItem Header="Settings">
-
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Settings" FontSize="18" />
+                </TabItem.Header>
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="DeviceSelector" ItemsSource="{Binding ActiveDevices}" MinWidth="120" DisplayMemberPath="Name" />
                     <ContentPresenter Content="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelector}" />
                 </DockPanel>
-                
-                <!--<ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" 
-                      ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
-                      Padding="5">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel ScrollViewer.VerticalScrollBarVisibility="Auto" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>-->
-
             </TabItem>
-            <TabItem Header="Configuration">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Configuration" FontSize="18" />
+                </TabItem.Header>
                 <DockPanel>
-                    <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" Margin="5" DisplayMemberPath="Name" />
-                    <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem.Gui}" />
+                    <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name" />
+                    <Border Margin="10">
+                        <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem.Gui}" Margin="5"  />
+                    </Border>
                 </DockPanel>
             </TabItem>
         </TabControl>
-
     </DockPanel>
-
 </Window>
