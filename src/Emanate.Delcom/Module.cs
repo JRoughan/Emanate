@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 using Emanate.Core.Output;
+using Emanate.Delcom.Configuration;
 
 namespace Emanate.Delcom
 {
@@ -10,6 +12,8 @@ namespace Emanate.Delcom
         {
             builder.RegisterType<DelcomOutput>().As<IOutput>();
             builder.RegisterType<DelcomDevice>().As<IOutputDevice>();
+            builder.RegisterType<ConfigurationView>();
+            builder.RegisterType<DelcomConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();
         }
     }
 }

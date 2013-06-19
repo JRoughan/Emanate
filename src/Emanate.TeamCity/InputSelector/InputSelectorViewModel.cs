@@ -48,5 +48,10 @@ namespace Emanate.TeamCity.InputSelector
             get { return projects; }
             set { projects = value; OnPropertyChanged("Projects"); }
         }
+
+        //public XElement ToXml()
+        //{
+            
+        //}
     }
 }

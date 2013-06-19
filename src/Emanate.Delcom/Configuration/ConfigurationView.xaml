@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Emanate.Delcom.Configuration.ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:configuration="clr-namespace:Emanate.Delcom.Configuration"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance configuration:DelcomConfiguration}">
+    <DockPanel IsEnabled="{Binding IsEditable}">
+        <ListView DockPanel.Dock="Left" x:Name="ProfileSelector" ItemsSource="{Binding Profiles}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="States">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="State" />
+                        <Label Grid.Column="1" Content="Green" />
+                        <Label Grid.Column="2" Content="Yellow" />
+                        <Label Grid.Column="3" Content="Red" />
+                        <Label Grid.Column="4" Content="Flash" />
+                    </Grid>
+                    <ListView ItemsSource="{Binding ElementName=ProfileSelector, Path=SelectedItem.States}" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="60" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}"></Label>
+                                    <CheckBox Grid.Row="0" Grid.Column="1" Content="" IsChecked="{Binding Green}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="2" Content="" IsChecked="{Binding Yellow}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="3" Content="" IsChecked="{Binding Red}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="4" Content="" IsChecked="{Binding Flash}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</UserControl>
