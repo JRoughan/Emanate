@@ -34,6 +34,7 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.2.5.2.830\lib\NET40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -45,6 +46,7 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\IModuleConfiguration.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\BuildState.cs" />
     <Compile Include="IModule.cs" />

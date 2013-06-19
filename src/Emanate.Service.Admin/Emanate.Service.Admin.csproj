@@ -80,7 +80,6 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="InputOutpotStorer.cs" />
-    <Compile Include="DelegateCommand.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>

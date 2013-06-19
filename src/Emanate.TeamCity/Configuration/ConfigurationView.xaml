@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance configuration:TeamCityConfiguration}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid IsEnabled="{Binding IsEditable}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".5*" />
             <ColumnDefinition Width=".5*" />
@@ -17,6 +17,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Uri" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Uri}"></TextBox>
@@ -43,5 +45,20 @@
         <Label Grid.Row="3" Grid.Column="0" Content="Polling Interval" />
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding PollingInterval}"></TextBox>
 
+        <Button Grid.Row="4" Grid.ColumnSpan="2" Content="Test Connection" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Image Grid.Row="5" Grid.ColumnSpan="2" >
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsTestSuccessful}" Value="true">
+                            <Setter Property="Source" Value="..\Images\success.png" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsTestSuccessful}" Value="false">
+                            <Setter Property="Source" Value="..\Images\failure.png" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
     </Grid>
 </UserControl>

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Windows.Input;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 
 namespace Emanate.TeamCity.Configuration
 {
+    // TODO: Split this into a config class and a VM
     public class TeamCityConfiguration : ViewModel, IModuleConfiguration
     {
         private const string key = "teamcity";
@@ -13,6 +15,12 @@ namespace Emanate.TeamCity.Configuration
         string IModuleConfiguration.Key { get { return key; } }
         string IModuleConfiguration.Name { get { return name; } }
         Type IModuleConfiguration.GuiType { get { return typeof(ConfigurationView); } }
+
+        public TeamCityConfiguration()
+        {
+            TestConnectionCommand = new DelegateCommand(TestConnection, CanTestConnection);
+            IsEditable = true;
+        }
 
         public string uri;
         public string Uri
@@ -57,6 +65,8 @@ namespace Emanate.TeamCity.Configuration
 
         public XElement ToXml()
         {
+            IsEditable = false;
+
             var element = new XElement(key);
             element.Add(new XElement("uri", Uri));
             element.Add(new XElement("polling-interval", PollingInterval));
@@ -64,11 +74,15 @@ namespace Emanate.TeamCity.Configuration
             element.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
             element.Add(new XElement("password", RequiresAuthentication ? Password : "")); // TODO: Encrypt password
 
+            IsEditable = true;
+
             return element;
         }
 
         public void FromXml(XElement element)
         {
+            IsEditable = false;
+
             // TODO
             //if (element.Name != key)
             //    throw new ArgumentException("Cannot load non-TeamCity configuration");
@@ -82,19 +96,53 @@ namespace Emanate.TeamCity.Configuration
                 UserName = element.Element("username").Value;
                 Password = element.Element("password").Value;
             }
+
+            IsEditable = true;
+        }
+
+
+        
+        public ICommand TestConnectionCommand { get; set; }
+
+        private bool isTesting;
+        private bool CanTestConnection()
+        {
+            return !isTesting;
+        }
+
+        private void TestConnection()
+        {
+            isTesting = true;
+            IsEditable = false;
+            IsTestSuccessful = null;
+            var connection = new TeamCityConnection(this);
+            try
+            {
+                IsTestSuccessful = connection.GetProjects() != null;
+            }
+            catch (Exception)
+            {
+                IsTestSuccessful = false;
+            }
+            finally
+            {
+                isTesting = false;
+                IsEditable = true;
+            }
+        }
+
+        private bool isEditable;
+        public bool IsEditable
+        {
+            get { return isEditable; }
+            set { isEditable = value; OnPropertyChanged("IsEditable"); }
+        }
+
+        private bool? isTestSuccessful;
+        public bool? IsTestSuccessful
+        {
+            get { return isTestSuccessful; }
+            set { isTestSuccessful = value; OnPropertyChanged("IsTestSuccessful"); }
         }
     }
 }
-
-//<?xml version="1.0" encoding="utf-8" ?>
-//<emanate>
-//  <modules>
-//    <teamcity>
-//      <uri>http://teamcity</uri>
-//      <requires-authentication>true</requires-authentication>
-//      <username>TFSBuild</username>
-//      <password>&lt;sysadm1n&gt;</password>
-//      <polling-interval>30</polling-interval>
-//    </teamcity>
-//  </modules>
-//</emanate>
