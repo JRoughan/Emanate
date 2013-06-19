@@ -1,11 +1,11 @@
 ﻿<Window x:Class="Emanate.Service.Admin.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Admin="clr-namespace:Emanate.Service.Admin"
+        xmlns:admin="clr-namespace:Emanate.Service.Admin"
         Title="Emanate Admin" Height="350" Width="525">
     <Window.Resources>
         
-        <DataTemplate DataType="{x:Type Admin:ConfigurationInfo}">
+        <DataTemplate DataType="{x:Type admin:ConfigurationInfo}">
             <TextBlock Text="{Binding Name}" />
         </DataTemplate>
 
@@ -44,21 +44,18 @@
             </Grid>
         </DataTemplate>
 
-        <Admin:PropertyTemplateSelector x:Key="propertyTemplateSelector"
+        <admin:PropertyTemplateSelector x:Key="propertyTemplateSelector"
             StringTemplate="{StaticResource stringTemplate}"
             IntegerTemplate="{StaticResource integerTemplate}"
             BooleanTemplate="{StaticResource booleanTemplate}" />
 
     </Window.Resources>
     <DockPanel>
-        <ToolBar DockPanel.Dock="Top">
-            <Button Content="Start" Command="{Binding StartCommand}" />
-            <Button Content="Stop" Command="{Binding StopCommand}" />
-            <Button Content="Restart"  Command="{Binding RestartCommand}" />
-        </ToolBar>
+        <Grid DockPanel.Dock="Top" HorizontalAlignment="Right">
+            <admin:ServiceAdminView DockPanel.Dock="Top" Height="32" Width="64" />
+        </Grid>
         <ListView DockPanel.Dock="Left" x:Name="configInfos" ItemsSource="{Binding ConfigurationInfos}" Padding="5" />
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock Text="{Binding Status}" />
             <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />
             <Button Content="Cancel" Command="{Binding CancelCommand}"  Margin="10" Padding="10" />
             <Button Content="Apply" Command="{Binding ApplyCommand}" Margin="10" Padding="10" />

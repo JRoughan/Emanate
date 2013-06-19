@@ -75,6 +75,11 @@
     </Compile>
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="PropertyTemplateSelector.cs" />
+    <Compile Include="ServiceAdminView.xaml.cs">
+      <DependentUpon>ServiceAdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceAdminViewModel.cs" />
+    <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -89,6 +94,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ServiceAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowViewModel.cs" />
@@ -126,6 +135,14 @@
     <Resource Include="..\..\resources\Emanate.ico">
       <Link>Emanate.ico</Link>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\restart.png" />
+    <Resource Include="Images\start.png" />
+    <Resource Include="Images\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

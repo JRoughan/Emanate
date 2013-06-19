@@ -4,9 +4,6 @@ using System.Windows.Controls;
 
 namespace Emanate.Service.Admin
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow
     {
         private readonly MainWindowViewModel viewModel;
