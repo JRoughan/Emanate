@@ -2,7 +2,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {    
     internal sealed partial class Hid  
     {         

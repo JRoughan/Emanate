@@ -3,7 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using Emanate.Core.Input;
-using Emanate.Core.Input.TeamCity;
+using Emanate.TeamCity;
 using NUnit.Framework;
 
 namespace Emanate.IntegrationTests.Core.Input

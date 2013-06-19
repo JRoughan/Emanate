@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Timers;
 using Emanate.Core.Input;
-using Emanate.Core.Input.TeamCity;
+using Emanate.TeamCity;
 using Moq;
 using NUnit.Framework;
 using Timer = System.Timers.Timer;

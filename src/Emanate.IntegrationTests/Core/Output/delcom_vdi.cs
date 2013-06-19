@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using Emanate.Core.Output.DelcomVdi;
+using Emanate.Delcom;
 using NUnit.Framework;
 
 namespace Emanate.IntegrationTests.Core.Output

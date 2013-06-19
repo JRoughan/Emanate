@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Emanate.Core.Input.TeamCity;
+using Emanate.TeamCity;
 
 namespace Emanate.UnitTests.Core.Input.TeamCity
 {

@@ -1,9 +1,8 @@
 ﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Output;
-using Emanate.Core.Output.DelcomVdi;
 
-namespace Emanate.TeamCity
+namespace Emanate.Delcom
 {
     public class Module : IModule
     {

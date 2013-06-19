@@ -1,8 +1,9 @@
 using System;
 using System.Management;
 using Emanate.Core.Input;
+using Emanate.Core.Output;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {
     public class DelcomOutput : IOutput
     {
@@ -63,7 +64,7 @@ namespace Emanate.Core.Output.DelcomVdi
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
-                    lastCompletedState = state;;
+                    lastCompletedState = state;
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:

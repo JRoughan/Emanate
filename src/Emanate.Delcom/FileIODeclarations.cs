@@ -2,7 +2,7 @@ using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {   
     internal sealed class FileIO  
     {

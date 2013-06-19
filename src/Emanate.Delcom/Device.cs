@@ -1,6 +1,6 @@
 using System;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {
     class Device : IDisposable
     {

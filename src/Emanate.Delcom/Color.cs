@@ -1,4 +1,4 @@
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {
     class Color
     {

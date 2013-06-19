@@ -2,7 +2,6 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Core.Input.TeamCity;
 
 namespace Emanate.TeamCity
 {

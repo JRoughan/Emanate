@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace Emanate.Core.Input.TeamCity
+namespace Emanate.TeamCity
 {
     public class TeamCityConnection : ITeamCityConnection
     {

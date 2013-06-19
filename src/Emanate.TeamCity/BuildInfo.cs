@@ -1,4 +1,4 @@
-namespace Emanate.Core.Input.TeamCity
+namespace Emanate.TeamCity
 {
     internal class BuildInfo
     {

@@ -7,9 +7,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
+using Emanate.Core.Input;
 using Timer = System.Timers.Timer;
 
-namespace Emanate.Core.Input.TeamCity
+namespace Emanate.TeamCity
 {
     public class TeamCityMonitor : IBuildMonitor
     {

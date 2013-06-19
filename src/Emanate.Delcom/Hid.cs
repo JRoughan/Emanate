@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {    
     internal sealed partial class Hid  
     {

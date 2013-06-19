@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Emanate.Core.Output.DelcomVdi
+namespace Emanate.Delcom
 {
 	sealed internal partial class DeviceManager
 	{
