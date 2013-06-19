@@ -14,21 +14,26 @@ namespace Emanate.Service.Admin
     {
         private readonly IComponentContext componentContext;
         private readonly IEnumerable<IModuleConfiguration> moduleConfigurations;
+        private readonly IEnumerable<IOutputDevice> outputDevices;
         private static string configFilePath;
 
-        public PluginConfigurationStorer(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations)
+        public PluginConfigurationStorer(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations, IEnumerable<IOutputDevice> outputDevices)
         {
             this.componentContext = componentContext;
             this.moduleConfigurations = moduleConfigurations;
+            this.outputDevices = outputDevices;
         }
 
-        public IEnumerable<ConfigurationInfo> Load()
+        public Foo Load()
         {
+            var foo = new Foo();
+
             var configDoc = GetServiceConfiguration();
 
             var rootNode = configDoc.Element("emanate");
-            var modules = rootNode.Element("modules");
 
+            // Modules
+            var modules = rootNode.Element("modules");
             foreach (var moduleElement in modules.Elements())
             {
                 var name = moduleElement.Name.LocalName;
@@ -41,11 +46,28 @@ namespace Emanate.Service.Admin
             {
                 var gui = componentContext.Resolve(moduleConfig.GuiType) as UserControl;
                 gui.DataContext = moduleConfig;
-                yield return new ConfigurationInfo(moduleConfig.Name, gui, moduleConfig);
+                foo.ModuleConfigurations.Add(new ConfigurationInfo(moduleConfig.Name, gui, moduleConfig));
             }
+
+            // Output devices
+            var devices = rootNode.Element("output-devices");
+            foreach (var moduleElement in devices.Elements())
+            {
+                var name = moduleElement.Name.LocalName;
+                var config = outputDevices.FirstOrDefault(c => c.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+                if (config != null)
+                    config.FromXml(moduleElement);
+            }
+
+            foreach (var device in outputDevices)
+            {
+                foo.OutputDevices.Add(device);
+            }
+
+            return foo;
         }
 
-        public void Save(IEnumerable<ConfigurationInfo> configurations)
+        public void Save(Foo foo)
         {
             if (configFilePath == null)
                 throw new InvalidOperationException("Cannot save configuration before it's been loaded");
@@ -56,7 +78,7 @@ namespace Emanate.Service.Admin
             var modulesElement = new XElement("modules");
             rootElement.Add(modulesElement);
 
-            foreach (var configurationInfo in configurations)
+            foreach (var configurationInfo in foo.ModuleConfigurations)
             {
                 var configuration = configurationInfo.ModuleConfiguration;
                 var xml = configuration.ToXml();

@@ -6,9 +6,9 @@ namespace Emanate.TeamCity.InputSelector
     {
         private readonly InputSelectorViewModel viewModel;
 
-        public InputSelectorView()
+        public InputSelectorView(InputSelectorViewModel inputSelectorViewModel)
         {
-            DataContext = viewModel = new InputSelectorViewModel();
+            DataContext = viewModel = inputSelectorViewModel;
             Initialized += ViewInitialized;
             InitializeComponent();
         }

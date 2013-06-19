@@ -8,6 +8,7 @@ namespace Emanate.Service.Admin
     public class MainWindowViewModel : ViewModel
     {
         private readonly PluginConfigurationStorer pluginConfigurationStorer;
+        private Foo foo;
 
         public MainWindowViewModel(PluginConfigurationStorer pluginConfigurationStorer)
         {
@@ -23,7 +24,8 @@ namespace Emanate.Service.Admin
 
         public override void Initialize()
         {
-            foreach (var plugin in pluginConfigurationStorer.Load())
+            foo = pluginConfigurationStorer.Load();
+            foreach (var plugin in foo.ModuleConfigurations)
             {
                 Configurations.Add(plugin);
             }
@@ -66,7 +68,9 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            pluginConfigurationStorer.Save(Configurations);
+            foo.ModuleConfigurations.Clear();
+            foo.ModuleConfigurations.AddRange(Configurations);
+            pluginConfigurationStorer.Save(foo);
         }
 
         private bool CanFindServiceConfiguration()

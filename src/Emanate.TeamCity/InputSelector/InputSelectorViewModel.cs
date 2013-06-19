@@ -3,10 +3,18 @@ using Emanate.Core;
 
 namespace Emanate.TeamCity.InputSelector
 {
-    class InputSelectorViewModel : ViewModel
+    public class InputSelectorViewModel : ViewModel
     {
+        private readonly ITeamCityConnection connection;
+
+        public InputSelectorViewModel(ITeamCityConnection connection)
+        {
+            this.connection = connection;
+        }
+
         public override void Initialize()
         {
+            //connection.GetProjects();
             var project = new ProjectViewModel();
             project.Id = "MyProjectId";
             project.Name = "MyProjectName";
