@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Emanate.Core;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity.InputSelector
 {
     class InputSelectorViewModel : ViewModel
     {

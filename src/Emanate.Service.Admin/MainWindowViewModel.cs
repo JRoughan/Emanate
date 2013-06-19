@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using Emanate.Core;
-using Emanate.TeamCity;
 
 namespace Emanate.Service.Admin
 {
     class MainWindowViewModel : ViewModel
     {
-        private readonly PluginConfigurationStorer pluginConfigurationStorer;
+        //private readonly PluginConfigurationStorer pluginConfigurationStorer;
 
         public MainWindowViewModel()
         {
@@ -16,8 +14,7 @@ namespace Emanate.Service.Admin
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
-            pluginConfigurationStorer = new PluginConfigurationStorer();
-            InputSelector = new InputSelector();
+            //pluginConfigurationStorer = new PluginConfigurationStorer();
             //ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
         }
 
