@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using Emanate.Core.Configuration;
@@ -26,22 +27,10 @@ namespace Emanate.Service.Admin
             Name = name;
             OutputDevice = outputDevice;
             InputSelector = inputSelector;
-            Inputs = new ObservableCollection<InputInfo>();
         }
 
         public string Name { get; private set; }
         public IOutputDevice OutputDevice { get; set; }
         public UserControl InputSelector { get; set; }
-        public ObservableCollection<InputInfo> Inputs { get; set; }
-    }
-
-    public class InputInfo
-    {
-        public InputInfo(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { get; private set; }
     }
 }

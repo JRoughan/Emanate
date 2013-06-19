@@ -42,7 +42,6 @@ namespace Emanate.Delcom.Configuration
                 profileElement.Add(new XAttribute("name", profile.Name));
                 profileElement.Add(new XElement("decay", profile.Decay));
 
-
                 foreach (var state in profile.States)
                 {
                     var stateElement = new XElement("state");

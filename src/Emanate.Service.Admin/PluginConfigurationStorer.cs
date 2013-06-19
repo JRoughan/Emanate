@@ -15,14 +15,12 @@ namespace Emanate.Service.Admin
     {
         private readonly IComponentContext componentContext;
         private readonly IEnumerable<IModuleConfiguration> moduleConfigurations;
-        private readonly IEnumerable<IOutputDevice> outputDevices;
         private static string configFilePath;
 
-        public PluginConfigurationStorer(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations, IEnumerable<IOutputDevice> outputDevices)
+        public PluginConfigurationStorer(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations)
         {
             this.componentContext = componentContext;
             this.moduleConfigurations = moduleConfigurations;
-            this.outputDevices = outputDevices;
         }
 
         public TotalConfig Load()
@@ -52,19 +50,21 @@ namespace Emanate.Service.Admin
 
             // Output devices
             var devices = rootNode.Element("output-devices");
-            foreach (var moduleElement in devices.Elements())
+            foreach (var deviceElement in devices.Elements())
             {
-                var name = moduleElement.Name.LocalName;
-                var device = outputDevices.FirstOrDefault(c => c.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
-                if (device != null)
-                    device.FromXml(moduleElement);
-            }
+                var name = deviceElement.Name.LocalName;
+                var device = componentContext.ResolveKeyed<IOutputDevice>(name);
+                device.FromXml(deviceElement);
 
-            foreach (var device in outputDevices)
-            {
-                //container.ResolveKeyed<UserControl>("TeamCity-InputSelector")
-                var inputSelector = componentContext.ResolveKeyed<UserControl>(device.Input + "-InputSelector");
-                foo.OutputDevices.Add(new OutputDeviceInfo(device.Name, device, inputSelector));
+                //foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
+                //{
+
+                    
+                //}
+
+                var inputSelector = componentContext.ResolveKeyed<UserControl>("teamcity" + "-InputSelector");
+                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device, inputSelector);
+                foo.OutputDevices.Add(outputDeviceInfo);
             }
 
             return foo;
@@ -78,15 +78,28 @@ namespace Emanate.Service.Admin
             var configDoc = new XDocument();
             var rootElement = new XElement("emanate");
             configDoc.Add(rootElement);
-            var modulesElement = new XElement("modules");
-            rootElement.Add(modulesElement);
 
+
+            // Modules
+            var modulesElement = new XElement("modules");
             foreach (var configurationInfo in totalConfig.ModuleConfigurations)
             {
                 var configuration = configurationInfo.ModuleConfiguration;
                 var xml = configuration.ToXml();
                 modulesElement.Add(xml);
             }
+            rootElement.Add(modulesElement);
+
+            // Output devices
+            var devicesElement = new XElement("output-devices");
+
+            foreach (var deviceInfo in totalConfig.OutputDevices)
+            {
+                var device = deviceInfo.OutputDevice;
+                var xml = device.ToXml();
+                devicesElement.Add(xml);
+            }
+            rootElement.Add(devicesElement);
 
             configDoc.Save(configFilePath);
         }

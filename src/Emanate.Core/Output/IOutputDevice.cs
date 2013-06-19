@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Emanate.Core.Output
@@ -10,9 +11,16 @@ namespace Emanate.Core.Output
 
         Type DeviceType { get; }
 
-        string Input { get; }
+        List<Input> Inputs { get; }
 
         XElement ToXml();
         void FromXml(XElement element);
+    }
+
+    public class Input
+    {
+        public string Source { get; set; }
+        public string Id { get; set; }
+        public string Profile { get; set; }
     }
 }

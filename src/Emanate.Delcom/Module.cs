@@ -11,7 +11,7 @@ namespace Emanate.Delcom
         public void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DelcomOutput>().As<IOutput>();
-            builder.RegisterType<DelcomDevice>().As<IOutputDevice>();
+            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>("delcom");
             builder.RegisterType<ConfigurationView>();
             builder.RegisterType<DelcomConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();
         }

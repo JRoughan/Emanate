@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using Emanate.Core;
-using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
@@ -12,17 +9,13 @@ namespace Emanate.Service.Admin
         private readonly PluginConfigurationStorer pluginConfigurationStorer;
         private TotalConfig totalConfig;
 
-        public MainWindowViewModel(PluginConfigurationStorer pluginConfigurationStorer, IEnumerable<IOutputDevice> outputDevices)
+        public MainWindowViewModel(PluginConfigurationStorer pluginConfigurationStorer)
         {
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
             this.pluginConfigurationStorer = pluginConfigurationStorer;
-            foreach (var outputDevice in outputDevices)
-            {
-                AvailableDevices.Add(outputDevice);
-            }
         }
 
         public event EventHandler CloseRequested;
@@ -50,17 +43,6 @@ namespace Emanate.Service.Admin
             {
                 configurations = value;
                 OnPropertyChanged("Configurations");
-            }
-        }
-
-        private ObservableCollection<IOutputDevice> availableDevices = new ObservableCollection<IOutputDevice>();
-        public ObservableCollection<IOutputDevice> AvailableDevices
-        {
-            get { return availableDevices; }
-            private set
-            {
-                availableDevices = value;
-                OnPropertyChanged("AvailableDevices");
             }
         }
 

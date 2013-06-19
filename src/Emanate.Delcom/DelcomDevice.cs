@@ -8,19 +8,37 @@ namespace Emanate.Delcom
     class DelcomDevice : IOutputDevice
     {
         private const string key = "delcom";
-        private const string name = "Delcom";
+        private const string defaultName = "Delcom";
 
         string IOutputDevice.Key { get { return key; } }
-        string IOutputDevice.Name { get { return name; } }
+
+        private string name;
+        public string Name { get { return name ?? defaultName; } }
+
+        public DelcomDevice()
+        {
+            Inputs = new List<Input>();
+        }
 
         public Type DeviceType { get { return typeof(Device); } }
 
-        public string Input { get; set; }
+        public List<Input> Inputs { get; private set; }
 
         public XElement ToXml()
         {
-            return null;
-            //throw new NotImplementedException();
+            var deviceElement = new XElement(key);
+            deviceElement.Add(new XElement("name", Name));
+            var inputsElement = new XElement("inputs");
+            foreach (var input in Inputs)
+            {
+                var inputElement = new XElement("input");
+                inputElement.Add(new XAttribute("source", input.Source));
+                inputElement.Add(new XAttribute("id", input.Id));
+                inputElement.Add(new XAttribute("profile", input.Profile));
+                inputsElement.Add(inputElement);
+            }
+            deviceElement.Add(inputsElement);
+            return deviceElement;
         }
 
         public void FromXml(XElement element)
@@ -30,10 +48,15 @@ namespace Emanate.Delcom
             //    throw new ArgumentException("Cannot load non-TeamCity configuration");
 
             // TODO: Error handling
-            var inputs = element.Element("inputs");
-            foreach (var input in inputs.Elements()) // TODO: Only handles one input
+            name = element.Element("name").Value;
+            var inputsElement = element.Element("inputs");
+            foreach (var inputElement in inputsElement.Elements("input"))
             {
-                Input = input.Name.LocalName;
+                var input = new Input();
+                input.Source = inputElement.Attribute("source").Value;
+                input.Id = inputElement.Attribute("id").Value;
+                input.Profile = inputElement.Attribute("profile").Value;
+                Inputs.Add(input);
             }
         }
     }

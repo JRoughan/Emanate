@@ -5,12 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:inputSelector="clr-namespace:Emanate.TeamCity.InputSelector"
              mc:Ignorable="d" 
+             x:Name="root"
              d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <TreeView ItemsSource="{Binding Projects}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
-                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                <DockPanel>
+                    <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding ElementName=root, Path=DataContext.AvailableProfiles}" SelectedItem="{Binding Profile}" Margin="100,0,0,0" IsEnabled="{Binding IsSelected}" />
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                </DockPanel>
             </HierarchicalDataTemplate>
         </TreeView.ItemTemplate>
     </TreeView>
