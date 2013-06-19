@@ -44,20 +44,13 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\AppConfigStorage.cs" />
-    <Compile Include="Configuration\IConfigurationGenerator.cs" />
-    <Compile Include="Configuration\IConfigurationStorage.cs" />
     <Compile Include="Configuration\IModuleConfiguration.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\BuildState.cs" />
-    <Compile Include="Configuration\ConfigurationAttribute.cs" />
-    <Compile Include="Configuration\KeyAttribute.cs" />
-    <Compile Include="Configuration\MissingKeyException.cs" />
     <Compile Include="IModule.cs" />
     <Compile Include="ModuleLoader.cs" />
     <Compile Include="Output\IOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Configuration\ReflectionConfigurationGenerator.cs" />
     <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

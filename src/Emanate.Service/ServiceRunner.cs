@@ -1,7 +1,6 @@
 using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
-using Emanate.Core.Configuration;
 
 namespace Emanate.Service
 {
@@ -15,8 +14,6 @@ namespace Emanate.Service
 
             builder.RegisterType<EmanateService>();
             builder.RegisterType<EmanateConsole>();
-            builder.RegisterType<AppConfigStorage>().As<IConfigurationStorage>();
-            builder.RegisterType<ReflectionConfigurationGenerator>().As<IConfigurationGenerator>();
 
             return builder.Build();
         }
