@@ -18,7 +18,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Uri" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Uri}"></TextBox>
@@ -44,22 +43,30 @@
         </GroupBox>
 
         <Label Grid.Row="3" Grid.Column="0" Content="Polling Interval" />
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding PollingInterval}"></TextBox>
+        <DockPanel Grid.Row="3" Grid.Column="1" Margin="0,0,10,0">
+            <TextBlock DockPanel.Dock="Right" Text="secs" />
+            <TextBlock DockPanel.Dock="Right" Text="{Binding PollingInterval}" Width="25"  />
+            <Slider Minimum="5" Maximum="120" Value="{Binding PollingInterval}" HorizontalAlignment="Stretch" TickFrequency="5" IsSnapToTickEnabled="True" />
+        </DockPanel>
+        
 
-        <Button Grid.Row="4" Grid.ColumnSpan="2" Content="Test Connection" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Image Grid.Row="5" Grid.ColumnSpan="2" >
-            <Image.Style>
-                <Style TargetType="Image">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsTestSuccessful}" Value="true">
-                            <Setter Property="Source" Value="..\Images\success.png" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsTestSuccessful}" Value="false">
-                            <Setter Property="Source" Value="..\Images\failure.png" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Image.Style>
-        </Image>
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Margin="30">
+            <Button Content="Test Connection" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Image Height="32" Width="32" Margin="0,20,0,0" >
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsTestSuccessful}" Value="true">
+                                <Setter Property="Source" Value="..\Images\success.png" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsTestSuccessful}" Value="false">
+                                <Setter Property="Source" Value="..\Images\failure.png" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </StackPanel>
+        
     </Grid>
 </UserControl>
