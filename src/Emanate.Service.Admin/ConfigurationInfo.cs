@@ -1,17 +1,16 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace Emanate.Service.Admin
 {
     public class ConfigurationInfo
     {
-        public ConfigurationInfo(string name, IEnumerable<ConfigurationProperty> properties)
+        public ConfigurationInfo(string name, UserControl gui)
         {
             Name = name;
-            Properties = new ObservableCollection<ConfigurationProperty>(properties);
+            Gui = gui;
         }
 
         public string Name { get; private set; }
-        public ObservableCollection<ConfigurationProperty> Properties { get; private set; }
+        public UserControl Gui { get; private set; }
     }
 }

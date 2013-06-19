@@ -80,7 +80,6 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="PropertyTemplateSelector.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>
@@ -94,7 +93,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConfigurationInfo.cs" />
-    <Compile Include="ConfigurationProperty.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

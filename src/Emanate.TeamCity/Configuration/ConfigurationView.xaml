@@ -36,7 +36,7 @@
                 <Label Grid.Row="0" Grid.Column="0" Content="UserName" />
                 <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserName}"></TextBox>
                 <Label Grid.Row="1" Grid.Column="0" Content="Password" />
-                <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="PasswordInput"></PasswordBox>
+                <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="PasswordInput" Initialized="PasswordInputInitialized"></PasswordBox>
             </Grid>
         </GroupBox>
 

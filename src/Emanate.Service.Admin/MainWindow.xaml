@@ -7,53 +7,6 @@
              mc:Ignorable="d"
         d:DataContext="{d:DesignInstance admin:MainWindowViewModel}"
         Title="Emanate Admin" Height="400" Width="600">
-    <Window.Resources>
-
-        <DataTemplate DataType="{x:Type admin:ConfigurationInfo}">
-            <TextBlock Text="{Binding Name}" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="stringTemplate">
-            <Grid Margin="0,2,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".3*" />
-                    <ColumnDefinition Width=".7*" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="{Binding FriendlyName}" />
-                <TextBox x:Name="textInput" Grid.Column="1" Text="{Binding Value}" />
-                <PasswordBox x:Name="passwordInput" Grid.Column="1" Visibility="Collapsed" Tag="{Binding}" Initialized="PasswordInputInitialized" />
-            </Grid>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding IsPassword}" Value="True">
-                    <Setter TargetName="textInput" Property="Visibility" Value="Collapsed" />
-                    <Setter TargetName="passwordInput" Property="Visibility" Value="Visible" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-
-        <DataTemplate x:Key="integerTemplate">
-            <Grid Margin="0,2,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".3*" />
-                    <ColumnDefinition Width=".7*" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="{Binding FriendlyName}" />
-                <TextBox Grid.Column="1" Text="{Binding Value}" />
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="booleanTemplate">
-            <Grid Margin="0,2,0,0">
-                <CheckBox Content="{Binding FriendlyName}" IsChecked="{Binding Value}" />
-            </Grid>
-        </DataTemplate>
-
-        <admin:PropertyTemplateSelector x:Key="propertyTemplateSelector"
-            StringTemplate="{StaticResource stringTemplate}"
-            IntegerTemplate="{StaticResource integerTemplate}"
-            BooleanTemplate="{StaticResource booleanTemplate}" />
-
-    </Window.Resources>
     <DockPanel>
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
