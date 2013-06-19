@@ -81,6 +81,10 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Emanate.Delcom\Emanate.Delcom.csproj">
+      <Project>{D7C53489-A78D-408D-AD21-1D85566A760E}</Project>
+      <Name>Emanate.Delcom</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Emanate.Service\Emanate.Service.csproj">
       <Project>{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}</Project>
       <Name>Emanate.Service</Name>

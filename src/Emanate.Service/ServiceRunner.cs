@@ -3,7 +3,6 @@ using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Core.Output.DelcomVdi;
 
 namespace Emanate.Service
 {
@@ -19,7 +18,6 @@ namespace Emanate.Service
             builder.RegisterType<EmanateConsole>();
             builder.RegisterType<AppConfigStorage>().As<IConfigurationStorage>();
             builder.RegisterType<ReflectionConfigurationGenerator>().As<IConfigurationGenerator>();
-            builder.RegisterType<DelcomOutput>().As<IOutput>();
 
             return builder.Build();
         }
