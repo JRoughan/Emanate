@@ -17,12 +17,12 @@ namespace Emanate.Delcom
 
         public DelcomDevice()
         {
-            Inputs = new List<Input>();
+            Inputs = new List<InputInfo>();
         }
 
         public Type DeviceType { get { return typeof(Device); } }
 
-        public List<Input> Inputs { get; private set; }
+        public List<InputInfo> Inputs { get; private set; }
 
         public XElement ToXml()
         {
@@ -52,7 +52,7 @@ namespace Emanate.Delcom
             var inputsElement = element.Element("inputs");
             foreach (var inputElement in inputsElement.Elements("input"))
             {
-                var input = new Input();
+                var input = new InputInfo();
                 input.Source = inputElement.Attribute("source").Value;
                 input.Id = inputElement.Attribute("id").Value;
                 input.Profile = inputElement.Attribute("profile").Value;

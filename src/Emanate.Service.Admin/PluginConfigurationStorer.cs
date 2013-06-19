@@ -6,6 +6,7 @@ using System.Management;
 using System.Windows.Controls;
 using System.Xml.Linq;
 using Autofac;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
@@ -56,14 +57,14 @@ namespace Emanate.Service.Admin
                 var device = componentContext.ResolveKeyed<IOutputDevice>(name);
                 device.FromXml(deviceElement);
 
-                //foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
-                //{
+                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device);
+                foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
+                {
+                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
+                    inputSelector.SelectInputs(inputGroup);
+                    outputDeviceInfo.AddInputSelector(inputSelector);
+                }
 
-                    
-                //}
-
-                var inputSelector = componentContext.ResolveKeyed<UserControl>("teamcity" + "-InputSelector");
-                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device, inputSelector);
                 foo.OutputDevices.Add(outputDeviceInfo);
             }
 

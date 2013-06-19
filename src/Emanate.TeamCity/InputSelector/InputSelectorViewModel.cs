@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core;
+using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.InputSelector
 {
@@ -33,9 +36,10 @@ namespace Emanate.TeamCity.InputSelector
 
                 foreach (var buildElement in buildElements)
                 {
-                    var coniguration = new ProjectConfigurationViewModel();
-                    coniguration.Name = buildElement.Attribute("name").Value;
-                    project.Configurations.Add(coniguration);
+                    var configuration = new ProjectConfigurationViewModel();
+                    configuration.Id = buildElement.Attribute("id").Value;
+                    configuration.Name = buildElement.Attribute("name").Value;
+                    project.Configurations.Add(configuration);
                 }
 
                 Projects.Add(project);
@@ -49,9 +53,15 @@ namespace Emanate.TeamCity.InputSelector
             set { projects = value; OnPropertyChanged("Projects"); }
         }
 
-        //public XElement ToXml()
-        //{
-            
-        //}
+        public void SelectInputs(IEnumerable<InputInfo> inputs)
+        {
+            var configurations = Projects.SelectMany(p => p.Configurations).ToList();
+            foreach (var inputInfo in inputs)
+            {
+                var config = configurations.SingleOrDefault(c => c.Id.Equals(inputInfo.Id, StringComparison.OrdinalIgnoreCase));
+                if (config != null)
+                    config.IsSelected = true;
+            }
+        }
     }
 }
