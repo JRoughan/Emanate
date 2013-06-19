@@ -8,6 +8,7 @@ using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
 using Emanate.Core.Input;
+using Emanate.TeamCity.Configuration;
 using Timer = System.Timers.Timer;
 
 namespace Emanate.TeamCity

@@ -15,7 +15,7 @@ namespace Emanate.Service.Admin
             var container = CreateContainer();
             var mainWindowViewModel = container.Resolve<MainWindowViewModel>();
             mainWindowViewModel.InputSelector = container.ResolveKeyed<UserControl>("TeamCity-InputSelector");
-            mainWindowViewModel.Configurations.Add(container.ResolveKeyed<UserControl>("TeamCity-Configuration"));
+            //mainWindowViewModel.Configurations.Add(container.ResolveKeyed<UserControl>("TeamCity-Configuration"));
             MainWindow = container.Resolve<MainWindow>(new TypedParameter(typeof(MainWindowViewModel), mainWindowViewModel));
             MainWindow.Show();
         }
@@ -28,6 +28,7 @@ namespace Emanate.Service.Admin
 
             builder.RegisterType<MainWindow>();
             builder.RegisterType<MainWindowViewModel>();
+            builder.RegisterType<PluginConfigurationStorer>();
 
             return builder.Build();
         }

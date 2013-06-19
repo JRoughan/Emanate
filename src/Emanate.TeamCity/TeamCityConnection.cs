@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using Emanate.TeamCity.Configuration;
 
 namespace Emanate.TeamCity
 {
@@ -8,15 +9,15 @@ namespace Emanate.TeamCity
     {
         private readonly Uri baseUri;
         private readonly NetworkCredential networkCredential;
-        private readonly bool isGuestAuthentication;
+        private readonly bool requiresAuthentication;
 
         public TeamCityConnection(TeamCityConfiguration configuration)
         {
             var rawUri = configuration.Uri ?? "http://localhost";
             baseUri = new Uri(rawUri);
 
-            isGuestAuthentication = configuration.IsUsingGuestAuthentication;
-            if (!isGuestAuthentication)
+            requiresAuthentication = configuration.RequiresAuthentication;
+            if (requiresAuthentication)
             {
                 var userName = configuration.UserName;
                 var password = configuration.Password;
@@ -62,7 +63,7 @@ namespace Emanate.TeamCity
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
 
-            if (!isGuestAuthentication)
+            if (requiresAuthentication)
                 webRequest.Credentials = networkCredential;
 
             webRequest.Proxy = null;

@@ -42,7 +42,7 @@
             <TabItem Header="Configuration">
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" Margin="5" DisplayMemberPath="Name" />
-                    <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem}" />
+                    <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem.Gui}" />
                 </DockPanel>
             </TabItem>
         </TabControl>

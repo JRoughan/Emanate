@@ -7,16 +7,15 @@ namespace Emanate.Service.Admin
 {
     public class MainWindowViewModel : ViewModel
     {
-        //private readonly PluginConfigurationStorer pluginConfigurationStorer;
+        private readonly PluginConfigurationStorer pluginConfigurationStorer;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(PluginConfigurationStorer pluginConfigurationStorer)
         {
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
-            //pluginConfigurationStorer = new PluginConfigurationStorer();
-            //ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
+            this.pluginConfigurationStorer = pluginConfigurationStorer;
         }
 
         public event EventHandler CloseRequested;
@@ -24,10 +23,10 @@ namespace Emanate.Service.Admin
 
         public override void Initialize()
         {
-            //foreach (var plugin in pluginConfigurationStorer.Load())
-            //{
-            //    ConfigurationInfos.Add(plugin);
-            //}
+            foreach (var plugin in pluginConfigurationStorer.Load())
+            {
+                Configurations.Add(plugin);
+            }
         }
 
         private UserControl inputSelector;
@@ -41,8 +40,8 @@ namespace Emanate.Service.Admin
             }
         }
 
-        private ObservableCollection<UserControl> configurations = new ObservableCollection<UserControl>();
-        public ObservableCollection<UserControl> Configurations
+        private ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();
+        public ObservableCollection<ConfigurationInfo> Configurations
         {
             get { return configurations; }
             private set
@@ -67,7 +66,7 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            //pluginConfigurationStorer.Save(configurationInfos);
+            pluginConfigurationStorer.Save(Configurations);
         }
 
         private bool CanFindServiceConfiguration()

@@ -58,7 +58,7 @@
     <Compile Include="Configuration\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\ConfigurationViewModel.cs" />
+    <Compile Include="Configuration\TeamCityConfiguration.cs" />
     <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
     <Compile Include="InputSelector\InputSelectorView.xaml.cs">
       <DependentUpon>InputSelectorView.xaml</DependentUpon>
@@ -67,7 +67,6 @@
     <Compile Include="InputSelector\ProjectViewModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="ITeamCityConnection.cs" />
-    <Compile Include="TeamCityConfiguration.cs" />
     <Compile Include="TeamCityConnection.cs" />
     <Compile Include="TeamCityMonitor.cs" />
   </ItemGroup>

@@ -6,34 +6,21 @@ namespace Emanate.TeamCity.Configuration
 {
     public partial class ConfigurationView
     {
-        private readonly ConfigurationViewModel viewModel;
+        private TeamCityConfiguration viewModel;
 
         public ConfigurationView()
         {
-            Initialized += ConfigurationView_Initialized;
-        }
-
-        void ConfigurationView_Initialized(object sender, EventArgs e)
-        {
-            //PasswordInput.PasswordChanged += PasswordInput_PasswordChanged;
-        }
-
-        void PasswordInput_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
-        {
-            viewModel.Password = PasswordInput.SecurePassword.ToString();
-        }
-
-        public ConfigurationView(ConfigurationViewModel viewModel)
-            :this()
-        {
-            DataContext = this.viewModel = viewModel;
-            Initialized += ViewInitialized;
+            DataContextChanged += ConfigurationView_DataContextChanged;
             InitializeComponent();
         }
 
-        void ViewInitialized(object sender, EventArgs e)
+        void ConfigurationView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            viewModel = e.NewValue as TeamCityConfiguration;
             viewModel.Initialize();
+
+            if (PasswordInput != null)
+                PasswordInput.Password = viewModel.Password;
         }
 
         private void PasswordInputInitialized(object sender, EventArgs e)
@@ -42,7 +29,9 @@ namespace Emanate.TeamCity.Configuration
             if (passwordBox == null)
                 return;
 
-            passwordBox.Password = viewModel.Password;
+            if (viewModel != null)
+                passwordBox.Password = viewModel.Password;
+
             passwordBox.PasswordChanged += passwordBox_PasswordChanged;
         }
 

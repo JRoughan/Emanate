@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Emanate.Core.Input;
 using Emanate.TeamCity;
+using Emanate.TeamCity.Configuration;
 using NUnit.Framework;
 
 namespace Emanate.IntegrationTests.Core.Input
