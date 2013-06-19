@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ServiceProcess;
+using Emanate.Core;
 
 namespace Emanate.Service.Admin
 {
@@ -18,6 +19,11 @@ namespace Emanate.Service.Admin
             statusUpdateWorker.DoWork += UpdateServiceStatus;
             statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
 
+            IsNotInstalled = true;
+        }
+
+        public void Initialize()
+        {
             try
             {
                 // TODO: Dynamically determine service name
@@ -28,11 +34,6 @@ namespace Emanate.Service.Admin
             {
                 IsNotInstalled = true;
             }
-        }
-
-        public void Initialize()
-        {
-            
         }
 
         private bool isRunning;
@@ -57,6 +58,7 @@ namespace Emanate.Service.Admin
             }
         }
 
+        // TODO: Add an imverse bool->vis converter and get rid of this double negative
         private bool isNotInstalled;
         public bool IsNotInstalled
         {
@@ -117,6 +119,7 @@ namespace Emanate.Service.Admin
 
         void UpdateStatus()
         {
+            IsNotInstalled = false;
             IsRunning = service.Status == ServiceControllerStatus.Running;
             IsStopped = service.Status == ServiceControllerStatus.Stopped;
         }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using Emanate.Core;
+using Emanate.TeamCity;
 
 namespace Emanate.Service.Admin
 {
@@ -14,32 +17,42 @@ namespace Emanate.Service.Admin
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
             pluginConfigurationStorer = new PluginConfigurationStorer();
-            ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
+            InputSelector = new InputSelector();
+            //ConfigurationInfos = new ObservableCollection<ConfigurationInfo>();
         }
 
         public event EventHandler CloseRequested;
 
 
-        public void Initialize()
+        public override void Initialize()
         {
-            foreach (var plugin in pluginConfigurationStorer.Load())
-            {
-                ConfigurationInfos.Add(plugin);
-            }
+            //foreach (var plugin in pluginConfigurationStorer.Load())
+            //{
+            //    ConfigurationInfos.Add(plugin);
+            //}
         }
 
-
-
-        private ObservableCollection<ConfigurationInfo> configurationInfos;
-        public ObservableCollection<ConfigurationInfo> ConfigurationInfos
+        private UserControl inputSelector;
+        public UserControl InputSelector
         {
-            get { return configurationInfos; }
+            get { return inputSelector; }
             private set
             {
-                configurationInfos = value;
-                OnPropertyChanged("ConfigurationInfos");
+                inputSelector = value;
+                OnPropertyChanged("InputSelector");
             }
         }
+
+        //private ObservableCollection<ConfigurationInfo> configurationInfos;
+        //public ObservableCollection<ConfigurationInfo> ConfigurationInfos
+        //{
+        //    get { return configurationInfos; }
+        //    private set
+        //    {
+        //        configurationInfos = value;
+        //        OnPropertyChanged("ConfigurationInfos");
+        //    }
+        //}
 
         
         private readonly DelegateCommand saveCommand;
@@ -56,7 +69,7 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            pluginConfigurationStorer.Save(configurationInfos);
+            //pluginConfigurationStorer.Save(configurationInfos);
         }
 
         private bool CanFindServiceConfiguration()

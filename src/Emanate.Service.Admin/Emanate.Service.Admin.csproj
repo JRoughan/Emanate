@@ -73,13 +73,21 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="BuildInfo.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="InputSelector.xaml.cs">
+      <DependentUpon>InputSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputSelectorViewModel.cs" />
     <Compile Include="PropertyTemplateSelector.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServiceAdminViewModel.cs" />
-    <Compile Include="ViewModel.cs" />
+    <Page Include="InputSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

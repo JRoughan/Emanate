@@ -55,6 +55,7 @@
     <Compile Include="Output\IOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\ReflectionConfigurationGenerator.cs" />
+    <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
