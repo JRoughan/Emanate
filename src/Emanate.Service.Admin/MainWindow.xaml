@@ -25,7 +25,7 @@
         <TabControl>
             <TabItem>
                 <TabItem.Header>
-                    <TextBlock Text="Settings" FontSize="18" />
+                    <TextBlock Text="Builds" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="DeviceSelector" ItemsSource="{Binding ActiveDevices}" MinWidth="120" DisplayMemberPath="Name" />
@@ -34,7 +34,7 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <TextBlock Text="Configuration" FontSize="18" />
+                    <TextBlock Text="Settings" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name" />

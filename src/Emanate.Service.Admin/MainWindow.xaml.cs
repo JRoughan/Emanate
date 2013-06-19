@@ -19,6 +19,12 @@ namespace Emanate.Service.Admin
         void MainWindowInitialized(object sender, EventArgs e)
         {
             viewModel.Initialize();
+
+            if (DeviceSelector.Items.Count > 0)
+                DeviceSelector.SelectedIndex = 0;
+
+            if (ConfigSelector.Items.Count > 0)
+                ConfigSelector.SelectedIndex = 0;
         }
 
         void ViewModelCloseRequested(object sender, EventArgs e)
