@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
+using Autofac;
+using Emanate.Core;
 
 namespace Emanate.Service.Admin
 {
@@ -12,5 +10,25 @@ namespace Emanate.Service.Admin
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var container = CreateContainer();
+            var mainWindowViewModel = container.Resolve<MainWindowViewModel>();
+            mainWindowViewModel.InputSelector = container.ResolveKeyed<UserControl>("TeamCity");
+            MainWindow = container.Resolve<MainWindow>(new TypedParameter(typeof(MainWindowViewModel), mainWindowViewModel));
+            MainWindow.Show();
+        }
+
+        private IContainer CreateContainer()
+        {
+            var builder = new ContainerBuilder();
+            var loader = new ModuleLoader();
+            loader.LoadModules(builder);
+
+            builder.RegisterType<MainWindow>();
+            builder.RegisterType<MainWindowViewModel>();
+
+            return builder.Build();
+        }
     }
 }

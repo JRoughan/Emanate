@@ -2,7 +2,6 @@ using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
-using Emanate.Core.Output;
 
 namespace Emanate.Service
 {

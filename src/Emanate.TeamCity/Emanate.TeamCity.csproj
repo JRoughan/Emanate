@@ -55,7 +55,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildInfo.cs" />
+    <Compile Include="InputSelector\ConfigurationViewModel.cs" />
+    <Compile Include="InputSelector\InputSelectorView.xaml.cs">
+      <DependentUpon>InputSelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InputSelector\InputSelectorViewModel.cs" />
+    <Compile Include="InputSelector\ProjectViewModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="ITeamCityConnection.cs" />
     <Compile Include="TeamCityConfiguration.cs" />
@@ -92,9 +97,16 @@
       <Name>Emanate.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="InputSelector\InputSelectorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)
+xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

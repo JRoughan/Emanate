@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace Emanate.Service.Admin
 {
     [DebuggerStepThrough]
-    internal class DelegateCommand : ICommand
+    public class DelegateCommand : ICommand
     {
         private readonly Func<bool> canExecute;
         private readonly Action execute;

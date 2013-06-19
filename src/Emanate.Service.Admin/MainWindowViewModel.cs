@@ -4,7 +4,7 @@ using Emanate.Core;
 
 namespace Emanate.Service.Admin
 {
-    class MainWindowViewModel : ViewModel
+    public class MainWindowViewModel : ViewModel
     {
         //private readonly PluginConfigurationStorer pluginConfigurationStorer;
 
@@ -33,7 +33,7 @@ namespace Emanate.Service.Admin
         public UserControl InputSelector
         {
             get { return inputSelector; }
-            private set
+            set
             {
                 inputSelector = value;
                 OnPropertyChanged("InputSelector");

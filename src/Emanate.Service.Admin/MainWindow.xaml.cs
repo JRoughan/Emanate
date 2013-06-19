@@ -8,9 +8,11 @@ namespace Emanate.Service.Admin
     {
         private readonly MainWindowViewModel viewModel;
 
-        public MainWindow()
+        public MainWindow() { }
+
+        public MainWindow(MainWindowViewModel viewModel)
         {
-            DataContext = viewModel = new MainWindowViewModel();
+            DataContext = this.viewModel = viewModel;
             viewModel.CloseRequested += ViewModelCloseRequested;
             Initialized += MainWindowInitialized;
             InitializeComponent();

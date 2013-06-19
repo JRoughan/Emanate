@@ -22,7 +22,7 @@ namespace Emanate.Service.Admin
             IsNotInstalled = true;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             try
             {
