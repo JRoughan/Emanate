@@ -1,32 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Windows.Controls;
-using System.Xml.Linq;
-using Autofac;
-using Emanate.Core.Configuration;
+﻿using System.Collections.Generic;
 
 namespace Emanate.Service.Admin
 {
-    public interface IOutputDevice
+    public class TotalConfig
     {
-        string Key { get; }
-
-        XElement ToXml();
-        void FromXml(XElement element);
-    }
-
-    public class Foo
-    {
-        public Foo()
+        public TotalConfig()
         {
             ModuleConfigurations = new List<ConfigurationInfo>();
-            OutputDevices = new List<IOutputDevice>();
+            OutputDevices = new List<OutputDeviceInfo>();
         }
 
         public List<ConfigurationInfo> ModuleConfigurations { get; set; }
-        public List<IOutputDevice> OutputDevices { get; set; }
+        public List<OutputDeviceInfo> OutputDevices { get; set; }
     }
 }

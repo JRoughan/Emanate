@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Xml.Linq;
 using Autofac;
 using Emanate.Core.Configuration;
+using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
@@ -24,9 +25,9 @@ namespace Emanate.Service.Admin
             this.outputDevices = outputDevices;
         }
 
-        public Foo Load()
+        public TotalConfig Load()
         {
-            var foo = new Foo();
+            var foo = new TotalConfig();
 
             var configDoc = GetServiceConfiguration();
 
@@ -54,20 +55,22 @@ namespace Emanate.Service.Admin
             foreach (var moduleElement in devices.Elements())
             {
                 var name = moduleElement.Name.LocalName;
-                var config = outputDevices.FirstOrDefault(c => c.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
-                if (config != null)
-                    config.FromXml(moduleElement);
+                var device = outputDevices.FirstOrDefault(c => c.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+                if (device != null)
+                    device.FromXml(moduleElement);
             }
 
             foreach (var device in outputDevices)
             {
-                foo.OutputDevices.Add(device);
+                //container.ResolveKeyed<UserControl>("TeamCity-InputSelector")
+                var inputSelector = componentContext.ResolveKeyed<UserControl>(device.Input + "-InputSelector");
+                foo.OutputDevices.Add(new OutputDeviceInfo(device.Name, device, inputSelector));
             }
 
             return foo;
         }
 
-        public void Save(Foo foo)
+        public void Save(TotalConfig totalConfig)
         {
             if (configFilePath == null)
                 throw new InvalidOperationException("Cannot save configuration before it's been loaded");
@@ -78,7 +81,7 @@ namespace Emanate.Service.Admin
             var modulesElement = new XElement("modules");
             rootElement.Add(modulesElement);
 
-            foreach (var configurationInfo in foo.ModuleConfigurations)
+            foreach (var configurationInfo in totalConfig.ModuleConfigurations)
             {
                 var configuration = configurationInfo.ModuleConfiguration;
                 var xml = configuration.ToXml();

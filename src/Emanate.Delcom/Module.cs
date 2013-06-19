@@ -9,6 +9,7 @@ namespace Emanate.Delcom
         public void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DelcomOutput>().As<IOutput>();
+            builder.RegisterType<DelcomDevice>().As<IOutputDevice>();
         }
     }
 }

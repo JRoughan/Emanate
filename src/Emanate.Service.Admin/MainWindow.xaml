@@ -25,9 +25,11 @@
         <TabControl>
             <TabItem Header="Settings">
 
-                <!--<ListView DockPanel.Dock="Left" x:Name="configInfos" ItemsSource="{Binding ConfigurationInfos}" Padding="5" />-->
-
-                <ContentPresenter Content="{Binding InputSelector}" />
+                <DockPanel>
+                    <ListView DockPanel.Dock="Left" x:Name="DeviceSelector" ItemsSource="{Binding ActiveDevices}" MinWidth="120" DisplayMemberPath="Name" />
+                    <ContentPresenter Content="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelector}" />
+                </DockPanel>
+                
                 <!--<ItemsControl ItemsSource="{Binding ElementName=configInfos, Path=SelectedItem.Properties}" 
                       ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
                       Padding="5">

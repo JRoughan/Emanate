@@ -1,5 +1,7 @@
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using Emanate.Core.Configuration;
+using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
@@ -15,5 +17,31 @@ namespace Emanate.Service.Admin
         public string Name { get; private set; }
         public UserControl Gui { get; private set; }
         public IModuleConfiguration ModuleConfiguration { get; private set; }
+    }
+
+    public class OutputDeviceInfo
+    {
+        public OutputDeviceInfo(string name, IOutputDevice outputDevice, UserControl inputSelector)
+        {
+            Name = name;
+            OutputDevice = outputDevice;
+            InputSelector = inputSelector;
+            Inputs = new ObservableCollection<InputInfo>();
+        }
+
+        public string Name { get; private set; }
+        public IOutputDevice OutputDevice { get; set; }
+        public UserControl InputSelector { get; set; }
+        public ObservableCollection<InputInfo> Inputs { get; set; }
+    }
+
+    public class InputInfo
+    {
+        public InputInfo(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
     }
 }

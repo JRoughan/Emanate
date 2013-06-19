@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.cs" />
+    <Compile Include="DelcomDevice.cs" />
     <Compile Include="DelcomHID.cs" />
     <Compile Include="DelcomOutput.cs" />
     <Compile Include="Device.cs" />

@@ -7,6 +7,10 @@ namespace Emanate.Delcom
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;
 
+        
+
+        
+
         //public string DeviceName { get; private set; }
         //public string DeviceStatus { get; private set; }
 
