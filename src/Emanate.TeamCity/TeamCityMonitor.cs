@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
@@ -20,7 +19,6 @@ namespace Emanate.TeamCity
         private const string m_teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
-        private readonly TeamCityConfiguration configuration;
         private bool isInitialized;
         private readonly Timer timer;
         private Dictionary<string, BuildState> buildStates;
@@ -37,7 +35,6 @@ namespace Emanate.TeamCity
         public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityConfiguration configuration)
         {
             this.teamCityConnection = teamCityConnection;
-            this.configuration = configuration;
 
             var pollingInterval = configuration.PollingInterval * 1000;
             if (pollingInterval < 1)
@@ -51,73 +48,14 @@ namespace Emanate.TeamCity
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
-        public IEnumerable<string> MonitoredBuilds
-        {
-            get { return buildStates.Keys; }
-        }
-
         public BuildState CurrentState { get; private set; }
 
-
-        private static bool IsWildcardMatch(string project, string pattern)
-        {
-            var regexPattern = "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
-            return Regex.IsMatch(project, regexPattern);
-        }
-
-        private IEnumerable<string> GetBuildIds(IEnumerable<InputInfo> builds)
-        {
-            return builds.Select(b => b.Id);
-            //var projectXml = teamCityConnection.GetProjects();
-            //var projectRoot = XElement.Parse(projectXml);
-
-            //var configs = 
-
-            //var configParts = builds.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            //var projectValues = configParts.Select(p =>
-            //                                          {
-            //                                              var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            //                                              return new { Project = parts[0].Trim(), Build = parts[1].Trim() };
-            //                                          });
-
-            //var projectNames = projectValues.Select(pv => pv.Project).Distinct();
-
-            //var projectElements =
-            //    from projectElement in projectRoot.Elements("project")
-            //    let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
-            //    where p != null
-            //    select new { Name = p, Id = projectElement.Attribute("id").Value };
-
-            //foreach (var projectElement in projectElements)
-            //{
-            //    var projectName = projectElement.Name;
-            //    var projectId = projectElement.Id;
-
-            //    var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
-
-            //    var buildXml = teamCityConnection.GetProject(projectId);
-            //    var builtRoot = XElement.Parse(buildXml);
-
-            //    var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
-            //                        from buildElement in buildTypesElement.Elements("buildType")
-            //                        let b = buildNames.FirstOrDefault(b => IsWildcardMatch(buildElement.Attribute("name").Value, b))
-            //                        where b != null
-            //                        select buildElement;
-
-
-            //    foreach (var buildElement in buildElements)
-            //    {
-            //        yield return buildElement.Attribute("id").Value;
-            //    }
-            //}
-        }
 
         public void BeginMonitoring(IEnumerable<InputInfo> inputs)
         {
             if (!isInitialized)
             {
-                var monitoredBuilds = GetBuildIds(inputs);
+                var monitoredBuilds = inputs.Select(b => b.Id);
                 buildStates = monitoredBuilds.ToDictionary(x => x, x => BuildState.Unknown);
                 isInitialized = true;
             }
