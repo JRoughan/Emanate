@@ -40,7 +40,7 @@ namespace Emanate.Service
                         monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
                         buildMonitors.Add(inputGroup.Key, monitor);
                     }
-                    monitor.StatusChanged += output.UpdateStatus;
+                    monitor.AddBuilds(output, inputGroup.Select(i => i.Id));
                 }
             }
         }
@@ -54,11 +54,7 @@ namespace Emanate.Service
         protected override void OnStop()
         {
             foreach (var buildMonitor in buildMonitors.Values)
-            {
                 buildMonitor.EndMonitoring();
-                foreach (var output in outputs.Values)
-                    buildMonitor.StatusChanged -= output.UpdateStatus;
-            }
         }
     }
 }

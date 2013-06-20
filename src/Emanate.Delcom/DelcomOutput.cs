@@ -42,15 +42,10 @@ namespace Emanate.Delcom
                     }
                 }
             }
-            UpdateStatus(lastCompletedState, lastUpdateTime);
+            UpdateStatus(lastCompletedState, lastCompletedState, lastUpdateTime);
         }
 
-        public void UpdateStatus(object sender, StatusChangedEventArgs e)
-        {
-            UpdateStatus(e.NewState, e.TimeStamp);
-        }
-
-        private void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
+        public void UpdateStatus(BuildState oldState, BuildState newState, DateTimeOffset timeStamp)
         {
             lock (device)
             {
@@ -58,7 +53,7 @@ namespace Emanate.Delcom
                     device.Open();
             }
 
-            switch (state)
+            switch (newState)
             {
                 case BuildState.Unknown:
                     device.TurnOn(Color.Red);
@@ -69,7 +64,7 @@ namespace Emanate.Delcom
                     device.TurnOff(Color.Red);
                     device.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
-                    lastCompletedState = state;
+                    lastCompletedState = newState;
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:
@@ -78,7 +73,7 @@ namespace Emanate.Delcom
                     TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
                     if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
                         device.StartBuzzer(100, 2, 20, 20);
-                    lastCompletedState = state;
+                    lastCompletedState = newState;
                     break;
                 case BuildState.Running:
                     device.TurnOff(Color.Red);
@@ -89,7 +84,7 @@ namespace Emanate.Delcom
                     device.Flash(Color.Red);
                     break;
             }
-            lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
+            lastCompletedState = newState != BuildState.Running ? newState : lastCompletedState;
             lastUpdateTime = timeStamp;
         }
 

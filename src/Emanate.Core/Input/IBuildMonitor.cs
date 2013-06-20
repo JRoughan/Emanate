@@ -9,10 +9,7 @@ namespace Emanate.Core.Input
         void BeginMonitoring();
         void EndMonitoring();
 
-        event EventHandler<StatusChangedEventArgs> StatusChanged;
-
-        void AddBuild(InputInfo input);
-        void AddBuilds(IEnumerable<InputInfo> inputs);
+        void AddBuilds(IOutput output, IEnumerable<string> buildIds);
     }
 
     public class StatusChangedEventArgs : EventArgs

@@ -19,9 +19,8 @@ namespace Emanate.TeamCity
         private const string m_teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
-        private bool isInitialized;
         private readonly Timer timer;
-        private readonly Dictionary<string, BuildState> buildStates = new Dictionary<string, BuildState>();
+        private readonly Dictionary<IOutput, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutput, Dictionary<string, BuildState>>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "UNKNOWN", BuildState.Unknown },
@@ -50,15 +49,9 @@ namespace Emanate.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IEnumerable<InputInfo> inputs)
+        public void AddBuilds(IOutput output, IEnumerable<string> buildIds)
         {
-            foreach (var info in inputs)
-                AddBuild(info);
-        }
-
-        public void AddBuild(InputInfo input)
-        {
-            buildStates.Add(input.Id, BuildState.Unknown);
+            buildStates.Add(output, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
@@ -89,36 +82,33 @@ namespace Emanate.TeamCity
 
         private void UpdateBuildStates()
         {
-            var newStates = GetNewBuildStates().ToList();
-
-            var newState = BuildState.Unknown;
-            var timeStamp = DateTimeOffset.Now;
-
-            if (newStates.Any())
+            foreach (var output in buildStates)
             {
-                foreach (var buildState in newStates)
-                    buildStates[buildState.BuildId] = buildState.State;
+                var newStates = GetNewBuildStates(output.Value.Keys).ToList();
 
-                newState = (BuildState)newStates.Max(s => (int)s.State);
+                var newState = BuildState.Unknown;
+                var timeStamp = DateTimeOffset.Now;
 
-                timeStamp = newStates.Max(s => s.TimeStamp);
+                if (newStates.Any())
+                {
+                    var states = buildStates[output.Key];
+                    foreach (var buildState in newStates)
+                        states[buildState.BuildId] = buildState.State;
+
+                    newState = (BuildState)newStates.Max(s => (int)s.State);
+
+                    timeStamp = newStates.Max(s => s.TimeStamp);
+                }
+
+                var oldState = CurrentState;
+                CurrentState = newState;
+                output.Key.UpdateStatus(oldState, newState, timeStamp);
             }
-
-            var oldState = CurrentState;
-            CurrentState = newState;
-            OnStatusChanged(oldState, newState, timeStamp);
         }
 
-        private void OnStatusChanged(BuildState oldState, BuildState newState, DateTimeOffset timeStamp)
+        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
         {
-            var handler = StatusChanged;
-            if (handler != null)
-                handler(this, new StatusChangedEventArgs(oldState, newState, timeStamp));
-        }
-
-        private IEnumerable<BuildInfo> GetNewBuildStates()
-        {
-            foreach (var buildId in buildStates.Keys)
+            foreach (var buildId in buildIds)
             {
                 var resultXml = teamCityConnection.GetBuild(buildId);
 
