@@ -79,6 +79,7 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="ConfigurationInfo.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>

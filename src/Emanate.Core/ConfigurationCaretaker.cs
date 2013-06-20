@@ -44,7 +44,7 @@ namespace Emanate.Service.Admin
 
             foreach (var moduleConfig in moduleConfigurations)
             {
-                foo.ModuleConfigurations.Add(new ConfigurationInfo(moduleConfig));
+                foo.ModuleConfigurations.Add(moduleConfig);
             }
 
             // Output devices
@@ -82,9 +82,8 @@ namespace Emanate.Service.Admin
 
             // Modules
             var modulesElement = new XElement("modules");
-            foreach (var configurationInfo in globalConfig.ModuleConfigurations)
+            foreach (var configuration in globalConfig.ModuleConfigurations)
             {
-                var configuration = configurationInfo.ModuleConfiguration;
                 var moduleMemento = configuration.CreateMemento();
                 modulesElement.Add(moduleMemento.Element);
             }

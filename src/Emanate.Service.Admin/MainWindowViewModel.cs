@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 using Autofac;
 using Emanate.Core;
@@ -31,9 +32,8 @@ namespace Emanate.Service.Admin
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
                 var gui = componentContext.ResolveKeyed<UserControl>(moduleConfig.Key + "-Config");
-                gui.DataContext = moduleConfig.ModuleConfiguration;
-                moduleConfig.Gui = gui;
-                Configurations.Add(moduleConfig);
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, gui);
+                Configurations.Add(moduleConfigInfo);
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)
@@ -78,8 +78,6 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            globalConfig.ModuleConfigurations.Clear();
-            globalConfig.ModuleConfigurations.AddRange(Configurations);
             configurationCaretaker.Save(globalConfig);
         }
 

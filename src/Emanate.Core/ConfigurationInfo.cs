@@ -7,19 +7,6 @@ using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
-    public class ConfigurationInfo
-    {
-        public ConfigurationInfo(IModuleConfiguration moduleConfiguration)
-        {
-            ModuleConfiguration = moduleConfiguration;
-        }
-
-        public string Key { get { return ModuleConfiguration.Key; } }
-        public string Name { get { return ModuleConfiguration.Name; } }
-        public IModuleConfiguration ModuleConfiguration { get; private set; }
-        public UserControl Gui { get; set; }
-    }
-
     public class OutputDeviceInfo : ViewModel
     {
         public OutputDeviceInfo(string name, IOutputDevice outputDevice, IModuleConfiguration configuration)
