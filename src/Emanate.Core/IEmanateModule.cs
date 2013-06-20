@@ -4,6 +4,7 @@ namespace Emanate.Core
 {
     public interface IEmanateModule
     {
-        void Load(ContainerBuilder builder);
+        void LoadAdminComponents(ContainerBuilder builder);
+        void LoadServiceComponents(ContainerBuilder builder);
     }
 }

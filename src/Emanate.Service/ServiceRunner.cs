@@ -15,7 +15,7 @@ namespace Emanate.Service
         {
             var builder = new ContainerBuilder();
             var loader = new ModuleLoader();
-            loader.LoadModules(builder);
+            loader.LoadServiceModules(builder);
 
             builder.RegisterType<ConfigurationCaretaker>();
             builder.RegisterType<EmanateService>();

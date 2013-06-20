@@ -22,7 +22,7 @@ namespace Emanate.Service.Admin
         {
             var builder = new ContainerBuilder();
             var loader = new ModuleLoader();
-            loader.LoadModules(builder);
+            loader.LoadAdminModules(builder);
 
             builder.RegisterType<MainWindow>();
             builder.RegisterType<MainWindowViewModel>();
