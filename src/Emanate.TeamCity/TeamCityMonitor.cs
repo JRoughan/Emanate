@@ -21,7 +21,7 @@ namespace Emanate.TeamCity
         private readonly ITeamCityConnection teamCityConnection;
         private bool isInitialized;
         private readonly Timer timer;
-        private Dictionary<string, BuildState> buildStates;
+        private readonly Dictionary<string, BuildState> buildStates = new Dictionary<string, BuildState>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "UNKNOWN", BuildState.Unknown },
@@ -50,16 +50,19 @@ namespace Emanate.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
-
-        public void BeginMonitoring(IEnumerable<InputInfo> inputs)
+        public void AddBuilds(IEnumerable<InputInfo> inputs)
         {
-            if (!isInitialized)
-            {
-                var monitoredBuilds = inputs.Select(b => b.Id);
-                buildStates = monitoredBuilds.ToDictionary(x => x, x => BuildState.Unknown);
-                isInitialized = true;
-            }
+            foreach (var info in inputs)
+                AddBuild(info);
+        }
 
+        public void AddBuild(InputInfo input)
+        {
+            buildStates.Add(input.Id, BuildState.Unknown);
+        }
+
+        public void BeginMonitoring()
+        {
             UpdateBuildStates();
             timer.Start();
         }

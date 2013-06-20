@@ -24,6 +24,7 @@ namespace Emanate.TeamCity
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
+            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)

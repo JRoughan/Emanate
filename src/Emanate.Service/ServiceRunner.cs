@@ -56,7 +56,7 @@ namespace Emanate.Service
             builder.Update(container);
 
             var app = container.Resolve<T>();
-            app.SetInputsToMonitor(inputs);
+            app.Initialize(config);
 
             return app;
         }

@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.ServiceProcess;
+using Autofac;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 
@@ -7,37 +10,55 @@ namespace Emanate.Service
 {
     public partial class EmanateService : ServiceBase
     {
-        private readonly IBuildMonitor monitor;
-        private readonly IOutput output;
-        private IEnumerable<InputInfo> inputs;
+        private readonly IComponentContext componentContext;
+        private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
+        private readonly Dictionary<string, IOutput> outputs = new Dictionary<string, IOutput>();
 
-        public EmanateService(IBuildMonitor monitor, IOutput output)
+        public EmanateService(IComponentContext componentContext)
         {
+            this.componentContext = componentContext;
             InitializeComponent();
-
-            this.output = output;
-            this.monitor = monitor;
-            this.monitor.StatusChanged += MonitorStatusChanged;
         }
 
-        public void SetInputsToMonitor(IEnumerable<InputInfo> inputsToMonitor)
+        public void Initialize(GlobalConfig config)
         {
-            this.inputs = inputsToMonitor;
-        }
+            foreach (var outputDevice in config.OutputDevices)
+            {
+                IOutput output;
+                if (!outputs.TryGetValue(outputDevice.Key, out output))
+                {
+                    //var device = componentContext.ResolveKeyed<IOutputDevice>(outputDevice.Key);
+                    output = componentContext.ResolveKeyed<IOutput>(outputDevice.Key);
+                    outputs.Add(outputDevice.Key, output);
+                }
 
-        private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)
-        {
-            output.UpdateStatus(e.NewState, e.TimeStamp);
+                foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
+                {
+                    IBuildMonitor monitor;
+                    if (!buildMonitors.TryGetValue(inputGroup.Key, out monitor))
+                    {
+                        monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
+                        buildMonitors.Add(inputGroup.Key, monitor);
+                    }
+                    monitor.StatusChanged += output.UpdateStatus;
+                }
+            }
         }
 
         protected override void OnStart(string[] args)
         {
-            monitor.BeginMonitoring(inputs);
+            foreach (var buildMonitor in buildMonitors.Values)
+                buildMonitor.BeginMonitoring();
         }
 
         protected override void OnStop()
         {
-            monitor.EndMonitoring();
+            foreach (var buildMonitor in buildMonitors.Values)
+            {
+                buildMonitor.EndMonitoring();
+                foreach (var output in outputs.Values)
+                    buildMonitor.StatusChanged -= output.UpdateStatus;
+            }
         }
     }
 }

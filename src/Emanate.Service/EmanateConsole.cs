@@ -1,13 +1,12 @@
 using System.Threading;
-using Emanate.Core.Input;
-using Emanate.Core.Output;
+using Autofac;
 
 namespace Emanate.Service
 {
     public class EmanateConsole : EmanateService
     {
-        public EmanateConsole(IBuildMonitor monitor, IOutput output)
-            : base(monitor, output) { }
+        public EmanateConsole(IComponentContext componentContext)
+            : base(componentContext) { }
 
         public void Start()
         {

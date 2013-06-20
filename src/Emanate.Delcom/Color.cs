@@ -1,6 +1,6 @@
 namespace Emanate.Delcom
 {
-    class Color
+    public class Color
     {
         private Color(int setId, int dutyId, int offsetId, int powerId, int minPower = 10, int maxPower = 80)
         {

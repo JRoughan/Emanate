@@ -6,10 +6,13 @@ namespace Emanate.Core.Input
 {
     public interface IBuildMonitor
     {
-        void BeginMonitoring(IEnumerable<InputInfo> inputs);
+        void BeginMonitoring();
         void EndMonitoring();
 
         event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+        void AddBuild(InputInfo input);
+        void AddBuilds(IEnumerable<InputInfo> inputs);
     }
 
     public class StatusChangedEventArgs : EventArgs

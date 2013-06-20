@@ -14,7 +14,7 @@ namespace Emanate.Delcom
 
         public DelcomOutput()
         {
-            device = new Device();
+            this.device = new Device();
             ListenForDeviceConnectionChanges();
         }
 
@@ -45,7 +45,12 @@ namespace Emanate.Delcom
             UpdateStatus(lastCompletedState, lastUpdateTime);
         }
 
-        public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
+        public void UpdateStatus(object sender, StatusChangedEventArgs e)
+        {
+            UpdateStatus(e.NewState, e.TimeStamp);
+        }
+
+        private void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
             lock (device)
             {

@@ -2,7 +2,7 @@ using System;
 
 namespace Emanate.Delcom
 {
-    class Device : IDisposable
+    public class Device : IDisposable
     {
         private readonly DelcomHid delcom = new DelcomHid();
         private DelcomHid.HidTxPacketStruct txCmd;

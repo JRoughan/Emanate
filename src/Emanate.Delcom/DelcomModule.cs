@@ -21,11 +21,11 @@ namespace Emanate.Delcom
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
+            builder.RegisterType<DelcomOutput>().Keyed<IOutput>(Key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)
         {
-            builder.RegisterType<DelcomOutput>().As<IOutput>();
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(Key);
             builder.RegisterType<DelcomConfiguration>().Keyed<IModuleConfiguration>(Key);
         }
