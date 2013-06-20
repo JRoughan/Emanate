@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
-namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
     public class GlobalConfig
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Emanate.Core
+namespace Emanate.Service.Admin
 {
     public abstract class ViewModel : INotifyPropertyChanged
     {

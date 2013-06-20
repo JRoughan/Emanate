@@ -1,4 +1,5 @@
 ﻿using Emanate.Core;
+using Emanate.Service.Admin;
 
 namespace Emanate.Delcom.Configuration
 {

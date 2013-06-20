@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Autofac;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 
 namespace Emanate.Service.Admin
 {

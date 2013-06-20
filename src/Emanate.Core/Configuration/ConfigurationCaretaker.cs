@@ -5,10 +5,9 @@ using System.Linq;
 using System.Management;
 using System.Xml.Linq;
 using Autofac;
-using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
-namespace Emanate.Core
+namespace Emanate.Core.Configuration
 {
     public class ConfigurationCaretaker
     {

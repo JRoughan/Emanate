@@ -6,6 +6,7 @@ using System.Net;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Output;
+using Emanate.Service.Admin;
 
 namespace Emanate.TeamCity.InputSelector
 {
