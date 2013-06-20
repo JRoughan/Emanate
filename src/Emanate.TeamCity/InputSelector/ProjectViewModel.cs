@@ -28,6 +28,13 @@ namespace Emanate.TeamCity.InputSelector
             }
         }
 
+        private bool isProfileTarget;
+        public bool IsProfileTarget
+        {
+            get { return isProfileTarget; }
+            set { isProfileTarget = value; OnPropertyChanged("IsProfileTarget"); }
+        }
+
         private ObservableCollection<ProjectConfigurationViewModel> configurations = new ObservableCollection<ProjectConfigurationViewModel>();
         public ObservableCollection<ProjectConfigurationViewModel> Configurations
         {
