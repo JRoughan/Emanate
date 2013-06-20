@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Emanate.Core;
@@ -68,6 +69,20 @@ namespace Emanate.TeamCity.Configuration
             set { requiresAuthentication = value; OnPropertyChanged("RequiresAuthentication"); }
         }
 
+        private bool isEditable;
+        public bool IsEditable
+        {
+            get { return isEditable; }
+            set { isEditable = value; OnPropertyChanged("IsEditable"); }
+        }
+
+        private bool? isTestSuccessful;
+        public bool? IsTestSuccessful
+        {
+            get { return isTestSuccessful; }
+            set { isTestSuccessful = value; OnPropertyChanged("IsTestSuccessful"); }
+        }
+
         public Memento CreateMemento()
         {
             IsEditable = false;
@@ -78,7 +93,7 @@ namespace Emanate.TeamCity.Configuration
             moduleElement.Add(new XElement("polling-interval", PollingInterval));
             moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
             moduleElement.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
-            moduleElement.Add(new XElement("password", RequiresAuthentication ? Password : "")); // TODO: Encrypt password
+            moduleElement.Add(new XElement("password", RequiresAuthentication ? EncryptDecrypt(Password) : ""));
 
             IsEditable = true;
 
@@ -100,13 +115,11 @@ namespace Emanate.TeamCity.Configuration
             if (RequiresAuthentication)
             {
                 UserName = element.Element("username").Value;
-                Password = element.Element("password").Value;
+                Password = EncryptDecrypt(element.Element("password").Value);
             }
 
             IsEditable = true;
         }
-
-
 
         public ICommand TestConnectionCommand { get; set; }
 
@@ -137,18 +150,18 @@ namespace Emanate.TeamCity.Configuration
             }
         }
 
-        private bool isEditable;
-        public bool IsEditable
+        // TODO: Extrmemely simplistic encrytion used here - will keep honest people honest but not much else
+        private static string EncryptDecrypt(string text)
         {
-            get { return isEditable; }
-            set { isEditable = value; OnPropertyChanged("IsEditable"); }
-        }
-
-        private bool? isTestSuccessful;
-        public bool? IsTestSuccessful
-        {
-            get { return isTestSuccessful; }
-            set { isTestSuccessful = value; OnPropertyChanged("IsTestSuccessful"); }
+            var outSb = new StringBuilder(text.Length);
+            char c;
+            for (int i = 0; i < text.Length; i++)
+            {
+                c = text[i];
+                c = (char)(c ^ 129);
+                outSb.Append(c);
+            }
+            return outSb.ToString();
         }
     }
 }

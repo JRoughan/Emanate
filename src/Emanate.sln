@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.UnitTests", "Emanat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Service", "Emanate.Service\Emanate.Service.csproj", "{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0CC6DC93-FAFD-451A-9851-B2A9EEC0B0A4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Tests", "_Tests", "{0CC6DC93-FAFD-451A-9851-B2A9EEC0B0A4}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Emanate.Service.Installer", "Emanate.Service.Installer\Emanate.Service.Installer.vdproj", "{248E7E53-3742-48BA-B1B5-683015AFBC5A}"
 EndProject
