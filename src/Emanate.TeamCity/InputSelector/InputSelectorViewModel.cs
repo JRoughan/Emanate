@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Output;
@@ -19,10 +20,19 @@ namespace Emanate.TeamCity.InputSelector
 
         public override void Initialize()
         {
-            var projectsXml = connection.GetProjects();
-            var foo = XElement.Parse(projectsXml);
+            string projectsXml;
+            try
+            {
+                projectsXml = connection.GetProjects();
+            }
+            catch (WebException)
+            {
+                HasBadConfiguration = true;
+                return;
+            }
 
-            foreach (var projectElement in foo.Elements())
+            var projectsElement = XElement.Parse(projectsXml);
+            foreach (var projectElement in projectsElement.Elements())
             {
                 var project = new ProjectViewModel();
                 project.Name = projectElement.Attribute("name").Value;
@@ -44,6 +54,13 @@ namespace Emanate.TeamCity.InputSelector
 
                 Projects.Add(project);
             }
+        }
+
+        private bool hasBadConfiguration;
+        public bool HasBadConfiguration
+        {
+            get { return hasBadConfiguration; }
+            set { hasBadConfiguration = value; OnPropertyChanged("HasBadConfiguration"); }
         }
 
         private ObservableCollection<ProjectViewModel> projects = new ObservableCollection<ProjectViewModel>();

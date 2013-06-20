@@ -6,10 +6,11 @@
              xmlns:inputSelector="clr-namespace:Emanate.TeamCity.InputSelector"
             xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}">
     <admin:InputSelector.Resources>
 
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        
         <Style x:Key="TreeViewItemFocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -117,12 +118,18 @@
             </Style.Triggers>
         </Style>
     </admin:InputSelector.Resources>
-    <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
-        <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
-                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
-    </TreeView>
+    <DockPanel>
+        <Border DockPanel.Dock="Top"  Background="Orange" BorderBrush="OrangeRed" SnapsToDevicePixels="True" Margin="20" Visibility="{Binding HasBadConfiguration, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="Cannot connect to TeamCity. Please check your settings." Margin="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        </Border>
+        <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
+    
 
 </admin:InputSelector>
