@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
-using Emanate.Core.Output;
 
 namespace Emanate.Service
 {
@@ -41,7 +39,7 @@ namespace Emanate.Service
         }
 
         private T CreateApp<T>(string configFile = null)
-            where T : IEmanateApp
+            where T : EmanateService
         {
             var container = CreateContainer<T>();
 
@@ -62,10 +60,5 @@ namespace Emanate.Service
 
             return app;
         }
-    }
-
-    public interface IEmanateApp
-    {
-        void SetInputsToMonitor(IEnumerable<InputInfo> inputsToMonitor);
     }
 }

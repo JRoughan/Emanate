@@ -64,7 +64,9 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="EmanateConsole.cs" />
+    <Compile Include="EmanateConsole.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="EmanateService.cs">
       <SubType>Component</SubType>
     </Compile>

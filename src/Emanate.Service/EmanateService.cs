@@ -5,7 +5,7 @@ using Emanate.Core.Output;
 
 namespace Emanate.Service
 {
-    public partial class EmanateService : ServiceBase, IEmanateApp
+    public partial class EmanateService : ServiceBase
     {
         private readonly IBuildMonitor monitor;
         private readonly IOutput output;
