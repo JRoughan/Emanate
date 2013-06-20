@@ -12,7 +12,7 @@
         >
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Height="80">
-            <Button Content="Add Profile" Margin="10" Padding="10" IsDefault="True" Click="AddProfileClick" />
+            <Button Content="Save Profile" Margin="10" Padding="10" IsDefault="True" Command="{Binding SaveProfileCommand}" CommandParameter="{Binding NewProfile}" Click="CloseClicked" />
             <Button Content="Cancel" Margin="10" Padding="10" IsCancel="True" />
         </StackPanel>
         <Grid>

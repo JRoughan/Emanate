@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -26,7 +27,7 @@ namespace Emanate.TeamCity.Configuration
             IsEditable = true;
         }
 
-        public IEnumerable<IOutputProfile> Profiles
+        public ObservableCollection<IOutputProfile> Profiles
         {
             get
             {

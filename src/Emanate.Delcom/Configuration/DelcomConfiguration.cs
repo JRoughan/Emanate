@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -27,28 +28,21 @@ namespace Emanate.Delcom.Configuration
             AddProfileCommand = new DelegateCommand(AddProfile);
         }
 
-        private ObservableCollection<MonitoringProfile> profiles = new ObservableCollection<MonitoringProfile>();
-        public ObservableCollection<MonitoringProfile> Profiles
+        private ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
+        public ObservableCollection<IOutputProfile> Profiles
         {
             get { return profiles; }
             set { profiles = value; OnPropertyChanged("Profiles"); }
-        }
-
-        IEnumerable<IOutputProfile> IModuleConfiguration.Profiles
-        {
-            get { return profiles; }
         }
 
         public ICommand AddProfileCommand { get; private set; }
 
         private void AddProfile()
         {
-            var addProfileViewModel = new AddProfileViewModel(this);
+            var addProfileViewModel = new AddProfileViewModel(Profiles);
             var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
             addProfileView.Owner = Application.Current.MainWindow;
-            var result = addProfileView.ShowDialog();
-            if (result.HasValue && result.Value)
-                Profiles.Add(addProfileViewModel.NewProfile);
+            addProfileView.ShowDialog();
         }
 
         public Memento CreateMemento()
@@ -60,7 +54,7 @@ namespace Emanate.Delcom.Configuration
             var profilesElement = new XElement("profiles");
             moduleElement.Add(profilesElement);
 
-            foreach (var profile in Profiles)
+            foreach (var profile in Profiles.OfType<MonitoringProfile>())
             {
                 var profileElement = new XElement("profile");
                 profileElement.Add(new XAttribute("key", profile.Key));

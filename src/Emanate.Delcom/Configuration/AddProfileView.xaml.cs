@@ -12,7 +12,7 @@ namespace Emanate.Delcom.Configuration
             InitializeComponent();
         }
 
-        private void AddProfileClick(object sender, RoutedEventArgs e)
+        private void CloseClicked(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }

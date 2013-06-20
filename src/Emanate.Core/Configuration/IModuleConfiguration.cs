@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Configuration
@@ -11,6 +12,6 @@ namespace Emanate.Core.Configuration
 
         Type GuiType { get; }
 
-        IEnumerable<IOutputProfile> Profiles { get; }
+        ObservableCollection<IOutputProfile> Profiles { get; }
     }
 }
