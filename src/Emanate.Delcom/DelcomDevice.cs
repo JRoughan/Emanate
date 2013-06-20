@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
 namespace Emanate.Delcom
@@ -26,9 +27,10 @@ namespace Emanate.Delcom
 
         public string Profile { get; set; }
 
-        public XElement ToXml()
+        public Memento CreateMemento()
         {
-            var deviceElement = new XElement(key);
+            var deviceElement = new XElement("output");
+            deviceElement.Add(new XAttribute("type", key));
             deviceElement.Add(new XAttribute("profile", Profile));
             deviceElement.Add(new XElement("name", Name));
             var inputsElement = new XElement("inputs");
@@ -40,16 +42,16 @@ namespace Emanate.Delcom
                 inputsElement.Add(inputElement);
             }
             deviceElement.Add(inputsElement);
-            return deviceElement;
+            return new Memento(deviceElement);
         }
 
-        public void FromXml(XElement element)
+        public void SetMemento(Memento memento)
         {
-            // TODO
-            //if (element.Name != key)
-            //    throw new ArgumentException("Cannot load non-TeamCity configuration");
+            if (memento.Type != key)
+                throw new ArgumentException("Cannot load non-Delcom device");
 
             // TODO: Error handling
+            var element = memento.Element;
             Profile = element.Attribute("profile").Value;
             name = element.Element("name").Value;
             var inputsElement = element.Element("inputs");

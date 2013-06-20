@@ -50,13 +50,14 @@ namespace Emanate.Delcom.Configuration
                 Profiles.Add(addProfileViewModel.NewProfile);
         }
 
-        public XElement ToXml()
+        public Memento CreateMemento()
         {
             IsEditable = false;
 
-            var element = new XElement(key);
+            var moduleElement = new XElement("module");
+            moduleElement.Add(new XAttribute("type", key));
             var profilesElement = new XElement("profiles");
-            element.Add(profilesElement);
+            moduleElement.Add(profilesElement);
 
             foreach (var profile in Profiles)
             {
@@ -80,18 +81,18 @@ namespace Emanate.Delcom.Configuration
 
             IsEditable = true;
 
-            return element;
+            return new Memento(moduleElement);
         }
 
-        public void FromXml(XElement element)
+        public void SetMemento(Memento memento)
         {
             IsEditable = false;
 
-            // TODO
-            //if (element.Name != key)
-            //    throw new ArgumentException("Cannot load non-TeamCity configuration");
+            if (memento.Type != key)
+                throw new ArgumentException("Cannot load non-Delcom configuration");
 
             // TODO: Error handling
+            var element = memento.Element;
             var profilesElement = element.Element("profiles");
             foreach (var profileElement in profilesElement.Elements("profile"))
             {

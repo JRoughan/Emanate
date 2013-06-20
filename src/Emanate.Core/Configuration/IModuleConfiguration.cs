@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Configuration
 {
-    public interface IModuleConfiguration
+    public interface IModuleConfiguration : IOriginator
     {
         string Key { get; }
         string Name { get; }
@@ -13,8 +12,5 @@ namespace Emanate.Core.Configuration
         Type GuiType { get; }
 
         IEnumerable<IOutputProfile> Profiles { get; }
-
-        XElement ToXml();
-        void FromXml(XElement element);
     }
 }

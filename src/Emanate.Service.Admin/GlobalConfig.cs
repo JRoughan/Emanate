@@ -2,9 +2,9 @@
 
 namespace Emanate.Service.Admin
 {
-    public class TotalConfig
+    public class GlobalConfig
     {
-        public TotalConfig()
+        public GlobalConfig()
         {
             ModuleConfigurations = new List<ConfigurationInfo>();
             OutputDevices = new List<OutputDeviceInfo>();

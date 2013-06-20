@@ -12,21 +12,21 @@ using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
-    public class PluginConfigurationStorer
+    public class ConfigurationCaretaker
     {
         private readonly IComponentContext componentContext;
         private readonly IEnumerable<IModuleConfiguration> moduleConfigurations;
         private static string configFilePath;
 
-        public PluginConfigurationStorer(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations)
+        public ConfigurationCaretaker(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations)
         {
             this.componentContext = componentContext;
             this.moduleConfigurations = moduleConfigurations;
         }
 
-        public TotalConfig Load()
+        public GlobalConfig Load()
         {
-            var foo = new TotalConfig();
+            var foo = new GlobalConfig();
 
             var configDoc = GetServiceConfiguration();
 
@@ -34,12 +34,11 @@ namespace Emanate.Service.Admin
 
             // Modules
             var modules = rootNode.Element("modules");
-            foreach (var moduleElement in modules.Elements())
+            foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
             {
-                var name = moduleElement.Name.LocalName;
-                var config = moduleConfigurations.FirstOrDefault(c => c.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+                var config = moduleConfigurations.FirstOrDefault(c => c.Key.Equals(moduleMemento.Type, StringComparison.OrdinalIgnoreCase));
                 if (config != null)
-                    config.FromXml(moduleElement);
+                    config.SetMemento(moduleMemento);
             }
 
             foreach (var moduleConfig in moduleConfigurations)
@@ -50,14 +49,13 @@ namespace Emanate.Service.Admin
             }
 
             // Output devices
-            var devices = rootNode.Element("output-devices");
-            foreach (var deviceElement in devices.Elements())
+            var devices = rootNode.Element("outputs");
+            foreach (var deviceMemento in devices.Elements("output").Select(e => new Memento(e)))
             {
-                var deviceKey = deviceElement.Name.LocalName;
-                var device = componentContext.ResolveKeyed<IOutputDevice>(deviceKey);
-                device.FromXml(deviceElement);
+                var device = componentContext.ResolveKeyed<IOutputDevice>(deviceMemento.Type);
+                device.SetMemento(deviceMemento);
 
-                var moduleConfiguration = moduleConfigurations.Single(c => c.Key.Equals(deviceKey, StringComparison.OrdinalIgnoreCase));
+                var moduleConfiguration = moduleConfigurations.Single(c => c.Key.Equals(deviceMemento.Type, StringComparison.OrdinalIgnoreCase));
 
                 var outputDeviceInfo = new OutputDeviceInfo(device.Name, device, moduleConfiguration);
                 foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
@@ -73,7 +71,7 @@ namespace Emanate.Service.Admin
             return foo;
         }
 
-        public void Save(TotalConfig totalConfig)
+        public void Save(GlobalConfig globalConfig)
         {
             if (configFilePath == null)
                 throw new InvalidOperationException("Cannot save configuration before it's been loaded");
@@ -85,24 +83,24 @@ namespace Emanate.Service.Admin
 
             // Modules
             var modulesElement = new XElement("modules");
-            foreach (var configurationInfo in totalConfig.ModuleConfigurations)
+            foreach (var configurationInfo in globalConfig.ModuleConfigurations)
             {
                 var configuration = configurationInfo.ModuleConfiguration;
-                var xml = configuration.ToXml();
-                modulesElement.Add(xml);
+                var moduleMemento = configuration.CreateMemento();
+                modulesElement.Add(moduleMemento.Element);
             }
             rootElement.Add(modulesElement);
 
             // Output devices
-            var devicesElement = new XElement("output-devices");
+            var devicesElement = new XElement("outputs");
 
-            foreach (var deviceInfo in totalConfig.OutputDevices)
+            foreach (var deviceInfo in globalConfig.OutputDevices)
             {
                 var device = deviceInfo.OutputDevice;
                 device.Inputs.Clear();
                 device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
-                var xml = device.ToXml();
-                devicesElement.Add(xml);
+                var deviceMemento = device.CreateMemento();
+                devicesElement.Add(deviceMemento.Element);
             }
             rootElement.Add(devicesElement);
 

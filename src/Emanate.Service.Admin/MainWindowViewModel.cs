@@ -6,16 +6,16 @@ namespace Emanate.Service.Admin
 {
     public class MainWindowViewModel : ViewModel
     {
-        private readonly PluginConfigurationStorer pluginConfigurationStorer;
-        private TotalConfig totalConfig;
+        private readonly ConfigurationCaretaker configurationCaretaker;
+        private GlobalConfig globalConfig;
 
-        public MainWindowViewModel(PluginConfigurationStorer pluginConfigurationStorer)
+        public MainWindowViewModel(ConfigurationCaretaker configurationCaretaker)
         {
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
-            this.pluginConfigurationStorer = pluginConfigurationStorer;
+            this.configurationCaretaker = configurationCaretaker;
         }
 
         public event EventHandler CloseRequested;
@@ -23,13 +23,13 @@ namespace Emanate.Service.Admin
 
         public override void Initialize()
         {
-            totalConfig = pluginConfigurationStorer.Load();
-            foreach (var plugin in totalConfig.ModuleConfigurations)
+            globalConfig = configurationCaretaker.Load();
+            foreach (var plugin in globalConfig.ModuleConfigurations)
             {
                 Configurations.Add(plugin);
             }
 
-            foreach (var outputDevice in totalConfig.OutputDevices)
+            foreach (var outputDevice in globalConfig.OutputDevices)
             {
                 ActiveDevices.Add(outputDevice);
             }
@@ -71,9 +71,9 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            totalConfig.ModuleConfigurations.Clear();
-            totalConfig.ModuleConfigurations.AddRange(Configurations);
-            pluginConfigurationStorer.Save(totalConfig);
+            globalConfig.ModuleConfigurations.Clear();
+            globalConfig.ModuleConfigurations.AddRange(Configurations);
+            configurationCaretaker.Save(globalConfig);
         }
 
         private bool CanFindServiceConfiguration()

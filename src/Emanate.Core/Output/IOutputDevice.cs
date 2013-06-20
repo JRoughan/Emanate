@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using Emanate.Core.Configuration;
 
 namespace Emanate.Core.Output
 {
-    public interface IOutputDevice
+    public interface IOutputDevice : IOriginator
     {
         string Key { get; }
         string Name { get; }
@@ -13,14 +13,5 @@ namespace Emanate.Core.Output
 
         List<InputInfo> Inputs { get; }
         string Profile { get; set; }
-
-        XElement ToXml();
-        void FromXml(XElement element);
-    }
-
-    public class InputInfo
-    {
-        public string Source { get; set; }
-        public string Id { get; set; }
     }
 }
