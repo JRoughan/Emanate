@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
+using Emanate.Core.Output;
 
 namespace Emanate.Core.Input
 {
     public interface IBuildMonitor
     {
-        void BeginMonitoring();
+        void BeginMonitoring(IEnumerable<InputInfo> inputs);
         void EndMonitoring();
 
         event EventHandler<StatusChangedEventArgs> StatusChanged;

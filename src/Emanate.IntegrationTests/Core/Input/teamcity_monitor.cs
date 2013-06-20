@@ -42,7 +42,7 @@ namespace Emanate.IntegrationTests.Core.Input
             var config = new TeamCityConfiguration { Uri = teamCityUri, PollingInterval = 60 };
             var monitor = new TeamCityMonitor(null, config);
 
-            monitor.BeginMonitoring();
+            //monitor.BeginMonitoring();
 
             Assert.AreNotEqual(BuildState.Unknown, monitor.CurrentState);
         }

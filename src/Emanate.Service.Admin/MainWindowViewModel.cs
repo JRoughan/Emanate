@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using Autofac;
 using Emanate.Core;
 
 namespace Emanate.Service.Admin
 {
     public class MainWindowViewModel : ViewModel
     {
+        private readonly IComponentContext componentContext;
         private readonly ConfigurationCaretaker configurationCaretaker;
         private GlobalConfig globalConfig;
 
-        public MainWindowViewModel(ConfigurationCaretaker configurationCaretaker)
+        public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker)
         {
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
 
+            this.componentContext = componentContext;
             this.configurationCaretaker = configurationCaretaker;
         }
 
@@ -24,9 +28,12 @@ namespace Emanate.Service.Admin
         public override void Initialize()
         {
             globalConfig = configurationCaretaker.Load();
-            foreach (var plugin in globalConfig.ModuleConfigurations)
+            foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
-                Configurations.Add(plugin);
+                var gui = componentContext.ResolveKeyed<UserControl>(moduleConfig.Key + "-Config");
+                gui.DataContext = moduleConfig.ModuleConfiguration;
+                moduleConfig.Gui = gui;
+                Configurations.Add(moduleConfig);
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)

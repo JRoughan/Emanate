@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Windows.Controls;
+using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
@@ -12,7 +13,7 @@ namespace Emanate.Delcom
         {
             builder.RegisterType<DelcomOutput>().As<IOutput>();
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>("delcom");
-            builder.RegisterType<ConfigurationView>();
+            builder.RegisterType<ConfigurationView>().Keyed<UserControl>("delcom-Config");
             builder.RegisterType<DelcomConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();
         }
     }

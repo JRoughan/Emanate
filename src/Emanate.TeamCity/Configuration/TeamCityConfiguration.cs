@@ -67,12 +67,6 @@ namespace Emanate.TeamCity.Configuration
             set { requiresAuthentication = value; OnPropertyChanged("RequiresAuthentication"); }
         }
 
-        public string BuildsToMonitor
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
         public Memento CreateMemento()
         {
             IsEditable = false;

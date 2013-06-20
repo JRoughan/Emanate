@@ -1,13 +1,15 @@
-﻿using System.ServiceProcess;
+﻿using System.Collections.Generic;
+using System.ServiceProcess;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 
 namespace Emanate.Service
 {
-    public partial class EmanateService : ServiceBase
+    public partial class EmanateService : ServiceBase, IEmanateApp
     {
         private readonly IBuildMonitor monitor;
         private readonly IOutput output;
+        private IEnumerable<InputInfo> inputs;
 
         public EmanateService(IBuildMonitor monitor, IOutput output)
         {
@@ -18,6 +20,11 @@ namespace Emanate.Service
             this.monitor.StatusChanged += MonitorStatusChanged;
         }
 
+        public void SetInputsToMonitor(IEnumerable<InputInfo> inputsToMonitor)
+        {
+            this.inputs = inputsToMonitor;
+        }
+
         private void MonitorStatusChanged(object sender, StatusChangedEventArgs e)
         {
             output.UpdateStatus(e.NewState, e.TimeStamp);
@@ -25,7 +32,7 @@ namespace Emanate.Service
 
         protected override void OnStart(string[] args)
         {
-            monitor.BeginMonitoring();
+            monitor.BeginMonitoring(inputs);
         }
 
         protected override void OnStop()

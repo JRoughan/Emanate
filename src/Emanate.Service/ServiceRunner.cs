@@ -1,6 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
+using Emanate.Core.Output;
+using Emanate.Service.Admin;
 
 namespace Emanate.Service
 {
@@ -12,6 +19,7 @@ namespace Emanate.Service
             var loader = new ModuleLoader();
             loader.LoadModules(builder);
 
+            builder.RegisterType<ConfigurationCaretaker>();
             builder.RegisterType<EmanateService>();
             builder.RegisterType<EmanateConsole>();
 
@@ -20,8 +28,8 @@ namespace Emanate.Service
 
         public void RunAsService()
         {
-            var container = CreateContainer();
-            var service = container.Resolve<EmanateService>();
+            var configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Emanate.config");
+            var service = CreateApp<EmanateService>(configFile);
 
             var servicesToRun = new ServiceBase[] { service };
             ServiceBase.Run(servicesToRun);
@@ -29,10 +37,29 @@ namespace Emanate.Service
 
         public void RunAsConsole()
         {
-            var container = CreateContainer();
-            var app = container.Resolve<EmanateConsole>();
+            var consoleApp = CreateApp<EmanateConsole>();
 
-            app.Start();
+            consoleApp.Start();
         }
+
+        private T CreateApp<T>(string configFile = null)
+            where T : IEmanateApp
+        {
+            var container = CreateContainer();
+            var app = container.Resolve<T>();
+
+            var caretaker = container.Resolve<ConfigurationCaretaker>();
+            var config = caretaker.Load(configFile);
+
+            //config.OutputDevices.SelectMany(d => d.)
+            //app.SetInputsToMonitor(inputs);
+
+            return app;
+        }
+    }
+
+    public interface IEmanateApp
+    {
+        void SetInputsToMonitor(IEnumerable<InputInfo> inputsToMonitor);
     }
 }

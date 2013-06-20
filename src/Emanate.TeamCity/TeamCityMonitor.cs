@@ -8,6 +8,7 @@ using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
 using Emanate.Core.Input;
+using Emanate.Core.Output;
 using Emanate.TeamCity.Configuration;
 using Timer = System.Timers.Timer;
 
@@ -64,56 +65,59 @@ namespace Emanate.TeamCity
             return Regex.IsMatch(project, regexPattern);
         }
 
-        private IEnumerable<string> GetBuildIds(string builds)
+        private IEnumerable<string> GetBuildIds(IEnumerable<InputInfo> builds)
         {
-            var projectXml = teamCityConnection.GetProjects();
-            var projectRoot = XElement.Parse(projectXml);
+            return builds.Select(b => b.Id);
+            //var projectXml = teamCityConnection.GetProjects();
+            //var projectRoot = XElement.Parse(projectXml);
 
-            var configParts = builds.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            //var configs = 
 
-            var projectValues = configParts.Select(p =>
-                                                      {
-                                                          var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                                          return new { Project = parts[0].Trim(), Build = parts[1].Trim() };
-                                                      });
+            //var configParts = builds.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            var projectNames = projectValues.Select(pv => pv.Project).Distinct();
+            //var projectValues = configParts.Select(p =>
+            //                                          {
+            //                                              var parts = p.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            //                                              return new { Project = parts[0].Trim(), Build = parts[1].Trim() };
+            //                                          });
 
-            var projectElements =
-                from projectElement in projectRoot.Elements("project")
-                let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
-                where p != null
-                select new { Name = p, Id = projectElement.Attribute("id").Value };
+            //var projectNames = projectValues.Select(pv => pv.Project).Distinct();
 
-            foreach (var projectElement in projectElements)
-            {
-                var projectName = projectElement.Name;
-                var projectId = projectElement.Id;
+            //var projectElements =
+            //    from projectElement in projectRoot.Elements("project")
+            //    let p = projectNames.FirstOrDefault(p => IsWildcardMatch(projectElement.Attribute("name").Value, p))
+            //    where p != null
+            //    select new { Name = p, Id = projectElement.Attribute("id").Value };
 
-                var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
+            //foreach (var projectElement in projectElements)
+            //{
+            //    var projectName = projectElement.Name;
+            //    var projectId = projectElement.Id;
 
-                var buildXml = teamCityConnection.GetProject(projectId);
-                var builtRoot = XElement.Parse(buildXml);
+            //    var buildNames = projectValues.Where(pv => pv.Project == projectName).Select(pv => pv.Build);
 
-                var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
-                                    from buildElement in buildTypesElement.Elements("buildType")
-                                    let b = buildNames.FirstOrDefault(b => IsWildcardMatch(buildElement.Attribute("name").Value, b))
-                                    where b != null
-                                    select buildElement;
+            //    var buildXml = teamCityConnection.GetProject(projectId);
+            //    var builtRoot = XElement.Parse(buildXml);
+
+            //    var buildElements = from buildTypesElement in builtRoot.Elements("buildTypes")
+            //                        from buildElement in buildTypesElement.Elements("buildType")
+            //                        let b = buildNames.FirstOrDefault(b => IsWildcardMatch(buildElement.Attribute("name").Value, b))
+            //                        where b != null
+            //                        select buildElement;
 
 
-                foreach (var buildElement in buildElements)
-                {
-                    yield return buildElement.Attribute("id").Value;
-                }
-            }
+            //    foreach (var buildElement in buildElements)
+            //    {
+            //        yield return buildElement.Attribute("id").Value;
+            //    }
+            //}
         }
 
-        public void BeginMonitoring()
+        public void BeginMonitoring(IEnumerable<InputInfo> inputs)
         {
             if (!isInitialized)
             {
-                var monitoredBuilds = GetBuildIds(configuration.BuildsToMonitor);
+                var monitoredBuilds = GetBuildIds(inputs);
                 buildStates = monitoredBuilds.ToDictionary(x => x, x => BuildState.Unknown);
                 isInitialized = true;
             }

@@ -9,16 +9,15 @@ namespace Emanate.Service.Admin
 {
     public class ConfigurationInfo
     {
-        public ConfigurationInfo(string name, UserControl gui, IModuleConfiguration moduleConfiguration)
+        public ConfigurationInfo(IModuleConfiguration moduleConfiguration)
         {
             ModuleConfiguration = moduleConfiguration;
-            Name = name;
-            Gui = gui;
         }
 
-        public string Name { get; private set; }
-        public UserControl Gui { get; private set; }
+        public string Key { get { return ModuleConfiguration.Key; } }
+        public string Name { get { return ModuleConfiguration.Name; } }
         public IModuleConfiguration ModuleConfiguration { get; private set; }
+        public UserControl Gui { get; set; }
     }
 
     public class OutputDeviceInfo : ViewModel

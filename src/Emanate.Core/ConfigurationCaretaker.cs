@@ -24,11 +24,12 @@ namespace Emanate.Service.Admin
             this.moduleConfigurations = moduleConfigurations;
         }
 
-        public GlobalConfig Load()
+        public GlobalConfig Load(string configFile = null)
         {
             var foo = new GlobalConfig();
 
-            var configDoc = GetServiceConfiguration();
+            configFilePath = configFile ?? GetServiceConfigurationFile();
+            var configDoc = XDocument.Load(configFilePath);
 
             var rootNode = configDoc.Element("emanate");
 
@@ -43,9 +44,7 @@ namespace Emanate.Service.Admin
 
             foreach (var moduleConfig in moduleConfigurations)
             {
-                var gui = componentContext.Resolve(moduleConfig.GuiType) as UserControl;
-                gui.DataContext = moduleConfig;
-                foo.ModuleConfigurations.Add(new ConfigurationInfo(moduleConfig.Name, gui, moduleConfig));
+                foo.ModuleConfigurations.Add(new ConfigurationInfo(moduleConfig));
             }
 
             // Output devices
@@ -107,7 +106,7 @@ namespace Emanate.Service.Admin
             configDoc.Save(configFilePath);
         }
 
-        private static XDocument GetServiceConfiguration()
+        private static string GetServiceConfigurationFile()
         {
             var mc = new ManagementClass("Win32_Service");
             foreach (ManagementObject mo in mc.GetInstances())
@@ -116,8 +115,7 @@ namespace Emanate.Service.Admin
                 {
                     var pathToServiceExe = mo.GetPropertyValue("PathName").ToString().Trim('"');
                     var dir = Path.GetDirectoryName(pathToServiceExe);
-                    configFilePath = Path.Combine(dir, "Emanate.config");
-                    return XDocument.Load(configFilePath);
+                    return Path.Combine(dir, "Emanate.config");
                 }
             }
             throw new Exception("Could not find the service or the installed path.");

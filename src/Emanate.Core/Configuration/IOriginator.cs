@@ -5,7 +5,7 @@ namespace Emanate.Core.Configuration
     public interface IOriginator
     {
         Memento CreateMemento();
-        void SetMemento(Memento element);
+        void SetMemento(Memento memento);
     }
 
     public class Memento

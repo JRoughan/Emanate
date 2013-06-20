@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -48,7 +49,10 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="ConfigurationCaretaker.cs" />
+    <Compile Include="ConfigurationInfo.cs" />
     <Compile Include="Configuration\IOriginator.cs" />
+    <Compile Include="GlobalConfig.cs" />
     <Compile Include="InputSelector.cs" />
     <Compile Include="Configuration\IModuleConfiguration.cs" />
     <Compile Include="DelegateCommand.cs" />
