@@ -3,6 +3,7 @@ using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
+using Emanate.Service.Admin;
 using Emanate.TeamCity.Configuration;
 using Emanate.TeamCity.InputSelector;
 
@@ -10,12 +11,14 @@ namespace Emanate.TeamCity
 {
     public class TeamCityModule : IEmanateModule
     {
+        private const string Key = "teamcity";
+
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>("teamcity-InputSelector");
+            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
-            builder.RegisterType<ConfigurationView>().Keyed<UserControl>("teamcity-Config");
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
         }
 
         public void LoadServiceComponents(ContainerBuilder builder)

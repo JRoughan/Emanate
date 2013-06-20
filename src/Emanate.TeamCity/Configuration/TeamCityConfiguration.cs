@@ -9,63 +9,46 @@ using Emanate.Service.Admin;
 
 namespace Emanate.TeamCity.Configuration
 {
-    // TODO: Split this into a config class and a VM
-    public class TeamCityConfiguration : ViewModel, IModuleConfiguration
+    public class TeamCityConfigurationViewModel : ViewModel
     {
-        private const string key = "teamcity";
-        private const string name = "TeamCity";
+        private readonly TeamCityConfiguration teamCityConfiguration;
 
-        string IModuleConfiguration.Key { get { return key; } }
-        string IModuleConfiguration.Name { get { return name; } }
-        Type IModuleConfiguration.GuiType { get { return typeof(ConfigurationView); } }
-
-        public TeamCityConfiguration()
+        public TeamCityConfigurationViewModel(TeamCityConfiguration teamCityConfiguration)
         {
+            this.teamCityConfiguration = teamCityConfiguration;
+            IsEditable = teamCityConfiguration != null;
+
             TestConnectionCommand = new DelegateCommand(TestConnection, CanTestConnection);
-            IsEditable = true;
         }
 
-        public ObservableCollection<IOutputProfile> Profiles
-        {
-            get
-            {
-                throw new NotSupportedException("TeamCity module does not support profiles");
-            }
-        }
-
-        public string uri;
         public string Uri
         {
-            get { return uri; }
-            set { uri = value; OnPropertyChanged("Uri"); }
+            get { return teamCityConfiguration.Uri; }
+            set { teamCityConfiguration.Uri = value; OnPropertyChanged("Uri"); }
         }
 
-        public int pollingInterval;
         public int PollingInterval
         {
-            get { return pollingInterval; }
-            set { pollingInterval = value; OnPropertyChanged("PollingInterval"); }
+            get { return teamCityConfiguration.PollingInterval; }
+            set { teamCityConfiguration.PollingInterval = value; OnPropertyChanged("PollingInterval"); }
         }
 
-        public string userName;
         public string UserName
         {
-            get { return userName; }
-            set { userName = value; OnPropertyChanged("UserName"); }
+            get { return teamCityConfiguration.UserName; }
+            set { teamCityConfiguration.UserName = value; OnPropertyChanged("UserName"); }
         }
 
-        public string password;
         public string Password
         {
-            get { return password; }
-            set { password = value; OnPropertyChanged("Password"); }
+            get { return teamCityConfiguration.Password; }
+            set { teamCityConfiguration.Password = value; OnPropertyChanged("Password"); }
         }
 
-        public bool requiresAuthentication;
         public bool RequiresAuthentication
         {
-            get { return requiresAuthentication; }
-            set { requiresAuthentication = value; OnPropertyChanged("RequiresAuthentication"); }
+            get { return teamCityConfiguration.RequiresAuthentication; }
+            set { teamCityConfiguration.RequiresAuthentication = value; OnPropertyChanged("RequiresAuthentication"); }
         }
 
         private bool isEditable;
@@ -82,44 +65,6 @@ namespace Emanate.TeamCity.Configuration
             set { isTestSuccessful = value; OnPropertyChanged("IsTestSuccessful"); }
         }
 
-        public Memento CreateMemento()
-        {
-            IsEditable = false;
-
-            var moduleElement = new XElement("module");
-            moduleElement.Add(new XAttribute("type", key));
-            moduleElement.Add(new XElement("uri", Uri));
-            moduleElement.Add(new XElement("polling-interval", PollingInterval));
-            moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
-            moduleElement.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
-            moduleElement.Add(new XElement("password", RequiresAuthentication ? EncryptDecrypt(Password) : ""));
-
-            IsEditable = true;
-
-            return new Memento(moduleElement);
-        }
-
-        public void SetMemento(Memento memento)
-        {
-            IsEditable = false;
-
-            if (memento.Type != key)
-                throw new ArgumentException("Cannot load non-TeamCity configuration");
-
-            // TODO: Error handling
-            var element = memento.Element;
-            Uri = element.Element("uri").Value;
-            PollingInterval = int.Parse(element.Element("polling-interval").Value);
-            RequiresAuthentication = bool.Parse(element.Element("requires-authentication").Value);
-            if (RequiresAuthentication)
-            {
-                UserName = element.Element("username").Value;
-                Password = EncryptDecrypt(element.Element("password").Value);
-            }
-
-            IsEditable = true;
-        }
-
         public ICommand TestConnectionCommand { get; set; }
 
         private bool isTesting;
@@ -133,7 +78,7 @@ namespace Emanate.TeamCity.Configuration
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
-            var connection = new TeamCityConnection(this);
+            var connection = new TeamCityConnection(teamCityConfiguration);
             try
             {
                 IsTestSuccessful = connection.GetProjects() != null;
@@ -146,6 +91,60 @@ namespace Emanate.TeamCity.Configuration
             {
                 isTesting = false;
                 IsEditable = true;
+            }
+        }
+    }
+
+    public class TeamCityConfiguration : IModuleConfiguration
+    {
+        private const string key = "teamcity";
+        private const string name = "TeamCity";
+
+        string IModuleConfiguration.Key { get { return key; } }
+        string IModuleConfiguration.Name { get { return name; } }
+        Type IModuleConfiguration.GuiType { get { return typeof(ConfigurationView); } }
+
+        public ObservableCollection<IOutputProfile> Profiles
+        {
+            get
+            {
+                throw new NotSupportedException("TeamCity module does not support profiles");
+            }
+        }
+
+        public string Uri { get; set; }
+        public int PollingInterval { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public bool RequiresAuthentication { get; set; }
+
+        public Memento CreateMemento()
+        {
+            var moduleElement = new XElement("module");
+            moduleElement.Add(new XAttribute("type", key));
+            moduleElement.Add(new XElement("uri", Uri));
+            moduleElement.Add(new XElement("polling-interval", PollingInterval));
+            moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
+            moduleElement.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
+            moduleElement.Add(new XElement("password", RequiresAuthentication ? EncryptDecrypt(Password) : ""));
+
+            return new Memento(moduleElement);
+        }
+
+        public void SetMemento(Memento memento)
+        {
+            if (memento.Type != key)
+                throw new ArgumentException("Cannot load non-TeamCity configuration");
+
+            // TODO: Error handling
+            var element = memento.Element;
+            Uri = element.Element("uri").Value;
+            PollingInterval = int.Parse(element.Element("polling-interval").Value);
+            RequiresAuthentication = bool.Parse(element.Element("requires-authentication").Value);
+            if (RequiresAuthentication)
+            {
+                UserName = element.Element("username").Value;
+                Password = EncryptDecrypt(element.Element("password").Value);
             }
         }
 

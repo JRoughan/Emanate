@@ -10,8 +10,30 @@ using Emanate.Service.Admin;
 
 namespace Emanate.Delcom.Configuration
 {
-    // TODO: Split this into a config class and a VM
-    public class DelcomConfiguration : ViewModel, IModuleConfiguration
+    public class DelcomConfigurationViewModel : ViewModel
+    {
+        private readonly DelcomConfiguration delcomConfiguration;
+
+        public DelcomConfigurationViewModel(DelcomConfiguration delcomConfiguration)
+        {
+            this.delcomConfiguration = delcomConfiguration;
+            IsEditable = delcomConfiguration != null;
+        }
+
+        private bool isEditable;
+        public bool IsEditable
+        {
+            get { return isEditable; }
+            set { isEditable = value; OnPropertyChanged("IsEditable"); }
+        }
+
+        public ObservableCollection<IOutputProfile> Profiles
+        {
+            get { return delcomConfiguration.Profiles; }
+        }
+    }
+
+    public class DelcomConfiguration : IModuleConfiguration
     {
         private const string key = "delcom";
         private const string name = "Delcom";
@@ -22,15 +44,13 @@ namespace Emanate.Delcom.Configuration
 
         public DelcomConfiguration()
         {
-            IsEditable = true;
             AddProfileCommand = new DelegateCommand(AddProfile);
         }
 
-        private ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
+        private readonly ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
         public ObservableCollection<IOutputProfile> Profiles
         {
             get { return profiles; }
-            set { profiles = value; OnPropertyChanged("Profiles"); }
         }
 
         public ICommand AddProfileCommand { get; private set; }
@@ -45,8 +65,6 @@ namespace Emanate.Delcom.Configuration
 
         public Memento CreateMemento()
         {
-            IsEditable = false;
-
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("type", key));
             var profilesElement = new XElement("profiles");
@@ -72,15 +90,11 @@ namespace Emanate.Delcom.Configuration
                 profilesElement.Add(profileElement);
             }
 
-            IsEditable = true;
-
             return new Memento(moduleElement);
         }
 
         public void SetMemento(Memento memento)
         {
-            IsEditable = false;
-
             if (memento.Type != key)
                 throw new ArgumentException("Cannot load non-Delcom configuration");
 
@@ -104,15 +118,6 @@ namespace Emanate.Delcom.Configuration
                 }
                 Profiles.Add(profile);
             }
-
-            IsEditable = true;
-        }
-
-        private bool isEditable;
-        public bool IsEditable
-        {
-            get { return isEditable; }
-            set { isEditable = value; OnPropertyChanged("IsEditable"); }
         }
     }
 }

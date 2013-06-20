@@ -6,21 +6,19 @@ namespace Emanate.TeamCity.Configuration
 {
     public partial class ConfigurationView
     {
-        private TeamCityConfiguration viewModel;
+        private TeamCityConfigurationViewModel viewModel;
 
         public ConfigurationView()
         {
-            DataContextChanged += ConfigurationView_DataContextChanged;
             InitializeComponent();
         }
 
-        void ConfigurationView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public override void SetTarget(Core.Configuration.IModuleConfiguration moduleConfiguration)
         {
-            viewModel = e.NewValue as TeamCityConfiguration;
+            viewModel = new TeamCityConfigurationViewModel(moduleConfiguration as TeamCityConfiguration);
             viewModel.Initialize();
-
-            if (PasswordInput != null)
-                PasswordInput.Password = viewModel.Password;
+            PasswordInput.Password = viewModel.Password;
+            DataContext = viewModel;
         }
 
         private void PasswordInputInitialized(object sender, EventArgs e)

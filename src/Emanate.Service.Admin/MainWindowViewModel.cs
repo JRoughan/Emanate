@@ -31,9 +31,9 @@ namespace Emanate.Service.Admin
             globalConfig = configurationCaretaker.Load();
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
-                var gui = componentContext.ResolveKeyed<UserControl>(moduleConfig.Key + "-Config");
-                gui.DataContext = moduleConfig;
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, gui);
+                var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
+                configurationEditor.SetTarget(moduleConfig);
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor);
                 Configurations.Add(moduleConfigInfo);
             }
 
@@ -44,7 +44,7 @@ namespace Emanate.Service.Admin
                 var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
                 foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
                 {
-                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
+                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
                     inputSelector.SelectInputs(inputGroup);
                     outputDeviceInfo.InputSelector = inputSelector;
                 }

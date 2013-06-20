@@ -1,20 +1,18 @@
-﻿using System.Windows;
-
-namespace Emanate.Delcom.Configuration
+﻿namespace Emanate.Delcom.Configuration
 {
     public partial class ConfigurationView
     {
-        private DelcomConfiguration viewModel;
+        private DelcomConfigurationViewModel viewModel;
 
         public ConfigurationView()
         {
-            DataContextChanged += ConfigurationView_DataContextChanged;
             InitializeComponent();
         }
 
-        void ConfigurationView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public override void SetTarget(Core.Configuration.IModuleConfiguration moduleConfiguration)
         {
-            viewModel = e.NewValue as DelcomConfiguration;
+            var config = moduleConfiguration as DelcomConfiguration;
+            viewModel = new DelcomConfigurationViewModel(config);
             viewModel.Initialize();
         }
     }
