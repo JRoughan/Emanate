@@ -14,6 +14,7 @@
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomConfigurationViewModel(config);
             viewModel.Initialize();
+            DataContext = viewModel;
         }
     }
 }

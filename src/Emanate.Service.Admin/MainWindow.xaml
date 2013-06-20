@@ -14,7 +14,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Border SnapsToDevicePixels="True">
-                <admin:ServiceAdminView Height="32" Width="64" Margin="20,0"  />
+                <admin:ServiceAdminView Height="32" Margin="20,0"  />
             </Border>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Save and Exit" Command="{Binding SaveCommand}" Margin="10" Padding="10" />

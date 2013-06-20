@@ -45,8 +45,6 @@ namespace Emanate.TeamCity
             timer.Elapsed += PollTeamCityStatus;
         }
 
-        public event EventHandler<StatusChangedEventArgs> StatusChanged;
-
         public BuildState CurrentState { get; private set; }
 
         public void AddBuilds(IOutput output, IEnumerable<string> buildIds)
