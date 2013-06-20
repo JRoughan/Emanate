@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
@@ -19,6 +21,7 @@ namespace Emanate.Delcom.Configuration
         public DelcomConfiguration()
         {
             IsEditable = true;
+            AddProfileCommand = new DelegateCommand(AddProfile);
         }
 
         private ObservableCollection<MonitoringProfile> profiles = new ObservableCollection<MonitoringProfile>();
@@ -26,6 +29,18 @@ namespace Emanate.Delcom.Configuration
         {
             get { return profiles; }
             set { profiles = value; OnPropertyChanged("Profiles"); }
+        }
+
+        public ICommand AddProfileCommand { get; private set; }
+
+        private void AddProfile()
+        {
+            var addProfileViewModel = new AddProfileViewModel(this);
+            var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
+            addProfileView.Owner = Application.Current.MainWindow;
+            var result = addProfileView.ShowDialog();
+            if (result.HasValue && result.Value)
+                Profiles.Add(addProfileViewModel.NewProfile);
         }
 
         public XElement ToXml()
