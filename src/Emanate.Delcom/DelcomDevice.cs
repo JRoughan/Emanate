@@ -24,9 +24,12 @@ namespace Emanate.Delcom
 
         public List<InputInfo> Inputs { get; private set; }
 
+        public string Profile { get; set; }
+
         public XElement ToXml()
         {
             var deviceElement = new XElement(key);
+            deviceElement.Add(new XAttribute("profile", Profile));
             deviceElement.Add(new XElement("name", Name));
             var inputsElement = new XElement("inputs");
             foreach (var input in Inputs)
@@ -47,6 +50,7 @@ namespace Emanate.Delcom
             //    throw new ArgumentException("Cannot load non-TeamCity configuration");
 
             // TODO: Error handling
+            Profile = element.Attribute("profile").Value;
             name = element.Element("name").Value;
             var inputsElement = element.Element("inputs");
             foreach (var inputElement in inputsElement.Elements("input"))

@@ -119,23 +119,12 @@
             </Style.Triggers>
         </Style>
     </core:InputSelector.Resources>
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
-            <Label Content="Output profile"></Label>
-            <ComboBox DockPanel.Dock="Right" 
-                              ItemsSource="{Binding AvailableProfiles}" 
-                              SelectedItem="{Binding Profile}" 
-                              DisplayMemberPath="Key"
-                              Margin="100,0,0,0" />
-        </StackPanel>
-        
-        <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
-                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
-    </DockPanel>
-    
+    <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
+        <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
+                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+            </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
+
 </core:InputSelector>

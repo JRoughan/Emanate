@@ -58,14 +58,13 @@ namespace Emanate.Service.Admin
                 device.FromXml(deviceElement);
 
                 var moduleConfiguration = moduleConfigurations.Single(c => c.Key.Equals(deviceKey, StringComparison.OrdinalIgnoreCase));
-                var profile = deviceElement.Attribute("profile").Value;
 
-                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device);
+                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device, moduleConfiguration);
                 foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
                 {
                     var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
-                    inputSelector.SelectInputs(inputGroup, moduleConfiguration, profile);
-                    outputDeviceInfo.AddInputSelector(inputSelector);
+                    inputSelector.SelectInputs(inputGroup);
+                    outputDeviceInfo.InputSelector = inputSelector;
                 }
 
                 foo.OutputDevices.Add(outputDeviceInfo);
@@ -100,6 +99,8 @@ namespace Emanate.Service.Admin
             foreach (var deviceInfo in totalConfig.OutputDevices)
             {
                 var device = deviceInfo.OutputDevice;
+                device.Inputs.Clear();
+                device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
                 var xml = device.ToXml();
                 devicesElement.Add(xml);
             }

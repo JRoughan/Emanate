@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.InputSelector
@@ -21,9 +20,14 @@ namespace Emanate.TeamCity.InputSelector
             viewModel.Initialize();
         }
 
-        public override void SelectInputs(IEnumerable<InputInfo> inputs, IModuleConfiguration moduleConfiguration, string currentOutputProfile)
+        public override void SelectInputs(IEnumerable<InputInfo> inputs)
         {
-            viewModel.SelectInputs(inputs, moduleConfiguration, currentOutputProfile);
+            viewModel.SelectInputs(inputs);
+        }
+
+        public override IEnumerable<InputInfo> GetSelectedInputs()
+        {
+            return viewModel.GetSelectedInputs();
         }
     }
 }

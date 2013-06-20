@@ -29,7 +29,17 @@
                 </TabItem.Header>
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="DeviceSelector" ItemsSource="{Binding ActiveDevices}" MinWidth="120" DisplayMemberPath="Name" />
-                    <ContentPresenter Content="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelector}" />
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
+                            <Label Content="Output profile"></Label>
+                            <ComboBox DockPanel.Dock="Right" 
+                              ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.AvailableProfiles}" 
+                              SelectedItem="{Binding ElementName=DeviceSelector, Path=SelectedItem.Profile}" 
+                              DisplayMemberPath="Key"
+                              Margin="100,0,0,0" />
+                        </StackPanel>
+                        <ContentPresenter Content="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelector}" />
+                    </DockPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>

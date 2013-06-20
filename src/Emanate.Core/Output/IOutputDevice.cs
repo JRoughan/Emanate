@@ -12,6 +12,7 @@ namespace Emanate.Core.Output
         Type DeviceType { get; }
 
         List<InputInfo> Inputs { get; }
+        string Profile { get; set; }
 
         XElement ToXml();
         void FromXml(XElement element);
