@@ -32,6 +32,7 @@ namespace Emanate.Service.Admin
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
                 var gui = componentContext.ResolveKeyed<UserControl>(moduleConfig.Key + "-Config");
+                gui.DataContext = moduleConfig;
                 var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, gui);
                 Configurations.Add(moduleConfigInfo);
             }
