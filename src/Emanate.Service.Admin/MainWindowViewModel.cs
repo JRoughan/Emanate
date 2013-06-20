@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using Autofac;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 
 namespace Emanate.Service.Admin

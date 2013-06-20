@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Emanate.Core.Configuration;
 
 namespace Emanate.Core.Output

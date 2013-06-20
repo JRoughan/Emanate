@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ServiceProcess;
-using Emanate.Core;
 
 namespace Emanate.Service.Admin
 {

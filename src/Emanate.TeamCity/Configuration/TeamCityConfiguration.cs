@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;

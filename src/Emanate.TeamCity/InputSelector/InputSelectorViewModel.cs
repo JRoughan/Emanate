@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
-using Emanate.Core;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
 
