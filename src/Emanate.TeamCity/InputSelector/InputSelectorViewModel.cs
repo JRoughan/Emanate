@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core;
+using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.InputSelector
@@ -53,8 +54,29 @@ namespace Emanate.TeamCity.InputSelector
             set { projects = value; OnPropertyChanged("Projects"); }
         }
 
-        public void SelectInputs(IEnumerable<InputInfo> inputs)
+        private IOutputProfile profile;
+        public IOutputProfile Profile
         {
+            get { return profile; }
+            set { profile = value; OnPropertyChanged("Profile"); }
+        }
+
+        private ObservableCollection<IOutputProfile> availableProfiles = new ObservableCollection<IOutputProfile>();
+        public ObservableCollection<IOutputProfile> AvailableProfiles
+        {
+            get { return availableProfiles; }
+            set { availableProfiles = value; OnPropertyChanged("AvailableProfiles"); }
+        }
+
+        public void SelectInputs(IEnumerable<InputInfo> inputs, IModuleConfiguration moduleConfiguration, string currentOutputProfile)
+        {
+            foreach (var profile in moduleConfiguration.Profiles)
+            {
+                AvailableProfiles.Add(profile);
+                if (profile.Key.Equals(currentOutputProfile))
+                    Profile = profile;
+            }
+
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var inputInfo in inputs)
             {

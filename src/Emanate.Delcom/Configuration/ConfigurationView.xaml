@@ -16,7 +16,7 @@
                     </Button>
                 </StackPanel>
             </GroupBox.Header>
-            <ListView  x:Name="ProfileSelector" ItemsSource="{Binding Profiles}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
+            <ListView  x:Name="ProfileSelector" ItemsSource="{Binding Profiles}" MinWidth="120" Margin="10" DisplayMemberPath="Key" />
         </GroupBox>
         <Grid>
             <Grid.RowDefinitions>

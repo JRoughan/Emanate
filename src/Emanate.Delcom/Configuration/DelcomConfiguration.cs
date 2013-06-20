@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
+using Emanate.Core.Output;
 
 namespace Emanate.Delcom.Configuration
 {
@@ -31,6 +33,11 @@ namespace Emanate.Delcom.Configuration
             set { profiles = value; OnPropertyChanged("Profiles"); }
         }
 
+        IEnumerable<IOutputProfile> IModuleConfiguration.Profiles
+        {
+            get { return profiles; }
+        }
+
         public ICommand AddProfileCommand { get; private set; }
 
         private void AddProfile()
@@ -54,7 +61,7 @@ namespace Emanate.Delcom.Configuration
             foreach (var profile in Profiles)
             {
                 var profileElement = new XElement("profile");
-                profileElement.Add(new XAttribute("name", profile.Name));
+                profileElement.Add(new XAttribute("key", profile.Key));
                 profileElement.Add(new XElement("decay", profile.Decay));
 
                 foreach (var state in profile.States)
@@ -89,7 +96,7 @@ namespace Emanate.Delcom.Configuration
             foreach (var profileElement in profilesElement.Elements("profile"))
             {
                 var profile = new MonitoringProfile();
-                profile.Name = profileElement.Attribute("name").Value;
+                profile.Key = profileElement.Attribute("key").Value;
                 profile.Decay = uint.Parse(profileElement.Element("decay").Value);
                 foreach (var stateElement in profileElement.Elements("state"))
                 {

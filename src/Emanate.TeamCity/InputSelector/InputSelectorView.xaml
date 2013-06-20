@@ -6,13 +6,12 @@
              xmlns:inputSelector="clr-namespace:Emanate.TeamCity.InputSelector"
                                       xmlns:core="clr-namespace:Emanate.Core;assembly=Emanate.Core"
                                       mc:Ignorable="d" 
-             x:Name="root"
              d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <core:InputSelector.Resources>
-        
+
         <BooleanToVisibilityConverter x:Key="BooToVisConverter" />
-        
+
         <Style x:Key="TreeViewItemFocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -120,19 +119,23 @@
             </Style.Triggers>
         </Style>
     </core:InputSelector.Resources>
-    <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
-        <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
-                <DockPanel>
-                    <ComboBox DockPanel.Dock="Right" 
-                              ItemsSource="{Binding ElementName=root, Path=DataContext.AvailableProfiles}" 
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
+            <Label Content="Output profile"></Label>
+            <ComboBox DockPanel.Dock="Right" 
+                              ItemsSource="{Binding AvailableProfiles}" 
                               SelectedItem="{Binding Profile}" 
-                              Margin="100,0,0,0" 
-                              IsEnabled="{Binding IsSelected}"
-                              Visibility="{Binding IsProfileTarget, Converter={StaticResource BooToVisConverter}}"/>
+                              DisplayMemberPath="Key"
+                              Margin="100,0,0,0" />
+        </StackPanel>
+        
+        <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
                     <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
-                </DockPanel>
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
-    </TreeView>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
+    
 </core:InputSelector>

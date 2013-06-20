@@ -53,15 +53,18 @@ namespace Emanate.Service.Admin
             var devices = rootNode.Element("output-devices");
             foreach (var deviceElement in devices.Elements())
             {
-                var name = deviceElement.Name.LocalName;
-                var device = componentContext.ResolveKeyed<IOutputDevice>(name);
+                var deviceKey = deviceElement.Name.LocalName;
+                var device = componentContext.ResolveKeyed<IOutputDevice>(deviceKey);
                 device.FromXml(deviceElement);
+
+                var moduleConfiguration = moduleConfigurations.Single(c => c.Key.Equals(deviceKey, StringComparison.OrdinalIgnoreCase));
+                var profile = deviceElement.Attribute("profile").Value;
 
                 var outputDeviceInfo = new OutputDeviceInfo(device.Name, device);
                 foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
                 {
                     var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
-                    inputSelector.SelectInputs(inputGroup);
+                    inputSelector.SelectInputs(inputGroup, moduleConfiguration, profile);
                     outputDeviceInfo.AddInputSelector(inputSelector);
                 }
 

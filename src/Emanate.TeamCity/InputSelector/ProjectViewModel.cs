@@ -5,8 +5,6 @@ namespace Emanate.TeamCity.InputSelector
 {
     public class ProjectViewModel : ViewModel
     {
-        public string Id { get; set; }
-
         private string name;
         public string Name
         {
@@ -26,13 +24,6 @@ namespace Emanate.TeamCity.InputSelector
                     configuration.IsSelected = value;
                 }
             }
-        }
-
-        private bool isProfileTarget;
-        public bool IsProfileTarget
-        {
-            get { return isProfileTarget; }
-            set { isProfileTarget = value; OnPropertyChanged("IsProfileTarget"); }
         }
 
         private ObservableCollection<ProjectConfigurationViewModel> configurations = new ObservableCollection<ProjectConfigurationViewModel>();

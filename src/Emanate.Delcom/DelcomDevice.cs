@@ -34,7 +34,6 @@ namespace Emanate.Delcom
                 var inputElement = new XElement("input");
                 inputElement.Add(new XAttribute("source", input.Source));
                 inputElement.Add(new XAttribute("id", input.Id));
-                inputElement.Add(new XAttribute("profile", input.Profile));
                 inputsElement.Add(inputElement);
             }
             deviceElement.Add(inputsElement);
@@ -55,7 +54,6 @@ namespace Emanate.Delcom
                 var input = new InputInfo();
                 input.Source = inputElement.Attribute("source").Value;
                 input.Id = inputElement.Attribute("id").Value;
-                input.Profile = inputElement.Attribute("profile").Value;
                 Inputs.Add(input);
             }
         }

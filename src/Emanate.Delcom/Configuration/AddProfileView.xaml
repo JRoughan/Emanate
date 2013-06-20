@@ -32,7 +32,7 @@
             <Label Grid.Row="1" Grid.Column="0" Content="Profile to clone (optional)" />
             <DockPanel Grid.Row="1" Grid.Column="1">
                 <Button DockPanel.Dock="Right" Content="Clone" Margin="2" Width="50" Command="{Binding CloneProfileCommand}" CommandParameter="{Binding ElementName=CloneProfileSelector, Path=SelectedItem}" />
-                <ComboBox x:Name="CloneProfileSelector" ItemsSource="{Binding ExistingProfiles}" />
+                <ComboBox x:Name="CloneProfileSelector" ItemsSource="{Binding ExistingProfiles}" DisplayMemberPath="Key" />
             </DockPanel>
             
             <GroupBox Header="States" Grid.Row="2" Grid.ColumnSpan="2" Margin="10">

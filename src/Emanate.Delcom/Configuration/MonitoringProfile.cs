@@ -1,15 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using Emanate.Core;
+using Emanate.Core.Output;
 
 namespace Emanate.Delcom.Configuration
 {
-    public class MonitoringProfile : ViewModel
+    public class MonitoringProfile : ViewModel, IOutputProfile
     {
-        private string name;
-        public string Name
+        private string key;
+        public string Key
         {
-            get { return name; }
-            set { name = value; OnPropertyChanged("Name"); }
+            get { return key; }
+            set { key = value; OnPropertyChanged("Key"); }
         }
 
         private ObservableCollection<ProfileState> states = new ObservableCollection<ProfileState>();

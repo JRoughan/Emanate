@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
+using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.Configuration
 {
@@ -20,6 +22,14 @@ namespace Emanate.TeamCity.Configuration
         {
             TestConnectionCommand = new DelegateCommand(TestConnection, CanTestConnection);
             IsEditable = true;
+        }
+
+        public IEnumerable<IOutputProfile> Profiles
+        {
+            get
+            {
+                throw new NotSupportedException("TeamCity module does not support profiles");
+            }
         }
 
         public string uri;
@@ -101,7 +111,7 @@ namespace Emanate.TeamCity.Configuration
         }
 
 
-        
+
         public ICommand TestConnectionCommand { get; set; }
 
         private bool isTesting;
