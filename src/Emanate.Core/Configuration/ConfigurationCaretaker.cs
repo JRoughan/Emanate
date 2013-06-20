@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -12,13 +11,11 @@ namespace Emanate.Core.Configuration
     public class ConfigurationCaretaker
     {
         private readonly IComponentContext componentContext;
-        private readonly IEnumerable<IModuleConfiguration> moduleConfigurations;
         private static string configFilePath;
 
-        public ConfigurationCaretaker(IComponentContext componentContext, IEnumerable<IModuleConfiguration> moduleConfigurations)
+        public ConfigurationCaretaker(IComponentContext componentContext)
         {
             this.componentContext = componentContext;
-            this.moduleConfigurations = moduleConfigurations;
         }
 
         public GlobalConfig Load(string configFile = null)
@@ -30,18 +27,16 @@ namespace Emanate.Core.Configuration
 
             var rootNode = configDoc.Element("emanate");
 
+            var builder = new ContainerBuilder();
+
             // Modules
             var modules = rootNode.Element("modules");
             foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
             {
-                var config = moduleConfigurations.FirstOrDefault(c => c.Key.Equals(moduleMemento.Type, StringComparison.OrdinalIgnoreCase));
-                if (config != null)
-                    config.SetMemento(moduleMemento);
-            }
-
-            foreach (var moduleConfig in moduleConfigurations)
-            {
+                var moduleConfig = componentContext.ResolveKeyed<IModuleConfiguration>(moduleMemento.Type);
+                moduleConfig.SetMemento(moduleMemento);
                 foo.ModuleConfigurations.Add(moduleConfig);
+                builder.RegisterInstance(moduleConfig).AsSelf();
             }
 
             // Output devices
@@ -52,6 +47,8 @@ namespace Emanate.Core.Configuration
                 device.SetMemento(deviceMemento);
                 foo.OutputDevices.Add(device);
             }
+
+            builder.Update(componentContext.ComponentRegistry);
 
             return foo;
         }

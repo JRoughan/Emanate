@@ -27,7 +27,7 @@ namespace Emanate.Delcom
         {
             builder.RegisterType<DelcomOutput>().As<IOutput>();
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(Key);
-            builder.RegisterType<DelcomConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();
+            builder.RegisterType<DelcomConfiguration>().Keyed<IModuleConfiguration>(Key);
         }
     }
 }

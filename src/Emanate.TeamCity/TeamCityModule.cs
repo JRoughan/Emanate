@@ -30,7 +30,7 @@ namespace Emanate.TeamCity
         {
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
             builder.RegisterType<TeamCityMonitor>().As<IBuildMonitor>();
-            builder.RegisterType<TeamCityConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();
+            builder.RegisterType<TeamCityConfiguration>().Keyed<IModuleConfiguration>(Key);
         }
     }
 }
