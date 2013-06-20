@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 
@@ -13,18 +14,13 @@ namespace Emanate.Core
             foreach (var dll in dlls)
             {
                 var assembly = Assembly.LoadFrom(dll);
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (type.IsInterface || type.IsAbstract)
-                        continue;
+                var moduleAttribute = (EmanateModuleAttribute)assembly.GetCustomAttributes(typeof (EmanateModuleAttribute), false).SingleOrDefault();
+                if (moduleAttribute == null)
+                    continue;
 
-                    if (typeof(IModule).IsAssignableFrom(type))
-                    {
-                        var module = Activator.CreateInstance(type) as IModule;
-                        if (module != null)
-                            module.Load(builder);
-                    }
-                }
+                var module = Activator.CreateInstance(moduleAttribute.ModuleType) as IEmanateModule;
+                if (module != null)
+                    module.Load(builder);
             }
         }
     }

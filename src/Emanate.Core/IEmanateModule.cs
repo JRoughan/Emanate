@@ -2,7 +2,7 @@
 
 namespace Emanate.Core
 {
-    public interface IModule
+    public interface IEmanateModule
     {
         void Load(ContainerBuilder builder);
     }

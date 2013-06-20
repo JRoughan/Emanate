@@ -76,7 +76,7 @@
     <Compile Include="FileIODeclarations.cs" />
     <Compile Include="Hid.cs" />
     <Compile Include="HidDeclarations.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="DelcomModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

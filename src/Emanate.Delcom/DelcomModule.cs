@@ -7,7 +7,7 @@ using Emanate.Delcom.Configuration;
 
 namespace Emanate.Delcom
 {
-    public class Module : IModule
+    public class DelcomModule : IEmanateModule
     {
         public void Load(ContainerBuilder builder)
         {

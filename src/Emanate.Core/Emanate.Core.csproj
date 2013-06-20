@@ -52,7 +52,8 @@
     <Compile Include="Configuration\IModuleConfiguration.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\BuildState.cs" />
-    <Compile Include="IModule.cs" />
+    <Compile Include="IEmanateModule.cs" />
+    <Compile Include="EmanateModuleAttribute.cs" />
     <Compile Include="ModuleLoader.cs" />
     <Compile Include="Output\InputInfo.cs" />
     <Compile Include="Output\IOutputDevice.cs" />

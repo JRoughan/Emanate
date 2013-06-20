@@ -2,6 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using Emanate.Core;
+using Emanate.Delcom;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -55,3 +57,5 @@ using System.Windows;
 
 [assembly: InternalsVisibleTo("Emanate.UnitTests")]
 [assembly: InternalsVisibleTo("Emanate.IntegrationTests")]
+
+[assembly: EmanateModule(typeof(DelcomModule))]

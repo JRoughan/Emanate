@@ -65,7 +65,7 @@
     </Compile>
     <Compile Include="InputSelector\InputSelectorViewModel.cs" />
     <Compile Include="InputSelector\ProjectViewModel.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="TeamCityModule.cs" />
     <Compile Include="ITeamCityConnection.cs" />
     <Compile Include="TeamCityConnection.cs" />
     <Compile Include="TeamCityMonitor.cs" />

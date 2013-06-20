@@ -8,7 +8,7 @@ using Emanate.TeamCity.InputSelector;
 
 namespace Emanate.TeamCity
 {
-    public class Module : IModule
+    public class TeamCityModule : IEmanateModule
     {
         public void Load(ContainerBuilder builder)
         {
