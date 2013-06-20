@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
@@ -11,15 +12,14 @@ namespace Emanate.Service
 {
     class ServiceRunner
     {
-        private IContainer CreateContainer()
+        private IContainer CreateContainer<TApp>()
         {
             var builder = new ContainerBuilder();
             var loader = new ModuleLoader();
             loader.LoadServiceModules(builder);
 
             builder.RegisterType<ConfigurationCaretaker>();
-            builder.RegisterType<EmanateService>();
-            builder.RegisterType<EmanateConsole>();
+            builder.RegisterType<TApp>();
 
             return builder.Build();
         }
@@ -43,14 +43,22 @@ namespace Emanate.Service
         private T CreateApp<T>(string configFile = null)
             where T : IEmanateApp
         {
-            var container = CreateContainer();
-            var app = container.Resolve<T>();
+            var container = CreateContainer<T>();
 
             var caretaker = container.Resolve<ConfigurationCaretaker>();
             var config = caretaker.Load(configFile);
 
-            //config.OutputDevices.SelectMany(d => d.)
-            //app.SetInputsToMonitor(inputs);
+            // HACK: hard coded to teamcity
+            var inputs = config.OutputDevices.SelectMany(d => d.Inputs).Where(i => i.Source == "teamcity");
+
+            var builder = new ContainerBuilder();
+            foreach (var moduleConfiguration in config.ModuleConfigurations)
+                builder.RegisterInstance(moduleConfiguration);
+
+            builder.Update(container);
+
+            var app = container.Resolve<T>();
+            app.SetInputsToMonitor(inputs);
 
             return app;
         }
