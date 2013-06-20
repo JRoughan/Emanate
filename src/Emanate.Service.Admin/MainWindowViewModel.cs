@@ -39,7 +39,17 @@ namespace Emanate.Service.Admin
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
-                ActiveDevices.Add(outputDevice);
+                var moduleConfiguration = globalConfig.ModuleConfigurations.Single(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
+
+                var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
+                foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
+                {
+                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
+                    inputSelector.SelectInputs(inputGroup);
+                    outputDeviceInfo.InputSelector = inputSelector;
+                }
+
+                ActiveDevices.Add(outputDeviceInfo);
             }
         }
 
@@ -64,7 +74,7 @@ namespace Emanate.Service.Admin
                 OnPropertyChanged("ActiveDevices");
             }
         }
-        
+
         private readonly DelegateCommand saveCommand;
         public DelegateCommand SaveCommand { get { return saveCommand; } }
 
@@ -79,6 +89,14 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
+            // TODO: The respective Guis should take care of keeping this in sync
+            foreach (var deviceInfo in ActiveDevices)
+            {
+                var device = deviceInfo.OutputDevice;
+                device.Inputs.Clear();
+                device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
+            }
+
             configurationCaretaker.Save(globalConfig);
         }
 

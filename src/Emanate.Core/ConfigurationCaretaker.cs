@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Windows.Controls;
 using System.Xml.Linq;
 using Autofac;
 using Emanate.Core;
@@ -53,18 +52,7 @@ namespace Emanate.Service.Admin
             {
                 var device = componentContext.ResolveKeyed<IOutputDevice>(deviceMemento.Type);
                 device.SetMemento(deviceMemento);
-
-                var moduleConfiguration = moduleConfigurations.Single(c => c.Key.Equals(deviceMemento.Type, StringComparison.OrdinalIgnoreCase));
-
-                var outputDeviceInfo = new OutputDeviceInfo(device.Name, device, moduleConfiguration);
-                foreach (var inputGroup in device.Inputs.GroupBy(i => i.Source))
-                {
-                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key + "-InputSelector");
-                    inputSelector.SelectInputs(inputGroup);
-                    outputDeviceInfo.InputSelector = inputSelector;
-                }
-
-                foo.OutputDevices.Add(outputDeviceInfo);
+                foo.OutputDevices.Add(device);
             }
 
             return foo;
@@ -92,11 +80,8 @@ namespace Emanate.Service.Admin
             // Output devices
             var devicesElement = new XElement("outputs");
 
-            foreach (var deviceInfo in globalConfig.OutputDevices)
+            foreach (var device in globalConfig.OutputDevices)
             {
-                var device = deviceInfo.OutputDevice;
-                device.Inputs.Clear();
-                device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
                 var deviceMemento = device.CreateMemento();
                 devicesElement.Add(deviceMemento.Element);
             }

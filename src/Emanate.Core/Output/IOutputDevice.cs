@@ -9,7 +9,7 @@ namespace Emanate.Core.Output
         string Key { get; }
         string Name { get; }
 
-        Type DeviceType { get; }
+        string Type { get; }
 
         List<InputInfo> Inputs { get; }
         string Profile { get; set; }

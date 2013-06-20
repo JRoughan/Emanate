@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;

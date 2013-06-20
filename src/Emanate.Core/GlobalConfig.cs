@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Emanate.Core.Configuration;
-using Emanate.Service.Admin;
+using Emanate.Core.Output;
 
 namespace Emanate.Core
 {
@@ -9,10 +9,10 @@ namespace Emanate.Core
         public GlobalConfig()
         {
             ModuleConfigurations = new List<IModuleConfiguration>();
-            OutputDevices = new List<OutputDeviceInfo>();
+            OutputDevices = new List<IOutputDevice>();
         }
 
         public List<IModuleConfiguration> ModuleConfigurations { get; set; }
-        public List<OutputDeviceInfo> OutputDevices { get; set; }
+        public List<IOutputDevice> OutputDevices { get; set; }
     }
 }

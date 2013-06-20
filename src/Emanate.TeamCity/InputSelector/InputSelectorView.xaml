@@ -4,13 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:inputSelector="clr-namespace:Emanate.TeamCity.InputSelector"
-                                      xmlns:core="clr-namespace:Emanate.Core;assembly=Emanate.Core"
+                                      xmlns:core="clr-namespace:Emanate.Core;assembly=EmanateAdmin"
                                       mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <core:InputSelector.Resources>
-
-        <BooleanToVisibilityConverter x:Key="BooToVisConverter" />
 
         <Style x:Key="TreeViewItemFocusVisual">
             <Setter Property="Control.Template">

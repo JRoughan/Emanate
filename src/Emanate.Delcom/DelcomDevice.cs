@@ -21,7 +21,7 @@ namespace Emanate.Delcom
             Inputs = new List<InputInfo>();
         }
 
-        public Type DeviceType { get { return typeof(Device); } }
+        public string Type { get { return key; } }
 
         public List<InputInfo> Inputs { get; private set; }
 
