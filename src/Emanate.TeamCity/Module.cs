@@ -14,7 +14,7 @@ namespace Emanate.TeamCity
         {
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
             builder.RegisterType<TeamCityMonitor>().As<IBuildMonitor>();
-            builder.RegisterType<InputSelectorView>().Keyed<Core.InputSelector>("teamcity-InputSelector");
+            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>("teamcity-InputSelector");
             builder.RegisterType<InputSelectorViewModel>();
             builder.RegisterType<ConfigurationView>().Keyed<UserControl>("teamcity-Config");
             builder.RegisterType<TeamCityConfiguration>().AsSelf().As<IModuleConfiguration>().SingleInstance();

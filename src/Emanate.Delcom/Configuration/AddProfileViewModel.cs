@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Emanate.Core;
+using Emanate.Service.Admin;
 
 namespace Emanate.Delcom.Configuration
 {

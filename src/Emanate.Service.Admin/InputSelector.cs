@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Emanate.Core.Output;
 
-namespace Emanate.Core
+namespace Emanate.Service.Admin
 {
     public class InputSelector : UserControl
     {

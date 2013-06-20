@@ -7,7 +7,6 @@ using System.ServiceProcess;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
 
 namespace Emanate.Service
 {

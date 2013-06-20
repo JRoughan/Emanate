@@ -1,14 +1,14 @@
-﻿<core:InputSelector x:Class="Emanate.TeamCity.InputSelector.InputSelectorView"
+﻿<admin:InputSelector x:Class="Emanate.TeamCity.InputSelector.InputSelectorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:inputSelector="clr-namespace:Emanate.TeamCity.InputSelector"
-                                      xmlns:core="clr-namespace:Emanate.Core;assembly=EmanateAdmin"
-                                      mc:Ignorable="d" 
+            xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
+            mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <core:InputSelector.Resources>
+    <admin:InputSelector.Resources>
 
         <Style x:Key="TreeViewItemFocusVisual">
             <Setter Property="Control.Template">
@@ -116,7 +116,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </core:InputSelector.Resources>
+    </admin:InputSelector.Resources>
     <TreeView ItemsSource="{Binding Projects}" ItemContainerStyle="{StaticResource StretchTreeViewItemStyle}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Configurations}">
@@ -125,4 +125,4 @@
         </TreeView.ItemTemplate>
     </TreeView>
 
-</core:InputSelector>
+</admin:InputSelector>

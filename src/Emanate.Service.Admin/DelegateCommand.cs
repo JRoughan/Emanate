@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Emanate.Core
+namespace Emanate.Service.Admin
 {
     [DebuggerStepThrough]
     public class DelegateCommand : ICommand

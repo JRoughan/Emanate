@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
+using Emanate.Service.Admin;
 
 namespace Emanate.TeamCity.Configuration
 {
