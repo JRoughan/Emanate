@@ -18,6 +18,18 @@ namespace Emanate.Delcom.Configuration
         {
             this.delcomConfiguration = delcomConfiguration;
             IsEditable = delcomConfiguration != null;
+
+            AddProfileCommand = new DelegateCommand(AddProfile);
+        }
+
+        public ICommand AddProfileCommand { get; private set; }
+
+        private void AddProfile()
+        {
+            var addProfileViewModel = new AddProfileViewModel(Profiles);
+            var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
+            addProfileView.Owner = Application.Current.MainWindow;
+            addProfileView.ShowDialog();
         }
 
         private bool isEditable;
@@ -40,27 +52,11 @@ namespace Emanate.Delcom.Configuration
 
         string IModuleConfiguration.Key { get { return key; } }
         string IModuleConfiguration.Name { get { return name; } }
-        Type IModuleConfiguration.GuiType { get { return typeof(ConfigurationView); } }
-
-        public DelcomConfiguration()
-        {
-            AddProfileCommand = new DelegateCommand(AddProfile);
-        }
 
         private readonly ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
         public ObservableCollection<IOutputProfile> Profiles
         {
             get { return profiles; }
-        }
-
-        public ICommand AddProfileCommand { get; private set; }
-
-        private void AddProfile()
-        {
-            var addProfileViewModel = new AddProfileViewModel(Profiles);
-            var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
-            addProfileView.Owner = Application.Current.MainWindow;
-            addProfileView.ShowDialog();
         }
 
         public Memento CreateMemento()

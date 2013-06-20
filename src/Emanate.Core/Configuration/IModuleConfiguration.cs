@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Configuration
@@ -8,8 +7,6 @@ namespace Emanate.Core.Configuration
     {
         string Key { get; }
         string Name { get; }
-
-        Type GuiType { get; }
 
         ObservableCollection<IOutputProfile> Profiles { get; }
     }

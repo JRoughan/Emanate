@@ -102,7 +102,6 @@ namespace Emanate.TeamCity.Configuration
 
         string IModuleConfiguration.Key { get { return key; } }
         string IModuleConfiguration.Name { get { return name; } }
-        Type IModuleConfiguration.GuiType { get { return typeof(ConfigurationView); } }
 
         public ObservableCollection<IOutputProfile> Profiles
         {
