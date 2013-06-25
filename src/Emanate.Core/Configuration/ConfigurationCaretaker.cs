@@ -25,7 +25,7 @@ namespace Emanate.Core.Configuration
                 return null;
 
             var builder = new ContainerBuilder();
-            var foo = new GlobalConfig();
+            var globalConfig = new GlobalConfig();
 
             var configDoc = XDocument.Load(configFilePath);
             var rootNode = configDoc.Element("emanate");
@@ -36,22 +36,35 @@ namespace Emanate.Core.Configuration
             {
                 var moduleConfig = componentContext.ResolveKeyed<IModuleConfiguration>(moduleMemento.Type);
                 moduleConfig.SetMemento(moduleMemento);
-                foo.ModuleConfigurations.Add(moduleConfig);
+                globalConfig.ModuleConfigurations.Add(moduleConfig);
                 builder.RegisterInstance(moduleConfig).AsSelf();
             }
 
             // Output devices
-            var devices = rootNode.Element("outputs");
-            foreach (var deviceMemento in devices.Elements("output").Select(e => new Memento(e)))
+            var outputsElement = rootNode.Element("outputs");
+            foreach (var outputElement in outputsElement.Elements("output"))
             {
-                var device = componentContext.ResolveKeyed<IOutputDevice>(deviceMemento.Type);
-                device.SetMemento(deviceMemento);
-                foo.OutputDevices.Add(device);
+                var outputType = outputElement.Attribute("type").Value;
+                var deviceName = outputElement.Attribute("device").Value;
+
+                var config = globalConfig.ModuleConfigurations.Single(c => c.Key == outputType);
+                var device = config.OutputDevices.Single(p => p.Name == deviceName);
+
+                var inputsElement = outputElement.Element("inputs");
+                foreach (var inputElement in inputsElement.Elements("input"))
+                {
+                    var input = new InputInfo();
+                    input.Source = inputElement.Attribute("source").Value;
+                    input.Id = inputElement.Attribute("id").Value;
+                    device.Inputs.Add(input);
+                }
+
+                globalConfig.OutputDevices.Add(device);
             }
 
             builder.Update(componentContext.ComponentRegistry);
 
-            return foo;
+            return globalConfig;
         }
 
         public void Save(GlobalConfig globalConfig)
@@ -71,14 +84,26 @@ namespace Emanate.Core.Configuration
             rootElement.Add(modulesElement);
 
             // Output devices
-            var devicesElement = new XElement("outputs");
+            var outputsElement = new XElement("outputs");
 
             foreach (var device in globalConfig.OutputDevices)
             {
-                var deviceMemento = device.CreateMemento();
-                devicesElement.Add(deviceMemento.Element);
+                var outputElement = new XElement("output");
+                outputElement.Add(new XAttribute("type", device.Key));
+                outputElement.Add(new XAttribute("device", device.Name));
+
+                var inputsElement = new XElement("inputs");
+                foreach (var input in device.Inputs)
+                {
+                    var inputElement = new XElement("input");
+                    inputElement.Add(new XAttribute("source", input.Source));
+                    inputElement.Add(new XAttribute("id", input.Id));
+                    inputsElement.Add(inputElement);
+                }
+                outputElement.Add(inputsElement);
+                outputsElement.Add(outputElement);
             }
-            rootElement.Add(devicesElement);
+            rootElement.Add(outputsElement);
 
             if (!Directory.Exists(configDir))
                 Directory.CreateDirectory(configDir);

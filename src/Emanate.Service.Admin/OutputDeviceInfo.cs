@@ -1,6 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 
@@ -14,22 +12,19 @@ namespace Emanate.Service.Admin
         {
             this.configuration = configuration;
 
-            profile = AvailableProfiles.Single(p => p.Key.Equals(outputDevice.Profile, StringComparison.OrdinalIgnoreCase));
-
             Name = name;
             OutputDevice = outputDevice;
-        }
-
-        private IOutputProfile profile;
-        public IOutputProfile Profile
-        {
-            get { return profile; }
-            set { profile = value; OutputDevice.Profile = value.Key; OnPropertyChanged("Profile"); }
         }
 
         public ObservableCollection<IOutputProfile> AvailableProfiles
         {
             get { return configuration.Profiles; }
+        }
+
+        public IOutputProfile Profile
+        {
+            get { return OutputDevice.Profile; }
+            set { OutputDevice.Profile = value; OnPropertyChanged("Profile"); }
         }
 
         public string Name { get; private set; }

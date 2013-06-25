@@ -23,6 +23,14 @@ namespace Emanate.TeamCity.Configuration
             }
         }
 
+        public ObservableCollection<IOutputDevice> OutputDevices
+        {
+            get
+            {
+                throw new NotSupportedException("TeamCity module does not support output devices");
+            }
+        }
+
         public string Uri { get; set; }
         public int PollingInterval { get; set; }
         public string UserName { get; set; }

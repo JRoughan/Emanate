@@ -9,5 +9,8 @@ namespace Emanate.Core.Configuration
         string Name { get; }
 
         ObservableCollection<IOutputProfile> Profiles { get; }
+
+        ObservableCollection<IOutputDevice> OutputDevices { get; }
+
     }
 }

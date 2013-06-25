@@ -21,18 +21,24 @@ namespace Emanate.Delcom.Configuration
             get { return profiles; }
         }
 
+        private readonly ObservableCollection<IOutputDevice> outputDevices = new ObservableCollection<IOutputDevice>();
+        public ObservableCollection<IOutputDevice> OutputDevices
+        {
+            get { return outputDevices; }
+        }
+
         public Memento CreateMemento()
         {
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("type", key));
+
             var profilesElement = new XElement("profiles");
             moduleElement.Add(profilesElement);
-
             foreach (var profile in Profiles.OfType<MonitoringProfile>())
             {
                 var profileElement = new XElement("profile");
                 profileElement.Add(new XAttribute("key", profile.Key));
-                profileElement.Add(new XElement("decay", profile.Decay));
+                profileElement.Add(new XAttribute("decay", profile.Decay));
 
                 foreach (var state in profile.States)
                 {
@@ -46,6 +52,17 @@ namespace Emanate.Delcom.Configuration
                 }
 
                 profilesElement.Add(profileElement);
+            }
+
+            var devicesElement = new XElement("devices");
+            moduleElement.Add(devicesElement);
+            foreach (var device in OutputDevices)
+            {
+                var deviceElement = new XElement("device");
+                deviceElement.Add(new XAttribute("name", device.Name));
+                deviceElement.Add(new XAttribute("profile", device.Profile.Key));
+
+                devicesElement.Add(deviceElement);
             }
 
             return new Memento(moduleElement);
@@ -63,7 +80,7 @@ namespace Emanate.Delcom.Configuration
             {
                 var profile = new MonitoringProfile();
                 profile.Key = profileElement.Attribute("key").Value;
-                profile.Decay = uint.Parse(profileElement.Element("decay").Value);
+                profile.Decay = uint.Parse(profileElement.Attribute("decay").Value);
                 foreach (var stateElement in profileElement.Elements("state"))
                 {
                     var state = new ProfileState();
@@ -75,6 +92,18 @@ namespace Emanate.Delcom.Configuration
                     profile.States.Add(state);
                 }
                 Profiles.Add(profile);
+            }
+
+            var devicesElement = element.Element("devices");
+            foreach (var deviceElement in devicesElement.Elements("device"))
+            {
+                var device = new DelcomDevice();
+                device.Name = deviceElement.Attribute("name").Value;
+
+                var profileKey = deviceElement.Attribute("profile").Value;
+                device.Profile = Profiles.Single(p => p.Key == profileKey);
+
+                OutputDevices.Add(device);
             }
         }
     }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Emanate.Core.Configuration;
 
 namespace Emanate.Core.Output
 {
-    public interface IOutputDevice : IOriginator
+    public interface IOutputDevice
     {
         string Key { get; }
         string Name { get; }
@@ -11,6 +10,6 @@ namespace Emanate.Core.Output
         string Type { get; }
 
         List<InputInfo> Inputs { get; }
-        string Profile { get; set; }
+        IOutputProfile Profile { get; set; }
     }
 }
