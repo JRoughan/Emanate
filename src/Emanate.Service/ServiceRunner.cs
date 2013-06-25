@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
@@ -24,8 +22,7 @@ namespace Emanate.Service
 
         public void RunAsService()
         {
-            var configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Emanate.config");
-            var service = CreateApp<EmanateService>(configFile);
+            var service = CreateApp<EmanateService>();
 
             var servicesToRun = new ServiceBase[] { service };
             ServiceBase.Run(servicesToRun);
@@ -38,13 +35,13 @@ namespace Emanate.Service
             consoleApp.Start();
         }
 
-        private T CreateApp<T>(string configFile = null)
+        private T CreateApp<T>()
             where T : EmanateService
         {
             var container = CreateContainer<T>();
 
             var caretaker = container.Resolve<ConfigurationCaretaker>();
-            var config = caretaker.Load(configFile);
+            var config = caretaker.Load();
 
             // HACK: hard coded to teamcity
             var inputs = config.OutputDevices.SelectMany(d => d.Inputs).Where(i => i.Source == "teamcity");

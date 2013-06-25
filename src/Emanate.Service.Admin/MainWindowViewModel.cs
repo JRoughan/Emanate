@@ -29,6 +29,10 @@ namespace Emanate.Service.Admin
         public override void Initialize()
         {
             globalConfig = configurationCaretaker.Load();
+
+            if (globalConfig == null)
+                globalConfig = GenerateDefaultConfig();
+
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
@@ -51,6 +55,11 @@ namespace Emanate.Service.Admin
 
                 ActiveDevices.Add(outputDeviceInfo);
             }
+        }
+
+        private GlobalConfig GenerateDefaultConfig()
+        {
+            return new GlobalConfig();
         }
 
         private ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();

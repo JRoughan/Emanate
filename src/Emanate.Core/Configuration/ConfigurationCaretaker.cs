@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Xml.Linq;
 using Autofac;
 using Emanate.Core.Output;
@@ -10,24 +9,26 @@ namespace Emanate.Core.Configuration
 {
     public class ConfigurationCaretaker
     {
+        private static readonly string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Emanate");
+        private static readonly string configFilePath = Path.Combine(configDir, "Configuration.xml");
+
         private readonly IComponentContext componentContext;
-        private static string configFilePath;
 
         public ConfigurationCaretaker(IComponentContext componentContext)
         {
             this.componentContext = componentContext;
         }
 
-        public GlobalConfig Load(string configFile = null)
+        public GlobalConfig Load()
         {
-            var foo = new GlobalConfig();
-
-            configFilePath = configFile ?? GetServiceConfigurationFile();
-            var configDoc = XDocument.Load(configFilePath);
-
-            var rootNode = configDoc.Element("emanate");
+            if (!File.Exists(configFilePath))
+                return null;
 
             var builder = new ContainerBuilder();
+            var foo = new GlobalConfig();
+
+            var configDoc = XDocument.Load(configFilePath);
+            var rootNode = configDoc.Element("emanate");
 
             // Modules
             var modules = rootNode.Element("modules");
@@ -55,9 +56,6 @@ namespace Emanate.Core.Configuration
 
         public void Save(GlobalConfig globalConfig)
         {
-            if (configFilePath == null)
-                throw new InvalidOperationException("Cannot save configuration before it's been loaded");
-
             var configDoc = new XDocument();
             var rootElement = new XElement("emanate");
             configDoc.Add(rootElement);
@@ -82,22 +80,10 @@ namespace Emanate.Core.Configuration
             }
             rootElement.Add(devicesElement);
 
-            configDoc.Save(configFilePath);
-        }
+            if (!Directory.Exists(configDir))
+                Directory.CreateDirectory(configDir);
 
-        private static string GetServiceConfigurationFile()
-        {
-            var mc = new ManagementClass("Win32_Service");
-            foreach (ManagementObject mo in mc.GetInstances())
-            {
-                if (mo.GetPropertyValue("Name").ToString() == "EmanateService")
-                {
-                    var pathToServiceExe = mo.GetPropertyValue("PathName").ToString().Trim('"');
-                    var dir = Path.GetDirectoryName(pathToServiceExe);
-                    return Path.Combine(dir, "Emanate.config");
-                }
-            }
-            throw new Exception("Could not find the service or the installed path.");
+            configDoc.Save(configFilePath);
         }
     }
 }
