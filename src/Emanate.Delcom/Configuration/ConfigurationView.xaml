@@ -1,12 +1,12 @@
 ﻿<admin:ConfigurationEditor x:Class="Emanate.Delcom.Configuration.ConfigurationView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:configuration="clr-namespace:Emanate.Delcom.Configuration"
-                                            xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
-                                            mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance configuration:DelcomConfiguration}">
+                           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:configuration="clr-namespace:Emanate.Delcom.Configuration"
+                           xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
+                           mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance configuration:DelcomConfigurationViewModel}">
     <DockPanel IsEnabled="{Binding IsEditable}">
         <GroupBox DockPanel.Dock="Left" >
             <GroupBox.Header>

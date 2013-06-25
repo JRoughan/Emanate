@@ -66,7 +66,7 @@ namespace Emanate.Delcom
 		internal struct SP_DEVICE_INTERFACE_DATA
 		{
 			internal Int32 cbSize;
-			internal System.Guid InterfaceClassGuid;
+			internal Guid InterfaceClassGuid;
 			internal Int32 Flags;
 			internal IntPtr Reserved;
 		}
@@ -80,7 +80,7 @@ namespace Emanate.Delcom
 		internal struct SP_DEVINFO_DATA
 		{
 			internal Int32 cbSize;
-			internal System.Guid ClassGuid;
+			internal Guid ClassGuid;
 			internal Int32 DevInst;
 			internal Int32 Reserved;
 		}
@@ -89,16 +89,16 @@ namespace Emanate.Delcom
 		internal static extern IntPtr RegisterDeviceNotification(IntPtr hRecipient, IntPtr NotificationFilter, Int32 Flags);
 
 		[DllImport("setupapi.dll", SetLastError = true)]
-		internal static extern Int32 SetupDiCreateDeviceInfoList(ref System.Guid ClassGuid, Int32 hwndParent);
+		internal static extern Int32 SetupDiCreateDeviceInfoList(ref Guid ClassGuid, Int32 hwndParent);
 
 		[DllImport("setupapi.dll", SetLastError = true)]
 		internal static extern Int32 SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
 
 		[DllImport("setupapi.dll", SetLastError = true)]
-		internal static extern Boolean SetupDiEnumDeviceInterfaces(IntPtr DeviceInfoSet, IntPtr DeviceInfoData, ref System.Guid InterfaceClassGuid, Int32 MemberIndex, ref SP_DEVICE_INTERFACE_DATA DeviceInterfaceData);
+		internal static extern Boolean SetupDiEnumDeviceInterfaces(IntPtr DeviceInfoSet, IntPtr DeviceInfoData, ref Guid InterfaceClassGuid, Int32 MemberIndex, ref SP_DEVICE_INTERFACE_DATA DeviceInterfaceData);
 
 		[DllImport("setupapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-		internal static extern IntPtr SetupDiGetClassDevs(ref System.Guid ClassGuid, IntPtr Enumerator, IntPtr hwndParent, Int32 Flags);
+		internal static extern IntPtr SetupDiGetClassDevs(ref Guid ClassGuid, IntPtr Enumerator, IntPtr hwndParent, Int32 Flags);
 
 		[DllImport("setupapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		internal static extern Boolean SetupDiGetDeviceInterfaceDetail(IntPtr DeviceInfoSet, ref SP_DEVICE_INTERFACE_DATA DeviceInterfaceData, IntPtr DeviceInterfaceDetailData, Int32 DeviceInterfaceDetailDataSize, ref Int32 RequiredSize, IntPtr DeviceInfoData);

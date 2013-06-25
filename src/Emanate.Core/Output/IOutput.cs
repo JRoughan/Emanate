@@ -5,6 +5,6 @@ namespace Emanate.Core.Output
 {
     public interface IOutput
     {
-        void UpdateStatus(BuildState oldState, BuildState newState, DateTimeOffset timeStamp);
+        void UpdateStatus(BuildState state, DateTimeOffset timeStamp);
     }
 }

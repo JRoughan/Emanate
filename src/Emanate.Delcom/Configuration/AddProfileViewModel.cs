@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Emanate.Core.Output;
@@ -32,7 +33,7 @@ namespace Emanate.Delcom.Configuration
             set { newProfile = value; OnPropertyChanged("NewProfile"); }
         }
 
-        public ObservableCollection<IOutputProfile> ExistingProfiles
+        public IEnumerable<IOutputProfile> ExistingProfiles
         {
             get { return existingProfiles; }
         }

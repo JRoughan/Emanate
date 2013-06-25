@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Autofac;
+﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
@@ -11,26 +10,26 @@ namespace Emanate.TeamCity
 {
     public class TeamCityModule : IEmanateModule
     {
-        private const string Key = "teamcity";
+        private const string key = "teamcity";
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>(Key);
+            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>(key);
             builder.RegisterType<InputSelectorViewModel>();
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
         }
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
+            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)
         {
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().Keyed<IModuleConfiguration>(Key);
+            builder.RegisterType<TeamCityConfiguration>().Keyed<IModuleConfiguration>(key);
         }
     }
 }

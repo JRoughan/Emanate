@@ -17,7 +17,6 @@ namespace Emanate.Core.Configuration
         }
 
         public XElement Element { get; private set; }
-
-        public string Type { get; set; }
+        public string Type { get; private set; }
     }
 }

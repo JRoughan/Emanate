@@ -11,7 +11,7 @@ namespace Emanate.Core.Configuration
             OutputDevices = new List<IOutputDevice>();
         }
 
-        public List<IModuleConfiguration> ModuleConfigurations { get; set; }
-        public List<IOutputDevice> OutputDevices { get; set; }
+        public List<IModuleConfiguration> ModuleConfigurations { get; private set; }
+        public List<IOutputDevice> OutputDevices { get; private set; }
     }
 }

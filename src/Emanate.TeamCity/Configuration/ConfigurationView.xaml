@@ -6,7 +6,7 @@
              xmlns:configuration="clr-namespace:Emanate.TeamCity.Configuration"
                                             xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
                                             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance configuration:TeamCityConfiguration}"
+             d:DataContext="{d:DesignInstance configuration:TeamCityConfigurationViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid IsEnabled="{Binding IsEditable}">
         <Grid.ColumnDefinitions>

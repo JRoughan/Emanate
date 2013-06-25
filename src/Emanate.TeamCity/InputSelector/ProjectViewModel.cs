@@ -18,7 +18,7 @@ namespace Emanate.TeamCity.InputSelector
             get { return isSelected; }
             set
             {
-                isSelected = value; this.OnPropertyChanged("IsSelected");
+                isSelected = value; OnPropertyChanged("IsSelected");
                 foreach (var configuration in configurations)
                 {
                     configuration.IsSelected = value;

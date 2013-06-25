@@ -59,6 +59,7 @@
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\TeamCityConfiguration.cs" />
+    <Compile Include="Configuration\TeamCityConfigurationViewModel.cs" />
     <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
     <Compile Include="InputSelector\InputSelectorView.xaml.cs">
       <DependentUpon>InputSelectorView.xaml</DependentUpon>

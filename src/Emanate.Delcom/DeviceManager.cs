@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Emanate.Delcom
 {
-	sealed internal partial class DeviceManager
+	internal sealed partial class DeviceManager
 	{
 		//  <summary>
 		//  Compares two device path names. Used to find out if the device name 

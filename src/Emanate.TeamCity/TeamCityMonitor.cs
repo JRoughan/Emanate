@@ -100,7 +100,7 @@ namespace Emanate.TeamCity
 
                 var oldState = CurrentState;
                 CurrentState = newState;
-                output.Key.UpdateStatus(oldState, newState, timeStamp);
+                output.Key.UpdateStatus(newState, timeStamp);
             }
         }
 

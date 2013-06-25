@@ -2,10 +2,7 @@
 
 namespace Emanate.Delcom.Configuration
 {
-    /// <summary>
-    /// Interaction logic for AddProfileView.xaml
-    /// </summary>
-    public partial class AddProfileView : Window
+    public partial class AddProfileView
     {
         public AddProfileView()
         {

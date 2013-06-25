@@ -65,6 +65,7 @@
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\DelcomConfiguration.cs" />
+    <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
     <Compile Include="Configuration\MonitoringProfile.cs" />
     <Compile Include="Configuration\ProfileState.cs" />
     <Compile Include="DelcomDevice.cs" />

@@ -17,7 +17,7 @@ namespace Emanate.TeamCity.InputSelector
         public bool IsSelected
         {
             get { return isSelected; }
-            set { isSelected = value; this.OnPropertyChanged("IsSelected"); }
+            set { isSelected = value; OnPropertyChanged("IsSelected"); }
         }
     }
 }
