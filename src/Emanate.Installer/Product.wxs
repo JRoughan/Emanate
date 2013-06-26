@@ -25,6 +25,22 @@
               <Shortcut Id="startmenuShortcut" Directory="ProgramMenuDir" Name="Emanate Admin" WorkingDirectory='INSTALLDIR' Icon="AdminIcon.exe" IconIndex="0" Advertise="yes" />
             </File>
           </Component>
+          <Component Id="ServiceExecutable" Guid="9F7AE5D7-8627-49DD-AE63-92767DF0B979">
+            <File Id="Emanate.exe" Name="Emanate.exe" Source="..\Emanate.Service\bin\$(var.Configuration)\Emanate.exe" Vital="yes" KeyPath="yes" />
+            <ServiceInstall
+                        Id="ServiceInstaller"
+                        Type="ownProcess"
+                        Vital="yes"
+                        Name="EmanateService"
+                        DisplayName="Emanate Monitoring Service"
+                        Description="Monitors software builds and displays status on external devices"
+                        Start="auto"
+                        Account="LocalSystem"
+                        ErrorControl="ignore"
+                        Interactive="no">
+            </ServiceInstall>
+            <ServiceControl Id="EmanateServiceStart" Stop="both" Remove="uninstall" Name="EmanateService" Wait="yes" />
+          </Component>
           <Component Id='CoreLibrary' Guid='A58B73AF-EE3D-4CED-9E04-95C519A17DE9'>
             <File Id='Emanate.Core.dll' Name='Emanate.Core.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Core.dll' KeyPath='yes' />
           </Component>
@@ -62,6 +78,7 @@
     <Icon Id="AdminIcon.exe" SourceFile="..\Emanate.Service\bin\$(var.Configuration)\EmanateAdmin.exe" />
 
     <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='ServiceExecutable' />
       <ComponentRef Id='AdminExecutable' />
       <ComponentRef Id='CoreLibrary' />
       <ComponentRef Id='Autofac' />
