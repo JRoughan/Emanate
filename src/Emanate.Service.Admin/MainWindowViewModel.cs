@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using Autofac;
 using Emanate.Core.Configuration;
 
@@ -15,6 +14,8 @@ namespace Emanate.Service.Admin
 
         public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker)
         {
+            //addDeviceCommand = new DelegateCommand(AddDevice);
+
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
@@ -37,7 +38,11 @@ namespace Emanate.Service.Admin
             {
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
                 configurationEditor.SetTarget(moduleConfig);
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor);
+
+                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
+                deviceManager.SetTarget(moduleConfig);
+
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
                 Configurations.Add(moduleConfigInfo);
             }
 
@@ -62,27 +67,28 @@ namespace Emanate.Service.Admin
             return new GlobalConfig();
         }
 
-        private ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();
+        private readonly ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();
         public ObservableCollection<ConfigurationInfo> Configurations
         {
             get { return configurations; }
-            private set
-            {
-                configurations = value;
-                OnPropertyChanged("Configurations");
-            }
         }
 
-        private ObservableCollection<OutputDeviceInfo> activeDevices = new ObservableCollection<OutputDeviceInfo>();
+        private readonly ObservableCollection<OutputDeviceInfo> activeDevices = new ObservableCollection<OutputDeviceInfo>();
         public ObservableCollection<OutputDeviceInfo> ActiveDevices
         {
             get { return activeDevices; }
-            private set
-            {
-                activeDevices = value;
-                OnPropertyChanged("ActiveDevices");
-            }
         }
+
+        //private readonly DelegateCommand addDeviceCommand;
+        //public DelegateCommand AddDeviceCommand { get { return addDeviceCommand; } }
+
+        //private void AddDevice()
+        //{
+        //    var addDeviceViewModel = new AddDeviceViewModel(configurations);
+        //    var addProfileView = new AddDeviceView { DataContext = addDeviceViewModel };
+        //    addProfileView.Owner = Application.Current.MainWindow;
+        //    addProfileView.ShowDialog();
+        //}
 
         private readonly DelegateCommand saveCommand;
         public DelegateCommand SaveCommand { get { return saveCommand; } }

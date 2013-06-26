@@ -17,7 +17,11 @@ namespace Emanate.TeamCity
             RegisterCommon(builder);
             builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>(key);
             builder.RegisterType<InputSelectorViewModel>();
+
             builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
+
+            builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(key);
+            builder.RegisterType<TeamCityDeviceManagerViewModel>();
         }
 
         public void LoadServiceComponents(ContainerBuilder builder)

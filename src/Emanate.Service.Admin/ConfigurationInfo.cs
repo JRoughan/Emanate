@@ -4,13 +4,15 @@ namespace Emanate.Service.Admin
 {
     public class ConfigurationInfo
     {
-        public ConfigurationInfo(string name, UserControl gui)
+        public ConfigurationInfo(string name, UserControl configurationEditor, UserControl deviceManager)
         {
             Name = name;
-            Gui = gui;
+            ConfigurationEditor = configurationEditor;
+            DeviceManager = deviceManager;
         }
 
         public string Name { get; private set; }
-        public UserControl Gui { get; set; }
+        public UserControl ConfigurationEditor { get; private set; }
+        public UserControl DeviceManager { get; private set; }
     }
 }

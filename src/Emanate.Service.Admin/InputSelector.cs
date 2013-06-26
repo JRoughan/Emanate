@@ -15,4 +15,9 @@ namespace Emanate.Service.Admin
     {
         public virtual void SetTarget(IModuleConfiguration moduleConfiguration) { }
     }
+
+    public class DeviceManager : UserControl
+    {
+        public virtual void SetTarget(IModuleConfiguration moduleConfiguration) { }
+    }
 }

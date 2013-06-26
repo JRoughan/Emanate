@@ -28,7 +28,7 @@
                     <TextBlock Text="Builds" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
-                    <ListView DockPanel.Dock="Left" x:Name="DeviceSelector" ItemsSource="{Binding ActiveDevices}" MinWidth="120" DisplayMemberPath="Name" />
+                    <ListView x:Name="DeviceSelector" DockPanel.Dock="Left" MinWidth="120" ItemsSource="{Binding ActiveDevices}" DisplayMemberPath="Name" Margin="10" />
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
                             <Label Content="Output profile"></Label>
@@ -44,12 +44,23 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <TextBlock Text="Settings" FontSize="18" />
+                    <TextBlock Text="Devices" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
-                    <ListView DockPanel.Dock="Left" x:Name="ConfigSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name" />
+                    <ListView DockPanel.Dock="Left" x:Name="ConfigDevicesSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
                     <Border Margin="10">
-                        <ContentPresenter Content="{Binding ElementName=ConfigSelector, Path=SelectedItem.Gui}" Margin="5"  />
+                        <ContentPresenter Content="{Binding ElementName=ConfigDevicesSelector, Path=SelectedItem.DeviceManager}" Margin="5"  />
+                    </Border>
+                </DockPanel>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Profiles" FontSize="18" />
+                </TabItem.Header>
+                <DockPanel>
+                    <ListView DockPanel.Dock="Left" x:Name="ConfigEditorSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
+                    <Border Margin="10">
+                        <ContentPresenter Content="{Binding ElementName=ConfigEditorSelector, Path=SelectedItem.ConfigurationEditor}" Margin="5"  />
                     </Border>
                 </DockPanel>
             </TabItem>

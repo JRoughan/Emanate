@@ -64,6 +64,10 @@
     <Compile Include="Configuration\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\DelcomDeviceManagerView.xaml.cs">
+      <DependentUpon>DelcomDeviceManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\DelcomDeviceManagerViewModel.cs" />
     <Compile Include="Configuration\DelcomConfiguration.cs" />
     <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
     <Compile Include="Configuration\MonitoringProfile.cs" />
@@ -119,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Configuration\ConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Configuration\DelcomDeviceManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

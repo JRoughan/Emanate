@@ -58,6 +58,10 @@
     <Compile Include="Configuration\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\TeamCityDeviceManagerView.xaml.cs">
+      <DependentUpon>TeamCityDeviceManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\TeamCityDeviceManagerViewModel.cs" />
     <Compile Include="Configuration\TeamCityConfiguration.cs" />
     <Compile Include="Configuration\TeamCityConfigurationViewModel.cs" />
     <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
@@ -107,6 +111,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Configuration\ConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Configuration\TeamCityDeviceManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

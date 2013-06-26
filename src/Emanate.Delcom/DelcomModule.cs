@@ -9,25 +9,28 @@ namespace Emanate.Delcom
 {
     public class DelcomModule : IEmanateModule
     {
-        internal const string Key = "delcom";
+        private const string key = "delcom";
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
             builder.RegisterType<DelcomConfigurationViewModel>();
+
+            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Service.Admin.DeviceManager>(key);
+            builder.RegisterType<DelcomDeviceManagerViewModel>();
         }
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<DelcomOutput>().Keyed<IOutput>(Key);
+            builder.RegisterType<DelcomOutput>().Keyed<IOutput>(key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)
         {
-            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(Key);
-            builder.RegisterType<DelcomConfiguration>().Keyed<IModuleConfiguration>(Key);
+            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(key);
+            builder.RegisterType<DelcomConfiguration>().Keyed<IModuleConfiguration>(key);
         }
     }
 }
