@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="Emanate" Language="1033" Version="1.0.0.0" Manufacturer="Jared Roughan" UpgradeCode="0d5a59f7-f67e-40ea-9d55-9bc6f1fa7250">
+  <Product Id="CC07B268-6E99-49F0-989E-1B127D8A63EB" Name="Emanate" Language="1033" Version="1.0.0.0" Manufacturer="Jared Roughan" UpgradeCode="0d5a59f7-f67e-40ea-9d55-9bc6f1fa7250">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <Condition Message='This setup requires the .NET Framework 1.0 installed.'>
+      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
+    </Condition>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
@@ -22,10 +27,10 @@
             <File Id='Autofac.dll' Name='Autofac.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.dll' KeyPath='no' />
             <File Id='Autofac.Configuration.dll' Name='Autofac.Configuration.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.Configuration.dll' KeyPath='no' />
           </Component>
-        <Component Id='DelcomModule' Guid='90C3CDAD-CF4D-4E18-B304-0D182006DBC3'>
+          <Component Id='DelcomModule' Guid='90C3CDAD-CF4D-4E18-B304-0D182006DBC3'>
             <File Id='Emanate.Delcom.dll' Name='Emanate.Delcom.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Delcom.dll' KeyPath='yes' />
           </Component>
-        <Component Id='TeamCityModule' Guid='229A3BC9-95F2-4846-852B-6E566B04D165'>
+          <Component Id='TeamCityModule' Guid='229A3BC9-95F2-4846-852B-6E566B04D165'>
             <File Id='Emanate.TeamCity.dll' Name='Emanate.TeamCity.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.TeamCity.dll' KeyPath='yes' />
           </Component>
         </Directory>
