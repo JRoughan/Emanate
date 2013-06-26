@@ -46,7 +46,7 @@ namespace Emanate.TeamCity.InputSelector
 
                 foreach (var buildElement in buildElements)
                 {
-                    var configuration = new ProjectConfigurationViewModel();
+                    var configuration = new ProjectConfigurationViewModel(project);
                     configuration.Id = buildElement.Attribute("id").Value;
                     configuration.Name = buildElement.Attribute("name").Value;
                     project.Configurations.Add(configuration);

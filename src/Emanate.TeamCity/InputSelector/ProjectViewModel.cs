@@ -5,6 +5,12 @@ namespace Emanate.TeamCity.InputSelector
 {
     public class ProjectViewModel : ViewModel
     {
+        public ProjectViewModel()
+        {
+            configurations = new ObservableCollection<ProjectConfigurationViewModel>();
+            configurations.CollectionChanged += (s, e) => CheckStatus();
+        }
+
         private string name;
         public string Name
         {
@@ -12,25 +18,59 @@ namespace Emanate.TeamCity.InputSelector
             set { name = value; OnPropertyChanged("Name"); }
         }
 
-        private bool isSelected;
-        public bool IsSelected
+        private bool? isSelected;
+        public bool? IsSelected
         {
             get { return isSelected; }
             set
             {
-                isSelected = value; OnPropertyChanged("IsSelected");
-                foreach (var configuration in configurations)
+                if (value.HasValue && (!isSelected.HasValue || isSelected.Value != value.Value))
                 {
-                    configuration.IsSelected = value;
+                    foreach (var configuration in configurations)
+                        configuration.IsSelected = value.Value;
                 }
+                isSelected = value; OnPropertyChanged("IsSelected");
             }
         }
 
-        private ObservableCollection<ProjectConfigurationViewModel> configurations = new ObservableCollection<ProjectConfigurationViewModel>();
+        private ObservableCollection<ProjectConfigurationViewModel> configurations;
         public ObservableCollection<ProjectConfigurationViewModel> Configurations
         {
             get { return configurations; }
             set { configurations = value; OnPropertyChanged("Configurations"); }
+        }
+
+        public void CheckStatus()
+        {
+            bool? projectSelection = null;
+            foreach (var configuration in Configurations)
+            {
+                if (configuration.IsSelected)
+                {
+                    if ((projectSelection.HasValue && !projectSelection.Value))
+                    {
+                        projectSelection = null;
+                        break;
+                    }
+                    projectSelection = true;
+                }
+                else
+                {
+                    if (projectSelection.HasValue && projectSelection.Value)
+                    {
+                        projectSelection = null;
+                        break;
+                    }
+                    projectSelection = false;
+                }
+
+            }
+
+            if (isSelected != projectSelection)
+            {
+                isSelected = projectSelection;
+                OnPropertyChanged("IsSelected");
+            }
         }
     }
 }
