@@ -11,6 +11,11 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
     <Media Id='1' Cabinet='Emanate.cab' EmbedCab='yes' />
+    
+    <UIRef Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    <!-- Why on earth do custom licenses show up white on white? -->
+    <!--<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
