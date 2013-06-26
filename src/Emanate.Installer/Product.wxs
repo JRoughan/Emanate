@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Emanate" Language="1033" Version="1.0.0.0" Manufacturer="Jared Roughan" UpgradeCode="0d5a59f7-f67e-40ea-9d55-9bc6f1fa7250">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+  <Product Id="*" Name="Emanate" Language="1033" Version="1.0.0.0" Manufacturer="Jared Roughan" UpgradeCode="0d5a59f7-f67e-40ea-9d55-9bc6f1fa7250">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
-		<Feature Id="ProductFeature" Title="Emanate" Level="1">
-			<ComponentGroupRef Id="ProductComponents" />
-		</Feature>
-	</Product>
+    <Media Id='1' Cabinet='Emanate.cab' EmbedCab='yes' />
 
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Emanate" />
-			</Directory>
-		</Directory>
-	</Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Emanate" >
+          <Component Id="AdminExecutable" Guid="AB2AE3CC-989B-4642-B518-008BD94F4EBF">
+            <File Id='EmanateAdmin.exe' Name='EmanateAdmin.exe' Source='..\Emanate.Service\bin\$(var.Configuration)\EmanateAdmin.exe' KeyPath='yes'>
+              <Shortcut Id="startmenuShortcut" Directory="ProgramMenuDir" Name="Emanate Admin" WorkingDirectory='INSTALLDIR' Icon="AdminIcon.exe" IconIndex="0" Advertise="yes" />
+            </File>
+          </Component>
+          <Component Id='CoreLibrary' Guid='A58B73AF-EE3D-4CED-9E04-95C519A17DE9'>
+            <File Id='Emanate.Core.dll' Name='Emanate.Core.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Core.dll' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="Foobar 1.0">
+          <Component Id="ProgramMenuDir" Guid="367BBC42-7BCE-429B-9D8C-F4357C011F4D">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
 
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
-	</Fragment>
+    <Icon Id="AdminIcon.exe" SourceFile="..\Emanate.Service\bin\$(var.Configuration)\EmanateAdmin.exe" />
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='AdminExecutable' />
+      <ComponentRef Id='CoreLibrary' />
+      <ComponentRef Id='ProgramMenuDir' />
+    </Feature>
+    <!--<Feature Id="ProductFeature" Title="Emanate" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>-->
+  </Product>
 </Wix>
