@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Core", "Emanate.Core\Emanate.Core.csproj", "{B5E7E5AA-896A-4B86-B202-23062972F077}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.IntegrationTests", "Emanate.IntegrationTests\Emanate.IntegrationTests.csproj", "{F5DC97D5-6CD7-4BDB-914F-104F27B6210C}"
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Service", "Emanate.Service\Emanate.Service.csproj", "{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Tests", "_Tests", "{0CC6DC93-FAFD-451A-9851-B2A9EEC0B0A4}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Emanate.Service.Installer", "Emanate.Service.Installer\Emanate.Service.Installer.vdproj", "{248E7E53-3742-48BA-B1B5-683015AFBC5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Service.Admin", "Emanate.Service.Admin\Emanate.Service.Admin.csproj", "{B1CE719A-B725-41FE-A2FB-9A2FB67862BA}"
 EndProject
@@ -76,13 +74,6 @@ Global
 		{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}.Release|x86.ActiveCfg = Release|x86
 		{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}.Release|x86.Build.0 = Release|x86
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Debug|Any CPU.ActiveCfg = Debug
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Debug|x86.ActiveCfg = Debug
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Release|Any CPU.ActiveCfg = Release
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Release|Any CPU.Build.0 = Release
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Release|Mixed Platforms.ActiveCfg = Release
-		{248E7E53-3742-48BA-B1B5-683015AFBC5A}.Release|x86.ActiveCfg = Release
 		{B1CE719A-B725-41FE-A2FB-9A2FB67862BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B1CE719A-B725-41FE-A2FB-9A2FB67862BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1CE719A-B725-41FE-A2FB-9A2FB67862BA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
