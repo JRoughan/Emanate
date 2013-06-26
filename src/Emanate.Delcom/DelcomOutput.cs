@@ -7,14 +7,14 @@ namespace Emanate.Delcom
 {
     public class DelcomOutput : IOutput
     {
-        private Device device;
+        private PhysicalDevice physicalDevice;
         private BuildState lastCompletedState;
         private DateTimeOffset lastUpdateTime;
         private const int minutesTillFullDim = 24 * 60; // 1 full day
 
-        public DelcomOutput()
+        public DelcomOutput(PhysicalDevice physicalDevice)
         {
-            device = new Device();
+            this.physicalDevice = physicalDevice;
             ListenForDeviceConnectionChanges();
         }
 
@@ -28,60 +28,61 @@ namespace Emanate.Delcom
 
         void ReAttachDeviceIfRequired(object sender, EventArrivedEventArgs e)
         {
-            lock (device)
+            lock (physicalDevice)
             {
-                if (device == null)
-                    device = new Device();
-                else
-                {
-                    var tempDevice = new Device();
-                    if (tempDevice.Name != device.Name)
-                    {
-                        device.Dispose();
-                        device = tempDevice;
-                    }
-                }
+                // TODO
+                //if (device == null)
+                //    device = new Device();
+                //else
+                //{
+                //    var tempDevice = new Device();
+                //    if (tempDevice.Name != device.Name)
+                //    {
+                //        device.Dispose();
+                //        device = tempDevice;
+                //    }
+                //}
             }
             UpdateStatus(lastCompletedState, lastUpdateTime);
         }
 
         public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
-            lock (device)
+            lock (physicalDevice)
             {
-                if (!device.IsOpen)
-                    device.Open();
+                if (!physicalDevice.IsOpen)
+                    physicalDevice.Open();
             }
 
             switch (state)
             {
                 case BuildState.Unknown:
-                    device.TurnOn(Color.Red);
-                    device.TurnOn(Color.Green);
-                    device.TurnOff(Color.Yellow);
+                    physicalDevice.TurnOn(Color.Red);
+                    physicalDevice.TurnOn(Color.Green);
+                    physicalDevice.TurnOff(Color.Yellow);
                     break;
                 case BuildState.Succeeded:
-                    device.TurnOff(Color.Red);
-                    device.TurnOff(Color.Yellow);
+                    physicalDevice.TurnOff(Color.Red);
+                    physicalDevice.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
                     lastCompletedState = state;
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:
-                    device.TurnOff(Color.Green);
-                    device.TurnOff(Color.Yellow);
+                    physicalDevice.TurnOff(Color.Green);
+                    physicalDevice.TurnOff(Color.Yellow);
                     TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
                     if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
-                        device.StartBuzzer(100, 2, 20, 20);
+                        physicalDevice.StartBuzzer(100, 2, 20, 20);
                     lastCompletedState = state;
                     break;
                 case BuildState.Running:
-                    device.TurnOff(Color.Red);
-                    device.TurnOff(Color.Green);
-                    device.Flash(Color.Yellow);
+                    physicalDevice.TurnOff(Color.Red);
+                    physicalDevice.TurnOff(Color.Green);
+                    physicalDevice.Flash(Color.Yellow);
                     break;
                 default:
-                    device.Flash(Color.Red);
+                    physicalDevice.Flash(Color.Red);
                     break;
             }
             lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
@@ -93,12 +94,12 @@ namespace Emanate.Delcom
             var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
             if (minutesSinceLastBuild > minutesTillFullDim)
             {
-                device.TurnOn(color, color.MinPower);
+                physicalDevice.TurnOn(color, color.MinPower);
             }
             else
             {
                 var power = color.MaxPower - (minutesSinceLastBuild / minutesTillFullDim) * (color.MaxPower - color.MinPower);
-                device.TurnOn(color, (byte)power);
+                physicalDevice.TurnOn(color, (byte)power);
             }
         }
     }

@@ -75,7 +75,7 @@
     <Compile Include="DelcomDevice.cs" />
     <Compile Include="DelcomHID.cs" />
     <Compile Include="DelcomOutput.cs" />
-    <Compile Include="Device.cs" />
+    <Compile Include="PhysicalDevice.cs" />
     <Compile Include="DeviceManagementDeclarations.cs" />
     <Compile Include="DeviceManager.cs" />
     <Compile Include="FileIODeclarations.cs" />

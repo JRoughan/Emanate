@@ -10,14 +10,14 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_open_single_attached_device()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
                 Assert.DoesNotThrow(() => device.Open());
         }
 
         [Test]
         public void should_turn_on_green_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.TurnOn(Color.Green);
@@ -28,7 +28,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_turn_on_yellow_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.TurnOn(Color.Yellow);
@@ -39,7 +39,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_turn_on_red_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.TurnOn(Color.Red);
@@ -50,7 +50,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_flash_green_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.Flash(Color.Green);
@@ -61,7 +61,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_flash_yellow_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.Flash(Color.Yellow);
@@ -72,7 +72,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_flash_red_light()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.Flash(Color.Red);
@@ -83,7 +83,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_start_buzzer()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.StartBuzzer(100, 2, 20, 20);
@@ -94,7 +94,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_ignore_requests_to_stop_if_buzzer_not_started()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.StopBuzzer();
@@ -104,7 +104,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void should_allow_all_lights_and_sound_at_once()
         {
-            using (var device = new Device())
+            using (var device = new PhysicalDevice(new DelcomHid()))
             {
                 device.Open();
                 device.TurnOn(Color.Green);
@@ -118,7 +118,7 @@ namespace Emanate.IntegrationTests.Core.Output
         [Test]
         public void x_should_turn_off_all_lights_and_sounds_when_finalized()
         {
-            var device = new Device();
+            var device = new PhysicalDevice(new DelcomHid());
             device.Open();
             device.TurnOn(Color.Green);
             device.TurnOn(Color.Yellow);

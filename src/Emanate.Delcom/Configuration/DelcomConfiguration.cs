@@ -60,6 +60,7 @@ namespace Emanate.Delcom.Configuration
             {
                 var deviceElement = new XElement("device");
                 deviceElement.Add(new XAttribute("name", device.Name));
+                deviceElement.Add(new XAttribute("id", device.Id));
                 deviceElement.Add(new XAttribute("profile", device.Profile.Key));
 
                 devicesElement.Add(deviceElement);
@@ -99,6 +100,7 @@ namespace Emanate.Delcom.Configuration
             {
                 var device = new DelcomDevice();
                 device.Name = deviceElement.Attribute("name").Value;
+                device.Id = deviceElement.Attribute("id").Value;
 
                 var profileKey = deviceElement.Attribute("profile").Value;
                 device.Profile = Profiles.Single(p => p.Key == profileKey);

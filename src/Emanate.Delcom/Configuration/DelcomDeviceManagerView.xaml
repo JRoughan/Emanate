@@ -7,7 +7,40 @@
                      xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
                      mc:Ignorable="d" 
                      d:DataContext="{d:DesignInstance configuration:DelcomDeviceManagerViewModel}">
-    <DockPanel>
-        <TextBlock Text="Delcom Device Manager" />
-    </DockPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width=".5*" />
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Column="0" Header="Configured">
+            <ItemsControl ItemsSource="{Binding ConfiguredDevices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBox Text="{Binding Name}"></TextBox>
+                            <TextBox Text="{Binding Profile}"></TextBox>
+                            <Button Content="!" Command="{Binding IndicateCommand}" />
+                        </StackPanel>
+                        <!--<Border Height="100" Width="100" Background="CornflowerBlue">-->
+                        <!--</Border>-->
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1" Header="Available">
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding AvailableDevices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBox Text="{Binding Name}"></TextBox>
+                            <Button Content="!" Command="{Binding IndicateCommand}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+    </Grid>
+
 </admin:DeviceManager>

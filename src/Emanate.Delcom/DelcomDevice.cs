@@ -3,7 +3,7 @@ using Emanate.Core.Output;
 
 namespace Emanate.Delcom
 {
-    class DelcomDevice : IOutputDevice
+    public class DelcomDevice : IOutputDevice
     {
         private const string key = "delcom";
         private const string defaultName = "Delcom";
@@ -23,11 +23,15 @@ namespace Emanate.Delcom
             Inputs = new List<InputInfo>();
         }
 
+        public string Id { get; set; }
+
         public string Type { get { return key; } }
 
         public List<InputInfo> Inputs { get; private set; }
 
         public IOutputProfile Profile { get; set; }
+
+        public PhysicalDevice PhysicalDevice { get; set; }
 
         //public Memento CreateMemento()
         //{
