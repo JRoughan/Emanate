@@ -30,7 +30,7 @@ namespace Emanate.Delcom
         private static void RegisterCommon(ContainerBuilder builder)
         {
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(key);
-            builder.RegisterType<DelcomConfiguration>().Keyed<IModuleConfiguration>(key);
+            builder.RegisterType<DelcomConfiguration>().As<IModuleConfiguration>().Keyed<IModuleConfiguration>(key);
         }
     }
 }

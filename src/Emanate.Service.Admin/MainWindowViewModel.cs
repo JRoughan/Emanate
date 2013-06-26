@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Autofac;
@@ -64,7 +65,9 @@ namespace Emanate.Service.Admin
 
         private GlobalConfig GenerateDefaultConfig()
         {
-            return new GlobalConfig();
+            var config = new GlobalConfig();
+            config.ModuleConfigurations.AddRange(componentContext.Resolve<IEnumerable<IModuleConfiguration>>());
+            return config;
         }
 
         private readonly ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();
