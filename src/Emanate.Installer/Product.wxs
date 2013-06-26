@@ -4,13 +4,13 @@
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <Condition Message='This setup requires the .NET Framework 1.0 installed.'>
+    <Condition Message='This application requires .NET Framework 4.0'>
       <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
     </Condition>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
-    <Media Id='1' Cabinet='Emanate.cab' EmbedCab='yes' />
+    <MediaTemplate EmbedCab="yes" />
     
     <UIRef Id="WixUI_Minimal" />
     <UIRef Id="WixUI_ErrorProgressText" />
@@ -30,6 +30,8 @@
           </Component>
           <Component Id='Autofac' Guid='98F63A33-515B-470E-ABB0-FDD2AE0C715B'>
             <File Id='Autofac.dll' Name='Autofac.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.dll' KeyPath='no' />
+          </Component>
+          <Component Id='AutofacConfiguration' Guid='1165E71D-0B2A-4EC9-976C-471D1B47F0B7'>
             <File Id='Autofac.Configuration.dll' Name='Autofac.Configuration.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.Configuration.dll' KeyPath='no' />
           </Component>
           <Component Id='DelcomModule' Guid='90C3CDAD-CF4D-4E18-B304-0D182006DBC3'>
@@ -63,6 +65,7 @@
       <ComponentRef Id='AdminExecutable' />
       <ComponentRef Id='CoreLibrary' />
       <ComponentRef Id='Autofac' />
+      <ComponentRef Id='AutofacConfiguration' />
       <ComponentRef Id='DelcomModule' />
       <ComponentRef Id='TeamCityModule' />
       <ComponentRef Id='EmanateAppDataFolder' />
