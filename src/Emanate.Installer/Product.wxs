@@ -41,6 +41,7 @@
                         Account="LocalSystem"
                         ErrorControl="ignore"
                         Interactive="no">
+              <ServiceConfig DelayedAutoStart="yes" OnInstall="yes" OnReinstall="yes" />
             </ServiceInstall>
             <ServiceControl Id="EmanateServiceStart" Stop="both" Remove="uninstall" Name="EmanateService" Wait="yes" />
           </Component>
