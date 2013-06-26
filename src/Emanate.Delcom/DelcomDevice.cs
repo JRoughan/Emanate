@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
+using Emanate.Delcom.Configuration;
 
 namespace Emanate.Delcom
 {
@@ -10,8 +12,8 @@ namespace Emanate.Delcom
         private const string key = "delcom";
         private const string defaultName = "Delcom";
         private BuildState lastCompletedState;
-        private DateTimeOffset lastUpdateTime;
-        private const int minutesTillFullDim = 24 * 60; // 1 full day
+        private DateTimeOffset lastUpdateTime; // TODO: This should be used fo device reconnection to discover decay level
+        //private const int minutesTillFullDim = 24 * 60; // 1 full day
 
         string IOutputDevice.Key { get { return key; } }
 
@@ -34,7 +36,12 @@ namespace Emanate.Delcom
 
         public List<InputInfo> Inputs { get; private set; }
 
-        public IOutputProfile Profile { get; set; }
+        private MonitoringProfile profile;
+        public IOutputProfile Profile
+        {
+            get { return profile; }
+            set { profile = value as MonitoringProfile; }
+        }
 
         public PhysicalDevice PhysicalDevice { get; set; }
 
@@ -46,52 +53,90 @@ namespace Emanate.Delcom
                     PhysicalDevice.Open();
             }
 
+            var profileState = profile.States.SingleOrDefault(p => p.BuildState == state);
+            if (profileState == null)
+            {
+                PhysicalDevice.Flash(Color.Red);
+                return;
+            }
+
             switch (state)
             {
                 case BuildState.Unknown:
-                    PhysicalDevice.TurnOn(Color.Red);
-                    PhysicalDevice.TurnOn(Color.Green);
-                    PhysicalDevice.TurnOff(Color.Yellow);
+                    SetColorBasedOnProfile(profileState, Color.Green, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
                     break;
                 case BuildState.Succeeded:
-                    PhysicalDevice.TurnOff(Color.Red);
-                    PhysicalDevice.TurnOff(Color.Yellow);
-                    TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Green, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
+
                     lastCompletedState = state;
                     break;
                 case BuildState.Error:
                 case BuildState.Failed:
-                    PhysicalDevice.TurnOff(Color.Green);
-                    PhysicalDevice.TurnOff(Color.Yellow);
-                    TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Green, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
+
+                    // TODO: Move buzzer flag to profile
                     if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
                         PhysicalDevice.StartBuzzer(100, 2, 20, 20);
+
                     lastCompletedState = state;
                     break;
                 case BuildState.Running:
-                    PhysicalDevice.TurnOff(Color.Red);
-                    PhysicalDevice.TurnOff(Color.Green);
-                    PhysicalDevice.Flash(Color.Yellow);
-                    break;
-                default:
-                    PhysicalDevice.Flash(Color.Red);
+                    SetColorBasedOnProfile(profileState, Color.Green, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
+                    SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
                     break;
             }
             lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
             lastUpdateTime = timeStamp;
         }
 
-        private void TurnOnColorWithCustomPowerLevel(Color color, DateTimeOffset timeStamp)
+        private void SetColorBasedOnProfile(ProfileState profileState, Color color, DateTimeOffset timeStamp)
         {
-            var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
-            if (minutesSinceLastBuild > minutesTillFullDim)
+            var isColorTurnedOn = color == Color.Green && profileState.Green ||
+                                  color == Color.Yellow && profileState.Yellow ||
+                                  color == Color.Red && profileState.Red;
+
+            if (isColorTurnedOn)
             {
-                PhysicalDevice.TurnOn(color, color.MinPower);
+                if (profile.Decay > 0)
+                    TurnOnColorWithCustomPowerLevel(color, timeStamp, profileState.Flash);
+                else
+                {
+                    if (profileState.Flash)
+                        PhysicalDevice.Flash(color);
+                    else
+                        PhysicalDevice.TurnOn(color);
+                }
             }
             else
             {
-                var power = color.MaxPower - (minutesSinceLastBuild / minutesTillFullDim) * (color.MaxPower - color.MinPower);
-                PhysicalDevice.TurnOn(color, (byte)power);
+                PhysicalDevice.TurnOff(color);
+            }
+        }
+
+        private void TurnOnColorWithCustomPowerLevel(Color color, DateTimeOffset timeStamp, bool flash)
+        {
+            var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
+            if (minutesSinceLastBuild > profile.Decay * 60)
+            {
+                if (flash)
+                    PhysicalDevice.Flash(color, color.MinPower);
+                else
+                    PhysicalDevice.TurnOn(color, color.MinPower);
+            }
+            else
+            {
+                var power = color.MaxPower - (minutesSinceLastBuild / profile.Decay * 60) * (color.MaxPower - color.MinPower);
+                if (flash)
+                    PhysicalDevice.Flash(color, (byte)power);
+                else
+                    PhysicalDevice.TurnOn(color, (byte)power);
             }
         }
 

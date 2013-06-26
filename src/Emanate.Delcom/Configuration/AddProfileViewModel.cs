@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
+using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
 
@@ -16,10 +17,10 @@ namespace Emanate.Delcom.Configuration
             this.existingProfiles = existingProfiles;
 
             NewProfile = new MonitoringProfile();
-            var allStates = existingProfiles.OfType<MonitoringProfile>().SelectMany(p => p.States).Select(s => s.Name).Distinct();
-            foreach (var stateName in allStates.Distinct())
+
+            foreach (BuildState buildState in Enum.GetValues(typeof(BuildState)))
             {
-                NewProfile.States.Add(new ProfileState { Name = stateName});
+                NewProfile.States.Add(new ProfileState { BuildState = buildState });
             }
 
             CloneProfileCommand = new DelegateCommand<MonitoringProfile>(CloneProfile, p => p != null);
@@ -47,7 +48,7 @@ namespace Emanate.Delcom.Configuration
             {
                 var newState = new ProfileState
                     {
-                        Name = state.Name,
+                        BuildState = state.BuildState,
                         Green = state.Green,
                         Yellow = state.Yellow,
                         Red = state.Red,

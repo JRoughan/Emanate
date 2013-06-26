@@ -110,6 +110,11 @@ namespace Emanate.Delcom
 
         public void Flash(Color color)
         {
+            Flash(color, color.MaxPower);
+        }
+
+        public void Flash(Color color, byte power)
+        {
             if (!IsPresent())
                 return;
             txCmd.MajorCmd = 101;
@@ -122,6 +127,11 @@ namespace Emanate.Delcom
             txCmd.MinorCmd = 12;
             txCmd.LSBData = color.SetId;
             txCmd.MSBData = 0;
+
+            txCmd.MajorCmd = 101;
+            txCmd.MinorCmd = 34;
+            txCmd.LSBData = color.PowerId;
+            txCmd.MSBData = power;
             delcom.SendCommand(txCmd); // and turn it on
         }
 

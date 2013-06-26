@@ -62,7 +62,7 @@
                                         <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="60" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" />
+                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding BuildState}" />
                                     <CheckBox Grid.Row="0" Grid.Column="1" Content="" IsChecked="{Binding Green}" />
                                     <CheckBox Grid.Row="0" Grid.Column="2" Content="" IsChecked="{Binding Yellow}" />
                                     <CheckBox Grid.Row="0" Grid.Column="3" Content="" IsChecked="{Binding Red}" />

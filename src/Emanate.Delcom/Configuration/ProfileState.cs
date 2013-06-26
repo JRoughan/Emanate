@@ -1,14 +1,15 @@
-﻿using Emanate.Service.Admin;
+﻿using Emanate.Core.Input;
+using Emanate.Service.Admin;
 
 namespace Emanate.Delcom.Configuration
 {
     public class ProfileState : ViewModel
     {
-        private string name;
-        public string Name
+        private BuildState buildState;
+        public BuildState BuildState
         {
-            get { return name; }
-            set { name = value; OnPropertyChanged("Name"); }
+            get { return buildState; }
+            set { buildState = value; OnPropertyChanged("BuildState"); }
         }
 
         private bool green;

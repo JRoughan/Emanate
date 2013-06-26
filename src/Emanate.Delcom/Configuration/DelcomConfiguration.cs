@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
+using Emanate.Core.Input;
 using Emanate.Core.Output;
 
 namespace Emanate.Delcom.Configuration
@@ -44,7 +45,7 @@ namespace Emanate.Delcom.Configuration
                 foreach (var state in profile.States)
                 {
                     var stateElement = new XElement("state");
-                    stateElement.Add(new XAttribute("name", state.Name));
+                    stateElement.Add(new XAttribute("name", Enum.GetName(typeof(BuildState), state.BuildState)));
                     stateElement.Add(new XAttribute("green", state.Green));
                     stateElement.Add(new XAttribute("yellow", state.Yellow));
                     stateElement.Add(new XAttribute("red", state.Red));
@@ -86,7 +87,7 @@ namespace Emanate.Delcom.Configuration
                 foreach (var stateElement in profileElement.Elements("state"))
                 {
                     var state = new ProfileState();
-                    state.Name = stateElement.Attribute("name").Value;
+                    state.BuildState = (BuildState)Enum.Parse(typeof(BuildState), stateElement.Attribute("name").Value);
                     state.Green = bool.Parse(stateElement.Attribute("green").Value);
                     state.Yellow = bool.Parse(stateElement.Attribute("yellow").Value);
                     state.Red = bool.Parse(stateElement.Attribute("red").Value);
