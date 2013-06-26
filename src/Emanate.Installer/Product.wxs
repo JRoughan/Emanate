@@ -18,10 +18,20 @@
           <Component Id='CoreLibrary' Guid='A58B73AF-EE3D-4CED-9E04-95C519A17DE9'>
             <File Id='Emanate.Core.dll' Name='Emanate.Core.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Core.dll' KeyPath='yes' />
           </Component>
+          <Component Id='Autofac' Guid='98F63A33-515B-470E-ABB0-FDD2AE0C715B'>
+            <File Id='Autofac.dll' Name='Autofac.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.dll' KeyPath='no' />
+            <File Id='Autofac.Configuration.dll' Name='Autofac.Configuration.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.Configuration.dll' KeyPath='no' />
+          </Component>
+        <Component Id='DelcomModule' Guid='90C3CDAD-CF4D-4E18-B304-0D182006DBC3'>
+            <File Id='Emanate.Delcom.dll' Name='Emanate.Delcom.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Delcom.dll' KeyPath='yes' />
+          </Component>
+        <Component Id='TeamCityModule' Guid='229A3BC9-95F2-4846-852B-6E566B04D165'>
+            <File Id='Emanate.TeamCity.dll' Name='Emanate.TeamCity.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.TeamCity.dll' KeyPath='yes' />
+          </Component>
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="Programs">
-        <Directory Id="ProgramMenuDir" Name="Foobar 1.0">
+        <Directory Id="ProgramMenuDir" Name="Emanate">
           <Component Id="ProgramMenuDir" Guid="367BBC42-7BCE-429B-9D8C-F4357C011F4D">
             <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
             <RegistryValue Root='HKCU' Key='Software\[ProductName]' Type='string' Value='' KeyPath='yes' />
@@ -35,6 +45,9 @@
     <Feature Id='Complete' Level='1'>
       <ComponentRef Id='AdminExecutable' />
       <ComponentRef Id='CoreLibrary' />
+      <ComponentRef Id='Autofac' />
+      <ComponentRef Id='DelcomModule' />
+      <ComponentRef Id='TeamCityModule' />
       <ComponentRef Id='ProgramMenuDir' />
     </Feature>
     <!--<Feature Id="ProductFeature" Title="Emanate" Level="1">
