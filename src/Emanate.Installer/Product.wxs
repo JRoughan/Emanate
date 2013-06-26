@@ -43,6 +43,13 @@
           </Component>
         </Directory>
       </Directory>
+      <Directory Id="CommonAppDataFolder" Name="CommonAppDataFolder">
+        <Directory Id="EmanateAppDataFolder" Name="Emanate">
+          <Component Id="EmanateAppDataFolder" Guid="B7D7FAF5-DC95-4D63-BA88-15EAC601A8D0">
+            <RemoveFolder Id='EmanateAppDataFolder' On='uninstall' />
+          </Component>
+        </Directory>
+      </Directory>
     </Directory>
 
     <Icon Id="AdminIcon.exe" SourceFile="..\Emanate.Service\bin\$(var.Configuration)\EmanateAdmin.exe" />
@@ -53,6 +60,7 @@
       <ComponentRef Id='Autofac' />
       <ComponentRef Id='DelcomModule' />
       <ComponentRef Id='TeamCityModule' />
+      <ComponentRef Id='EmanateAppDataFolder' />
       <ComponentRef Id='ProgramMenuDir' />
     </Feature>
     <!--<Feature Id="ProductFeature" Title="Emanate" Level="1">
