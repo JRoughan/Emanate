@@ -17,8 +17,7 @@
     
     <WixVariable Id="WixUIDialogBmp" Value="Installer Dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="Installer Banner.bmp" />
-    <!-- Why on earth do custom licenses show up white on white? -->
-    <!--<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
