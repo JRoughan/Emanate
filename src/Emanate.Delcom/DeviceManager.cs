@@ -229,7 +229,7 @@ namespace Emanate.Delcom
 
 						// Skip over cbsize (4 bytes) to get the address of the devicePathName.
 
-						var pDevicePathName = new IntPtr(detailDataBuffer.ToInt32() + 4);
+						var pDevicePathName = new IntPtr(detailDataBuffer.ToInt64() + 4);
 
 						// Get the String containing the devicePathName.
 
