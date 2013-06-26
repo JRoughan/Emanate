@@ -13,7 +13,7 @@
 //        public void should_populate_string_properties()
 //        {
 //            var monitor = new Mock<IBuildMonitor>();
-//            var output = new Mock<IOutput>();
+//            var output = new Mock<IBuildOutput>();
 //            var service = new EmanateService(monitor.Object, output.Object);
 //        }
 //    }

@@ -24,7 +24,7 @@ namespace Emanate.Delcom
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             RegisterCommon(builder);
-            builder.RegisterType<DelcomOutput>().Keyed<IOutput>(key);
+            //builder.RegisterType<DelcomBuildOutput>().Keyed<IBuildOutput>(key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)

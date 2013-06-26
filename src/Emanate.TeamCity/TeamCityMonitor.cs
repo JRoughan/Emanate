@@ -20,7 +20,7 @@ namespace Emanate.TeamCity
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly Timer timer;
-        private readonly Dictionary<IOutput, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutput, Dictionary<string, BuildState>>();
+        private readonly Dictionary<IOutputDevice, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<string, BuildState>>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "UNKNOWN", BuildState.Unknown },
@@ -47,9 +47,9 @@ namespace Emanate.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutput output, IEnumerable<string> buildIds)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds)
         {
-            buildStates.Add(output, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
+            buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()

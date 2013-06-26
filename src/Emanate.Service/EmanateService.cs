@@ -12,7 +12,7 @@ namespace Emanate.Service
     {
         private readonly IComponentContext componentContext;
         private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
-        private readonly Dictionary<string, IOutput> outputs = new Dictionary<string, IOutput>();
+        private readonly Dictionary<string, IOutputDevice> outputDevices = new Dictionary<string, IOutputDevice>();
 
         public EmanateService(IComponentContext componentContext)
         {
@@ -24,13 +24,7 @@ namespace Emanate.Service
         {
             foreach (var outputDevice in config.OutputDevices)
             {
-                IOutput output;
-                if (!outputs.TryGetValue(outputDevice.Key, out output))
-                {
-                    //var device = componentContext.ResolveKeyed<IOutputDevice>(outputDevice.Key);
-                    output = componentContext.ResolveKeyed<IOutput>(outputDevice.Key);
-                    outputs.Add(outputDevice.Key, output);
-                }
+                outputDevices.Add(outputDevice.Key, outputDevice);
 
                 foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
                 {
@@ -40,7 +34,7 @@ namespace Emanate.Service
                         monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
                         buildMonitors.Add(inputGroup.Key, monitor);
                     }
-                    monitor.AddBuilds(output, inputGroup.Select(i => i.Id));
+                    monitor.AddBuilds(outputDevice, inputGroup.Select(i => i.Id));
                 }
             }
         }

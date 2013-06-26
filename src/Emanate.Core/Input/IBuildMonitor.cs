@@ -8,6 +8,6 @@ namespace Emanate.Core.Input
         void BeginMonitoring();
         void EndMonitoring();
 
-        void AddBuilds(IOutput output, IEnumerable<string> buildIds);
+        void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
@@ -95,7 +96,9 @@ namespace Emanate.Delcom.Configuration
                 Profiles.Add(profile);
             }
 
-            var devicesElement = element.Element("devices");
+            var configuredDevices = new List<DelcomDevice>();
+
+                var devicesElement = element.Element("devices");
             foreach (var deviceElement in devicesElement.Elements("device"))
             {
                 var device = new DelcomDevice();
@@ -105,7 +108,25 @@ namespace Emanate.Delcom.Configuration
                 var profileKey = deviceElement.Attribute("profile").Value;
                 device.Profile = Profiles.Single(p => p.Key == profileKey);
 
-                OutputDevices.Add(device);
+                configuredDevices.Add(device);
+            }
+
+            for (uint i = 1; ; i++)
+            {
+                var delcom = new DelcomHid();
+                if (delcom.OpenNthDevice(i) != 0)
+                    break;
+
+                var physicalDevice = new PhysicalDevice(delcom);
+                var deviceId = physicalDevice.Name;
+
+                var delcomDevice = configuredDevices.SingleOrDefault(d => d.Id == deviceId);
+
+                if (delcomDevice != null)
+                {
+                    delcomDevice.PhysicalDevice = physicalDevice;
+                    OutputDevices.Add(delcomDevice);
+                }
             }
         }
     }

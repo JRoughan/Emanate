@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Emanate.Core.Input;
 
 namespace Emanate.Core.Output
 {
@@ -12,5 +14,7 @@ namespace Emanate.Core.Output
 
         List<InputInfo> Inputs { get; }
         IOutputProfile Profile { get; set; }
+
+        void UpdateStatus(BuildState state, DateTimeOffset timeStamp);
     }
 }

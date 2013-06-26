@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Emanate.Core.Input;
 using Emanate.Core.Output;
 
 namespace Emanate.Delcom
@@ -7,6 +9,9 @@ namespace Emanate.Delcom
     {
         private const string key = "delcom";
         private const string defaultName = "Delcom";
+        private BuildState lastCompletedState;
+        private DateTimeOffset lastUpdateTime;
+        private const int minutesTillFullDim = 24 * 60; // 1 full day
 
         string IOutputDevice.Key { get { return key; } }
 
@@ -33,41 +38,62 @@ namespace Emanate.Delcom
 
         public PhysicalDevice PhysicalDevice { get; set; }
 
-        //public Memento CreateMemento()
-        //{
-        //    var deviceElement = new XElement("output");
-        //    deviceElement.Add(new XAttribute("type", key));
-        //    deviceElement.Add(new XAttribute("profile", Profile));
-        //    deviceElement.Add(new XElement("name", Name));
-        //    var inputsElement = new XElement("inputs");
-        //    foreach (var input in Inputs)
-        //    {
-        //        var inputElement = new XElement("input");
-        //        inputElement.Add(new XAttribute("source", input.Source));
-        //        inputElement.Add(new XAttribute("id", input.Id));
-        //        inputsElement.Add(inputElement);
-        //    }
-        //    deviceElement.Add(inputsElement);
-        //    return new Memento(deviceElement);
-        //}
+        public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
+        {
+            lock (PhysicalDevice)
+            {
+                if (!PhysicalDevice.IsOpen)
+                    PhysicalDevice.Open();
+            }
 
-        //public void SetMemento(Memento memento)
-        //{
-        //    if (memento.Type != key)
-        //        throw new ArgumentException("Cannot load non-Delcom device");
+            switch (state)
+            {
+                case BuildState.Unknown:
+                    PhysicalDevice.TurnOn(Color.Red);
+                    PhysicalDevice.TurnOn(Color.Green);
+                    PhysicalDevice.TurnOff(Color.Yellow);
+                    break;
+                case BuildState.Succeeded:
+                    PhysicalDevice.TurnOff(Color.Red);
+                    PhysicalDevice.TurnOff(Color.Yellow);
+                    TurnOnColorWithCustomPowerLevel(Color.Green, timeStamp);
+                    lastCompletedState = state;
+                    break;
+                case BuildState.Error:
+                case BuildState.Failed:
+                    PhysicalDevice.TurnOff(Color.Green);
+                    PhysicalDevice.TurnOff(Color.Yellow);
+                    TurnOnColorWithCustomPowerLevel(Color.Red, timeStamp);
+                    if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
+                        PhysicalDevice.StartBuzzer(100, 2, 20, 20);
+                    lastCompletedState = state;
+                    break;
+                case BuildState.Running:
+                    PhysicalDevice.TurnOff(Color.Red);
+                    PhysicalDevice.TurnOff(Color.Green);
+                    PhysicalDevice.Flash(Color.Yellow);
+                    break;
+                default:
+                    PhysicalDevice.Flash(Color.Red);
+                    break;
+            }
+            lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
+            lastUpdateTime = timeStamp;
+        }
 
-        //    // TODO: Error handling
-        //    var element = memento.Element;
-        //    Profile = element.Attribute("profile").Value;
-        //    name = element.Element("name").Value;
-        //    var inputsElement = element.Element("inputs");
-        //    foreach (var inputElement in inputsElement.Elements("input"))
-        //    {
-        //        var input = new InputInfo();
-        //        input.Source = inputElement.Attribute("source").Value;
-        //        input.Id = inputElement.Attribute("id").Value;
-        //        Inputs.Add(input);
-        //    }
-        //}
+        private void TurnOnColorWithCustomPowerLevel(Color color, DateTimeOffset timeStamp)
+        {
+            var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
+            if (minutesSinceLastBuild > minutesTillFullDim)
+            {
+                PhysicalDevice.TurnOn(color, color.MinPower);
+            }
+            else
+            {
+                var power = color.MaxPower - (minutesSinceLastBuild / minutesTillFullDim) * (color.MaxPower - color.MinPower);
+                PhysicalDevice.TurnOn(color, (byte)power);
+            }
+        }
+
     }
 }

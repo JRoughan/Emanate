@@ -57,7 +57,7 @@
     <Compile Include="ModuleLoader.cs" />
     <Compile Include="Output\InputInfo.cs" />
     <Compile Include="Output\IOutputDevice.cs" />
-    <Compile Include="Output\IOutput.cs" />
+    <Compile Include="Output\IBuildOutput.cs" />
     <Compile Include="Output\IOutputProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

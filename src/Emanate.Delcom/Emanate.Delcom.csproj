@@ -64,6 +64,7 @@
     <Compile Include="Configuration\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\DelcomDeviceInfo.cs" />
     <Compile Include="Configuration\DelcomDeviceManagerView.xaml.cs">
       <DependentUpon>DelcomDeviceManagerView.xaml</DependentUpon>
     </Compile>
@@ -74,7 +75,7 @@
     <Compile Include="Configuration\ProfileState.cs" />
     <Compile Include="DelcomDevice.cs" />
     <Compile Include="DelcomHID.cs" />
-    <Compile Include="DelcomOutput.cs" />
+    <Compile Include="DelcomBuildOutput.cs" />
     <Compile Include="PhysicalDevice.cs" />
     <Compile Include="DeviceManagementDeclarations.cs" />
     <Compile Include="DeviceManager.cs" />
