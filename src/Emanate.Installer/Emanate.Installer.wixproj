@@ -34,6 +34,7 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Installer Banner.bmp" />
     <Content Include="License.rtf" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />

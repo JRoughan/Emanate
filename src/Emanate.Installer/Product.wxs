@@ -14,6 +14,9 @@
     
     <UIRef Id="WixUI_Minimal" />
     <UIRef Id="WixUI_ErrorProgressText" />
+    
+    <WixVariable Id="WixUIDialogBmp" Value="Installer Dialog.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="Installer Banner.bmp" />
     <!-- Why on earth do custom licenses show up white on white? -->
     <!--<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
 
