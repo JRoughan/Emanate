@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Autofac;
@@ -32,9 +31,6 @@ namespace Emanate.Service.Admin
         {
             globalConfig = configurationCaretaker.Load();
 
-            if (globalConfig == null)
-                globalConfig = GenerateDefaultConfig();
-
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
@@ -61,13 +57,6 @@ namespace Emanate.Service.Admin
 
                 ActiveDevices.Add(outputDeviceInfo);
             }
-        }
-
-        private GlobalConfig GenerateDefaultConfig()
-        {
-            var config = new GlobalConfig();
-            config.ModuleConfigurations.AddRange(componentContext.Resolve<IEnumerable<IModuleConfiguration>>());
-            return config;
         }
 
         private readonly ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();

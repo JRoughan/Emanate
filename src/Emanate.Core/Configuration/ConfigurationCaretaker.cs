@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -22,7 +23,7 @@ namespace Emanate.Core.Configuration
         public GlobalConfig Load()
         {
             if (!File.Exists(configFilePath))
-                return null;
+                return GenerateDefaultConfiguration();
 
             var builder = new ContainerBuilder();
             var globalConfig = new GlobalConfig();
@@ -65,6 +66,22 @@ namespace Emanate.Core.Configuration
             builder.Update(componentContext.ComponentRegistry);
 
             return globalConfig;
+        }
+
+        private GlobalConfig GenerateDefaultConfiguration()
+        {
+            var builder = new ContainerBuilder();
+
+            var config = new GlobalConfig();
+            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IModuleConfiguration>>())
+            {
+                builder.RegisterInstance(moduleConfiguration).AsSelf();
+                config.ModuleConfigurations.Add(moduleConfiguration);
+            }
+
+            builder.Update(componentContext.ComponentRegistry);
+
+            return config;
         }
 
         public void Save(GlobalConfig globalConfig)
