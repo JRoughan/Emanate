@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Xml.Linq;
@@ -15,6 +16,8 @@ namespace Emanate.TeamCity.Configuration
         string IModuleConfiguration.Key { get { return key; } }
         string IModuleConfiguration.Name { get { return name; } }
 
+        // TODO: Split interfaces so input modules don't need NotSupportedExceptions
+
         public ObservableCollection<IOutputProfile> Profiles
         {
             get
@@ -23,13 +26,17 @@ namespace Emanate.TeamCity.Configuration
             }
         }
 
-        public ObservableCollection<IOutputDevice> OutputDevices
+        public IEnumerable<IOutputDevice> OutputDevices
         {
             get
             {
                 throw new NotSupportedException("TeamCity module does not support output devices");
             }
         }
+
+        public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
+        public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
+
 
         public string Uri { get; set; }
         public int PollingInterval { get; set; }

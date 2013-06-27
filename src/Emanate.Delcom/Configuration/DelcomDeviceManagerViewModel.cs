@@ -63,7 +63,7 @@ namespace Emanate.Delcom.Configuration
             device.Profile = delcomConfiguration.Profiles.First();
 
             deviceInfo.Profile = deviceInfo.Device.Profile.Key; // TODO: Binding should deal with this
-            delcomConfiguration.OutputDevices.Add(deviceInfo.Device);
+            delcomConfiguration.AddOutputDevice(deviceInfo.Device);
             AvailableDevices.Remove(deviceInfo);
             ConfiguredDevices.Add(deviceInfo);
         }
@@ -78,7 +78,7 @@ namespace Emanate.Delcom.Configuration
             deviceInfo.Device.Profile = null;
             deviceInfo.Profile = null; // TODO: Binding should deal with this
 
-            delcomConfiguration.OutputDevices.Remove(deviceInfo.Device);
+            delcomConfiguration.RemoveOutputDevice(deviceInfo.Device);
             ConfiguredDevices.Remove(deviceInfo);
             AvailableDevices.Add(deviceInfo);
         }

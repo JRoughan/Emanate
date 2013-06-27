@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Autofac;
 using Emanate.Core.Configuration;
+using Emanate.Core.Output;
 
 namespace Emanate.Service.Admin
 {
@@ -41,22 +42,50 @@ namespace Emanate.Service.Admin
 
                 var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
                 Configurations.Add(moduleConfigInfo);
+
+                moduleConfig.OutputDeviceAdded += AddOutputDevice;
+                moduleConfig.OutputDeviceRemoved += RemoveOutputDevice;
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
                 var moduleConfiguration = globalConfig.ModuleConfigurations.Single(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
-
-                var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
-                foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
-                {
-                    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
-                    inputSelector.SelectInputs(inputGroup);
-                    outputDeviceInfo.InputSelector = inputSelector;
-                }
-
-                ActiveDevices.Add(outputDeviceInfo);
+                AddActiveDevice(moduleConfiguration, outputDevice);
             }
+        }
+
+        private void AddOutputDevice(object sender, OutputDeviceEventArgs e)
+        {
+            
+            AddActiveDevice(e.ModuleConfiguration, e.OutputDevice);
+        }
+
+        private void RemoveOutputDevice(object sender, OutputDeviceEventArgs e)
+        {
+            var deviceToRemove = ActiveDevices.SingleOrDefault(d => d.Name == e.OutputDevice.Name);
+            if (deviceToRemove != null)
+                ActiveDevices.Remove(deviceToRemove);
+        }
+
+        private void AddActiveDevice(IModuleConfiguration moduleConfiguration, IOutputDevice outputDevice)
+        {
+            var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
+            
+            // HACK: Force an input for a new device without any. Ugly!
+            if (!outputDevice.Inputs.Any())
+            {
+                var inputSelector = componentContext.ResolveKeyed<InputSelector>("teamcity");
+                outputDeviceInfo.InputSelector = inputSelector;
+            }
+            
+            foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
+            {
+                var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
+                inputSelector.SelectInputs(inputGroup);
+                outputDeviceInfo.InputSelector = inputSelector;
+            }
+
+            ActiveDevices.Add(outputDeviceInfo);
         }
 
         private readonly ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();

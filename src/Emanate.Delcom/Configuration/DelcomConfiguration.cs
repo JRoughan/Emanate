@@ -24,15 +24,29 @@ namespace Emanate.Delcom.Configuration
         }
 
         private readonly ObservableCollection<IOutputDevice> outputDevices = new ObservableCollection<IOutputDevice>();
-        public ObservableCollection<IOutputDevice> OutputDevices
+        public IEnumerable<IOutputDevice> OutputDevices
         {
             get { return outputDevices; }
         }
 
-        public DelcomConfiguration()
+        public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
+        public void AddOutputDevice(IOutputDevice outputDevice)
         {
-            
+            outputDevices.Add(outputDevice);
+            var handler = OutputDeviceAdded;
+            if (handler != null)
+                handler(this, new OutputDeviceEventArgs(this, outputDevice));
         }
+
+        public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
+        public void RemoveOutputDevice(DelcomDevice outputDevice)
+        {
+            outputDevices.Remove(outputDevice);
+            var handler = OutputDeviceAdded;
+            if (handler != null)
+                handler(this, new OutputDeviceEventArgs(this, outputDevice));
+        }
+
 
         public Memento CreateMemento()
         {
@@ -131,7 +145,7 @@ namespace Emanate.Delcom.Configuration
                 if (delcomDevice != null)
                 {
                     delcomDevice.PhysicalDevice = physicalDevice;
-                    OutputDevices.Add(delcomDevice);
+                    AddOutputDevice(delcomDevice);
                 }
             }
         }
