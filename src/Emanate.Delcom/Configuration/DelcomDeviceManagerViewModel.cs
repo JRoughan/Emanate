@@ -16,7 +16,8 @@ namespace Emanate.Delcom.Configuration
             ConfiguredDevices = new ObservableCollection<DelcomDeviceInfo>();
             AvailableDevices = new ObservableCollection<DelcomDeviceInfo>();
 
-            SaveDeviceCommand = new DelegateCommand<DelcomDevice>(SaveDevice, CanSaveDevice);
+            AddDeviceCommand = new DelegateCommand<DelcomDeviceInfo>(AddDevice, CanAddDevice);
+            RemoveDeviceCommand = new DelegateCommand<DelcomDeviceInfo>(RemoveDevice, CanRemoveDevice);
         }
 
         public override void Initialize()
@@ -33,7 +34,7 @@ namespace Emanate.Delcom.Configuration
                 var deviceId = physicalDevice.Name;
                 var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.Id == deviceId);
 
-                var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice);
+                var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice, delcomConfiguration);
 
                 if (configuredDevice != null)
                 {
@@ -49,16 +50,37 @@ namespace Emanate.Delcom.Configuration
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }
         public ObservableCollection<DelcomDeviceInfo> AvailableDevices { get; private set; }
 
-        public ICommand SaveDeviceCommand { get; private set; }
-        private bool CanSaveDevice(DelcomDevice device)
+        public ICommand AddDeviceCommand { get; private set; }
+        private bool CanAddDevice(DelcomDeviceInfo deviceInfo)
         {
-            return device != null;
+            return deviceInfo != null;
         }
-        private void SaveDevice(DelcomDevice device)
+        private void AddDevice(DelcomDeviceInfo deviceInfo)
         {
-            delcomConfiguration.OutputDevices.Add(device);
+            var device = deviceInfo.Device;
+            device.Id = device.PhysicalDevice.Name;
+            device.Name = deviceInfo.Name;
+            device.Profile = delcomConfiguration.Profiles.First();
+
+            deviceInfo.Profile = deviceInfo.Device.Profile.Key; // TODO: Binding should deal with this
+            delcomConfiguration.OutputDevices.Add(deviceInfo.Device);
+            AvailableDevices.Remove(deviceInfo);
+            ConfiguredDevices.Add(deviceInfo);
         }
 
-        
+        public ICommand RemoveDeviceCommand { get; private set; }
+        private bool CanRemoveDevice(DelcomDeviceInfo deviceInfo)
+        {
+            return deviceInfo != null;
+        }
+        private void RemoveDevice(DelcomDeviceInfo deviceInfo)
+        {
+            deviceInfo.Device.Profile = null;
+            deviceInfo.Profile = null; // TODO: Binding should deal with this
+
+            delcomConfiguration.OutputDevices.Remove(deviceInfo.Device);
+            ConfiguredDevices.Remove(deviceInfo);
+            AvailableDevices.Add(deviceInfo);
+        }
     }
 }

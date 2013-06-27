@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Core.Output;
@@ -9,18 +10,34 @@ namespace Emanate.Delcom.Configuration
     public class DelcomDeviceInfo : ViewModel
     {
         private readonly IOutputDevice configuredDevice;
+        private readonly DelcomConfiguration delcomConfiguration;
+        private const string defaultName = "Delcom Device";
 
-        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice)
+
+        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice, DelcomConfiguration delcomConfiguration)
         {
             IndicateCommand = new DelegateCommand(Indicate);
 
             Device = delcomDevice;
             this.configuredDevice = configuredDevice;
-            Name = delcomDevice.PhysicalDevice.Name;
-            
+            this.delcomConfiguration = delcomConfiguration;
+
             if (configuredDevice != null)
             {
+                Name = configuredDevice.Name;
                 Profile = configuredDevice.Profile.Key;
+            }
+            else
+            {
+                for (int i = 0;; i++)
+                {
+                    var currentname = defaultName + " #" + 1;
+                    if (delcomConfiguration.OutputDevices.All(d => d.Name != currentname))
+                    {
+                        Name = currentname;
+                        break;
+                    }
+                }
             }
         }
 

@@ -29,6 +29,11 @@ namespace Emanate.Delcom.Configuration
             get { return outputDevices; }
         }
 
+        public DelcomConfiguration()
+        {
+            
+        }
+
         public Memento CreateMemento()
         {
             var moduleElement = new XElement("module");

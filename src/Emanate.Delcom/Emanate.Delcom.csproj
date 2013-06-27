@@ -141,6 +141,13 @@
   <ItemGroup>
     <Resource Include="Images\edit.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MoveLeft.png" />
+    <Resource Include="Images\MoveRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Identify.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)\

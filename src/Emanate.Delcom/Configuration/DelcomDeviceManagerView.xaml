@@ -7,39 +7,42 @@
                      xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
                      mc:Ignorable="d" 
                      d:DataContext="{d:DesignInstance configuration:DelcomDeviceManagerViewModel}">
+    <admin:DeviceManager.Resources>
+        <DataTemplate x:Key="DeviceTemplate" DataType="{x:Type configuration:DelcomDeviceInfo}">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <Button Grid.Column="1" Command="{Binding IndicateCommand}" ToolTip="Identify" HorizontalAlignment="Right" >
+                    <Image Source="..\Images\Identify.png" Height="32" Width="32" />
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </admin:DeviceManager.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width=".5*" />
         </Grid.ColumnDefinitions>
 
         <GroupBox Grid.Column="0" Header="Configured">
-            <ItemsControl ItemsSource="{Binding ConfiguredDevices}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBox Text="{Binding Name}"></TextBox>
-                            <TextBox Text="{Binding Profile}"></TextBox>
-                            <Button Content="!" Command="{Binding IndicateCommand}" />
-                        </StackPanel>
-                        <!--<Border Height="100" Width="100" Background="CornflowerBlue">-->
-                        <!--</Border>-->
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <ListView x:Name="ConfiguredDeviceSelector" ItemsSource="{Binding ConfiguredDevices}" ItemTemplate="{StaticResource DeviceTemplate}" />
         </GroupBox>
 
-        <GroupBox Grid.Column="1" Header="Available">
-            <ItemsControl Grid.Column="1" ItemsSource="{Binding AvailableDevices}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBox Text="{Binding Name}"></TextBox>
-                            <Button Content="!" Command="{Binding IndicateCommand}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <StackPanel Grid.Column="1" >
+            <Button Command="{Binding AddDeviceCommand}" CommandParameter="{Binding ElementName=AvailableDeviceSelector, Path=SelectedItem}" ToolTip="Add build light">
+                <Image Source="..\Images\MoveLeft.png" Height="32" Width="32" />
+            </Button>
+            <Button Margin="0,50,0,0" Command="{Binding RemoveDeviceCommand}" CommandParameter="{Binding ElementName=ConfiguredDeviceSelector, Path=SelectedItem}" ToolTip="Remove build light">
+                <Image Source="..\Images\MoveRight.png" Height="32" Width="32" />
+            </Button>
+        </StackPanel>
+        
+        <GroupBox Grid.Column="2" Header="Available">
+            <ListView Grid.Column="1" x:Name="AvailableDeviceSelector" ItemsSource="{Binding AvailableDevices}" ItemTemplate="{StaticResource DeviceTemplate}" />
         </GroupBox>
     </Grid>
 
