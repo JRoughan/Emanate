@@ -16,6 +16,9 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
     <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="icon.ico" SourceFile="..\..\Resources\Emanate.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     
     <UIRef Id="WixUI_Minimal" />
     <UIRef Id="WixUI_ErrorProgressText" />
