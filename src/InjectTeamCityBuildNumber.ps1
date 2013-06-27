@@ -9,7 +9,7 @@ $rawVersionNumber = $rawVersionNumberMatch.Groups[1].Value
                     
 $versionParts = $rawVersionNumber.Split('.')  
 $versionParts[3] = ([int]$versionParts[3]) + 1  
-$updatedAssemblyVersion = "{0}.{1}.{2}.{3}" -f $versionParts[0], $versionParts[1], $versionParts[2], $buildNumber  
+$updatedAssemblyVersion = "{0}.{1}.{2}.{3}" -f $versionParts[0], $versionParts[1], $buildNumber, $versionParts[2]  
       
 
 (Get-Content $productInfoFile) | ForEach-Object {  
