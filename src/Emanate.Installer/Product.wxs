@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="CC07B268-6E99-49F0-989E-1B127D8A63EB" Name="Emanate" Language="1033" Version="1.0.0.0" Manufacturer="Jared Roughan" UpgradeCode="0d5a59f7-f67e-40ea-9d55-9bc6f1fa7250">
+  <Product Id="*" 
+           Name="Emanate" 
+           Language="1033" 
+           Version="!(bind.fileVersion.Emanate.exe)"
+           Manufacturer="Jared Roughan"
+           UpgradeCode="B5EC12B8-687A-4401-A605-5907E3ABAF2D">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
@@ -91,8 +96,6 @@
       <ComponentRef Id='EmanateAppDataFolder' />
       <ComponentRef Id='ProgramMenuDir' />
     </Feature>
-    <!--<Feature Id="ProductFeature" Title="Emanate" Level="1">
-      <ComponentGroupRef Id="ProductComponents" />
-    </Feature>-->
+
   </Product>
 </Wix>
