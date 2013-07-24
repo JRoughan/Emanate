@@ -60,8 +60,7 @@ namespace Emanate.Delcom.Configuration
             var device = deviceInfo.Device;
             device.Id = device.PhysicalDevice.Name;
             device.Name = deviceInfo.Name;
-            device.Profile = delcomConfiguration.Profiles.First();
-
+            device.Profile = delcomConfiguration.Profiles.FirstOrDefault() ?? delcomConfiguration.GenerateDefaultProfile("Default", true);
             deviceInfo.Profile = deviceInfo.Device.Profile.Key; // TODO: Binding should deal with this
             delcomConfiguration.AddOutputDevice(deviceInfo.Device);
             AvailableDevices.Remove(deviceInfo);

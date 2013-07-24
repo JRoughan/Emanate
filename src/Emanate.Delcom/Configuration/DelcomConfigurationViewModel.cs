@@ -22,7 +22,7 @@ namespace Emanate.Delcom.Configuration
 
         private void AddProfile()
         {
-            var addProfileViewModel = new AddProfileViewModel(Profiles);
+            var addProfileViewModel = new AddProfileViewModel(delcomConfiguration, Profiles);
             var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
             addProfileView.Owner = Application.Current.MainWindow;
             addProfileView.ShowDialog();

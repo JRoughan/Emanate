@@ -28,10 +28,7 @@ namespace Emanate.TeamCity.Configuration
 
         public IEnumerable<IOutputDevice> OutputDevices
         {
-            get
-            {
-                throw new NotSupportedException("TeamCity module does not support output devices");
-            }
+            get { yield break; }
         }
 
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;

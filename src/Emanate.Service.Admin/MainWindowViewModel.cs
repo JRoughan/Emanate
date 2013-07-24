@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Autofac;
@@ -15,8 +16,6 @@ namespace Emanate.Service.Admin
 
         public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker)
         {
-            //addDeviceCommand = new DelegateCommand(AddDevice);
-
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
@@ -32,6 +31,8 @@ namespace Emanate.Service.Admin
         {
             globalConfig = configurationCaretaker.Load();
 
+            var outputDevices = new List<IOutputDevice>(globalConfig.OutputDevices);
+
             foreach (var moduleConfig in globalConfig.ModuleConfigurations)
             {
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
@@ -43,20 +44,22 @@ namespace Emanate.Service.Admin
                 var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
                 Configurations.Add(moduleConfigInfo);
 
+                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
+                globalConfig.OutputDevices.AddRange(unconfiguredDevices);
+
                 moduleConfig.OutputDeviceAdded += AddOutputDevice;
                 moduleConfig.OutputDeviceRemoved += RemoveOutputDevice;
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
-                var moduleConfiguration = globalConfig.ModuleConfigurations.Single(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
+                var moduleConfiguration = globalConfig.ModuleConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
         }
 
         private void AddOutputDevice(object sender, OutputDeviceEventArgs e)
         {
-            
             AddActiveDevice(e.ModuleConfiguration, e.OutputDevice);
         }
 
@@ -70,14 +73,14 @@ namespace Emanate.Service.Admin
         private void AddActiveDevice(IModuleConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
-            
+
             // HACK: Force an input for a new device without any. Ugly!
             if (!outputDevice.Inputs.Any())
             {
                 var inputSelector = componentContext.ResolveKeyed<InputSelector>("teamcity");
                 outputDeviceInfo.InputSelector = inputSelector;
             }
-            
+
             foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
             {
                 var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);

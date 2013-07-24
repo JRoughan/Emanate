@@ -29,6 +29,22 @@ namespace Emanate.Delcom.Configuration
             get { return outputDevices; }
         }
 
+        public IOutputProfile GenerateDefaultProfile(string newKey, bool add)
+        {
+            var defaultProfile = new MonitoringProfile();
+
+            defaultProfile.Key = newKey;
+            foreach (BuildState buildState in Enum.GetValues(typeof(BuildState)))
+            {
+                defaultProfile.States.Add(new ProfileState { BuildState = buildState });
+            }
+
+            if (add)
+                Profiles.Add(defaultProfile);
+
+            return defaultProfile;
+        }
+
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
         public void AddOutputDevice(IOutputDevice outputDevice)
         {

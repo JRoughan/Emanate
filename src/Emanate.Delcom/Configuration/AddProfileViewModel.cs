@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
 
@@ -12,17 +10,12 @@ namespace Emanate.Delcom.Configuration
     {
         private readonly ObservableCollection<IOutputProfile> existingProfiles;
 
-        public AddProfileViewModel(ObservableCollection<IOutputProfile> existingProfiles)
+        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<IOutputProfile> existingProfiles)
         {
             this.existingProfiles = existingProfiles;
 
-            NewProfile = new MonitoringProfile();
-
-            foreach (BuildState buildState in Enum.GetValues(typeof(BuildState)))
-            {
-                NewProfile.States.Add(new ProfileState { BuildState = buildState });
-            }
-
+            NewProfile = (MonitoringProfile)delcomConfiguration.GenerateDefaultProfile("", false);
+                
             CloneProfileCommand = new DelegateCommand<MonitoringProfile>(CloneProfile, p => p != null);
             SaveProfileCommand = new DelegateCommand<MonitoringProfile>(SaveProfile, CanSaveProfile);
         }
