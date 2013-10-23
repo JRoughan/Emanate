@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ServiceProcess;
+using System.Windows;
 
 namespace Emanate.Service.Admin
 {
@@ -111,6 +112,7 @@ namespace Emanate.Service.Admin
             if (e.Error != null)
             {
                 IsNotInstalled = true;
+                MessageBox.Show("Could not update service: " + e.Error.Message);
                 return;
             }
             UpdateStatus();

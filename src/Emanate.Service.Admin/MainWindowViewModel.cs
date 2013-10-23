@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
@@ -136,7 +137,15 @@ namespace Emanate.Service.Admin
                 device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
             }
 
-            configurationCaretaker.Save(globalConfig);
+            try
+            {
+                configurationCaretaker.Save(globalConfig);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot save config file: " + ex.Message);
+                throw;
+            }
         }
 
         private bool CanFindServiceConfiguration()
