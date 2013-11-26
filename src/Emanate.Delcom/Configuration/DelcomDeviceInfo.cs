@@ -31,7 +31,7 @@ namespace Emanate.Delcom.Configuration
             {
                 for (int i = 0;; i++)
                 {
-                    var currentname = defaultName + " #" + 1;
+                    var currentname = defaultName + " #" + i;
                     if (delcomConfiguration.OutputDevices.All(d => d.Name != currentname))
                     {
                         Name = currentname;
