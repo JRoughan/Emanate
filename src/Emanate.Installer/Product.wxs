@@ -58,9 +58,6 @@
           <Component Id='Autofac' Guid='98F63A33-515B-470E-ABB0-FDD2AE0C715B'>
             <File Id='Autofac.dll' Name='Autofac.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.dll' KeyPath='no' />
           </Component>
-          <Component Id='AutofacConfiguration' Guid='1165E71D-0B2A-4EC9-976C-471D1B47F0B7'>
-            <File Id='Autofac.Configuration.dll' Name='Autofac.Configuration.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Autofac.Configuration.dll' KeyPath='no' />
-          </Component>
           <Component Id='DelcomModule' Guid='90C3CDAD-CF4D-4E18-B304-0D182006DBC3'>
             <File Id='Emanate.Delcom.dll' Name='Emanate.Delcom.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Delcom.dll' KeyPath='yes' />
           </Component>
@@ -93,7 +90,6 @@
       <ComponentRef Id='AdminExecutable' />
       <ComponentRef Id='CoreLibrary' />
       <ComponentRef Id='Autofac' />
-      <ComponentRef Id='AutofacConfiguration' />
       <ComponentRef Id='DelcomModule' />
       <ComponentRef Id='TeamCityModule' />
       <ComponentRef Id='EmanateAppDataFolder' />
