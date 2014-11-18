@@ -60,14 +60,14 @@ namespace Emanate.TeamCity.InputSelector
         public bool HasBadConfiguration
         {
             get { return hasBadConfiguration; }
-            set { hasBadConfiguration = value; OnPropertyChanged("HasBadConfiguration"); }
+            set { hasBadConfiguration = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<ProjectViewModel> projects = new ObservableCollection<ProjectViewModel>();
         public ObservableCollection<ProjectViewModel> Projects
         {
             get { return projects; }
-            set { projects = value; OnPropertyChanged("Projects"); }
+            set { projects = value; OnPropertyChanged(); }
         }
 
         public void SelectInputs(IEnumerable<InputInfo> inputs)

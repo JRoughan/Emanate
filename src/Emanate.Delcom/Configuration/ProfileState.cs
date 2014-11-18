@@ -9,35 +9,35 @@ namespace Emanate.Delcom.Configuration
         public BuildState BuildState
         {
             get { return buildState; }
-            set { buildState = value; OnPropertyChanged("BuildState"); }
+            set { buildState = value; OnPropertyChanged(); }
         }
 
         private bool green;
         public bool Green
         {
             get { return green; }
-            set { green = value; OnPropertyChanged("Green"); }
+            set { green = value; OnPropertyChanged(); }
         }
 
         private bool yellow;
         public bool Yellow
         {
             get { return yellow; }
-            set { yellow = value; OnPropertyChanged("Yellow"); }
+            set { yellow = value; OnPropertyChanged(); }
         }
 
         private bool red;
         public bool Red
         {
             get { return red; }
-            set { red = value; OnPropertyChanged("Red"); }
+            set { red = value; OnPropertyChanged(); }
         }
 
         private bool flash;
         public bool Flash
         {
             get { return flash; }
-            set { flash = value; OnPropertyChanged("Flash"); }
+            set { flash = value; OnPropertyChanged(); }
         }
     }
 }

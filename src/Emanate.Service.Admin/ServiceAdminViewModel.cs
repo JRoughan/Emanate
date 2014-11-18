@@ -43,7 +43,7 @@ namespace Emanate.Service.Admin
             set
             {
                 isRunning = value;
-                OnPropertyChanged("IsRunning");
+                OnPropertyChanged();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Emanate.Service.Admin
             set
             {
                 isStopped = value;
-                OnPropertyChanged("IsStopped");
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +66,7 @@ namespace Emanate.Service.Admin
             set
             {
                 isNotInstalled = value;
-                OnPropertyChanged("IsNotInstalled");
+                OnPropertyChanged();
             }
         }
 

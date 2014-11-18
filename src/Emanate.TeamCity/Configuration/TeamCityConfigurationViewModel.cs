@@ -19,45 +19,45 @@ namespace Emanate.TeamCity.Configuration
         public string Uri
         {
             get { return teamCityConfiguration.Uri; }
-            set { teamCityConfiguration.Uri = value; OnPropertyChanged("Uri"); }
+            set { teamCityConfiguration.Uri = value; OnPropertyChanged(); }
         }
 
         public int PollingInterval
         {
             get { return teamCityConfiguration.PollingInterval; }
-            set { teamCityConfiguration.PollingInterval = value; OnPropertyChanged("PollingInterval"); }
+            set { teamCityConfiguration.PollingInterval = value; OnPropertyChanged(); }
         }
 
         public string UserName
         {
             get { return teamCityConfiguration.UserName; }
-            set { teamCityConfiguration.UserName = value; OnPropertyChanged("UserName"); }
+            set { teamCityConfiguration.UserName = value; OnPropertyChanged(); }
         }
 
         public string Password
         {
             get { return teamCityConfiguration.Password; }
-            set { teamCityConfiguration.Password = value; OnPropertyChanged("Password"); }
+            set { teamCityConfiguration.Password = value; OnPropertyChanged(); }
         }
 
         public bool RequiresAuthentication
         {
             get { return teamCityConfiguration.RequiresAuthentication; }
-            set { teamCityConfiguration.RequiresAuthentication = value; OnPropertyChanged("RequiresAuthentication"); }
+            set { teamCityConfiguration.RequiresAuthentication = value; OnPropertyChanged(); }
         }
 
         private bool isEditable;
         public bool IsEditable
         {
             get { return isEditable; }
-            set { isEditable = value; OnPropertyChanged("IsEditable"); }
+            set { isEditable = value; OnPropertyChanged(); }
         }
 
         private bool? isTestSuccessful;
         public bool? IsTestSuccessful
         {
             get { return isTestSuccessful; }
-            set { isTestSuccessful = value; OnPropertyChanged("IsTestSuccessful"); }
+            set { isTestSuccessful = value; OnPropertyChanged(); }
         }
 
         public ICommand TestConnectionCommand { get; set; }

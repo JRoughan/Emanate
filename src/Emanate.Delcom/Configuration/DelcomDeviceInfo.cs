@@ -45,21 +45,21 @@ namespace Emanate.Delcom.Configuration
         public string Name
         {
             get { return name; }
-            set { name = value; OnPropertyChanged("Name"); }
+            set { name = value; OnPropertyChanged(); }
         }
 
         private string profile;
         public string Profile
         {
             get { return profile; }
-            set { profile = value; OnPropertyChanged("Profile"); }
+            set { profile = value; OnPropertyChanged(); }
         }
 
         private DelcomDevice device;
         public DelcomDevice Device
         {
             get { return device; }
-            set { device = value; OnPropertyChanged("Device"); }
+            set { device = value; OnPropertyChanged(); }
         }
 
         public ICommand IndicateCommand { get; private set; }

@@ -24,7 +24,7 @@ namespace Emanate.Delcom.Configuration
         public MonitoringProfile NewProfile
         {
             get { return newProfile; }
-            set { newProfile = value; OnPropertyChanged("NewProfile"); }
+            set { newProfile = value; OnPropertyChanged(); }
         }
 
         public IEnumerable<IOutputProfile> ExistingProfiles

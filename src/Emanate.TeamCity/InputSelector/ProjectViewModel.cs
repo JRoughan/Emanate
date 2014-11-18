@@ -15,7 +15,7 @@ namespace Emanate.TeamCity.InputSelector
         public string Name
         {
             get { return name; }
-            set { name = value; OnPropertyChanged("Name"); }
+            set { name = value; OnPropertyChanged(); }
         }
 
         private bool? isSelected;
@@ -29,7 +29,7 @@ namespace Emanate.TeamCity.InputSelector
                     foreach (var configuration in configurations)
                         configuration.IsSelected = value.Value;
                 }
-                isSelected = value; OnPropertyChanged("IsSelected");
+                isSelected = value; OnPropertyChanged();
             }
         }
 
@@ -37,7 +37,7 @@ namespace Emanate.TeamCity.InputSelector
         public ObservableCollection<ProjectConfigurationViewModel> Configurations
         {
             get { return configurations; }
-            set { configurations = value; OnPropertyChanged("Configurations"); }
+            set { configurations = value; OnPropertyChanged(); }
         }
 
         public void CheckStatus()

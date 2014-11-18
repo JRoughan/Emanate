@@ -10,21 +10,21 @@ namespace Emanate.Delcom.Configuration
         public string Key
         {
             get { return key; }
-            set { key = value; OnPropertyChanged("Key"); }
+            set { key = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<ProfileState> states = new ObservableCollection<ProfileState>();
         public ObservableCollection<ProfileState> States
         {
             get { return states; }
-            set { states = value; OnPropertyChanged("States"); }
+            set { states = value; OnPropertyChanged(); }
         }
 
         private uint decay;
         public uint Decay
         {
             get { return decay; }
-            set { decay = value; OnPropertyChanged("Decay"); }
+            set { decay = value; OnPropertyChanged(); }
         }
     }
 }

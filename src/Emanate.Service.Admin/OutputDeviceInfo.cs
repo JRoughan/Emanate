@@ -24,7 +24,7 @@ namespace Emanate.Service.Admin
         public IOutputProfile Profile
         {
             get { return OutputDevice.Profile; }
-            set { OutputDevice.Profile = value; OnPropertyChanged("Profile"); }
+            set { OutputDevice.Profile = value; OnPropertyChanged(); }
         }
 
         public string Name { get; private set; }
