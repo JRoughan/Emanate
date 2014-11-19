@@ -82,14 +82,19 @@ namespace Emanate.TeamCity
         {
             foreach (var output in buildStates)
             {
+                var outputDevice = output.Key;
+                if (!outputDevice.IsAvailable)
+                    continue;
+
                 var newStates = GetNewBuildStates(output.Value.Keys).ToList();
 
                 var newState = BuildState.Unknown;
                 var timeStamp = DateTimeOffset.Now;
 
+
                 if (newStates.Any())
                 {
-                    var states = buildStates[output.Key];
+                    var states = buildStates[outputDevice];
                     foreach (var buildState in newStates)
                         states[buildState.BuildId] = buildState.State;
 
@@ -100,7 +105,7 @@ namespace Emanate.TeamCity
 
                 var oldState = CurrentState;
                 CurrentState = newState;
-                output.Key.UpdateStatus(newState, timeStamp);
+                outputDevice.UpdateStatus(newState, timeStamp);
             }
         }
 

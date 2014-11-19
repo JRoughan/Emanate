@@ -18,6 +18,11 @@ namespace Emanate.TeamCity.Configuration
 
         // TODO: Split interfaces so input modules don't need NotSupportedExceptions
 
+        public IOutputProfile GenerateEmptyProfile(string newKey = "")
+        {
+            throw new NotSupportedException("TeamCity module does not support profiles");
+        }
+
         public ObservableCollection<IOutputProfile> Profiles
         {
             get

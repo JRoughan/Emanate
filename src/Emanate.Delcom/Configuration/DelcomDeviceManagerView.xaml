@@ -5,9 +5,14 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:configuration="clr-namespace:Emanate.Delcom.Configuration"
                      xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
+                     xmlns:converters="clr-namespace:Emanate.Service.Admin.Converters;assembly=EmanateAdmin"
                      mc:Ignorable="d" 
                      d:DataContext="{d:DesignInstance configuration:DelcomDeviceManagerViewModel}">
     <admin:DeviceManager.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <converters:NegativeBooleanToVisibilityConverter x:Key="NegativeBoolToVis" />
+
         <DataTemplate x:Key="DeviceTemplate" DataType="{x:Type configuration:DelcomDeviceInfo}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -15,9 +20,10 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                <Button Grid.Column="1" Command="{Binding IndicateCommand}" ToolTip="Identify" HorizontalAlignment="Right" >
+                <Button x:Name="indicateTrigger" Grid.Column="1" Command="{Binding IndicateCommand}" ToolTip="Identify" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource NegativeBoolToVis}}" >
                     <Image Source="..\Images\Identify.png" Height="32" Width="32" />
                 </Button>
+                <Image x:Name="errorImage" Grid.Column="1" Source="..\Images\error.png" Height="32" Width="32" ToolTip="Missing" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource BoolToVis}}" />
             </Grid>
         </DataTemplate>
     </admin:DeviceManager.Resources>
@@ -42,7 +48,7 @@
         </StackPanel>
         
         <GroupBox Grid.Column="2" Header="Available">
-            <ListView Grid.Column="1" x:Name="AvailableDeviceSelector" ItemsSource="{Binding AvailableDevices}" ItemTemplate="{StaticResource DeviceTemplate}" />
+            <ListView x:Name="AvailableDeviceSelector" ItemsSource="{Binding AvailableDevices}" ItemTemplate="{StaticResource DeviceTemplate}" />
         </GroupBox>
     </Grid>
 

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
 
@@ -9,18 +10,13 @@ namespace Emanate.Delcom.Configuration
 {
     public class DelcomDeviceInfo : ViewModel
     {
-        private readonly IOutputDevice configuredDevice;
-        private readonly DelcomConfiguration delcomConfiguration;
         private const string defaultName = "Delcom Device";
 
-
-        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice, DelcomConfiguration delcomConfiguration)
+        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice, IModuleConfiguration delcomConfiguration)
         {
             IndicateCommand = new DelegateCommand(Indicate);
 
             Device = delcomDevice;
-            this.configuredDevice = configuredDevice;
-            this.delcomConfiguration = delcomConfiguration;
 
             if (configuredDevice != null)
             {
@@ -62,7 +58,10 @@ namespace Emanate.Delcom.Configuration
             set { device = value; OnPropertyChanged(); }
         }
 
+        public bool IsMissingPhysicalDevice { get { return device == null || device.PhysicalDevice == null; } }
+
         public ICommand IndicateCommand { get; private set; }
+
         private void Indicate()
         {
             Task.Factory.StartNew(() =>

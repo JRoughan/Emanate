@@ -6,7 +6,14 @@
 
         public ConfigurationView()
         {
+            Loaded += SelectInitialProfile;
             InitializeComponent();
+        }
+
+        void SelectInitialProfile(object sender, System.EventArgs e)
+        {
+            if (ProfileSelector.HasItems && ProfileSelector.SelectedIndex < 0)
+                ProfileSelector.SelectedIndex = 0;
         }
 
         public override void SetTarget(Core.Configuration.IModuleConfiguration moduleConfiguration)

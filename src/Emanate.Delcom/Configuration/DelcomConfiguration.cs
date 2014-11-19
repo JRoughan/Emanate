@@ -29,19 +29,26 @@ namespace Emanate.Delcom.Configuration
             get { return outputDevices; }
         }
 
-        public IOutputProfile GenerateDefaultProfile(string newKey, bool add)
+        public IOutputProfile GenerateEmptyProfile(string newKey = "")
         {
-            var defaultProfile = new MonitoringProfile();
-
-            defaultProfile.Key = newKey;
-            foreach (BuildState buildState in Enum.GetValues(typeof(BuildState)))
+            var defaultProfile = new MonitoringProfile
             {
+                Key = newKey,
+                HasRestrictedHours = false,
+                StartTime = 0,
+                EndTime = 24
+            };
+
+            foreach (BuildState buildState in Enum.GetValues(typeof(BuildState)))
                 defaultProfile.States.Add(new ProfileState { BuildState = buildState });
-            }
 
-            if (add)
-                Profiles.Add(defaultProfile);
+            return defaultProfile;
+        }
 
+        public IOutputProfile AddDefaultProfile(string newKey)
+        {
+            var defaultProfile = GenerateEmptyProfile(newKey);
+            Profiles.Add(defaultProfile);
             return defaultProfile;
         }
 
@@ -76,6 +83,9 @@ namespace Emanate.Delcom.Configuration
                 var profileElement = new XElement("profile");
                 profileElement.Add(new XAttribute("key", profile.Key));
                 profileElement.Add(new XAttribute("decay", profile.Decay));
+                profileElement.Add(new XAttribute("restrictedhours", profile.HasRestrictedHours));
+                profileElement.Add(new XAttribute("starttime", profile.StartTime));
+                profileElement.Add(new XAttribute("endtime", profile.EndTime));
 
                 foreach (var state in profile.States)
                 {
@@ -115,40 +125,55 @@ namespace Emanate.Delcom.Configuration
             // TODO: Error handling
             var element = memento.Element;
             var profilesElement = element.Element("profiles");
-            foreach (var profileElement in profilesElement.Elements("profile"))
+            if (profilesElement != null)
             {
-                var profile = new MonitoringProfile();
-                profile.Key = profileElement.Attribute("key").Value;
-                profile.Decay = uint.Parse(profileElement.Attribute("decay").Value);
-                foreach (var stateElement in profileElement.Elements("state"))
+                foreach (var profileElement in profilesElement.Elements("profile"))
                 {
-                    var state = new ProfileState
+                    var profile = new MonitoringProfile
                     {
-                        BuildState = ParseOptionalEnum(stateElement, "name", BuildState.Unknown),
-                        Green = ParseOptionalBoolean(stateElement, "green"), 
-                        Yellow = ParseOptionalBoolean(stateElement, "yellow"),
-                        Red = ParseOptionalBoolean(stateElement, "red"),
-                        Flash = ParseOptionalBoolean(stateElement, "flash"),
-                        Buzzer = ParseOptionalBoolean(stateElement, "buzzer")
+                        Key = ParseOptionalString(profileElement, "key"),
+                        Decay = ParseOptionalUint(profileElement, "decay"),
+                        HasRestrictedHours = ParseOptionalBoolean(profileElement, "restrictedhours"),
+                        StartTime = ParseOptionalUint(profileElement, "starttime"),
+                        EndTime = ParseOptionalUint(profileElement, "endtime"),
                     };
-                    profile.States.Add(state);
+
+                    foreach (var stateElement in profileElement.Elements("state"))
+                    {
+                        var state = new ProfileState
+                        {
+                            BuildState = ParseOptionalEnum(stateElement, "name", BuildState.Unknown),
+                            Green = ParseOptionalBoolean(stateElement, "green"),
+                            Yellow = ParseOptionalBoolean(stateElement, "yellow"),
+                            Red = ParseOptionalBoolean(stateElement, "red"),
+                            Flash = ParseOptionalBoolean(stateElement, "flash"),
+                            Buzzer = ParseOptionalBoolean(stateElement, "buzzer")
+                        };
+                        profile.States.Add(state);
+                    }
+
+                    Profiles.Add(profile);
                 }
-                Profiles.Add(profile);
             }
 
-            var configuredDevices = new List<DelcomDevice>();
-
             var devicesElement = element.Element("devices");
-            foreach (var deviceElement in devicesElement.Elements("device"))
+            if (devicesElement != null)
             {
-                var device = new DelcomDevice();
-                device.Name = deviceElement.Attribute("name").Value;
-                device.Id = deviceElement.Attribute("id").Value;
+                foreach (var deviceElement in devicesElement.Elements("device"))
+                {
+                    var profileKey = ParseOptionalString(deviceElement, "profile");
+                    if (string.IsNullOrWhiteSpace(profileKey))
+                        continue;
 
-                var profileKey = deviceElement.Attribute("profile").Value;
-                device.Profile = Profiles.Single(p => p.Key == profileKey);
+                    var device = new DelcomDevice
+                    {
+                        Id = deviceElement.Attribute("id").Value,
+                        Name = deviceElement.Attribute("name").Value,
+                        Profile = Profiles.Single(p => p.Key == profileKey)
+                    };
 
-                configuredDevices.Add(device);
+                    AddOutputDevice(device);
+                }
             }
 
             for (uint i = 1; ; i++)
@@ -160,13 +185,9 @@ namespace Emanate.Delcom.Configuration
                 var physicalDevice = new PhysicalDevice(delcom);
                 var deviceId = physicalDevice.Name;
 
-                var delcomDevice = configuredDevices.SingleOrDefault(d => d.Id == deviceId);
-
+                var delcomDevice = outputDevices.OfType<DelcomDevice>().SingleOrDefault(d => d.Id == deviceId);
                 if (delcomDevice != null)
-                {
                     delcomDevice.PhysicalDevice = physicalDevice;
-                    AddOutputDevice(delcomDevice);
-                }
             }
         }
 
@@ -193,6 +214,28 @@ namespace Emanate.Delcom.Configuration
                     return value;
             }
             return defaultValue;
+        }
+
+        private static uint ParseOptionalUint(XElement element, string attributeName)
+        {
+            var attribute = element.Attribute(attributeName);
+            if (attribute != null)
+            {
+                uint value;
+                if (uint.TryParse(attribute.Value, out value))
+                    return value;
+            }
+            return 0;
+        }
+
+        private static string ParseOptionalString(XElement element, string attributeName)
+        {
+            var attribute = element.Attribute(attributeName);
+            if (attribute != null)
+            {
+                return attribute.Value;
+            }
+            return "";
         }
     }
 }

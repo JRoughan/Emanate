@@ -78,6 +78,9 @@
     <Compile Include="Configuration\DelcomConfiguration.cs" />
     <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
     <Compile Include="Configuration\MonitoringProfile.cs" />
+    <Compile Include="Configuration\ProfileControl.xaml.cs">
+      <DependentUpon>ProfileControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ProfileState.cs" />
     <Compile Include="DelcomDevice.cs" />
     <Compile Include="DelcomHID.cs" />
@@ -138,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Configuration\ProfileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\add.png" />
@@ -151,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Identify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

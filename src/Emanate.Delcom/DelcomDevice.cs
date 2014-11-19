@@ -12,7 +12,7 @@ namespace Emanate.Delcom
         private const string key = "delcom";
         private const string defaultName = "Delcom";
         private BuildState lastCompletedState;
-        private DateTimeOffset lastUpdateTime; // TODO: This should be used fo device reconnection to discover decay level
+        private DateTimeOffset lastUpdateTime; // TODO: This should be used for device reconnection to discover decay level
         //private const int minutesTillFullDim = 24 * 60; // 1 full day
 
         string IOutputDevice.Key { get { return key; } }
@@ -45,8 +45,24 @@ namespace Emanate.Delcom
 
         public PhysicalDevice PhysicalDevice { get; set; }
 
+        public bool IsAvailable { get { return PhysicalDevice != null; } }
+
         public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
+            if (profile.HasRestrictedHours)
+            {
+                var currentTime = DateTime.Now;
+                if (currentTime.Hour < profile.StartTime || currentTime.Hour > profile.EndTime)
+                {
+                    lock (PhysicalDevice)
+                    {
+                        if (PhysicalDevice.IsOpen)
+                            PhysicalDevice.Close();
+                        return;
+                    }
+                }
+            }
+
             lock (PhysicalDevice)
             {
                 if (!PhysicalDevice.IsOpen)
@@ -141,6 +157,5 @@ namespace Emanate.Delcom
                     PhysicalDevice.TurnOn(color, (byte)power);
             }
         }
-
     }
 }

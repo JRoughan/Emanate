@@ -26,5 +26,26 @@ namespace Emanate.Delcom.Configuration
             get { return decay; }
             set { decay = value; OnPropertyChanged(); }
         }
+
+        private bool hasRestrictedHours;
+        public bool HasRestrictedHours
+        {
+            get { return hasRestrictedHours; }
+            set { hasRestrictedHours = value; OnPropertyChanged(); }
+        }
+
+        private uint startTime;
+        public uint StartTime
+        {
+            get { return startTime; }
+            set { startTime = value; OnPropertyChanged(); }
+        }
+
+        private uint endTime;
+        public uint EndTime
+        {
+            get { return endTime; }
+            set { endTime = value; OnPropertyChanged(); }
+        }
     }
 }

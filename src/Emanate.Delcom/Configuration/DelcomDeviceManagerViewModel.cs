@@ -45,6 +45,11 @@ namespace Emanate.Delcom.Configuration
                     AvailableDevices.Add(delcomDeviceInfo);
                 }
             }
+
+            foreach (var missingDevice in delcomConfiguration.OutputDevices.Except(ConfiguredDevices.Select(d => d.Device)))
+            {
+                ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
+            }
         }
 
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }
@@ -60,7 +65,7 @@ namespace Emanate.Delcom.Configuration
             var device = deviceInfo.Device;
             device.Id = device.PhysicalDevice.Name;
             device.Name = deviceInfo.Name;
-            device.Profile = delcomConfiguration.Profiles.FirstOrDefault() ?? delcomConfiguration.GenerateDefaultProfile("Default", true);
+            device.Profile = delcomConfiguration.Profiles.FirstOrDefault() ?? delcomConfiguration.AddDefaultProfile("Default");
             deviceInfo.Profile = deviceInfo.Device.Profile.Key; // TODO: Binding should deal with this
             delcomConfiguration.AddOutputDevice(deviceInfo.Device);
             AvailableDevices.Remove(deviceInfo);

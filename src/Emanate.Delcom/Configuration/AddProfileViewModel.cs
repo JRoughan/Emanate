@@ -14,7 +14,7 @@ namespace Emanate.Delcom.Configuration
         {
             this.existingProfiles = existingProfiles;
 
-            NewProfile = (MonitoringProfile)delcomConfiguration.GenerateDefaultProfile("", false);
+            NewProfile = (MonitoringProfile)delcomConfiguration.GenerateEmptyProfile("");
                 
             CloneProfileCommand = new DelegateCommand<MonitoringProfile>(CloneProfile, p => p != null);
             SaveProfileCommand = new DelegateCommand<MonitoringProfile>(SaveProfile, CanSaveProfile);

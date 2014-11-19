@@ -15,6 +15,7 @@ namespace Emanate.Core.Output
         List<InputInfo> Inputs { get; }
         IOutputProfile Profile { get; set; }
 
+        bool IsAvailable { get; }
         void UpdateStatus(BuildState state, DateTimeOffset timeStamp);
     }
 }

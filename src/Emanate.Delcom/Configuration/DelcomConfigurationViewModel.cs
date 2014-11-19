@@ -32,12 +32,26 @@ namespace Emanate.Delcom.Configuration
         public bool IsEditable
         {
             get { return isEditable; }
-            set { isEditable = value; OnPropertyChanged("IsEditable"); }
+            set { isEditable = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<IOutputProfile> Profiles
         {
             get { return delcomConfiguration.Profiles; }
+        }
+
+        private int startTime;
+        public int StartTime
+        {
+            get { return startTime; }
+            set { startTime = value; OnPropertyChanged(); }
+        }
+
+        private int endTime;
+        public int EndTime
+        {
+            get { return endTime; }
+            set { endTime = value; OnPropertyChanged(); }
         }
     }
 }
