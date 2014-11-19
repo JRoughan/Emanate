@@ -39,5 +39,12 @@ namespace Emanate.Delcom.Configuration
             get { return flash; }
             set { flash = value; OnPropertyChanged(); }
         }
+
+        private bool buzzer;
+        public bool Buzzer
+        {
+            get { return buzzer; }
+            set { buzzer = value; OnPropertyChanged(); }
+        }
     }
 }

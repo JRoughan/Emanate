@@ -60,6 +60,12 @@ namespace Emanate.Delcom
                 return;
             }
 
+            if (profileState.Buzzer && lastCompletedState != state)
+            {
+                // TODO: Make actual buzzer sound configurable
+                PhysicalDevice.StartBuzzer(100, 2, 20, 20);
+            }
+            
             switch (state)
             {
                 case BuildState.Unknown:
@@ -79,10 +85,6 @@ namespace Emanate.Delcom
                     SetColorBasedOnProfile(profileState, Color.Green, timeStamp);
                     SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
                     SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
-
-                    // TODO: Move buzzer flag to profile
-                    if (lastCompletedState != BuildState.Failed && lastCompletedState != BuildState.Error)
-                        PhysicalDevice.StartBuzzer(100, 2, 20, 20);
 
                     lastCompletedState = state;
                     break;

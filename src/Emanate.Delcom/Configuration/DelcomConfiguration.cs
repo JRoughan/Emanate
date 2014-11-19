@@ -85,6 +85,7 @@ namespace Emanate.Delcom.Configuration
                     stateElement.Add(new XAttribute("yellow", state.Yellow));
                     stateElement.Add(new XAttribute("red", state.Red));
                     stateElement.Add(new XAttribute("flash", state.Flash));
+                    stateElement.Add(new XAttribute("buzzer", state.Buzzer));
                     profileElement.Add(stateElement);
                 }
 
@@ -121,12 +122,15 @@ namespace Emanate.Delcom.Configuration
                 profile.Decay = uint.Parse(profileElement.Attribute("decay").Value);
                 foreach (var stateElement in profileElement.Elements("state"))
                 {
-                    var state = new ProfileState();
-                    state.BuildState = (BuildState)Enum.Parse(typeof(BuildState), stateElement.Attribute("name").Value);
-                    state.Green = bool.Parse(stateElement.Attribute("green").Value);
-                    state.Yellow = bool.Parse(stateElement.Attribute("yellow").Value);
-                    state.Red = bool.Parse(stateElement.Attribute("red").Value);
-                    state.Flash = bool.Parse(stateElement.Attribute("flash").Value);
+                    var state = new ProfileState
+                    {
+                        BuildState = ParseOptionalEnum(stateElement, "name", BuildState.Unknown),
+                        Green = ParseOptionalBoolean(stateElement, "green"), 
+                        Yellow = ParseOptionalBoolean(stateElement, "yellow"),
+                        Red = ParseOptionalBoolean(stateElement, "red"),
+                        Flash = ParseOptionalBoolean(stateElement, "flash"),
+                        Buzzer = ParseOptionalBoolean(stateElement, "buzzer")
+                    };
                     profile.States.Add(state);
                 }
                 Profiles.Add(profile);
@@ -134,7 +138,7 @@ namespace Emanate.Delcom.Configuration
 
             var configuredDevices = new List<DelcomDevice>();
 
-                var devicesElement = element.Element("devices");
+            var devicesElement = element.Element("devices");
             foreach (var deviceElement in devicesElement.Elements("device"))
             {
                 var device = new DelcomDevice();
@@ -164,6 +168,31 @@ namespace Emanate.Delcom.Configuration
                     AddOutputDevice(delcomDevice);
                 }
             }
+        }
+
+        private static bool ParseOptionalBoolean(XElement element, string attributeName)
+        {
+            var attribute = element.Attribute(attributeName);
+            if (attribute != null)
+            {
+                bool value;
+                if (bool.TryParse(attribute.Value, out value))
+                    return value;
+            }
+            return false;
+        }
+
+        private static TEnum ParseOptionalEnum<TEnum>(XElement element, string attributeName, TEnum defaultValue)
+            where TEnum : struct
+        {
+            var attribute = element.Attribute(attributeName);
+            if (attribute != null)
+            {
+                TEnum value;
+                if (Enum.TryParse(attribute.Value, out value))
+                    return value;
+            }
+            return defaultValue;
         }
     }
 }

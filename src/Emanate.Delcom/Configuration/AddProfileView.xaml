@@ -44,20 +44,23 @@
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="State" />
                         <Label Grid.Column="1" Content="Green" />
                         <Label Grid.Column="2" Content="Yellow" />
                         <Label Grid.Column="3" Content="Red" />
                         <Label Grid.Column="4" Content="Flash" />
+                        <Label Grid.Column="5" Content="Buzzer" />
                     </Grid>
-                    <ListView ItemsSource="{Binding NewProfile.States}" >
-                        <ListView.ItemTemplate>
+                    <ItemsControl ItemsSource="{Binding NewProfile.States}" >
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
                                         <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="60" />
@@ -67,10 +70,11 @@
                                     <CheckBox Grid.Row="0" Grid.Column="2" Content="" IsChecked="{Binding Yellow}" />
                                     <CheckBox Grid.Row="0" Grid.Column="3" Content="" IsChecked="{Binding Red}" />
                                     <CheckBox Grid.Row="0" Grid.Column="4" Content="" IsChecked="{Binding Flash}" />
+                                    <CheckBox Grid.Row="0" Grid.Column="4" Content="" IsChecked="{Binding Buzzer}" />
                                 </Grid>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </DockPanel>
             </GroupBox>
         </Grid>
