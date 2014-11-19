@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
@@ -12,6 +13,9 @@ namespace Emanate.Service.Admin
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (Debugger.IsAttached)
+                Diagnostics.InitialiseConsole();
+
             var container = CreateContainer();
             var mainWindowViewModel = container.Resolve<MainWindowViewModel>();
             MainWindow = container.Resolve<MainWindow>(new TypedParameter(typeof(MainWindowViewModel), mainWindowViewModel));

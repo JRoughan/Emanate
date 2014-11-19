@@ -53,6 +53,8 @@
     <Compile Include="Configuration\IOriginator.cs" />
     <Compile Include="Configuration\GlobalConfig.cs" />
     <Compile Include="Configuration\IModuleConfiguration.cs" />
+    <Compile Include="Diagnostics.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\BuildState.cs" />
     <Compile Include="IEmanateModule.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Output\IBuildOutput.cs" />
     <Compile Include="Output\IOutputProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Configuration\XElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

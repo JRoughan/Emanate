@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Autofac;
@@ -129,7 +130,7 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
-            // TODO: The respective Guis should take care of keeping this in sync
+            // TODO: The respective GUIs should take care of keeping this in sync
             foreach (var deviceInfo in ActiveDevices)
             {
                 var device = deviceInfo.OutputDevice;
@@ -143,8 +144,9 @@ namespace Emanate.Service.Admin
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot save config file: " + ex.Message);
-                throw;
+                var errorMessage = "Cannot save config file: " + ex.Message;
+                Trace.TraceError(errorMessage);
+                MessageBox.Show(errorMessage);
             }
         }
 

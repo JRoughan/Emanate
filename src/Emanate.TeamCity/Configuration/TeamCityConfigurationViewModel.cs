@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using Emanate.Service.Admin;
 
@@ -70,6 +71,7 @@ namespace Emanate.TeamCity.Configuration
 
         private void TestConnection()
         {
+            Trace.TraceInformation("=> TeamCityConfigurationViewModel.TestConnection");
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
@@ -86,6 +88,7 @@ namespace Emanate.TeamCity.Configuration
             {
                 isTesting = false;
                 IsEditable = true;
+                Trace.TraceInformation("TeamCity connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
             }
         }
     }

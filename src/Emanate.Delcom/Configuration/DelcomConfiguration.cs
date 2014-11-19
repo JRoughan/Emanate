@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -126,9 +127,8 @@ namespace Emanate.Delcom.Configuration
         {
             Trace.TraceInformation("=> DelcomConfiguration.SetMemento");
             if (memento.Type != key)
-                throw new ArgumentException("Cannot load non-Delcom configuration");
+                Trace.TraceWarning("Possible attempt to load non-Delcom configuration");
 
-            // TODO: Error handling
             var element = memento.Element;
             var profilesElement = element.Element("profiles");
             if (profilesElement != null)
@@ -137,23 +137,23 @@ namespace Emanate.Delcom.Configuration
                 {
                     var profile = new MonitoringProfile
                     {
-                        Key = ParseOptionalString(profileElement, "key"),
-                        Decay = ParseOptionalUint(profileElement, "decay"),
-                        HasRestrictedHours = ParseOptionalBoolean(profileElement, "restrictedhours"),
-                        StartTime = ParseOptionalUint(profileElement, "starttime"),
-                        EndTime = ParseOptionalUint(profileElement, "endtime"),
+                        Key = profileElement.GetAttributeString("key"),
+                        Decay = profileElement.GetAttributeUint("decay"),
+                        HasRestrictedHours = profileElement.GetAttributeBoolean("restrictedhours"),
+                        StartTime = profileElement.GetAttributeUint("starttime"),
+                        EndTime = profileElement.GetAttributeUint("endtime"),
                     };
 
                     foreach (var stateElement in profileElement.Elements("state"))
                     {
                         var state = new ProfileState
                         {
-                            BuildState = ParseOptionalEnum(stateElement, "name", BuildState.Unknown),
-                            Green = ParseOptionalBoolean(stateElement, "green"),
-                            Yellow = ParseOptionalBoolean(stateElement, "yellow"),
-                            Red = ParseOptionalBoolean(stateElement, "red"),
-                            Flash = ParseOptionalBoolean(stateElement, "flash"),
-                            Buzzer = ParseOptionalBoolean(stateElement, "buzzer")
+                            BuildState = stateElement.GetAttributeEnum("name", BuildState.Unknown),
+                            Green = stateElement.GetAttributeBoolean("green"),
+                            Yellow = stateElement.GetAttributeBoolean("yellow"),
+                            Red = stateElement.GetAttributeBoolean("red"),
+                            Flash = stateElement.GetAttributeBoolean("flash"),
+                            Buzzer = stateElement.GetAttributeBoolean("buzzer")
                         };
                         profile.States.Add(state);
                     }
@@ -161,26 +161,33 @@ namespace Emanate.Delcom.Configuration
                     Profiles.Add(profile);
                 }
             }
+            else
+                Trace.TraceWarning("Missing element: profiles");
 
             var devicesElement = element.Element("devices");
             if (devicesElement != null)
             {
                 foreach (var deviceElement in devicesElement.Elements("device"))
                 {
-                    var profileKey = ParseOptionalString(deviceElement, "profile");
+                    var profileKey = deviceElement.GetAttributeString("profile");
                     if (string.IsNullOrWhiteSpace(profileKey))
+                    {
+                        Trace.TraceWarning("Ignoring invalid profile key");
                         continue;
+                    }
 
                     var device = new DelcomDevice
                     {
-                        Id = deviceElement.Attribute("id").Value,
-                        Name = deviceElement.Attribute("name").Value,
+                        Id = deviceElement.GetAttributeString("id"),
+                        Name = deviceElement.GetAttributeString("name"),
                         Profile = Profiles.Single(p => p.Key == profileKey)
                     };
 
                     AddOutputDevice(device);
                 }
             }
+            else
+                Trace.TraceWarning("Missing element: devices");
 
             for (uint i = 1; ; i++)
             {
@@ -195,53 +202,6 @@ namespace Emanate.Delcom.Configuration
                 if (delcomDevice != null)
                     delcomDevice.PhysicalDevice = physicalDevice;
             }
-        }
-
-        private static bool ParseOptionalBoolean(XElement element, string attributeName)
-        {
-            var attribute = element.Attribute(attributeName);
-            if (attribute != null)
-            {
-                bool value;
-                if (bool.TryParse(attribute.Value, out value))
-                    return value;
-            }
-            return false;
-        }
-
-        private static TEnum ParseOptionalEnum<TEnum>(XElement element, string attributeName, TEnum defaultValue)
-            where TEnum : struct
-        {
-            var attribute = element.Attribute(attributeName);
-            if (attribute != null)
-            {
-                TEnum value;
-                if (Enum.TryParse(attribute.Value, out value))
-                    return value;
-            }
-            return defaultValue;
-        }
-
-        private static uint ParseOptionalUint(XElement element, string attributeName)
-        {
-            var attribute = element.Attribute(attributeName);
-            if (attribute != null)
-            {
-                uint value;
-                if (uint.TryParse(attribute.Value, out value))
-                    return value;
-            }
-            return 0;
-        }
-
-        private static string ParseOptionalString(XElement element, string attributeName)
-        {
-            var attribute = element.Attribute(attributeName);
-            if (attribute != null)
-            {
-                return attribute.Value;
-            }
-            return "";
         }
     }
 }

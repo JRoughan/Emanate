@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Emanate.Service
+namespace Emanate.Core
 {
-    class NativeMethods
+    internal static class NativeMethods
     {
         const int SW_HIDE = 0;
         public const int SW_SHOW = 5;

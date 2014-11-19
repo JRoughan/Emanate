@@ -13,7 +13,7 @@ namespace Emanate.Core.Configuration
         public Memento(XElement element)
         {
             Element = element;
-            Type = element.Attribute("type").Value;
+            Type = element.GetAttributeString("type");
         }
 
         public XElement Element { get; private set; }

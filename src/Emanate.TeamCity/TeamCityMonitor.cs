@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.TeamCity.Configuration;
@@ -16,7 +17,7 @@ namespace Emanate.TeamCity
     public class TeamCityMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
-        private const string m_teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
+        private const string teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly Timer timer;
@@ -132,8 +133,8 @@ namespace Emanate.TeamCity
                     var build = new
                                     {
                                         IsRunning = buildXml.Attribute("running") != null,
-                                        Status = buildXml.Attribute("status").Value,
-                                        TimeStamp = DateTimeOffset.ParseExact(buildXml.Attribute("startDate").Value, m_teamCityDateFormat, CultureInfo.InvariantCulture)
+                                        Status = buildXml.GetAttributeString("status"),
+                                        TimeStamp = buildXml.GetAttributeDateTime("startDate", teamCityDateFormat)
                                     };
 
                     var state = ConvertState(build.Status);
@@ -143,6 +144,8 @@ namespace Emanate.TeamCity
 
                     yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
                 }
+                else
+                    Trace.TraceWarning("Build '{0}' invalid", buildId);
             }
         }
 

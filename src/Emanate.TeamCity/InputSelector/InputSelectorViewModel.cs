@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
+using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
 
@@ -27,8 +28,9 @@ namespace Emanate.TeamCity.InputSelector
             {
                 projectsXml = connection.GetProjects();
             }
-            catch (WebException)
+            catch (WebException ex)
             {
+                Trace.TraceError("Could not get projects: " + ex.Message);
                 HasBadConfiguration = true;
                 return;
             }
@@ -37,9 +39,10 @@ namespace Emanate.TeamCity.InputSelector
             foreach (var projectElement in projectsElement.Elements())
             {
                 var project = new ProjectViewModel();
-                project.Name = projectElement.Attribute("name").Value;
+                project.Name = projectElement.GetAttributeString("name");
+                var projectId = projectElement.GetAttributeString("id");
 
-                var buildXml = connection.GetProject(projectElement.Attribute("id").Value);
+                var buildXml = connection.GetProject(projectId);
                 var buildRoot = XElement.Parse(buildXml);
 
                 var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
@@ -49,8 +52,8 @@ namespace Emanate.TeamCity.InputSelector
                 foreach (var buildElement in buildElements)
                 {
                     var configuration = new ProjectConfigurationViewModel(project);
-                    configuration.Id = buildElement.Attribute("id").Value;
-                    configuration.Name = buildElement.Attribute("name").Value;
+                    configuration.Id = buildElement.GetAttributeString("id");
+                    configuration.Name = buildElement.GetAttributeString("name");
                     project.Configurations.Add(configuration);
                 }
 

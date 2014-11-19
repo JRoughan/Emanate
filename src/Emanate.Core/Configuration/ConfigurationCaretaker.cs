@@ -61,8 +61,8 @@ namespace Emanate.Core.Configuration
                 {
                     foreach (var outputElement in outputsElement.Elements("output"))
                     {
-                        var outputType = outputElement.Attribute("type").Value;
-                        var deviceName = outputElement.Attribute("device").Value;
+                        var outputType = outputElement.GetAttributeString("type");
+                        var deviceName = outputElement.GetAttributeString("device");
 
                         var config = globalConfig.ModuleConfigurations.Single(c => c.Key == outputType);
                         var device = config.OutputDevices.Single(p => p.Name == deviceName);
@@ -74,8 +74,8 @@ namespace Emanate.Core.Configuration
                             {
                                 var input = new InputInfo
                                 {
-                                    Id = inputElement.Attribute("id").Value,
-                                    Source = inputElement.Attribute("source").Value
+                                    Id = inputElement.GetAttributeString("id"),
+                                    Source = inputElement.GetAttributeString("source")
                                 };
                                 Trace.TraceInformation("Adding input '{0}' to device '{1}'", input.Id, deviceName);
                                 device.Inputs.Add(input);

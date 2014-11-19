@@ -32,37 +32,27 @@ namespace Emanate.Service
 
         public void RunAsConsole()
         {
-            InitialiseConsole();
+            Diagnostics.InitialiseConsole();
             var consoleApp = CreateApp<EmanateConsole>();
 
             consoleApp.Start();
         }
 
-        private static void InitialiseConsole()
-        {
-            var handle = NativeMethods.GetConsoleWindow();
-            if (handle == IntPtr.Zero)
-                NativeMethods.AllocConsole();
-            else
-                NativeMethods.ShowWindow(handle, NativeMethods.SW_SHOW);
-
-            Trace.Listeners.Add(new ConsoleTraceListener());
-        }
-
         private T CreateApp<T>()
             where T : EmanateService
         {
+            Trace.TraceInformation("=> ServiceRunner.CreateApp<{0}>", typeof(T).Name);
             var container = CreateContainer<T>();
 
             var caretaker = container.Resolve<ConfigurationCaretaker>();
             var config = caretaker.Load();
 
-            // HACK: hard coded to teamcity
-            var inputs = config.OutputDevices.SelectMany(d => d.Inputs).Where(i => i.Source == "teamcity");
-
             var builder = new ContainerBuilder();
             foreach (var moduleConfiguration in config.ModuleConfigurations)
+            {
+                Trace.TraceInformation("Registering module configuration '{0}'", moduleConfiguration.Name);
                 builder.RegisterInstance(moduleConfiguration);
+            }
 
             builder.Update(container);
 
