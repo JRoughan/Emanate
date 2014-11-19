@@ -49,24 +49,32 @@ namespace Emanate.TeamCity
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds)
         {
+            Trace.TraceInformation("=> TeamCityMonitor.AddBuilds");
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
         {
+            Trace.TraceInformation("=> TeamCityMonitor.BeginMonitoring");
             UpdateBuildStates();
+            Trace.TraceInformation("Starting polling timer");
             timer.Start();
         }
 
         public void EndMonitoring()
         {
+            Trace.TraceInformation("=> TeamCityModule.EndMonitoring");
             timer.Stop();
         }
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)
         {
+            Trace.TraceInformation("=> TeamCityMonitor.PollTeamCityStatus");
             if (!Monitor.TryEnter(pollingLock, lockingInterval))
+            {
+                Trace.TraceWarning("Could not acquire polling lock - skipping attempt");
                 return;
+            }
 
             try
             {
@@ -80,6 +88,7 @@ namespace Emanate.TeamCity
 
         private void UpdateBuildStates()
         {
+            Trace.TraceInformation("=> TeamCityModule.UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -111,6 +120,7 @@ namespace Emanate.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
         {
+            Trace.TraceInformation("=> TeamCityModule.GetNewBuildStates");
             foreach (var buildId in buildIds)
             {
                 var resultXml = teamCityConnection.GetBuild(buildId);
@@ -142,7 +152,8 @@ namespace Emanate.TeamCity
             if (stateMap.TryGetValue(state, out convertedState))
                 return convertedState;
 
-            throw new NotSupportedException(string.Format("State '{0}' is not supported.", state));
+            Trace.TraceInformation("State '{0}' is not supported.", state);
+            return BuildState.Unknown;
         }
 
         [DebuggerDisplay("{BuildId} - {State}")]

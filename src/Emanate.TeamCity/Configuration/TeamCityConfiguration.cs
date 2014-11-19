@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
@@ -39,7 +40,6 @@ namespace Emanate.TeamCity.Configuration
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
 
-
         public string Uri { get; set; }
         public int PollingInterval { get; set; }
         public string UserName { get; set; }
@@ -48,6 +48,7 @@ namespace Emanate.TeamCity.Configuration
 
         public Memento CreateMemento()
         {
+            Trace.TraceInformation("=> TeamCityConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("type", key));
             moduleElement.Add(new XElement("uri", Uri));
@@ -61,6 +62,7 @@ namespace Emanate.TeamCity.Configuration
 
         public void SetMemento(Memento memento)
         {
+            Trace.TraceInformation("=> TeamCityConfiguration.SetMemento");
             if (memento.Type != key)
                 throw new ArgumentException("Cannot load non-TeamCity configuration");
 

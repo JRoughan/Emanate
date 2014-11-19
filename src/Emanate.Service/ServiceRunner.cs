@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
@@ -30,9 +32,21 @@ namespace Emanate.Service
 
         public void RunAsConsole()
         {
+            InitialiseConsole();
             var consoleApp = CreateApp<EmanateConsole>();
 
             consoleApp.Start();
+        }
+
+        private static void InitialiseConsole()
+        {
+            var handle = NativeMethods.GetConsoleWindow();
+            if (handle == IntPtr.Zero)
+                NativeMethods.AllocConsole();
+            else
+                NativeMethods.ShowWindow(handle, NativeMethods.SW_SHOW);
+
+            Trace.Listeners.Add(new ConsoleTraceListener());
         }
 
         private T CreateApp<T>()

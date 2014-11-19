@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -49,15 +50,24 @@ namespace Emanate.Delcom
 
         public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
+            Trace.TraceInformation("=> DelcomDevice.UpdateStatus");
+            Trace.TraceInformation("New state is '{0}'", state);
             if (profile.HasRestrictedHours)
             {
                 var currentTime = DateTime.Now;
                 if (currentTime.Hour < profile.StartTime || currentTime.Hour > profile.EndTime)
                 {
+                    Trace.TraceInformation("Outside restricted hours");
                     lock (PhysicalDevice)
                     {
                         if (PhysicalDevice.IsOpen)
+                        {
+                            Trace.TraceInformation("Turning off device");
                             PhysicalDevice.Close();
+                        }
+                        else
+                            Trace.TraceInformation("Ignoring update");
+
                         return;
                     }
                 }
@@ -66,12 +76,17 @@ namespace Emanate.Delcom
             lock (PhysicalDevice)
             {
                 if (!PhysicalDevice.IsOpen)
+                {
+                    Trace.TraceInformation("Turning on device");
                     PhysicalDevice.Open();
+                }
             }
 
+            Trace.TraceWarning("Finding profile for state '{0}'", state);
             var profileState = profile.States.SingleOrDefault(p => p.BuildState == state);
             if (profileState == null)
             {
+                Trace.TraceWarning("No profile found for state '{0}'", state);
                 PhysicalDevice.Flash(Color.Red);
                 return;
             }
@@ -79,6 +94,7 @@ namespace Emanate.Delcom
             if (profileState.Buzzer && lastCompletedState != state)
             {
                 // TODO: Make actual buzzer sound configurable
+                Trace.TraceInformation("Sounding buzzer");
                 PhysicalDevice.StartBuzzer(100, 2, 20, 20);
             }
             
@@ -94,6 +110,7 @@ namespace Emanate.Delcom
                     SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
                     SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
 
+                    Trace.TraceInformation("Setting last completed state to '{0}'", state);
                     lastCompletedState = state;
                     break;
                 case BuildState.Error:
@@ -102,6 +119,7 @@ namespace Emanate.Delcom
                     SetColorBasedOnProfile(profileState, Color.Yellow, timeStamp);
                     SetColorBasedOnProfile(profileState, Color.Red, timeStamp);
 
+                    Trace.TraceInformation("Setting last completed state to '{0}'", state);
                     lastCompletedState = state;
                     break;
                 case BuildState.Running:
@@ -111,51 +129,51 @@ namespace Emanate.Delcom
                     break;
             }
             lastCompletedState = state != BuildState.Running ? state : lastCompletedState;
+            Trace.TraceInformation("Setting last update time to '{0}'", timeStamp);
             lastUpdateTime = timeStamp;
         }
 
         private void SetColorBasedOnProfile(ProfileState profileState, Color color, DateTimeOffset timeStamp)
         {
+            Trace.TraceInformation("=> DelcomDevice.SetColorBasedOnProfile");
             var isColorTurnedOn = color == Color.Green && profileState.Green ||
                                   color == Color.Yellow && profileState.Yellow ||
                                   color == Color.Red && profileState.Red;
 
             if (isColorTurnedOn)
             {
-                if (profile.Decay > 0)
-                    TurnOnColorWithCustomPowerLevel(color, timeStamp, profileState.Flash);
+                var intensity = GetColorIntensity(color, timeStamp);
+                if (profileState.Flash)
+                {
+                    Trace.TraceInformation("Flashing '{0}' at intensity '{1}'", color.Name, intensity);
+                    PhysicalDevice.Flash(color, intensity);
+                }
                 else
                 {
-                    if (profileState.Flash)
-                        PhysicalDevice.Flash(color);
-                    else
-                        PhysicalDevice.TurnOn(color);
+                    Trace.TraceInformation("Turning on '{0}' at intensity '{1}'", color.Name, intensity);
+                    PhysicalDevice.TurnOn(color, intensity);
                 }
             }
             else
             {
+                Trace.TraceInformation("Turning off '{0}'", color.Name);
                 PhysicalDevice.TurnOff(color);
             }
         }
 
-        private void TurnOnColorWithCustomPowerLevel(Color color, DateTimeOffset timeStamp, bool flash)
+        private byte GetColorIntensity(Color color, DateTimeOffset timeStamp)
         {
+            Trace.TraceInformation("=> DelcomDevice.GetColorIntensity");
+
+            if (profile.Decay <= 0)
+                return color.MaxPower;
+
             var minutesSinceLastBuild = (DateTimeOffset.Now - timeStamp).TotalMinutes;
             if (minutesSinceLastBuild > profile.Decay * 60)
-            {
-                if (flash)
-                    PhysicalDevice.Flash(color, color.MinPower);
-                else
-                    PhysicalDevice.TurnOn(color, color.MinPower);
-            }
-            else
-            {
-                var power = color.MaxPower - (minutesSinceLastBuild / profile.Decay * 60) * (color.MaxPower - color.MinPower);
-                if (flash)
-                    PhysicalDevice.Flash(color, (byte)power);
-                else
-                    PhysicalDevice.TurnOn(color, (byte)power);
-            }
+                return color.MinPower;
+
+            var power = color.MaxPower - (minutesSinceLastBuild / profile.Decay * 60) * (color.MaxPower - color.MinPower);
+            return (byte)power;
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Core.Output;
 
 namespace Emanate.Service
 {
@@ -12,7 +12,6 @@ namespace Emanate.Service
     {
         private readonly IComponentContext componentContext;
         private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
-        //private readonly Dictionary<string, IOutputDevice> outputDevices = new Dictionary<string, IOutputDevice>();
 
         public EmanateService(IComponentContext componentContext)
         {
@@ -22,33 +21,45 @@ namespace Emanate.Service
 
         public void Initialize(GlobalConfig config)
         {
+            Trace.TraceInformation("=> EmanateService.Initialize");
             foreach (var outputDevice in config.OutputDevices)
             {
-                //outputDevices.Add(outputDevice.Key, outputDevice);
-
+                Trace.TraceInformation("Processing output device '{0}'", outputDevice.Name);
                 foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
                 {
+                    Trace.TraceInformation("Processing input group '{0}'", inputGroup.Key);
                     IBuildMonitor monitor;
                     if (!buildMonitors.TryGetValue(inputGroup.Key, out monitor))
                     {
                         monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
                         buildMonitors.Add(inputGroup.Key, monitor);
+                        Trace.TraceInformation("Monitor '{0}' added", monitor.GetType());
                     }
-                    monitor.AddBuilds(outputDevice, inputGroup.Select(i => i.Id));
+                    var buildIds = inputGroup.Select(i => i.Id).ToList();
+                    monitor.AddBuilds(outputDevice, buildIds);
+                    Trace.TraceInformation("Builds added: {0}", string.Join(", ", buildIds));
                 }
             }
         }
 
         protected override void OnStart(string[] args)
         {
+            Trace.TraceInformation("=> EmanateService.OnStart");
             foreach (var buildMonitor in buildMonitors.Values)
+            {
+                Trace.TraceInformation("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
+            }
         }
 
         protected override void OnStop()
         {
+            Trace.TraceInformation("=> EmanateService.OnStop");
             foreach (var buildMonitor in buildMonitors.Values)
+            {
+                Trace.TraceInformation("Ending build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.EndMonitoring();
+            }
         }
     }
 }

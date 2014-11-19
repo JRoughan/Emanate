@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Diagnostics;
+using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
@@ -13,6 +14,7 @@ namespace Emanate.Delcom
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
+            Trace.TraceInformation("=> DelcomModule.LoadAdminComponents");
             RegisterCommon(builder);
             builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
             builder.RegisterType<DelcomConfigurationViewModel>();
@@ -23,12 +25,14 @@ namespace Emanate.Delcom
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
+            Trace.TraceInformation("=> DelcomModule.LoadServiceComponents");
             RegisterCommon(builder);
             //builder.RegisterType<DelcomBuildOutput>().Keyed<IBuildOutput>(key);
         }
 
         private static void RegisterCommon(ContainerBuilder builder)
         {
+            Trace.TraceInformation("=> DelcomModule.RegisterCommon");
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(key);
             builder.RegisterType<DelcomConfiguration>().As<IModuleConfiguration>().Keyed<IModuleConfiguration>(key);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
@@ -31,6 +32,7 @@ namespace Emanate.Delcom.Configuration
 
         public IOutputProfile GenerateEmptyProfile(string newKey = "")
         {
+            Trace.TraceInformation("=> DelcomConfiguration.GenerateEmptyProfile");
             var defaultProfile = new MonitoringProfile
             {
                 Key = newKey,
@@ -47,6 +49,7 @@ namespace Emanate.Delcom.Configuration
 
         public IOutputProfile AddDefaultProfile(string newKey)
         {
+            Trace.TraceInformation("=> DelcomConfiguration.AddDefaultProfile");
             var defaultProfile = GenerateEmptyProfile(newKey);
             Profiles.Add(defaultProfile);
             return defaultProfile;
@@ -55,6 +58,7 @@ namespace Emanate.Delcom.Configuration
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
         public void AddOutputDevice(IOutputDevice outputDevice)
         {
+            Trace.TraceInformation("=> DelcomConfiguration.AddOutputDevice");
             outputDevices.Add(outputDevice);
             var handler = OutputDeviceAdded;
             if (handler != null)
@@ -64,15 +68,16 @@ namespace Emanate.Delcom.Configuration
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
         public void RemoveOutputDevice(DelcomDevice outputDevice)
         {
+            Trace.TraceInformation("=> DelcomConfiguration.RemoveOutputDevice");
             outputDevices.Remove(outputDevice);
             var handler = OutputDeviceAdded;
             if (handler != null)
                 handler(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
-
         public Memento CreateMemento()
         {
+            Trace.TraceInformation("=> DelcomConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("type", key));
 
@@ -119,6 +124,7 @@ namespace Emanate.Delcom.Configuration
 
         public void SetMemento(Memento memento)
         {
+            Trace.TraceInformation("=> DelcomConfiguration.SetMemento");
             if (memento.Type != key)
                 throw new ArgumentException("Cannot load non-Delcom configuration");
 

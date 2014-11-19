@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
@@ -20,6 +21,7 @@ namespace Emanate.TeamCity.InputSelector
 
         public override void Initialize()
         {
+            Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
             string projectsXml;
             try
             {
@@ -72,6 +74,7 @@ namespace Emanate.TeamCity.InputSelector
 
         public void SelectInputs(IEnumerable<InputInfo> inputs)
         {
+            Trace.TraceInformation("=> InputSelectorViewModel.SelectInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var inputInfo in inputs)
             {
@@ -83,6 +86,7 @@ namespace Emanate.TeamCity.InputSelector
 
         public IEnumerable<InputInfo> GetSelectedInputs()
         {
+            Trace.TraceInformation("=> InputSelectorViewModel.GetSelectedInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var configuration in configurations)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -22,47 +23,78 @@ namespace Emanate.Core.Configuration
 
         public GlobalConfig Load()
         {
+            Trace.TraceInformation("=> ConfigurationCaretaker.Load");
+
             if (!File.Exists(configFilePath))
+            {
+                Trace.TraceInformation("No config file found");
                 return GenerateDefaultConfiguration();
+            }
 
             var builder = new ContainerBuilder();
             var globalConfig = new GlobalConfig();
 
+            Trace.TraceInformation("Loading config file from '{0}'", configFilePath);
             var configDoc = XDocument.Load(configFilePath);
             var rootNode = configDoc.Element("emanate");
 
-            // Modules
-            var modules = rootNode.Element("modules");
-            foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
+            if (rootNode != null)
             {
-                var moduleConfig = componentContext.ResolveKeyed<IModuleConfiguration>(moduleMemento.Type);
-                moduleConfig.SetMemento(moduleMemento);
-                globalConfig.ModuleConfigurations.Add(moduleConfig);
-                builder.RegisterInstance(moduleConfig).AsSelf();
-            }
-
-            // Output devices
-            var outputsElement = rootNode.Element("outputs");
-            foreach (var outputElement in outputsElement.Elements("output"))
-            {
-                var outputType = outputElement.Attribute("type").Value;
-                var deviceName = outputElement.Attribute("device").Value;
-
-                var config = globalConfig.ModuleConfigurations.Single(c => c.Key == outputType);
-                var device = config.OutputDevices.Single(p => p.Name == deviceName);
-
-                var inputsElement = outputElement.Element("inputs");
-                foreach (var inputElement in inputsElement.Elements("input"))
+                // Modules
+                var modules = rootNode.Element("modules");
+                if (modules != null)
                 {
-                    var input = new InputInfo();
-                    input.Source = inputElement.Attribute("source").Value;
-                    input.Id = inputElement.Attribute("id").Value;
-                    device.Inputs.Add(input);
+                    foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
+                    {
+                        var moduleConfig = componentContext.ResolveKeyed<IModuleConfiguration>(moduleMemento.Type);
+                        moduleConfig.SetMemento(moduleMemento);
+                        globalConfig.ModuleConfigurations.Add(moduleConfig);
+                        builder.RegisterInstance(moduleConfig).AsSelf();
+                    }
                 }
+                else
+                    Trace.TraceWarning("Missing element: modules");
 
-                globalConfig.OutputDevices.Add(device);
+                // Output devices
+                var outputsElement = rootNode.Element("outputs");
+                if (outputsElement != null)
+                {
+                    foreach (var outputElement in outputsElement.Elements("output"))
+                    {
+                        var outputType = outputElement.Attribute("type").Value;
+                        var deviceName = outputElement.Attribute("device").Value;
+
+                        var config = globalConfig.ModuleConfigurations.Single(c => c.Key == outputType);
+                        var device = config.OutputDevices.Single(p => p.Name == deviceName);
+
+                        var inputsElement = outputElement.Element("inputs");
+                        if (inputsElement != null)
+                        {
+                            foreach (var inputElement in inputsElement.Elements("input"))
+                            {
+                                var input = new InputInfo
+                                {
+                                    Id = inputElement.Attribute("id").Value,
+                                    Source = inputElement.Attribute("source").Value
+                                };
+                                Trace.TraceInformation("Adding input '{0}' to device '{1}'", input.Id, deviceName);
+                                device.Inputs.Add(input);
+                            }
+                        }
+                        else
+                            Trace.TraceWarning("Missing element: inputs");
+
+                        Trace.TraceInformation("Adding device '{0}'", deviceName);
+                        globalConfig.OutputDevices.Add(device);
+                    }
+                }
+                else
+                    Trace.TraceWarning("Missing element: outputs");
             }
+            else
+                Trace.TraceError("Missing root node");
 
+            Trace.TraceInformation("Updating container from config");
             builder.Update(componentContext.ComponentRegistry);
 
             return globalConfig;
@@ -70,6 +102,7 @@ namespace Emanate.Core.Configuration
 
         private GlobalConfig GenerateDefaultConfiguration()
         {
+            Trace.TraceInformation("=> ConfigurationCaretaker.GenerateDefaultConfiguration");
             var builder = new ContainerBuilder();
 
             var config = new GlobalConfig();
@@ -79,6 +112,7 @@ namespace Emanate.Core.Configuration
                 config.ModuleConfigurations.Add(moduleConfiguration);
             }
 
+            Trace.TraceInformation("Updating container from config");
             builder.Update(componentContext.ComponentRegistry);
 
             return config;
@@ -86,10 +120,10 @@ namespace Emanate.Core.Configuration
 
         public void Save(GlobalConfig globalConfig)
         {
+            Trace.TraceInformation("=> ConfigurationCaretaker.Save");
             var configDoc = new XDocument();
             var rootElement = new XElement("emanate");
             configDoc.Add(rootElement);
-
 
             // Modules
             var modulesElement = new XElement("modules");
