@@ -19,8 +19,6 @@ namespace Emanate.Service.Admin
 
             statusUpdateWorker.DoWork += UpdateServiceStatus;
             statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
-
-            IsNotInstalled = true;
         }
 
         public override void Initialize()
@@ -34,7 +32,7 @@ namespace Emanate.Service.Admin
             catch (Exception)
             {
                 Trace.TraceWarning("Emanate service missing");
-                IsNotInstalled = true;
+                IsInstalled = false;
             }
         }
 
@@ -60,14 +58,13 @@ namespace Emanate.Service.Admin
             }
         }
 
-        // TODO: Add an imverse bool->vis converter and get rid of this double negative
-        private bool isNotInstalled;
-        public bool IsNotInstalled
+        private bool isInstalled;
+        public bool IsInstalled
         {
-            get { return isNotInstalled; }
+            get { return isInstalled; }
             set
             {
-                isNotInstalled = value;
+                isInstalled = value;
                 OnPropertyChanged();
             }
         }
@@ -77,7 +74,7 @@ namespace Emanate.Service.Admin
 
         private bool CanStartService()
         {
-            return !isNotInstalled && !statusUpdateWorker.IsBusy && service.Status == ServiceControllerStatus.Stopped;
+            return isInstalled && !statusUpdateWorker.IsBusy && service.Status == ServiceControllerStatus.Stopped;
         }
 
         private void StartService()
@@ -92,7 +89,7 @@ namespace Emanate.Service.Admin
 
         private bool CanStopService()
         {
-            return !isNotInstalled && !statusUpdateWorker.IsBusy && service.CanStop && service.Status == ServiceControllerStatus.Running;
+            return isInstalled && !statusUpdateWorker.IsBusy && service.CanStop && service.Status == ServiceControllerStatus.Running;
         }
 
         private void StopService()
@@ -116,7 +113,7 @@ namespace Emanate.Service.Admin
         {
             if (e.Error != null)
             {
-                IsNotInstalled = true;
+                IsInstalled = false;
                 var errorMessage = "Could not update service: " + e.Error.Message;
                 Trace.TraceInformation(errorMessage);
                 MessageBox.Show(errorMessage);
@@ -127,7 +124,7 @@ namespace Emanate.Service.Admin
 
         void UpdateStatus()
         {
-            IsNotInstalled = false;
+            IsInstalled = true;
             IsRunning = service.Status == ServiceControllerStatus.Running;
             IsStopped = service.Status == ServiceControllerStatus.Stopped;
         }

@@ -39,19 +39,5 @@ namespace Emanate.Delcom.Configuration
         {
             get { return delcomConfiguration.Profiles; }
         }
-
-        private int startTime;
-        public int StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; OnPropertyChanged(); }
-        }
-
-        private int endTime;
-        public int EndTime
-        {
-            get { return endTime; }
-            set { endTime = value; OnPropertyChanged(); }
-        }
     }
 }

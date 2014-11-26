@@ -12,7 +12,7 @@
             <GroupBox.Header>
                 <CheckBox IsChecked="{Binding HasRestrictedHours}" Content="Restricted Hours" />
             </GroupBox.Header>
-            <controls:TimeRangeSlider IsEnabled="{Binding HasRestrictedHours}" LowerValue="{Binding StartTime}" UpperValue="{Binding EndTime}" />
+            <controls:TimeRangeSlider IsEnabled="{Binding HasRestrictedHours}" Start="{Binding StartTime}" End="{Binding EndTime}" />
         </GroupBox>
         <GroupBox Header="States">
             <DockPanel>

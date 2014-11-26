@@ -13,76 +13,51 @@ namespace Emanate.Service.Admin.Controls
 
         private void WireUpInnerSliders(object sender, EventArgs e)
         {
-            LowerSlider.ValueChanged += LowerSlider_ValueChanged;
-            UpperSlider.ValueChanged += UpperSlider_ValueChanged;
+            StartSlider.ValueChanged += UpdateEndValue;
+            EndSlider.ValueChanged += UpdateStartValue;
         }
 
-        private void LowerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void UpdateEndValue(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            UpperSlider.Value = Math.Max(UpperSlider.Value, LowerSlider.Value + 1);
+            EndSlider.Value = Math.Max(EndSlider.Value, StartSlider.Value + 1);
+            ConstrainValues();
+        }
 
-            var upperValue = (uint) UpperSlider.Value;
-            var lowerValue = (uint) LowerSlider.Value;
+        private void UpdateStartValue(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            StartSlider.Value = Math.Max(Math.Min(EndSlider.Value - 1, StartSlider.Value), 0);
+            ConstrainValues();
+        }
 
-            if (UpperValue > lowerValue)
+        public static readonly DependencyProperty StartProperty = DependencyProperty.Register("Start", typeof(uint), typeof(TimeRangeSlider), new FrameworkPropertyMetadata(0u, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public uint Start
+        {
+            get { return (uint)GetValue(StartProperty); }
+            set { SetValue(StartProperty, value); }
+        }
+
+        public static readonly DependencyProperty EndProperty = DependencyProperty.Register("End", typeof(uint), typeof(TimeRangeSlider), new FrameworkPropertyMetadata(24u, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public uint End
+        {
+            get { return (uint)GetValue(EndProperty); }
+            set { SetValue(EndProperty, value); }
+        }
+
+        private void ConstrainValues()
+        {
+            var upperValue = (uint)EndSlider.Value;
+            var lowerValue = (uint)StartSlider.Value;
+
+            if (upperValue > lowerValue)
             {
-                LowerValue = lowerValue;
-                UpperValue = upperValue;
+                Start = lowerValue;
+                End = upperValue;
             }
             else
             {
-                UpperValue = upperValue;
-                LowerValue = lowerValue;
+                End = upperValue;
+                Start = lowerValue;
             }
-        }
-
-        private void UpperSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            LowerSlider.Value = Math.Max(Math.Min(UpperSlider.Value - 1, LowerSlider.Value), 0);
-
-            var upperValue = (uint)UpperSlider.Value;
-            var lowerValue = (uint)LowerSlider.Value;
-
-            if (UpperValue > lowerValue)
-            {
-                LowerValue = lowerValue;
-                UpperValue = upperValue;
-            }
-            else
-            {
-                UpperValue = upperValue;
-                LowerValue = lowerValue;
-            }
-        }
-
-        public uint LowerValue
-        {
-            get { return (uint)GetValue(LowerValueProperty); }
-            set { SetValue(LowerValueProperty, value); }
-        }
-
-        public static readonly DependencyProperty LowerValueProperty =
-            DependencyProperty.Register("LowerValue", typeof(uint), typeof(TimeRangeSlider), new UIPropertyMetadata(0u, OnLowerValueChanged));
-
-        private static void OnLowerValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var slider = (TimeRangeSlider)d;
-            slider.LowerSlider.Value = (uint)e.NewValue;
-        }
-
-        public uint UpperValue
-        {
-            get { return (uint)GetValue(UpperValueProperty); }
-            set { SetValue(UpperValueProperty, value); }
-        }
-
-        public static readonly DependencyProperty UpperValueProperty =
-            DependencyProperty.Register("UpperValue", typeof(uint), typeof(TimeRangeSlider), new UIPropertyMetadata(24u, OnUpperValueChanged));
-
-        private static void OnUpperValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var slider = (TimeRangeSlider)d;
-            slider.UpperSlider.Value = (uint)e.NewValue;
         }
     }
 }

@@ -88,7 +88,8 @@
     <Compile Include="Controls\TimeRangeSlider.xaml.cs">
       <DependentUpon>TimeRangeSlider.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\NegativeBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="InputSelector.cs" />
     <Compile Include="OutputDeviceInfo.cs" />

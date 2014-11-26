@@ -105,17 +105,6 @@ namespace Emanate.Service.Admin
             get { return activeDevices; }
         }
 
-        //private readonly DelegateCommand addDeviceCommand;
-        //public DelegateCommand AddDeviceCommand { get { return addDeviceCommand; } }
-
-        //private void AddDevice()
-        //{
-        //    var addDeviceViewModel = new AddDeviceViewModel(configurations);
-        //    var addProfileView = new AddDeviceView { DataContext = addDeviceViewModel };
-        //    addProfileView.Owner = Application.Current.MainWindow;
-        //    addProfileView.ShowDialog();
-        //}
-
         private readonly DelegateCommand saveCommand;
         public DelegateCommand SaveCommand { get { return saveCommand; } }
 

@@ -46,10 +46,8 @@ namespace Emanate.Delcom.Configuration
                 }
             }
 
-            foreach (var missingDevice in delcomConfiguration.OutputDevices.Except(ConfiguredDevices.Select(d => d.Device)))
-            {
+            foreach (var missingDevice in delcomConfiguration.OutputDevices.Where(od => ConfiguredDevices.All(cd => cd.Name != od.Name)))
                 ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
-            }
         }
 
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }

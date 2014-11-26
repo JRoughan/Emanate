@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:admin="clr-namespace:Emanate.Service.Admin"
+             xmlns:converters="clr-namespace:Emanate.Service.Admin.Converters"
              mc:Ignorable="d" 
             d:DataContext="{d:DesignInstance admin:ServiceAdminViewModel}"
              >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis" />
     </UserControl.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal">
@@ -21,7 +23,7 @@
             <Button Command="{Binding RestartCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVis}}" ToolTip="Restart Service">
                 <Image Source="Images\restart.png"></Image>
             </Button>
-            <Image Source="Images\error.png" Visibility="{Binding IsNotInstalled, Converter={StaticResource BoolToVis}}" ToolTip="Service is not installed" />
+            <Image Source="Images\error.png" Visibility="{Binding IsInstalled, Converter={StaticResource InverseBoolToVis}}" ToolTip="Service is not installed" />
         </StackPanel>
     </Grid>
 </UserControl>

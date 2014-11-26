@@ -11,7 +11,7 @@
     <admin:DeviceManager.Resources>
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <converters:NegativeBooleanToVisibilityConverter x:Key="NegativeBoolToVis" />
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis" />
 
         <DataTemplate x:Key="DeviceTemplate" DataType="{x:Type configuration:DelcomDeviceInfo}">
             <Grid HorizontalAlignment="Stretch">
@@ -20,7 +20,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                <Button x:Name="indicateTrigger" Grid.Column="1" Command="{Binding IndicateCommand}" ToolTip="Identify" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource NegativeBoolToVis}}" >
+                <Button x:Name="indicateTrigger" Grid.Column="1" Command="{Binding IndicateCommand}" ToolTip="Identify" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource InverseBoolToVis}}" >
                     <Image Source="..\Images\Identify.png" Height="32" Width="32" />
                 </Button>
                 <Image x:Name="errorImage" Grid.Column="1" Source="..\Images\error.png" Height="32" Width="32" ToolTip="Missing" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource BoolToVis}}" />

@@ -6,7 +6,7 @@ using System.Windows.Data;
 namespace Emanate.Service.Admin.Converters
 {
     [Localizability(LocalizationCategory.NeverLocalize)]
-    public sealed class NegativeBooleanToVisibilityConverter : IValueConverter
+    public sealed class InverseBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
