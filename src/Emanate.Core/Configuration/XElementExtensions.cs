@@ -7,12 +7,15 @@ namespace Emanate.Core.Configuration
 {
     public static class XElementExtensions
     {
+        private static readonly TraceSwitch configOutputSwitch = new TraceSwitch("configOutput", "Log values read from configuration files.");
+
         public static string GetAttributeString(this XElement element, string attributeName)
         {
             var attribute = element.Attribute(attributeName);
             if (attribute != null)
             {
-                Trace.TraceInformation("     <{0} {1}='{2}'>", element.Name, attributeName, attribute.Value);
+                if (configOutputSwitch.TraceVerbose)
+                    Trace.TraceInformation("     <{0} {1}='{2}'>", element.Name, attributeName, attribute.Value);
                 return attribute.Value;
             }
 

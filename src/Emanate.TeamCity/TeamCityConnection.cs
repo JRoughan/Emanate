@@ -35,14 +35,14 @@ namespace Emanate.TeamCity
 
         public string GetProject(string projectId)
         {
-            Trace.TraceInformation("=> TeamCityConnection.GetProject");
+            Trace.TraceInformation("=> TeamCityConnection.GetProject({0})", projectId);
             var buildUri = CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
             return Request(buildUri);
         }
 
         public string GetBuild(string buildId)
         {
-            Trace.TraceInformation("=> TeamCityConnection.GetBuild");
+            Trace.TraceInformation("=> TeamCityConnection.GetBuild({0})", buildId);
             var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0}),count:1", buildId));
             return Request(resultUri);
         }
@@ -54,13 +54,22 @@ namespace Emanate.TeamCity
 
         private string Request(Uri uri)
         {
-            var webRequest = CreateWebRequest(uri);
-            webRequest.Accept = "application/xml";
+            try
+            {
+                Trace.TraceInformation("=> TeamCityConnection.Request({0})", uri);
+                var webRequest = CreateWebRequest(uri);
+                webRequest.Accept = "application/xml";
 
-            using (var webResponse = webRequest.GetResponse())
-            using (var stream = webResponse.GetResponseStream())
-            using (var reader = new StreamReader(stream))
-                return reader.ReadToEnd();
+                using (var webResponse = webRequest.GetResponse())
+                using (var stream = webResponse.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                    return reader.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("Team city request failed: " + ex.Message);
+                throw;
+            }
         }
 
         private HttpWebRequest CreateWebRequest(Uri uri)
