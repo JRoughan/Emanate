@@ -4,11 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Timers;
-using System.Xml.Linq;
-using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.Vso.Configuration;
+using Microsoft.TeamFoundation.Build.WebApi;
 using Timer = System.Timers.Timer;
 
 namespace Emanate.Vso
@@ -16,19 +15,10 @@ namespace Emanate.Vso
     public class VsoMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
-        private const string vsoDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan lockingInterval;
         private readonly IVsoConnection vsoConnection;
         private readonly Timer timer;
-        private readonly Dictionary<IOutputDevice, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<string, BuildState>>();
-        private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
-                                                              {
-                                                                  { "UNKNOWN", BuildState.Unknown },
-                                                                  { "RUNNING", BuildState.Running },
-                                                                  { "ERROR", BuildState.Error },
-                                                                  { "FAILURE", BuildState.Failed },
-                                                                  { "SUCCESS", BuildState.Succeeded }
-                                                              };
+        private readonly Dictionary<IOutputDevice, Dictionary<int, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<int, BuildState>>();
 
 
         public VsoMonitor(IVsoConnection vsoConnection, VsoConfiguration configuration)
@@ -50,7 +40,7 @@ namespace Emanate.Vso
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds)
         {
             Trace.TraceInformation("=> VsoMonitor.AddBuilds");
-            buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
+            buildStates.Add(outputDevice, buildIds.ToDictionary(int.Parse, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
@@ -63,7 +53,7 @@ namespace Emanate.Vso
 
         public void EndMonitoring()
         {
-            Trace.TraceInformation("=> TeamCityModule.EndMonitoring");
+            Trace.TraceInformation("=> VsoMonitor.EndMonitoring");
             timer.Stop();
         }
 
@@ -88,7 +78,7 @@ namespace Emanate.Vso
 
         private void UpdateBuildStates()
         {
-            Trace.TraceInformation("=> TeamCityModule.UpdateBuildStates");
+            Trace.TraceInformation("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -98,7 +88,7 @@ namespace Emanate.Vso
                 var newStates = GetNewBuildStates(output.Value.Keys).ToList();
 
                 var newState = BuildState.Unknown;
-                var timeStamp = DateTimeOffset.Now;
+                var timeStamp = DateTime.Now;
 
 
                 if (newStates.Any())
@@ -109,7 +99,7 @@ namespace Emanate.Vso
 
                     newState = (BuildState)newStates.Max(s => (int)s.State);
 
-                    timeStamp = newStates.Max(s => s.TimeStamp);
+                    timeStamp = newStates.Where(s => s.TimeStamp.HasValue).Max(s => s.TimeStamp.Value);
                 }
 
                 var oldState = CurrentState;
@@ -118,25 +108,22 @@ namespace Emanate.Vso
             }
         }
 
-        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
+        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<int> buildIds)
         {
-            Trace.TraceInformation("=> TeamCityModule.GetNewBuildStates");
+            Trace.TraceInformation("=> VsoMonitor.GetNewBuildStates");
             foreach (var buildId in buildIds)
             {
-                var resultXml = vsoConnection.GetBuild(buildId);
-
-                var resultRoot = XElement.Parse(resultXml);
-                var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
-                if (buildXml != null)
+                var tfsBuild = vsoConnection.GetBuild(buildId).Result;
+                if (tfsBuild != null)
                 {
                     var build = new
                                     {
-                                        IsRunning = buildXml.Attribute("running") != null,
-                                        Status = buildXml.GetAttributeString("status"),
-                                        TimeStamp = buildXml.GetAttributeDateTime("startDate", vsoDateFormat)
+                                        IsRunning = tfsBuild.Status == BuildStatus.InProgress,
+                                        Status = tfsBuild.Status,
+                                        TimeStamp = tfsBuild.StartTime
                                     };
 
-                    var state = ConvertState(build.Status);
+                    var state = ConvertState(tfsBuild);
 
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
@@ -148,22 +135,20 @@ namespace Emanate.Vso
             }
         }
 
-        private BuildState ConvertState(string state)
+        private BuildState ConvertState(Build build)
         {
-            BuildState convertedState;
-            if (stateMap.TryGetValue(state, out convertedState))
-                return convertedState;
+            if (build.Status == BuildStatus.InProgress)
+                return BuildState.Running;
 
-            Trace.TraceInformation("State '{0}' is not supported.", state);
-            return BuildState.Unknown;
+            return build.Result.HasValue && build.Result.Value == BuildResult.Succeeded ? BuildState.Succeeded : BuildState.Failed;
         }
 
         [DebuggerDisplay("{BuildId} - {State}")]
         class BuildInfo
         {
-            public string BuildId { get; set; }
+            public int BuildId { get; set; }
             public BuildState State { get; set; }
-            public DateTimeOffset TimeStamp { get; set; }
+            public DateTime? TimeStamp { get; set; }
         }
     }
 }

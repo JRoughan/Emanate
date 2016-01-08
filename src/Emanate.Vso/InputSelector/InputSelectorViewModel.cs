@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Service.Admin;
+using Microsoft.TeamFoundation.Core.WebApi;
 
 namespace Emanate.Vso.InputSelector
 {
@@ -20,13 +21,13 @@ namespace Emanate.Vso.InputSelector
             this.connection = connection;
         }
 
-        public override void Initialize()
+        public override async void Initialize()
         {
             Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
-            string projectsXml;
+            IEnumerable<TeamProjectReference> projectRefs;
             try
             {
-                projectsXml = connection.GetProjects();
+                projectRefs = await connection.GetProjects();
             }
             catch (WebException ex)
             {
@@ -35,29 +36,28 @@ namespace Emanate.Vso.InputSelector
                 return;
             }
 
-            var projectsElement = XElement.Parse(projectsXml);
-            foreach (var projectElement in projectsElement.Elements())
+            foreach (var projectRef in projectRefs)
             {
-                var project = new ProjectViewModel();
-                project.Name = projectElement.GetAttributeString("name");
-                var projectId = projectElement.GetAttributeString("id");
+                var projectVm = new ProjectViewModel();
+                projectVm.Name = projectRef.Name;
 
-                var buildXml = connection.GetProject(projectId);
-                var buildRoot = XElement.Parse(buildXml);
+                var buildDefinitions = await connection.GetBuildDefinitions(projectRef.Id);
 
-                var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
-                                    from buildElement in buildTypesElement.Elements("buildType")
-                                    select buildElement;
+                //var buildRoot = XElement.Parse(buildXml);
 
-                foreach (var buildElement in buildElements)
+                //var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
+                //                    from buildElement in buildTypesElement.Elements("buildType")
+                //                    select buildElement;
+
+                foreach (var buildDefinition in buildDefinitions)
                 {
-                    var configuration = new ProjectConfigurationViewModel(project);
-                    configuration.Id = buildElement.GetAttributeString("id");
-                    configuration.Name = buildElement.GetAttributeString("name");
-                    project.Configurations.Add(configuration);
+                    var configuration = new ProjectConfigurationViewModel(projectVm);
+                    configuration.Id = buildDefinition.Id.ToString();
+                    configuration.Name = buildDefinition.Name;
+                    projectVm.Configurations.Add(configuration);
                 }
 
-                Projects.Add(project);
+                Projects.Add(projectVm);
             }
         }
 

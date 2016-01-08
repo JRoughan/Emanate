@@ -1,79 +1,56 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using Emanate.Vso.Configuration;
+using Microsoft.TeamFoundation.Build.WebApi;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.VisualStudio.Services.Common;
 
 namespace Emanate.Vso
 {
     public class VsoConnection : IVsoConnection
     {
         private readonly Uri baseUri;
-        private readonly NetworkCredential networkCredential;
-        private readonly bool requiresAuthentication;
+        private readonly VssCredentials vssCredential;
 
         public VsoConnection(VsoConfiguration configuration)
         {
-            var rawUri = configuration.Uri ?? "http://localhost";
-            baseUri = new Uri(rawUri);
-            networkCredential = new NetworkCredential(configuration.UserName, configuration.Password);
+            var rawUrl = $"https://{configuration.Uri}.visualstudio.com/DefaultCollection/";
+            baseUri = new Uri(rawUrl);
+            var networkCredential = new NetworkCredential(configuration.UserName, configuration.Password);
+            var windowsCredential = new WindowsCredential(networkCredential);
+            vssCredential = new VssCredentials(windowsCredential);
         }
 
-        public string GetProjects()
+        public async Task<IEnumerable<TeamProjectReference>> GetProjects()
         {
             Trace.TraceInformation("=> VsoConnection.GetProjects");
-            var uri = CreateUri("/httpAuth/app/rest/projects");
-            return Request(uri);
+            var client = new ProjectHttpClient(baseUri, vssCredential);
+            return await client.GetProjects();
         }
 
-        public string GetProject(string projectId)
+        public async Task<TeamProject> GetProject(Guid projectId)
         {
             Trace.TraceInformation("=> VsoConnection.GetProject({0})", projectId);
-            var buildUri = CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
-            return Request(buildUri);
+            var client = new ProjectHttpClient(baseUri, vssCredential);
+            return await client.GetProject(projectId.ToString());
         }
 
-        public string GetBuild(string buildId)
+        public async Task<Build> GetBuild(int buildId)
         {
             Trace.TraceInformation("=> VsoConnection.GetBuild({0})", buildId);
-            var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0}),count:1", buildId));
-            return Request(resultUri);
+            var client = new BuildHttpClient(baseUri, vssCredential);
+            return await client.GetBuildAsync(buildId);
         }
 
-        private Uri CreateUri(string relativeUrl)
+        public async Task<IEnumerable<DefinitionReference>> GetBuildDefinitions(Guid projectId)
         {
-            return new Uri(baseUri, relativeUrl.TrimStart('/'));
-        }
-
-        private string Request(Uri uri)
-        {
-            try
-            {
-                Trace.TraceInformation("=> VsoConnection.Request({0})", uri);
-                var webRequest = CreateWebRequest(uri);
-                webRequest.Accept = "application/xml";
-
-                using (var webResponse = webRequest.GetResponse())
-                using (var stream = webResponse.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                    return reader.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("Team city request failed: " + ex.Message);
-                throw;
-            }
-        }
-
-        private HttpWebRequest CreateWebRequest(Uri uri)
-        {
-            var webRequest = (HttpWebRequest)WebRequest.Create(uri);
-
-            if (requiresAuthentication)
-                webRequest.Credentials = networkCredential;
-
-            webRequest.Proxy = null;
-            return (webRequest);
+            Trace.TraceInformation("=> VsoConnection.GetBuilds({0})", projectId);
+            var client = new BuildHttpClient(baseUri, vssCredential);
+            return await client.GetDefinitionsAsync(projectId);
         }
     }
 }
