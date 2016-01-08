@@ -21,13 +21,14 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Uri" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Uri}"></TextBox>
+        <DockPanel Grid.Row="0" Grid.Column="1">
+            <TextBlock DockPanel.Dock="Left" Text="https://"></TextBlock>
+            <TextBlock DockPanel.Dock="Right" Text=".visualstudio.com"></TextBlock>
+            <TextBox Text="{Binding Uri}"></TextBox>
+        </DockPanel>
 
         <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Padding="5">
-            <GroupBox.Header>
-                <CheckBox Grid.Row="1" Grid.Column="0" Content="Requires Authentication" IsChecked="{Binding RequiresAuthentication}" />
-            </GroupBox.Header>
-            <Grid IsEnabled="{Binding RequiresAuthentication}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width=".5*" />
                     <ColumnDefinition Width=".5*" />

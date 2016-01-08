@@ -41,12 +41,6 @@ namespace Emanate.Vso.Configuration
             set { vsoConfiguration.Password = value; OnPropertyChanged(); }
         }
 
-        public bool RequiresAuthentication
-        {
-            get { return vsoConfiguration.RequiresAuthentication; }
-            set { vsoConfiguration.RequiresAuthentication = value; OnPropertyChanged(); }
-        }
-
         private bool isEditable;
         public bool IsEditable
         {

@@ -44,7 +44,6 @@ namespace Emanate.Vso.Configuration
         public int PollingInterval { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public bool RequiresAuthentication { get; set; }
 
         public Memento CreateMemento()
         {
@@ -53,9 +52,8 @@ namespace Emanate.Vso.Configuration
             moduleElement.Add(new XAttribute("type", key));
             moduleElement.Add(new XElement("uri", Uri));
             moduleElement.Add(new XElement("polling-interval", PollingInterval));
-            moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
-            moduleElement.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
-            moduleElement.Add(new XElement("password", RequiresAuthentication ? EncryptDecrypt(Password) : ""));
+            moduleElement.Add(new XElement("username", UserName));
+            moduleElement.Add(new XElement("password", EncryptDecrypt(Password)));
 
             return new Memento(moduleElement);
         }
@@ -70,12 +68,8 @@ namespace Emanate.Vso.Configuration
             var element = memento.Element;
             Uri = element.Element("uri").Value;
             PollingInterval = int.Parse(element.Element("polling-interval").Value);
-            RequiresAuthentication = bool.Parse(element.Element("requires-authentication").Value);
-            if (RequiresAuthentication)
-            {
-                UserName = element.Element("username").Value;
-                Password = EncryptDecrypt(element.Element("password").Value);
-            }
+            UserName = element.Element("username").Value;
+            Password = EncryptDecrypt(element.Element("password").Value);
         }
 
         // TODO: Extrmemely simplistic encrytion used here - will keep honest people honest but not much else

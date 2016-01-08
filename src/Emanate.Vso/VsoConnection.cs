@@ -16,14 +16,7 @@ namespace Emanate.Vso
         {
             var rawUri = configuration.Uri ?? "http://localhost";
             baseUri = new Uri(rawUri);
-
-            requiresAuthentication = configuration.RequiresAuthentication;
-            if (requiresAuthentication)
-            {
-                var userName = configuration.UserName;
-                var password = configuration.Password;
-                networkCredential = new NetworkCredential(userName, password);
-            }
+            networkCredential = new NetworkCredential(configuration.UserName, configuration.Password);
         }
 
         public string GetProjects()
