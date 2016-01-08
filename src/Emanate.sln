@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Core", "Emanate.Core\Emanate.Core.csproj", "{B5E7E5AA-896A-4B86-B202-23062972F077}"
 EndProject
@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C8BB40
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Vso", "Emanate.Vso\Emanate.Vso.csproj", "{D02CEB1D-3B90-477D-A8E7-04A62786E704}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{31022F41-3163-4716-B0A0-34DED24F7467}.Debug|Any CPU.Build.0 = Debug|x86
 		{31022F41-3163-4716-B0A0-34DED24F7467}.Release|Any CPU.ActiveCfg = Release|x86
 		{31022F41-3163-4716-B0A0-34DED24F7467}.Release|Any CPU.Build.0 = Release|x86
+		{D02CEB1D-3B90-477D-A8E7-04A62786E704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02CEB1D-3B90-477D-A8E7-04A62786E704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02CEB1D-3B90-477D-A8E7-04A62786E704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02CEB1D-3B90-477D-A8E7-04A62786E704}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,5 +90,6 @@ Global
 		{1C5DDBEC-CBE2-48CA-B75C-2DCDC5F6DC3E} = {0CC6DC93-FAFD-451A-9851-B2A9EEC0B0A4}
 		{EA0DF8D8-DA80-4089-BF02-598BBC60F70B} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 		{D7C53489-A78D-408D-AD21-1D85566A760E} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
+		{D02CEB1D-3B90-477D-A8E7-04A62786E704} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 	EndGlobalSection
 EndGlobal
