@@ -64,6 +64,9 @@
           <Component Id='TeamCityModule' Guid='229A3BC9-95F2-4846-852B-6E566B04D165'>
             <File Id='Emanate.TeamCity.dll' Name='Emanate.TeamCity.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.TeamCity.dll' KeyPath='yes' />
           </Component>
+          <Component Id='VsoModule' Guid='0CF71F34-D1C7-4C8F-A563-5803539E8C6D'>
+            <File Id='Emanate.Vso.dll' Name='Emanate.Vso.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Vso.dll' KeyPath='yes' />
+          </Component>
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="Programs">
@@ -92,6 +95,7 @@
       <ComponentRef Id='Autofac' />
       <ComponentRef Id='DelcomModule' />
       <ComponentRef Id='TeamCityModule' />
+      <ComponentRef Id='VsoModule' />
       <ComponentRef Id='EmanateAppDataFolder' />
       <ComponentRef Id='ProgramMenuDir' />
     </Feature>
