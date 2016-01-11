@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Emanate.Core.Configuration;
@@ -29,7 +30,7 @@ namespace Emanate.Service.Admin
         public event EventHandler CloseRequested;
 
 
-        public override void Initialize()
+        public override Task<bool> Initialize()
         {
             globalConfig = configurationCaretaker.Load();
 
@@ -58,6 +59,8 @@ namespace Emanate.Service.Admin
                 var moduleConfiguration = globalConfig.ModuleConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
+
+            return Task.FromResult(true);
         }
 
         private void AddOutputDevice(object sender, OutputDeviceEventArgs e)

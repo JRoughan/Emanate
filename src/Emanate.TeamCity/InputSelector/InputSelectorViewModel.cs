@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
@@ -20,7 +21,7 @@ namespace Emanate.TeamCity.InputSelector
             this.connection = connection;
         }
 
-        public override void Initialize()
+        public override Task<bool> Initialize()
         {
             Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
             string projectsXml;
@@ -32,7 +33,7 @@ namespace Emanate.TeamCity.InputSelector
             {
                 Trace.TraceError("Could not get projects: " + ex.Message);
                 HasBadConfiguration = true;
-                return;
+                return Task.FromResult(false);
             }
 
             var projectsElement = XElement.Parse(projectsXml);
@@ -59,6 +60,8 @@ namespace Emanate.TeamCity.InputSelector
 
                 Projects.Add(project);
             }
+
+            return Task.FromResult(true);
         }
 
         private bool hasBadConfiguration;

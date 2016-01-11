@@ -1,3 +1,4 @@
+using System;
 using Emanate.Service.Admin;
 
 namespace Emanate.Vso.InputSelector
@@ -20,6 +21,13 @@ namespace Emanate.Vso.InputSelector
             set { name = value; OnPropertyChanged(); }
         }
 
+        private Guid projectId;
+        public Guid ProjectId
+        {
+            get { return projectId; }
+            set { projectId = value; OnPropertyChanged(); }
+        }
+
         private bool isSelected;
         public bool IsSelected
         {
@@ -35,5 +43,6 @@ namespace Emanate.Vso.InputSelector
                 }
             }
         }
+
     }
 }

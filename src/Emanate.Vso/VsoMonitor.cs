@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -18,7 +19,7 @@ namespace Emanate.Vso
         private readonly TimeSpan lockingInterval;
         private readonly IVsoConnection vsoConnection;
         private readonly Timer timer;
-        private readonly Dictionary<IOutputDevice, Dictionary<int, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<int, BuildState>>();
+        private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
 
 
         public VsoMonitor(IVsoConnection vsoConnection, VsoConfiguration configuration)
@@ -37,10 +38,10 @@ namespace Emanate.Vso
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<BuildKey> buildIds)
         {
             Trace.TraceInformation("=> VsoMonitor.AddBuilds");
-            buildStates.Add(outputDevice, buildIds.ToDictionary(int.Parse, b => BuildState.Unknown));
+            buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
@@ -76,7 +77,7 @@ namespace Emanate.Vso
             }
         }
 
-        private void UpdateBuildStates()
+        private async void UpdateBuildStates()
         {
             Trace.TraceInformation("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
@@ -85,17 +86,17 @@ namespace Emanate.Vso
                 if (!outputDevice.IsAvailable)
                     continue;
 
-                var newStates = GetNewBuildStates(output.Value.Keys).ToList();
+                var buildInfos = await GetNewBuildStates(output.Value.Keys);
+                var newStates = buildInfos.ToList();
 
                 var newState = BuildState.Unknown;
                 var timeStamp = DateTime.Now;
-
 
                 if (newStates.Any())
                 {
                     var states = buildStates[outputDevice];
                     foreach (var buildState in newStates)
-                        states[buildState.BuildId] = buildState.State;
+                        states[buildState.BuildKey] = buildState.State;
 
                     newState = (BuildState)newStates.Max(s => (int)s.State);
 
@@ -108,12 +109,13 @@ namespace Emanate.Vso
             }
         }
 
-        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<int> buildIds)
+        private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
             Trace.TraceInformation("=> VsoMonitor.GetNewBuildStates");
-            foreach (var buildId in buildIds)
+            var buildInfos = new List<BuildInfo>();
+            foreach (var buildKey in buildKeys)
             {
-                var tfsBuild = vsoConnection.GetBuild(buildId).Result;
+                var tfsBuild = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
                 if (tfsBuild != null)
                 {
                     var build = new
@@ -128,11 +130,12 @@ namespace Emanate.Vso
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
 
-                    yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
+                    buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = build.TimeStamp});
                 }
                 else
-                    Trace.TraceWarning("Build '{0}' invalid", buildId);
+                    Trace.TraceWarning("Build '{0}' invalid", buildKey);
             }
+            return buildInfos;
         }
 
         private BuildState ConvertState(Build build)
@@ -146,7 +149,7 @@ namespace Emanate.Vso
         [DebuggerDisplay("{BuildId} - {State}")]
         class BuildInfo
         {
-            public int BuildId { get; set; }
+            public BuildKey BuildKey { get; set; }
             public BuildState State { get; set; }
             public DateTime? TimeStamp { get; set; }
         }

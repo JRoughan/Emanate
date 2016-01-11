@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Emanate.Service.Admin
@@ -21,18 +22,20 @@ namespace Emanate.Service.Admin
             statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
         }
 
-        public override void Initialize()
+        public override Task<bool> Initialize()
         {
             try
             {
                 // TODO: Dynamically determine service name
                 service = new ServiceController("EmanateService");
                 UpdateStatus();
+                return Task.FromResult(true);
             }
             catch (Exception)
             {
                 Trace.TraceWarning("Emanate service missing");
                 IsInstalled = false;
+                return Task.FromResult(false);
             }
         }
 

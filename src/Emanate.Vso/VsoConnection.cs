@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Emanate.Vso.Configuration;
@@ -39,11 +40,12 @@ namespace Emanate.Vso
             return await client.GetProject(projectId.ToString());
         }
 
-        public async Task<Build> GetBuild(int buildId)
+        public async Task<Build> GetBuild(Guid projectId, int definition)
         {
-            Trace.TraceInformation("=> VsoConnection.GetBuild({0})", buildId);
+            Trace.TraceInformation("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
             var client = new BuildHttpClient(baseUri, vssCredential);
-            return await client.GetBuildAsync(buildId);
+            var builds = await client.GetBuildsAsync(projectId, new[] {definition});
+            return builds.OrderByDescending(b => b.FinishTime).FirstOrDefault();
         }
 
         public async Task<IEnumerable<DefinitionReference>> GetBuildDefinitions(Guid projectId)

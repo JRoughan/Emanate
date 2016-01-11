@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
@@ -35,7 +36,7 @@ namespace Emanate.Service
                         buildMonitors.Add(inputGroup.Key, monitor);
                         Trace.TraceInformation("Monitor '{0}' added", monitor.GetType());
                     }
-                    var buildIds = inputGroup.Select(i => i.Id).ToList();
+                    var buildIds = inputGroup.Select(i => new BuildKey(i.ProjectId, i.Id)).ToList();
                     monitor.AddBuilds(outputDevice, buildIds);
                     Trace.TraceInformation("Builds added: {0}", string.Join(", ", buildIds));
                 }

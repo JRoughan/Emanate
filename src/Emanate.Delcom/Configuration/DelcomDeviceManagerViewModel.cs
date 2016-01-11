@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Service.Admin;
 
@@ -20,7 +21,7 @@ namespace Emanate.Delcom.Configuration
             RemoveDeviceCommand = new DelegateCommand<DelcomDeviceInfo>(RemoveDevice, CanRemoveDevice);
         }
 
-        public override void Initialize()
+        public override Task<bool> Initialize()
         {
             for (uint i = 1; ; i++)
             {
@@ -48,6 +49,8 @@ namespace Emanate.Delcom.Configuration
 
             foreach (var missingDevice in delcomConfiguration.OutputDevices.Where(od => ConfiguredDevices.All(cd => cd.Name != od.Name)))
                 ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
+
+            return Task.FromResult(true);
         }
 
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }

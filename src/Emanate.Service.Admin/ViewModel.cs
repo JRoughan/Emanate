@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Emanate.Service.Admin
 {
@@ -13,6 +14,6 @@ namespace Emanate.Service.Admin
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public virtual void Initialize() { }
+        public virtual Task<bool> Initialize() { return Task.FromResult(true); }
     }
 }

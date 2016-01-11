@@ -10,7 +10,7 @@ namespace Emanate.Vso
     {
         Task<IEnumerable<TeamProjectReference>> GetProjects();
         Task<TeamProject> GetProject(Guid projectId);
-        Task<Build> GetBuild(int buildId);
+        Task<Build> GetBuild(Guid projectId, int buildId);
         Task<IEnumerable<DefinitionReference>> GetBuildDefinitions(Guid projectId);
     }
 }

@@ -21,7 +21,7 @@ namespace Emanate.TeamCity
         private readonly TimeSpan lockingInterval;
         private readonly ITeamCityConnection teamCityConnection;
         private readonly Timer timer;
-        private readonly Dictionary<IOutputDevice, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<string, BuildState>>();
+        private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
                                                                   { "UNKNOWN", BuildState.Unknown },
@@ -48,7 +48,7 @@ namespace Emanate.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> buildIds)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<BuildKey> buildIds)
         {
             Trace.TraceInformation("=> TeamCityMonitor.AddBuilds");
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
@@ -119,12 +119,12 @@ namespace Emanate.TeamCity
             }
         }
 
-        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
+        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
             Trace.TraceInformation("=> TeamCityModule.GetNewBuildStates");
-            foreach (var buildId in buildIds)
+            foreach (var buildKey in buildKeys)
             {
-                var resultXml = teamCityConnection.GetBuild(buildId);
+                var resultXml = teamCityConnection.GetBuild(buildKey.BuildId);
 
                 var resultRoot = XElement.Parse(resultXml);
                 var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
@@ -142,10 +142,10 @@ namespace Emanate.TeamCity
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
 
-                    yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
+                    yield return new BuildInfo { BuildId = buildKey, State = state, TimeStamp = build.TimeStamp};
                 }
                 else
-                    Trace.TraceWarning("Build '{0}' invalid", buildId);
+                    Trace.TraceWarning("Build '{0}' invalid", buildKey);
             }
         }
 
@@ -162,7 +162,7 @@ namespace Emanate.TeamCity
         [DebuggerDisplay("{BuildId} - {State}")]
         class BuildInfo
         {
-            public string BuildId { get; set; }
+            public BuildKey BuildId { get; set; }
             public BuildState State { get; set; }
             public DateTimeOffset TimeStamp { get; set; }
         }
