@@ -46,9 +46,21 @@ namespace Emanate.Core.Configuration
                 {
                     foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
                     {
-                        var moduleConfig = componentContext.ResolveKeyed<IModuleConfiguration>(moduleMemento.Type);
+                        IOriginator moduleConfig = null;
+                        switch (moduleMemento.Type)
+                        {
+                            case "output":
+                                moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(moduleMemento.Key);
+                                globalConfig.OututConfigurations.Add((IOutputConfiguration) moduleConfig);
+                                break;
+                            case "input":
+                                moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(moduleMemento.Key);
+                                globalConfig.InputConfigurations.Add((IInputConfiguration) moduleConfig);
+                                break;
+                            default:
+                                throw new Exception("Unknown module type");
+                        }
                         moduleConfig.SetMemento(moduleMemento);
-                        globalConfig.ModuleConfigurations.Add(moduleConfig);
                         builder.RegisterInstance(moduleConfig).AsSelf();
                     }
                 }
@@ -64,7 +76,7 @@ namespace Emanate.Core.Configuration
                         var outputType = outputElement.GetAttributeString("type");
                         var deviceName = outputElement.GetAttributeString("device");
 
-                        var config = globalConfig.ModuleConfigurations.Single(c => c.Key == outputType);
+                        var config = globalConfig.OututConfigurations.Single(c => c.Key == outputType);
                         var device = config.OutputDevices.Single(p => p.Name == deviceName);
 
                         var inputsElement = outputElement.Element("inputs");
@@ -107,10 +119,15 @@ namespace Emanate.Core.Configuration
             var builder = new ContainerBuilder();
 
             var config = new GlobalConfig();
-            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IModuleConfiguration>>())
+            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IOutputConfiguration>>())
             {
                 builder.RegisterInstance(moduleConfiguration).AsSelf();
-                config.ModuleConfigurations.Add(moduleConfiguration);
+                config.OututConfigurations.Add(moduleConfiguration);
+            }
+            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IInputConfiguration>>())
+            {
+                builder.RegisterInstance(moduleConfiguration).AsSelf();
+                config.InputConfigurations.Add(moduleConfiguration);
             }
 
             Trace.TraceInformation("Updating container from config");
@@ -128,7 +145,12 @@ namespace Emanate.Core.Configuration
 
             // Modules
             var modulesElement = new XElement("modules");
-            foreach (var configuration in globalConfig.ModuleConfigurations)
+            foreach (var configuration in globalConfig.OututConfigurations)
+            {
+                var moduleMemento = configuration.CreateMemento();
+                modulesElement.Add(moduleMemento.Element);
+            }
+            foreach (var configuration in globalConfig.InputConfigurations)
             {
                 var moduleMemento = configuration.CreateMemento();
                 modulesElement.Add(moduleMemento.Element);

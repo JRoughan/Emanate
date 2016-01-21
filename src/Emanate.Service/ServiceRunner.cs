@@ -48,7 +48,13 @@ namespace Emanate.Service
             var config = caretaker.Load();
 
             var builder = new ContainerBuilder();
-            foreach (var moduleConfiguration in config.ModuleConfigurations)
+            foreach (var moduleConfiguration in config.OututConfigurations)
+            {
+                Trace.TraceInformation("Registering module configuration '{0}'", moduleConfiguration.Name);
+                builder.RegisterInstance(moduleConfiguration);
+            }
+
+            foreach (var moduleConfiguration in config.InputConfigurations)
             {
                 Trace.TraceInformation("Registering module configuration '{0}'", moduleConfiguration.Name);
                 builder.RegisterInstance(moduleConfiguration);

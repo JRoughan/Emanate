@@ -6,9 +6,9 @@ namespace Emanate.Service.Admin
 {
     public class OutputDeviceInfo : ViewModel
     {
-        private readonly IModuleConfiguration configuration;
+        private readonly IOutputConfiguration configuration;
 
-        public OutputDeviceInfo(string name, IOutputDevice outputDevice, IModuleConfiguration configuration)
+        public OutputDeviceInfo(string name, IOutputDevice outputDevice, IOutputConfiguration configuration)
         {
             this.configuration = configuration;
 

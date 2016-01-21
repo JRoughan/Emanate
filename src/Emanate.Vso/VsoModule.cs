@@ -37,7 +37,7 @@ namespace Emanate.Vso
         {
             Trace.TraceInformation("=> VsoModule.RegisterCommon");
             builder.RegisterType<VsoConnection>().As<IVsoConnection>();
-            builder.RegisterType<VsoConfiguration>().As<IModuleConfiguration>().Keyed<IModuleConfiguration>(key);
+            builder.RegisterType<VsoConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(key);
         }
     }
 }

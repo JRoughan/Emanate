@@ -34,7 +34,7 @@ namespace Emanate.Delcom
         {
             Trace.TraceInformation("=> DelcomModule.RegisterCommon");
             builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(key);
-            builder.RegisterType<DelcomConfiguration>().As<IModuleConfiguration>().Keyed<IModuleConfiguration>(key);
+            builder.RegisterType<DelcomConfiguration>().As<IOutputConfiguration>().Keyed<IOutputConfiguration>(key);
         }
     }
 }

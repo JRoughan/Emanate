@@ -12,7 +12,7 @@ namespace Emanate.Delcom.Configuration
     {
         private const string defaultName = "Delcom Device";
 
-        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice, IModuleConfiguration delcomConfiguration)
+        public DelcomDeviceInfo(DelcomDevice delcomDevice, IOutputDevice configuredDevice, IOutputConfiguration delcomConfiguration)
         {
             IndicateCommand = new DelegateCommand(Indicate);
 

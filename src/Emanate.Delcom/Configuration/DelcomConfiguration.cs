@@ -4,20 +4,19 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 
 namespace Emanate.Delcom.Configuration
 {
-    public class DelcomConfiguration : IModuleConfiguration
+    public class DelcomConfiguration : IOutputConfiguration
     {
         private const string key = "delcom";
         private const string name = "Delcom";
 
-        string IModuleConfiguration.Key { get { return key; } }
-        string IModuleConfiguration.Name { get { return name; } }
+        string IOutputConfiguration.Key { get { return key; } }
+        string IOutputConfiguration.Name { get { return name; } }
 
         private readonly ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
         public ObservableCollection<IOutputProfile> Profiles
@@ -80,7 +79,9 @@ namespace Emanate.Delcom.Configuration
         {
             Trace.TraceInformation("=> DelcomConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
-            moduleElement.Add(new XAttribute("type", key));
+            // TODO: Move key and type tagging to CareTaker
+            moduleElement.Add(new XAttribute("key", key));
+            moduleElement.Add(new XAttribute("type", "output"));
 
             var profilesElement = new XElement("profiles");
             moduleElement.Add(profilesElement);
@@ -126,7 +127,7 @@ namespace Emanate.Delcom.Configuration
         public void SetMemento(Memento memento)
         {
             Trace.TraceInformation("=> DelcomConfiguration.SetMemento");
-            if (memento.Type != key)
+            if (memento.Key != key)
                 Trace.TraceWarning("Possible attempt to load non-Delcom configuration");
 
             var element = memento.Element;

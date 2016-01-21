@@ -52,9 +52,11 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ConfigurationCaretaker.cs" />
+    <Compile Include="Configuration\IInputConfiguration.cs" />
     <Compile Include="Configuration\IOriginator.cs" />
     <Compile Include="Configuration\GlobalConfig.cs" />
-    <Compile Include="Configuration\IModuleConfiguration.cs" />
+    <Compile Include="Configuration\IOutputConfiguration.cs" />
+    <Compile Include="Configuration\OutputDeviceEventArgs.cs" />
     <Compile Include="Diagnostics.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />

@@ -9,36 +9,13 @@ using Emanate.Core.Output;
 
 namespace Emanate.Vso.Configuration
 {
-    public class VsoConfiguration : IModuleConfiguration
+    public class VsoConfiguration : IInputConfiguration
     {
         private const string key = "vso";
         private const string name = "Visual Studio Online";
 
-        string IModuleConfiguration.Key { get { return key; } }
-        string IModuleConfiguration.Name { get { return name; } }
-
-        // TODO: Split interfaces so input modules don't need NotSupportedExceptions
-
-        public IOutputProfile GenerateEmptyProfile(string newKey = "")
-        {
-            throw new NotSupportedException("Visual Studio Online module does not support profiles");
-        }
-
-        public ObservableCollection<IOutputProfile> Profiles
-        {
-            get
-            {
-                throw new NotSupportedException("Visual Studio Online module does not support profiles");
-            }
-        }
-
-        public IEnumerable<IOutputDevice> OutputDevices
-        {
-            get { yield break; }
-        }
-
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
+        string IInputConfiguration.Key { get { return key; } }
+        string IInputConfiguration.Name { get { return name; } }
 
         public string Uri { get; set; }
         public int PollingInterval { get; set; }
@@ -49,7 +26,8 @@ namespace Emanate.Vso.Configuration
         {
             Trace.TraceInformation("=> VsoConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
-            moduleElement.Add(new XAttribute("type", key));
+            moduleElement.Add(new XAttribute("key", key));
+            moduleElement.Add(new XAttribute("type", "input"));
             moduleElement.Add(new XElement("uri", Uri));
             moduleElement.Add(new XElement("polling-interval", PollingInterval));
             moduleElement.Add(new XElement("username", UserName));
@@ -61,7 +39,7 @@ namespace Emanate.Vso.Configuration
         public void SetMemento(Memento memento)
         {
             Trace.TraceInformation("=> VsoConfiguration.SetMemento");
-            if (memento.Type != key)
+            if (memento.Key != key)
                 throw new ArgumentException("Cannot load non-Visual Studio Online configuration");
 
             // TODO: Error handling

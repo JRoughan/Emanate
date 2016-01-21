@@ -13,11 +13,11 @@ namespace Emanate.Service.Admin
 
     public class ConfigurationEditor : UserControl
     {
-        public virtual void SetTarget(IModuleConfiguration moduleConfiguration) { }
+        public virtual void SetTarget(IOutputConfiguration moduleConfiguration) { }
     }
 
     public class DeviceManager : UserControl
     {
-        public virtual void SetTarget(IModuleConfiguration moduleConfiguration) { }
+        public virtual void SetTarget(IOutputConfiguration moduleConfiguration) { }
     }
 }

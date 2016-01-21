@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Emanate.Core.Configuration;
 
 namespace Emanate.Vso.Configuration
 {
@@ -13,7 +14,7 @@ namespace Emanate.Vso.Configuration
             InitializeComponent();
         }
 
-        public override void SetTarget(Core.Configuration.IModuleConfiguration moduleConfiguration)
+        public override void SetTarget(IOutputConfiguration moduleConfiguration)
         {
             viewModel = new VsoConfigurationViewModel(moduleConfiguration as VsoConfiguration);
             viewModel.Initialize();

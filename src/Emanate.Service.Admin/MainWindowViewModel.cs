@@ -36,7 +36,7 @@ namespace Emanate.Service.Admin
 
             var outputDevices = new List<IOutputDevice>(globalConfig.OutputDevices);
 
-            foreach (var moduleConfig in globalConfig.ModuleConfigurations)
+            foreach (var moduleConfig in globalConfig.OututConfigurations)
             {
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
                 configurationEditor.SetTarget(moduleConfig);
@@ -56,7 +56,7 @@ namespace Emanate.Service.Admin
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
-                var moduleConfiguration = globalConfig.ModuleConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
+                var moduleConfiguration = globalConfig.OututConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
 
@@ -75,7 +75,7 @@ namespace Emanate.Service.Admin
                 ActiveDevices.Remove(deviceToRemove);
         }
 
-        private void AddActiveDevice(IModuleConfiguration moduleConfiguration, IOutputDevice outputDevice)
+        private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
 

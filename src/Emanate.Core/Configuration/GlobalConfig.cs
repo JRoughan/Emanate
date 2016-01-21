@@ -7,11 +7,13 @@ namespace Emanate.Core.Configuration
     {
         public GlobalConfig()
         {
-            ModuleConfigurations = new List<IModuleConfiguration>();
+            InputConfigurations = new List<IInputConfiguration>();
+            OututConfigurations = new List<IOutputConfiguration>();
             OutputDevices = new List<IOutputDevice>();
         }
 
-        public List<IModuleConfiguration> ModuleConfigurations { get; private set; }
+        public List<IInputConfiguration> InputConfigurations { get; private set; }
+        public List<IOutputConfiguration> OututConfigurations { get; private set; }
         public List<IOutputDevice> OutputDevices { get; private set; }
     }
 }

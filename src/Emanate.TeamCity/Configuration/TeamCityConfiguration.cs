@@ -1,44 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
-using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.Configuration
 {
-    public class TeamCityConfiguration : IModuleConfiguration
+    public class TeamCityConfiguration : IInputConfiguration
     {
         private const string key = "teamcity";
         private const string name = "TeamCity";
 
-        string IModuleConfiguration.Key { get { return key; } }
-        string IModuleConfiguration.Name { get { return name; } }
-
-        // TODO: Split interfaces so input modules don't need NotSupportedExceptions
-
-        public IOutputProfile GenerateEmptyProfile(string newKey = "")
-        {
-            throw new NotSupportedException("TeamCity module does not support profiles");
-        }
-
-        public ObservableCollection<IOutputProfile> Profiles
-        {
-            get
-            {
-                throw new NotSupportedException("TeamCity module does not support profiles");
-            }
-        }
-
-        public IEnumerable<IOutputDevice> OutputDevices
-        {
-            get { yield break; }
-        }
-
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
+        string IInputConfiguration.Key { get { return key; } }
+        string IInputConfiguration.Name { get { return name; } }
 
         public string Uri { get; set; }
         public int PollingInterval { get; set; }
@@ -50,7 +24,8 @@ namespace Emanate.TeamCity.Configuration
         {
             Trace.TraceInformation("=> TeamCityConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
-            moduleElement.Add(new XAttribute("type", key));
+            moduleElement.Add(new XAttribute("key", key));
+            moduleElement.Add(new XAttribute("type", "input"));
             moduleElement.Add(new XElement("uri", Uri));
             moduleElement.Add(new XElement("polling-interval", PollingInterval));
             moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
@@ -63,7 +38,7 @@ namespace Emanate.TeamCity.Configuration
         public void SetMemento(Memento memento)
         {
             Trace.TraceInformation("=> TeamCityConfiguration.SetMemento");
-            if (memento.Type != key)
+            if (memento.Key != key)
                 throw new ArgumentException("Cannot load non-TeamCity configuration");
 
             // TODO: Error handling

@@ -16,7 +16,7 @@
                 ProfileSelector.SelectedIndex = 0;
         }
 
-        public override void SetTarget(Core.Configuration.IModuleConfiguration moduleConfiguration)
+        public override void SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomConfigurationViewModel(config);

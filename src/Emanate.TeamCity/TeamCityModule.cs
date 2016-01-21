@@ -37,7 +37,7 @@ namespace Emanate.TeamCity
         {
             Trace.TraceInformation("=> TeamCityModule.RegisterCommon");
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().As<IModuleConfiguration>().Keyed<IModuleConfiguration>(key);
+            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(key);
         }
     }
 }
