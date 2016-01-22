@@ -13,7 +13,7 @@ namespace Emanate.Service.Admin
             InitializeComponent();
         }
 
-        async void ViewInitialized(object sender, EventArgs e)
+        void ViewInitialized(object sender, EventArgs e)
         {
             viewModel.Initialize();
         }

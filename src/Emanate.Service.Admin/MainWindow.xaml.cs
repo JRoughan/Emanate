@@ -16,9 +16,9 @@ namespace Emanate.Service.Admin
             InitializeComponent();
         }
 
-        async void MainWindowInitialized(object sender, EventArgs e)
+        void MainWindowInitialized(object sender, EventArgs e)
         {
-            await viewModel.Initialize();
+            viewModel.Initialize();
 
             if (DeviceSelector.Items.Count > 0)
                 DeviceSelector.SelectedIndex = 0;

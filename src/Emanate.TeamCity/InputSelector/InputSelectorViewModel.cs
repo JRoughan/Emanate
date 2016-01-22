@@ -21,7 +21,7 @@ namespace Emanate.TeamCity.InputSelector
             this.connection = connection;
         }
 
-        public override Task<bool> Initialize()
+        public override void Initialize()
         {
             Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
             string projectsXml;
@@ -33,7 +33,7 @@ namespace Emanate.TeamCity.InputSelector
             {
                 Trace.TraceError("Could not get projects: " + ex.Message);
                 HasBadConfiguration = true;
-                return Task.FromResult(false);
+                return;
             }
 
             var projectsElement = XElement.Parse(projectsXml);
@@ -60,8 +60,6 @@ namespace Emanate.TeamCity.InputSelector
 
                 Projects.Add(project);
             }
-
-            return Task.FromResult(true);
         }
 
         private bool hasBadConfiguration;

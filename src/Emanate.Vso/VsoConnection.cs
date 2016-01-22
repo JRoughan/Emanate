@@ -26,33 +26,33 @@ namespace Emanate.Vso
             vssCredential = new VssCredentials(windowsCredential);
         }
 
-        public async Task<IEnumerable<TeamProjectReference>> GetProjects()
+        public IEnumerable<TeamProjectReference> GetProjects()
         {
             Trace.TraceInformation("=> VsoConnection.GetProjects");
             var client = new ProjectHttpClient(baseUri, vssCredential);
-            return await client.GetProjects();
+            return client.GetProjects().Result;
         }
 
-        public async Task<TeamProject> GetProject(Guid projectId)
+        public TeamProject GetProject(Guid projectId)
         {
             Trace.TraceInformation("=> VsoConnection.GetProject({0})", projectId);
             var client = new ProjectHttpClient(baseUri, vssCredential);
-            return await client.GetProject(projectId.ToString());
+            return client.GetProject(projectId.ToString()).Result;
         }
 
-        public async Task<Build> GetBuild(Guid projectId, int definition)
+        public Build GetBuild(Guid projectId, int definition)
         {
             Trace.TraceInformation("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
             var client = new BuildHttpClient(baseUri, vssCredential);
-            var builds = await client.GetBuildsAsync(projectId, new[] {definition});
+            var builds = client.GetBuildsAsync(projectId, new[] {definition}).Result;
             return builds.OrderByDescending(b => b.FinishTime).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<DefinitionReference>> GetBuildDefinitions(Guid projectId)
+        public IEnumerable<DefinitionReference> GetBuildDefinitions(Guid projectId)
         {
             Trace.TraceInformation("=> VsoConnection.GetBuilds({0})", projectId);
             var client = new BuildHttpClient(baseUri, vssCredential);
-            return await client.GetDefinitionsAsync(projectId);
+            return client.GetDefinitionsAsync(projectId).Result;
         }
     }
 }

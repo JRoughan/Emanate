@@ -31,7 +31,7 @@ namespace Emanate.Service.Admin
         public event EventHandler CloseRequested;
 
 
-        public override Task<bool> Initialize()
+        public override void Initialize()
         {
             globalConfig = configurationCaretaker.Load();
 
@@ -60,8 +60,6 @@ namespace Emanate.Service.Admin
                 var moduleConfiguration = globalConfig.OututConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
-
-            return Task.FromResult(true);
         }
 
         private void AddOutputDevice(object sender, OutputDeviceEventArgs e)

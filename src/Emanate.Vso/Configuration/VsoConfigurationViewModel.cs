@@ -63,7 +63,7 @@ namespace Emanate.Vso.Configuration
             return !isTesting;
         }
 
-        private async void TestConnection()
+        private void TestConnection()
         {
             Trace.TraceInformation("=> VsoConfigurationViewModel.TestConnection");
             isTesting = true;
@@ -72,7 +72,7 @@ namespace Emanate.Vso.Configuration
             var connection = new VsoConnection(vsoConfiguration);
             try
             {
-                var projects = await connection.GetProjects();
+                var projects = connection.GetProjects();
                 IsTestSuccessful = projects != null;
             }
             catch (Exception)

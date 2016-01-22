@@ -23,20 +23,18 @@ namespace Emanate.Service.Admin
             statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
         }
 
-        public override Task<bool> Initialize()
+        public override void Initialize()
         {
             try
             {
                 // TODO: Dynamically determine service name
                 service = new ServiceController("EmanateService");
                 UpdateStatus();
-                return Task.FromResult(true);
             }
             catch (Exception)
             {
                 Trace.TraceWarning("Emanate service missing");
                 IsInstalled = false;
-                return Task.FromResult(false);
             }
         }
 

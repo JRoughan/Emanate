@@ -4,9 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Microsoft.TeamFoundation.Core.WebApi;
@@ -22,19 +19,19 @@ namespace Emanate.Vso.InputSelector
             this.connection = connection;
         }
 
-        public override async Task<bool> Initialize()
+        public override void Initialize()
         {
             Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
             IEnumerable<TeamProjectReference> projectRefs;
             try
             {
-                projectRefs = await connection.GetProjects();
+                projectRefs = connection.GetProjects();
             }
             catch (WebException ex)
             {
                 Trace.TraceError("Could not get projects: " + ex.Message);
                 HasBadConfiguration = true;
-                return false;
+                return;
             }
 
             foreach (var projectRef in projectRefs)
@@ -42,7 +39,7 @@ namespace Emanate.Vso.InputSelector
                 var projectVm = new ProjectViewModel();
                 projectVm.Name = projectRef.Name;
 
-                var buildDefinitions = await connection.GetBuildDefinitions(projectRef.Id);
+                var buildDefinitions = connection.GetBuildDefinitions(projectRef.Id);
 
                 //var buildRoot = XElement.Parse(buildXml);
 
@@ -61,7 +58,6 @@ namespace Emanate.Vso.InputSelector
 
                 Projects.Add(projectVm);
             }
-            return true;
         }
 
         private bool hasBadConfiguration;

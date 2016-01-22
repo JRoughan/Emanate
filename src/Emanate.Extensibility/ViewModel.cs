@@ -14,6 +14,6 @@ namespace Emanate.Extensibility
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public virtual Task<bool> Initialize() { return Task.FromResult(true); }
+        public virtual void Initialize() { }
     }
 }

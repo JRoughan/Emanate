@@ -21,7 +21,7 @@ namespace Emanate.Delcom.Configuration
             RemoveDeviceCommand = new DelegateCommand<DelcomDeviceInfo>(RemoveDevice, CanRemoveDevice);
         }
 
-        public override Task<bool> Initialize()
+        public override void Initialize()
         {
             for (uint i = 1; ; i++)
             {
@@ -49,8 +49,6 @@ namespace Emanate.Delcom.Configuration
 
             foreach (var missingDevice in delcomConfiguration.OutputDevices.Where(od => ConfiguredDevices.All(cd => cd.Name != od.Name)))
                 ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
-
-            return Task.FromResult(true);
         }
 
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }

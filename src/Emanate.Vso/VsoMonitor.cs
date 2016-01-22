@@ -77,7 +77,7 @@ namespace Emanate.Vso
             }
         }
 
-        private async void UpdateBuildStates()
+        private void UpdateBuildStates()
         {
             Trace.TraceInformation("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
@@ -86,7 +86,7 @@ namespace Emanate.Vso
                 if (!outputDevice.IsAvailable)
                     continue;
 
-                var buildInfos = await GetNewBuildStates(output.Value.Keys);
+                var buildInfos = GetNewBuildStates(output.Value.Keys);
                 var newStates = buildInfos.ToList();
 
                 var newState = BuildState.Unknown;
@@ -109,13 +109,13 @@ namespace Emanate.Vso
             }
         }
 
-        private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
+        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
             Trace.TraceInformation("=> VsoMonitor.GetNewBuildStates");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var tfsBuild = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
+                var tfsBuild = vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
                 if (tfsBuild != null)
                 {
                     var build = new
