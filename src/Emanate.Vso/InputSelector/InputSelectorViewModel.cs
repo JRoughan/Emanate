@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 using Microsoft.TeamFoundation.Core.WebApi;
 
 namespace Emanate.Vso.InputSelector

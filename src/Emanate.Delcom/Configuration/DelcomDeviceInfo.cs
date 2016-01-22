@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Configuration
 {

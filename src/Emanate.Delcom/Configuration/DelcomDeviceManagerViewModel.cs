@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Configuration
 {

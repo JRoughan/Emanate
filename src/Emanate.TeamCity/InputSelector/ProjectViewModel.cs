@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.TeamCity.InputSelector
 {

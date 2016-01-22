@@ -1,5 +1,5 @@
 using System;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Vso.InputSelector
 {

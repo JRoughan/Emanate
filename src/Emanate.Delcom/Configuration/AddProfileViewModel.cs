@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Configuration
 {

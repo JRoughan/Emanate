@@ -4,7 +4,7 @@ using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Delcom.Configuration;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom
 {
@@ -19,7 +19,7 @@ namespace Emanate.Delcom
             builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
             builder.RegisterType<DelcomConfigurationViewModel>();
 
-            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Service.Admin.DeviceManager>(key);
+            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Extensibility.DeviceManager>(key);
             builder.RegisterType<DelcomDeviceManagerViewModel>();
         }
 

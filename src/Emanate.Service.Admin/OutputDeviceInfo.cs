@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
+using Emanate.Extensibility;
 
 namespace Emanate.Service.Admin
 {

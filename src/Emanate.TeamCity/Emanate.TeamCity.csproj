@@ -113,9 +113,9 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Service.Admin\Emanate.Service.Admin.csproj">
-      <Project>{B1CE719A-B725-41FE-A2FB-9A2FB67862BA}</Project>
-      <Name>Emanate.Service.Admin</Name>
+    <ProjectReference Include="..\Emanate.Extensibility\Emanate.Extensibility.csproj">
+      <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
+      <Name>Emanate.Extensibility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

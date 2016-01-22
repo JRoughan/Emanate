@@ -1,5 +1,5 @@
 ﻿using Emanate.Core.Input;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Configuration
 {

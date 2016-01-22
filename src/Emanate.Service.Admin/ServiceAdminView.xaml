@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:admin="clr-namespace:Emanate.Service.Admin"
-             xmlns:converters="clr-namespace:Emanate.Service.Admin.Converters"
+             xmlns:converters="clr-namespace:Emanate.Extensibility.Converters;assembly=Emanate.Extensibility"
              mc:Ignorable="d" 
             d:DataContext="{d:DesignInstance admin:ServiceAdminViewModel}"
              >

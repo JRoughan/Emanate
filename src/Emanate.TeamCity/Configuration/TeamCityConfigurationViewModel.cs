@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Input;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.TeamCity.Configuration
 {

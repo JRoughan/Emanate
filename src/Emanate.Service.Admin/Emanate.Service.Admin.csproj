@@ -99,23 +99,11 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="ConfigurationInfo.cs" />
-    <Compile Include="Controls\TimeRangeSlider.xaml.cs">
-      <DependentUpon>TimeRangeSlider.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\InverseBooleanConverter.cs" />
-    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="DelegateCommand.cs" />
-    <Compile Include="InputSelector.cs" />
     <Compile Include="OutputDeviceInfo.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServiceAdminViewModel.cs" />
-    <Compile Include="ViewModel.cs" />
-    <Page Include="Controls\TimeRangeSlider.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -184,6 +172,22 @@
     <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.Delcom\Emanate.Delcom.csproj">
+      <Project>{d7c53489-a78d-408d-ad21-1d85566a760e}</Project>
+      <Name>Emanate.Delcom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.Extensibility\Emanate.Extensibility.csproj">
+      <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
+      <Name>Emanate.Extensibility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
+      <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
+      <Name>Emanate.TeamCity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.Vso\Emanate.Vso.csproj">
+      <Project>{d02ceb1d-3b90-477d-a8e7-04a62786e704}</Project>
+      <Name>Emanate.Vso</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

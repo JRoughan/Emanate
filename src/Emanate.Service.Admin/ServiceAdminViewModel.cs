@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Windows;
+using Emanate.Extensibility;
 
 namespace Emanate.Service.Admin
 {

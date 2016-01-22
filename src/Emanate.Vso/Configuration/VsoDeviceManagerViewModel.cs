@@ -1,4 +1,4 @@
-﻿using Emanate.Service.Admin;
+﻿using Emanate.Extensibility;
 
 namespace Emanate.Vso.Configuration
 {

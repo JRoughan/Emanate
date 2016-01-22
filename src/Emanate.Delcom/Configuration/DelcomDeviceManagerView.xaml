@@ -1,14 +1,14 @@
-﻿<admin:DeviceManager x:Class="Emanate.Delcom.Configuration.DelcomDeviceManagerView"
+﻿<extensibility:DeviceManager x:Class="Emanate.Delcom.Configuration.DelcomDeviceManagerView"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:configuration="clr-namespace:Emanate.Delcom.Configuration"
-                     xmlns:admin="clr-namespace:Emanate.Service.Admin;assembly=EmanateAdmin"
-                     xmlns:converters="clr-namespace:Emanate.Service.Admin.Converters;assembly=EmanateAdmin"
+                     xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
+                     xmlns:converters="clr-namespace:Emanate.Extensibility.Converters;assembly=Emanate.Extensibility"
                      mc:Ignorable="d" 
                      d:DataContext="{d:DesignInstance configuration:DelcomDeviceManagerViewModel}">
-    <admin:DeviceManager.Resources>
+    <extensibility:DeviceManager.Resources>
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis" />
@@ -26,7 +26,7 @@
                 <Image x:Name="errorImage" Grid.Column="1" Source="..\Images\error.png" Height="32" Width="32" ToolTip="Missing" HorizontalAlignment="Right" Visibility="{Binding IsMissingPhysicalDevice, Converter={StaticResource BoolToVis}}" />
             </Grid>
         </DataTemplate>
-    </admin:DeviceManager.Resources>
+    </extensibility:DeviceManager.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".5*" />
@@ -52,4 +52,7 @@
         </GroupBox>
     </Grid>
 
-</admin:DeviceManager>
+</extensibility:DeviceManager>
+
+
+

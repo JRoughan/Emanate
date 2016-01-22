@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Configuration
 {

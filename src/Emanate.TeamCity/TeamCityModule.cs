@@ -3,7 +3,7 @@ using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 using Emanate.TeamCity.Configuration;
 using Emanate.TeamCity.InputSelector;
 
@@ -17,7 +17,7 @@ namespace Emanate.TeamCity
         {
             Trace.TraceInformation("=> TeamCityModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Service.Admin.InputSelector>(key);
+            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(key);
             builder.RegisterType<InputSelectorViewModel>();
 
             builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);

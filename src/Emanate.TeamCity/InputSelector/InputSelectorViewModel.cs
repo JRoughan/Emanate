@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Service.Admin;
+using Emanate.Extensibility;
 
 namespace Emanate.TeamCity.InputSelector
 {
