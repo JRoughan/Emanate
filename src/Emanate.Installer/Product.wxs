@@ -8,9 +8,9 @@
            UpgradeCode="B5EC12B8-687A-4401-A605-5907E3ABAF2D">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
-    <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <Condition Message='This application requires .NET Framework 4.0'>
-      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message='This application requires .NET Framework 4.5'>
+      <![CDATA[Installed OR NETFRAMEWORK45]]>
     </Condition>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -52,6 +52,9 @@
             </ServiceInstall>
             <ServiceControl Id="EmanateServiceStart" Stop="both" Remove="uninstall" Name="EmanateService" Wait="yes" />
           </Component>
+          <Component Id='ExtensibilityLibrary' Guid='70F3045E-919C-4AFE-A410-EDBF7F35080D'>
+            <File Id='Emanate.Extensibility.dll' Name='Emanate.Extensibility.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Extensibility.dll' KeyPath='yes' />
+          </Component>
           <Component Id='CoreLibrary' Guid='A58B73AF-EE3D-4CED-9E04-95C519A17DE9'>
             <File Id='Emanate.Core.dll' Name='Emanate.Core.dll' Source='..\Emanate.Service\bin\$(var.Configuration)\Emanate.Core.dll' KeyPath='yes' />
           </Component>
@@ -92,6 +95,7 @@
       <ComponentRef Id='ServiceExecutable' />
       <ComponentRef Id='AdminExecutable' />
       <ComponentRef Id='CoreLibrary' />
+      <ComponentRef Id='ExtensibilityLibrary' />
       <ComponentRef Id='Autofac' />
       <ComponentRef Id='DelcomModule' />
       <ComponentRef Id='TeamCityModule' />
