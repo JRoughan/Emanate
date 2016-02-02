@@ -66,16 +66,12 @@ namespace Emanate.Delcom.Configuration
         {
             Task.Factory.StartNew(() =>
                 {
-                    Device.PhysicalDevice.TurnOn(Color.Red);
                     Device.PhysicalDevice.TurnOn(Color.Yellow);
-                    Device.PhysicalDevice.TurnOn(Color.Green);
                     Thread.Sleep(100);
                 })
                 .ContinueWith(t =>
                     {
-                        Device.PhysicalDevice.TurnOff(Color.Red);
                         Device.PhysicalDevice.TurnOff(Color.Yellow);
-                        Device.PhysicalDevice.TurnOff(Color.Green);
                     });
         }
     }

@@ -81,7 +81,7 @@ namespace Emanate.Service.Admin
             // HACK: Force an input for a new device without any. Ugly!
             if (!outputDevice.Inputs.Any())
             {
-                var inputSelector = componentContext.ResolveKeyed<InputSelector>("teamcity");
+                var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
                 outputDeviceInfo.InputSelector = inputSelector;
             }
 
