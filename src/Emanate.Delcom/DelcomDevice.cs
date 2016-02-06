@@ -23,8 +23,6 @@ namespace Emanate.Delcom
 
         public string Name { get; set; } = defaultName;
 
-        public string PhysicalDeviceId { get; set; }
-
         public string Type { get { return key; } }
 
         public Guid ProfileId { get; private set; }
@@ -39,6 +37,8 @@ namespace Emanate.Delcom
         public PhysicalDevice PhysicalDevice { get; set; }
 
         public bool IsAvailable { get { return PhysicalDevice != null; } }
+
+        public string PhysicalDeviceId { get; set; }
 
         public void UpdateStatus(BuildState state, DateTimeOffset timeStamp)
         {
