@@ -40,6 +40,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Delcom.Admin", "Ema
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.TeamCity.Admin", "Emanate.TeamCity.Admin\Emanate.TeamCity.Admin.csproj", "{7D682147-DFA8-4DE4-85BC-37F85896DBE9}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Emanate.Web", "http://localhost:53284", "{E80FC24F-AAE8-43B7-A420-D37681EE997B}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53284"
+		Debug.AspNetCompiler.PhysicalPath = "Emanate.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53284\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53284"
+		Release.AspNetCompiler.PhysicalPath = "Emanate.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53284\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Emanate.Web\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Api", "Emanate.Api\Emanate.Api.csproj", "{8AF73E98-5947-4D17-B5CB-95BB6CA8A4BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +121,14 @@ Global
 		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E80FC24F-AAE8-43B7-A420-D37681EE997B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E80FC24F-AAE8-43B7-A420-D37681EE997B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E80FC24F-AAE8-43B7-A420-D37681EE997B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{E80FC24F-AAE8-43B7-A420-D37681EE997B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8AF73E98-5947-4D17-B5CB-95BB6CA8A4BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AF73E98-5947-4D17-B5CB-95BB6CA8A4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AF73E98-5947-4D17-B5CB-95BB6CA8A4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AF73E98-5947-4D17-B5CB-95BB6CA8A4BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
