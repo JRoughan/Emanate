@@ -2,8 +2,8 @@ import AltContainer from 'alt-container';
 import React from 'react';
 
 import OutputGroups from './OutputGroups.jsx';
-import OutputGroupActions from '../actions/OutputGroupsActions';
-import OutputGroupStore from '../stores/OutputGroupsStore';
+import OutputGroupActions from '../actions/OutputGroupActions';
+import OutputGroupStore from '../stores/OutputGroupStore';
 
 export default class App extends React.Component {
     render() {

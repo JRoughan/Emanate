@@ -1,6 +1,6 @@
 ﻿import uuid from 'node-uuid';
 import alt from '../libs/alt';
-import OutputGroupActions from '../actions/OutputGroupsActions';
+import OutputGroupActions from '../actions/OutputGroupActions';
 
 class OutputGroupStore {
     constructor() {
