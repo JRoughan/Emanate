@@ -1,71 +1,79 @@
+import AltContainer from 'alt-container';
 import React from 'react';
+import Outputs from './Outputs.jsx';
+import OutputActions from '../actions/OutputActions';
+import OutputStore from '../stores/OutputStore';
+import OutputGroupActions from '../actions/OutputGroupActions';
+import Editable from './Editable.jsx';
 
 export default class OutputGroup extends React.Component {
+  render() {
+    const {outputGroup, ...props} = this.props;
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            editing: false
-        };
-    }
-
-    render() {
-        if(this.state.editing) {
-            return this.renderEdit();
-        }
-
-        return this.renderOutputGroup();
-    }
-
-    renderEdit = () => {
-        return <input type="text"
-        ref={
-          (e) => e ? e.selectionStart = this.props.name.length : null
-        }
-        autoFocus={true}
-        defaultValue={this.props.name}
-        onBlur={this.finishEdit}
-        onKeyPress={this.checkEnter} />;
-    };
-
-    renderDelete = () => {
-        return <button className="delete-outputGroup" onClick={this.props.onDelete}>x</button>;
-    };
-
-    renderOutputGroup = () => {
-        const onDelete = this.props.onDelete;
-
-        return (
-          <div onClick={this.edit}>
-            <span className="name">{this.props.name}</span>
-            {onDelete ? this.renderDelete() : null }
+    return (
+      <div {...props}>
+        <div className="outputGroup-header" onClick={this.activateOutputGroupEdit}>
+          <div className="outputGroup-add-output">
+            <button onClick={this.addOutput}>+</button>
           </div>
-        );
-    };
+          <Editable className="outputGroup-name" editing={outputGroup.editing}
+            value={outputGroup.name} onEdit={this.editName} />
+          <div className="outputGroup-delete">
+            <button onClick={this.deleteOutputGroup}>x</button>
+          </div>
+        </div>
+        <AltContainer
+          stores={[OutputStore]}
+          inject={{
+            outputs: () => OutputStore.getOutputsByIds(outputGroup.outputs)
+          }}
+        >
+          <Outputs
+            onValueClick={this.activateOutputEdit}
+            onEdit={this.editOutput}
+            onDelete={this.deleteOutput} />
+        </AltContainer>
+      </div>
+    );
+  }
+  addOutput = (e) => {
+    e.stopPropagation();
 
-    edit = () => {
-        this.setState({
-            editing: true
-        });
-    };
+    const outputGroupId = this.props.outputGroup.id;
+    const output = OutputActions.create({name: 'New name'});
 
-    checkEnter = (e) => {
-        if(e.key === 'Enter') {
-            this.finishEdit(e);
-        }
-    };
+    OutputGroupActions.attachToOutputGroup({
+      outputId: output.id,
+      outputGroupId
+    });
+  };
+  editOutput(id, name) {
+    OutputActions.update({id, name, editing: false});
+  }
+  deleteOutput = (outputId, e) => {
+    e.stopPropagation();
 
-    finishEdit = (e) => {
-        const value = e.target.value;
-    
-        if(this.props.onEdit && value.trim()) {
-            this.props.onEdit(value);
-    
-            // Exit edit mode.
-            this.setState({
-                editing: false
-            });
-        }
-    };
+    const outputGroupId = this.props.outputGroup.id;
+
+    OutputGroupActions.detachFromOutputGroup({outputGroupId, outputId});
+    OutputActions.delete(outputId);
+  };
+  editName = (name) => {
+    const outputGroupId = this.props.outputGroup.id;
+
+    OutputGroupActions.update({id: outputGroupId, name, editing: false});
+  };
+  deleteOutputGroup = () => {
+    const outputGroupId = this.props.outputGroup.id;
+
+    OutputGroupActions.delete(outputGroupId);
+  };
+  activateOutputGroupEdit = () => {
+    const outputGroupId = this.props.outputGroup.id;
+
+    OutputGroupActions.update({id: outputGroupId, editing: true});
+  };
+  activateOutputEdit(id) {
+    OutputActions.update({id, editing: true});
+  }
 }

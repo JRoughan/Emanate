@@ -6,27 +6,17 @@ import OutputGroupActions from '../actions/OutputGroupActions';
 import OutputGroupStore from '../stores/OutputGroupStore';
 
 export default class App extends React.Component {
-    render() {
-        return (
-          <div>
-            <button className="add-outputGroup" onClick={this.addOutputGroup}>+</button>
-            <AltContainer stores={[OutputGroupStore]} inject={{outputGroups: () => OutputGroupStore.getState().outputGroups}}>
-              <OutputGroups onEdit={this.editOutputGroup} onDelete={this.deleteOutputGroup} />
-            </AltContainer>
-          </div>
+  render() {
+    return (
+      <div>
+        <button className="add-outputGroup" onClick={this.addOutputGroup}>+</button>
+        <AltContainer stores={[OutputGroupStore]} inject={{ outputGroups: () => OutputGroupStore.getState().outputGroups || [] }} >
+          <OutputGroups />
+        </AltContainer>
+      </div>
     );
-
-    }
-
-    addOutputGroup() {
-        OutputGroupActions.create({name: 'New observation group'});
-    }
-
-    editOutputGroup(id, name) {
-        OutputGroupActions.update({id, name});
-    }
-
-    deleteOutputGroup(id) {
-        OutputGroupActions.delete(id);
-    }
+  }
+  addOutputGroup() {
+    OutputGroupActions.create({name: 'New output group'});
+  }
 }
