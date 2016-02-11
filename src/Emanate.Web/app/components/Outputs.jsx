@@ -11,6 +11,7 @@ export default ({outputs, onValueClick, onEdit, onDelete}) => {
           onValueClick={onValueClick.bind(null, output.id)}
           onEdit={onEdit.bind(null, output.id)}
           onDelete={onDelete.bind(null, output.id)} />
+          <div>{output.profile.name}</div>
       </li>
     )}</ul>
   );

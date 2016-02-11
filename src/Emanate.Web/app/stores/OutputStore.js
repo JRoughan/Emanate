@@ -1,6 +1,7 @@
 import uuid from 'node-uuid';
 import alt from '../libs/alt';
 import OutputActions from '../actions/OutputActions';
+import DelcomProfileStore from '../stores/DelcomProfileStore';
 
 class OutputStore {
   constructor() {
@@ -16,6 +17,7 @@ class OutputStore {
     const outputs = this.outputs;
 
     output.id = uuid.v4();
+    output.profile = DelcomProfileStore.getDefaultProfile();
 
     this.setState({
       outputs: outputs.concat(output)
