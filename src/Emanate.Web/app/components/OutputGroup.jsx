@@ -17,7 +17,7 @@ export default class OutputGroup extends React.Component {
             <button onClick={this.addOutput}>+</button>
           </div>
           <Editable className="outputGroup-name" editing={outputGroup.editing}
-            value={outputGroup.name} onEdit={this.editName} />
+            value={outputGroup.name} onEdit={this.editGroupName} />
           <div className="outputGroup-delete">
             <button onClick={this.deleteOutputGroup}>x</button>
           </div>
@@ -26,12 +26,8 @@ export default class OutputGroup extends React.Component {
           stores={[OutputStore]}
           inject={{
             outputs: () => OutputStore.getOutputsByIds(outputGroup.outputs)
-          }}
-        >
-          <Outputs
-            onValueClick={this.activateOutputEdit}
-            onEdit={this.editOutput}
-            onDelete={this.deleteOutput} />
+          }}>
+          <Outputs onDelete={this.deleteOutput} />
         </AltContainer>
       </div>
     );
@@ -47,9 +43,6 @@ export default class OutputGroup extends React.Component {
       outputGroupId
     });
   };
-  editOutput(id, name) {
-    OutputActions.update({id, name, editing: false});
-  }
   deleteOutput = (outputId, e) => {
     e.stopPropagation();
 
@@ -58,7 +51,7 @@ export default class OutputGroup extends React.Component {
     OutputGroupActions.detachFromOutputGroup({outputGroupId, outputId});
     OutputActions.delete(outputId);
   };
-  editName = (name) => {
+  editGroupName = (name) => {
     const outputGroupId = this.props.outputGroup.id;
 
     OutputGroupActions.update({id: outputGroupId, name, editing: false});
@@ -73,7 +66,4 @@ export default class OutputGroup extends React.Component {
 
     OutputGroupActions.update({id: outputGroupId, editing: true});
   };
-  activateOutputEdit(id) {
-    OutputActions.update({id, editing: true});
-  }
 }
