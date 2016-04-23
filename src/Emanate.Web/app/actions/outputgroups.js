@@ -11,7 +11,7 @@ export function createOutputGroup(outputGroup) {
       ...outputGroup
     })
   };
-};
+}
 
 export const UPDATE_OUTPUTGROUP = 'UPDATE_OUTPUTGROUP';
 export function updateOutputGroup(updatedOutputGroup) {
@@ -19,7 +19,7 @@ export function updateOutputGroup(updatedOutputGroup) {
     type: UPDATE_OUTPUTGROUP,
     ...updatedOutputGroup
   };
-};
+}
 
 export const DELETE_OUTPUTGROUP = 'DELETE_OUTPUTGROUP';
 export function deleteOutputGroup(id) {
@@ -27,7 +27,7 @@ export function deleteOutputGroup(id) {
     type: DELETE_OUTPUTGROUP,
     id
   };
-};
+}
 
 export const ATTACH_TO_OUTPUTGROUP = 'ATTACH_TO_OUTPUTGROUP';
 export function attachToOutputGroup(outputGroupId, outputId) {
@@ -36,7 +36,7 @@ export function attachToOutputGroup(outputGroupId, outputId) {
     outputGroupId,
     outputId
   };
-};
+}
 
 export const DETACH_FROM_OUTPUTGROUP = 'DETACH_FROM_OUTPUTGROUP';
 export function detachFromOutputGroup(outputGroupId, outputId) {
@@ -45,5 +45,5 @@ export function detachFromOutputGroup(outputGroupId, outputId) {
     outputGroupId,
     outputId
   };
-};
+}
 

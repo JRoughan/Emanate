@@ -9,7 +9,7 @@ export function createOutput(output) {
       ...output
     }
   };
-};
+}
 
 export const UPDATE_OUTPUT = 'UPDATE_OUTPUT';
 export function updateOutput(updatedOutput) {
@@ -17,7 +17,7 @@ export function updateOutput(updatedOutput) {
     type: UPDATE_OUTPUT,
     ...updatedOutput
   };
-};
+}
 
 export const DELETE_OUTPUT = 'DELETE_OUTPUT';
 export function deleteOutput(id) {
@@ -25,4 +25,4 @@ export function deleteOutput(id) {
     type: DELETE_OUTPUT,
     id
   };
-};
+}

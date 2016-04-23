@@ -3,23 +3,8 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import Outputs from './Outputs.jsx';
 import Editable from './Editable.jsx';
-import ItemTypes from '../constants/itemTypes';
 import * as outputGroupActions from '../actions/outputGroups';
 import * as outputActions from '../actions/outputs';
-
-const outputTarget = {
-  hover(targetProps, monitor) {
-    const sourceProps = monitor.getItem();
-    const sourceId = sourceProps.id;
-
-    if(!targetProps.outputGroup.get('outputs').count()) {
-      targetProps.attachToOutputGroup(
-        targetProps.outputGroup.get('id'),
-        sourceId
-      );
-    }
-  }
-};
 
 class OutputGroup extends React.Component {
   render() {

@@ -1,5 +1,4 @@
 import {List, Map} from 'immutable';
-import update from 'react-addons-update';
 import * as types from '../actions/outputGroups';
 
 const initialState = List();
