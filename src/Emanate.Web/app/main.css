@@ -19,7 +19,7 @@ body {
 
   padding: 0.5em;
   color: #fff;
-    font-size: 150%;
+  font-size: 150%;
   background-color: #47AB53;
 
   border-top-left-radius: 0.5em;
@@ -72,11 +72,11 @@ body {
 }
 
 .output {
-    display: inline-block;
+  display: inline-block;
   margin: 1em;
   padding: 1em;
 
-    min-height: 4em;
+  min-height: 4em;
 
   background-color: #fdfdfd;
   box-shadow: 0 0 0.3em .03em rgba(0,0,0,.3);

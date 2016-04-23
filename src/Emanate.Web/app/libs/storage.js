@@ -1,16 +1,13 @@
-﻿export default {
-
-  get(key) {
-      try {
-          return JSON.parse(localStorage.getItem(key));
-      }
-      catch(e) {
-          return null;
-      }
+export default {
+  get: function(k) {
+    try {
+      return JSON.parse(localStorage.getItem(k));
+    }
+    catch(e) {
+      return null;
+    }
   },
-
-  set(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+  set: function(k, v) {
+    localStorage.setItem(k, JSON.stringify(v));
   }
-
 };

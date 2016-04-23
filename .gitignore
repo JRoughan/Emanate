@@ -32,3 +32,4 @@ Emanate.Service.exe.config
 [Pp]ackages*/
 src/.vs/config/applicationhost.config
 node_modules
+[Bb]uild

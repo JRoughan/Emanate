@@ -1,64 +1,64 @@
-const merge = require('webpack-merge');
 const path = require('path');
+const HtmlwebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');
 const webpack = require('webpack');
+const CleanPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const pkg = require('./package.json');
 
 const TARGET = process.env.npm_lifecycle_event;
 const PATHS = {
   app: path.join(__dirname, 'app'),
-  build: path.join(__dirname, 'build')
+  build: path.join(__dirname, 'build'),
+  style: path.join(__dirname, 'app/main.css'),
+  test: path.join(__dirname, 'tests')
+};
+const ENV = {
+  host: process.env.HOST || 'localhost',
+  port: process.env.PORT || 8080
 };
 
 process.env.BABEL_ENV = TARGET;
 
 const common = {
-  // Entry accepts a path or an object of entries.
-  // The build chapter contains an example of the latter.
-  entry: PATHS.app,
-  // Add resolve.extensions.
-  // '' is needed to allow imports without an extension.
-  // Note the .'s before extensions as it will fail to match without!!!
+  entry: {
+    app: PATHS.app
+  },
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
   output: {
     path: PATHS.build,
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
-	preLoaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['eslint'],
-        include: PATHS.app
-      }
-    ],
     loaders: [
       {
-        // Test expects a RegExp! Note the slashes!
-        test: /\.css$/,
-        loaders: ['style', 'css'],
-        // Include accepts either a path or an array of paths.
-        include: PATHS.app
-      },
-      // Set up jsx. This accepts js too thanks to RegExp
-      {
         test: /\.jsx?$/,
-        // Enable caching for improved performance during development
-        // It uses default OS directory by default. If you need something
-        // more custom, pass a path to it. I.e., babel?cacheDirectory=<path>
         loaders: ['babel?cacheDirectory'],
         include: PATHS.app
       }
     ]
-  }
+  },
+  plugins: [
+    new HtmlwebpackPlugin({
+      template: 'node_modules/html-webpack-template/index.ejs',
+      title: 'Emanate app',
+      appMountId: 'app',
+      inject: false
+    })
+  ]
 };
 
-// Default configuration
 if(TARGET === 'start' || !TARGET) {
   module.exports = merge(common, {
+    entry: {
+      style: PATHS.style
+    },
+    devtool: 'eval-source-map',
     devServer: {
-      contentBase: PATHS.build,
-
+      historyApiFallback: true,
       hot: true,
       inline: true,
       progress: true,
@@ -67,16 +67,95 @@ if(TARGET === 'start' || !TARGET) {
       stats: 'errors-only',
 
       // Parse host and port from env so this is easy to customize.
-      host: process.env.HOST,
-      port: process.env.PORT
+      host: ENV.host,
+      port: ENV.port
+    },
+    module: {
+      loaders: [
+        // Define development specific CSS setup
+        {
+          test: /\.css$/,
+          loaders: ['style', 'css'],
+          include: PATHS.app
+        }
+      ]
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin()
     ]
   });
-
 }
 
-if(TARGET === 'build') {
-  module.exports = merge(common, {});
+if(TARGET === 'build' || TARGET === 'stats') {
+  module.exports = merge(common, {
+    entry: {
+      vendor: Object.keys(pkg.dependencies).filter(function(v) {
+        // Exclude alt-utils as it won't work with this setup
+        // due to the way the package has been designed
+        // (no package.json main).
+        return v !== 'alt-utils';
+      }),
+      style: PATHS.style
+    },
+    output: {
+      path: PATHS.build,
+      filename: '[name].[chunkhash].js',
+      chunkFilename: '[chunkhash].js'
+    },
+    module: {
+      loaders: [
+        // Extract CSS during build
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract('style', 'css'),
+          include: PATHS.app
+        }
+      ]
+    },
+    plugins: [
+      new CleanPlugin([PATHS.build]),
+      // Output extracted CSS to a file
+      new ExtractTextPlugin('styles.[chunkhash].css'),
+      // Extract vendor and manifest files
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['vendor', 'manifest']
+      }),
+      // Setting DefinePlugin affects React library size!
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': '"production"'
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      })
+    ]
+  });
+}
+
+if(TARGET === 'test' || TARGET === 'tdd') {
+  module.exports = merge(common, {
+    devtool: 'inline-source-map',
+    resolve: {
+      alias: {
+        'app': PATHS.app
+      }
+    },
+    module: {
+      preLoaders: [
+        {
+          test: /\.jsx?$/,
+          loaders: ['isparta-instrumenter'],
+          include: PATHS.app
+        }
+      ],
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          loaders: ['babel?cacheDirectory'],
+          include: PATHS.test
+        }
+      ]
+    }
+  });
 }

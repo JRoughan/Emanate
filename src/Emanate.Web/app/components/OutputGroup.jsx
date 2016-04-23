@@ -1,69 +1,83 @@
-import AltContainer from 'alt-container';
 import React from 'react';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
 import Outputs from './Outputs.jsx';
-import OutputActions from '../actions/OutputActions';
-import OutputStore from '../stores/OutputStore';
-import OutputGroupActions from '../actions/OutputGroupActions';
 import Editable from './Editable.jsx';
+import ItemTypes from '../constants/itemTypes';
+import * as outputGroupActions from '../actions/outputGroups';
+import * as outputActions from '../actions/outputs';
 
-export default class OutputGroup extends React.Component {
+const outputTarget = {
+  hover(targetProps, monitor) {
+    const sourceProps = monitor.getItem();
+    const sourceId = sourceProps.id;
+
+    if(!targetProps.outputGroup.get('outputs').count()) {
+      targetProps.attachToOutputGroup(
+        targetProps.outputGroup.get('id'),
+        sourceId
+      );
+    }
+  }
+};
+
+class OutputGroup extends React.Component {
   render() {
-    const {outputGroup, ...props} = this.props;
+    const {outputGroup, outputGroupOutputs, ...props} = this.props;
+    const outputGroupId = outputGroup.get('id');
 
     return (
       <div {...props}>
-        <div className="outputGroup-header" onClick={this.activateOutputGroupEdit}>
+        <div className="outputGroup-header"
+          onClick={() => props.updateOutputGroup({id: outputGroupId, editing: true})}>
           <div className="outputGroup-add-output">
-            <button onClick={this.addOutput}>+</button>
+            <button onClick={this.addOutput.bind(this, outputGroupId)}>+</button>
           </div>
-          <Editable className="outputGroup-name" editing={outputGroup.editing}
-            value={outputGroup.name} onEdit={this.editGroupName} />
+          <Editable className="outputGroup-name" editing={outputGroup.get('editing')}
+            value={outputGroup.get('name')}
+            onEdit={name => props.updateOutputGroup({id: outputGroupId, name, editing: false})} />
           <div className="outputGroup-delete">
-            <button onClick={this.deleteOutputGroup}>x</button>
+            <button onClick={this.deleteOutputGroup.bind(this, outputGroupId)}>x</button>
           </div>
         </div>
-        <AltContainer
-          stores={[OutputStore]}
-          inject={{
-            outputs: () => OutputStore.getOutputsByIds(outputGroup.outputs)
-          }}>
-          <Outputs onDelete={this.deleteOutput} />
-        </AltContainer>
+        <Outputs
+          outputs={outputGroupOutputs}
+          onValueClick={id => props.updateOutput({id, editing: true})}
+          onEdit={(id, name) => props.updateOutput({id, name, editing: false})}
+          onDelete={(id, e) => this.deleteOutput(outputGroupId, id, e)} />
       </div>
     );
   }
-  addOutput = (e) => {
+  deleteOutputGroup(outputGroupId, e) {
     e.stopPropagation();
 
-    const outputGroupId = this.props.outputGroup.id;
-    const output = OutputActions.create({name: 'New name'});
+    this.props.deleteOutputGroup(outputGroupId);
+  }
+  addOutput(outputGroupId, e) {
+    e.stopPropagation();
 
-    OutputGroupActions.attachToOutputGroup({
-      outputId: output.id,
-      outputGroupId
+    const o = this.props.createOutput({
+      name: 'New output'
     });
-  };
-  deleteOutput = (outputId, e) => {
+    this.props.attachToOutputGroup(outputGroupId, o.output.id);
+  }
+  deleteOutput(outputGroupId, outputId, e) {
     e.stopPropagation();
 
-    const outputGroupId = this.props.outputGroup.id;
-
-    OutputGroupActions.detachFromOutputGroup({outputGroupId, outputId});
-    OutputActions.delete(outputId);
-  };
-  editGroupName = (name) => {
-    const outputGroupId = this.props.outputGroup.id;
-
-    OutputGroupActions.update({id: outputGroupId, name, editing: false});
-  };
-  deleteOutputGroup = () => {
-    const outputGroupId = this.props.outputGroup.id;
-
-    OutputGroupActions.delete(outputGroupId);
-  };
-  activateOutputGroupEdit = () => {
-    const outputGroupId = this.props.outputGroup.id;
-
-    OutputGroupActions.update({id: outputGroupId, editing: true});
-  };
+    this.props.detachFromOutputGroup(outputGroupId, outputId);
+    this.props.deleteOutput(outputId);
+  }
 }
+
+export default compose(
+  // If you want to memoize this (more performant),
+  // use https://www.npmjs.com/package/reselect
+  connect((state, props) => ({
+    outputGroupOutputs: props.outputGroup.get('outputs').map(
+      id => state.outputs.find(output => output.get('id') === id)
+    )
+  }), {
+    ...outputGroupActions,
+    ...outputActions
+  })
+)(OutputGroup);
