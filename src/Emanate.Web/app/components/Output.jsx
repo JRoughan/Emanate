@@ -6,7 +6,7 @@ import * as outputActions from '../actions/outputs';
 
 class Output extends React.Component {
   render() {
-    const {output, onDelete} = this.props;
+    const {output, profile, onDelete} = this.props;
     return (
         <div>
             <Editable editing={output.get('editing')}
@@ -14,6 +14,7 @@ class Output extends React.Component {
                       onValueClick={this.activateOutputEdit}
                       onEdit={this.editOutput}
                       onDelete={onDelete.bind(null, output.get('id'))} />
+            <div>{profile.get('name')}</div>
         </div>
     );
   }
@@ -30,7 +31,9 @@ class Output extends React.Component {
 }
 
 export default compose(
-  connect(() => ({}), {
+  connect((state, props) => ({
+      profile: state.profiles.find(profile => profile.get('id') === props.output.get('profileId'))
+  }), {
     ...outputActions
   })
 )(Output);

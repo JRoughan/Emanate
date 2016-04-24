@@ -27,7 +27,7 @@ export default function outputs(state = initialState, action) {
       }
 
       return state.delete(outputIndex);
-
+    
     default:
       return state;
   }

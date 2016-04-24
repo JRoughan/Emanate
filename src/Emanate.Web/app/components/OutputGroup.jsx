@@ -42,7 +42,8 @@ class OutputGroup extends React.Component {
     e.stopPropagation();
 
     const o = this.props.createOutput({
-      name: 'New output'
+      name: 'New output',
+      profileId: this.props.defaultProfile.get('id')
     });
     this.props.attachToOutputGroup(outputGroupId, o.output.id);
   }
@@ -60,7 +61,8 @@ export default compose(
   connect((state, props) => ({
     outputGroupOutputs: props.outputGroup.get('outputs').map(
       id => state.outputs.find(output => output.get('id') === id)
-    )
+    ),
+    defaultProfile: state.profiles.first()
   }), {
     ...outputGroupActions,
     ...outputActions
