@@ -22,15 +22,15 @@ module.exports = function karmaConfig (config) {
       // Needed because React.js requires bind and phantomjs does not support it
       'node_modules/phantomjs-polyfill/bind-polyfill.js',
 
-      // Grab all files in the tests directory that contain _test.
-      'tests/**/*_test.*'
+      // Grab all files in the tests directory that contain _tests.
+      'tests/**/*_tests.*'
     ],
 
     preprocessors: {
       // Reference: http://webpack.github.io/docs/testing.html
       // Reference: https://github.com/webpack/karma-webpack
       // Convert files with webpack and load sourcemaps
-      'tests/**/*_test.*': ['webpack', 'sourcemap']
+      'tests/**/*_tests.*': ['webpack', 'sourcemap']
     },
 
     browsers: [
