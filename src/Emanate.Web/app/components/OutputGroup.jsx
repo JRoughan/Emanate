@@ -42,7 +42,6 @@ class OutputGroup extends React.Component {
     e.stopPropagation();
 
     const o = this.props.createOutput({
-      name: 'New output',
       profileId: this.props.defaultProfile.get('id')
     });
     this.props.attachToOutputGroup(outputGroupId, o.output.id);

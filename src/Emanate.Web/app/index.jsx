@@ -5,7 +5,7 @@ import Root from './containers/Root.jsx';
 import configureStore from './store/configureStore';
 import storage from './libs/storage';
 
-const APP_STORAGE = 'emanate_storage4';
+const APP_STORAGE = 'emanate_storage5';
 
 const store = configureStore(deserialize(storage.get(APP_STORAGE)));
 

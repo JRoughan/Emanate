@@ -7,6 +7,7 @@ export function createProfile(profile) {
     type: CREATE_PROFILE,
     profile: Map({
       id: uuid.v4(),
+      name: Math.random().toString(36).substr(2, 9),
       states: List(profile.states || []),
       ...profile
     })

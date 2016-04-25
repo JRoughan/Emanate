@@ -7,6 +7,7 @@ export function createOutputGroup(outputGroup) {
     type: CREATE_OUTPUTGROUP,
     outputGroup: Map({
       id: uuid.v4(),
+      name: Math.random().toString(36).substr(2, 9),
       outputs: List(outputGroup.outputs || []),
       ...outputGroup
     })

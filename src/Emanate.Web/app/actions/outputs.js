@@ -6,6 +6,7 @@ export function createOutput(output) {
     type: CREATE_OUTPUT,
     output: {
       id: uuid.v4(),
+      name: Math.random().toString(36).substr(2, 9),
       ...output
     }
   };

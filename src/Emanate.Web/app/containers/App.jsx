@@ -15,8 +15,8 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <button className="add-outputGroup" onClick={createOutputGroup.bind(null, { name: 'New outputGroup' })}>Add Output Group</button>
-        <button className="add-profile" onClick={createProfile.bind(null, { name: 'New profile' })}>Add Profile</button>
+        <button className="add-outputGroup" onClick={createOutputGroup.bind(null, {})}>Add Output Group</button>
+        <button className="add-profile" onClick={createProfile.bind(null, {})}>Add Profile</button>
         <OutputGroups outputGroups={outputGroups} />
       </div>
     );
