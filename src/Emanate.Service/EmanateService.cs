@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.ServiceProcess;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 
 namespace Emanate.Service
 {
-    public partial class EmanateService : ServiceBase
+    public class EmanateService
     {
         private readonly IComponentContext componentContext;
         private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
@@ -17,12 +15,43 @@ namespace Emanate.Service
         public EmanateService(IComponentContext componentContext)
         {
             this.componentContext = componentContext;
-            InitializeComponent();
         }
 
-        public void Initialize(GlobalConfig config)
+        public void Start()
+        {
+            Trace.TraceInformation("=> EmanateService.Start");
+            Initialize();
+            foreach (var buildMonitor in buildMonitors.Values)
+            {
+                Trace.TraceInformation("Starting build monitor '{0}'", buildMonitor.GetType().Name);
+                buildMonitor.BeginMonitoring();
+            }
+        }
+
+        public void Pause()
+        {
+            Trace.TraceInformation("=> EmanateService.Pause");
+        }
+
+        public void Continue()
+        {
+            Trace.TraceInformation("=> EmanateService.Continue");
+        }
+
+        public void Stop()
+        {
+            Trace.TraceInformation("=> EmanateService.Stop");
+            foreach (var buildMonitor in buildMonitors.Values)
+            {
+                Trace.TraceInformation("Ending build monitor '{0}'", buildMonitor.GetType().Name);
+                buildMonitor.EndMonitoring();
+            }
+        }
+
+        private void Initialize()
         {
             Trace.TraceInformation("=> EmanateService.Initialize");
+            var config = componentContext.Resolve<GlobalConfig>();
             foreach (var outputDevice in config.OutputDevices)
             {
                 Trace.TraceInformation("Processing output device '{0}'", outputDevice.Name);
@@ -38,26 +67,6 @@ namespace Emanate.Service
                     }
                     monitor.AddBuilds(outputDevice, inputGroup);
                 }
-            }
-        }
-
-        protected override void OnStart(string[] args)
-        {
-            Trace.TraceInformation("=> EmanateService.OnStart");
-            foreach (var buildMonitor in buildMonitors.Values)
-            {
-                Trace.TraceInformation("Starting build monitor '{0}'", buildMonitor.GetType().Name);
-                buildMonitor.BeginMonitoring();
-            }
-        }
-
-        protected override void OnStop()
-        {
-            Trace.TraceInformation("=> EmanateService.OnStop");
-            foreach (var buildMonitor in buildMonitors.Values)
-            {
-                Trace.TraceInformation("Ending build monitor '{0}'", buildMonitor.GetType().Name);
-                buildMonitor.EndMonitoring();
             }
         }
     }
