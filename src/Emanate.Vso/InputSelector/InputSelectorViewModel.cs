@@ -6,8 +6,6 @@ using System.Linq;
 using System.Net;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
-using Microsoft.TeamFoundation.Core.WebApi;
-using Newtonsoft.Json;
 
 namespace Emanate.Vso.InputSelector
 {

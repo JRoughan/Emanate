@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.Vso.Configuration;
-using Microsoft.TeamFoundation.Build.WebApi;
 using Timer = System.Timers.Timer;
 
 namespace Emanate.Vso
@@ -21,7 +19,9 @@ namespace Emanate.Vso
         private readonly Timer timer;
         private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
 
-
+        private static readonly string InProgressStatus = "inProgress";
+        private static readonly string SucceededStatus = "succeeded";
+        
         public VsoMonitor(IVsoConnection vsoConnection, VsoConfiguration configuration)
         {
             this.vsoConnection = vsoConnection;
@@ -115,22 +115,13 @@ namespace Emanate.Vso
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var tfsBuild = vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
+                var tfsBuild = vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId))["value"][0];
                 if (tfsBuild != null)
                 {
-                    var build = new
-                                    {
-                                        IsRunning = tfsBuild.Status == BuildStatus.InProgress,
-                                        Status = tfsBuild.Status,
-                                        TimeStamp = tfsBuild.StartTime
-                                    };
-
+                    var startTime = DateTime.Parse((string) tfsBuild["startTime"]);
                     var state = ConvertState(tfsBuild);
 
-                    if (build.IsRunning && state == BuildState.Succeeded)
-                        state = BuildState.Running;
-
-                    buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = build.TimeStamp});
+                    buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
                 else
                     Trace.TraceWarning("Build '{0}' invalid", buildKey);
@@ -138,15 +129,16 @@ namespace Emanate.Vso
             return buildInfos;
         }
 
-        private BuildState ConvertState(Build build)
+        private BuildState ConvertState(dynamic build)
         {
-            if (build.Status == BuildStatus.InProgress)
+            string result = build["result"];
+            if (string.IsNullOrWhiteSpace(result) && build["status"] == InProgressStatus)
                 return BuildState.Running;
 
-            return build.Result.HasValue && build.Result.Value == BuildResult.Succeeded ? BuildState.Succeeded : BuildState.Failed;
+            return !string.IsNullOrWhiteSpace(result) && result == SucceededStatus ? BuildState.Succeeded : BuildState.Failed;
         }
 
-        [DebuggerDisplay("{BuildId} - {State}")]
+        [DebuggerDisplay("{BuildKey} - {State}")]
         class BuildInfo
         {
             public BuildKey BuildKey { get; set; }

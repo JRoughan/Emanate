@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Input
@@ -12,6 +13,7 @@ namespace Emanate.Core.Input
         void AddBuilds(IOutputDevice outputDevice, IEnumerable<BuildKey> buildIds);
     }
 
+    [DebuggerDisplay("{ProjectId}:{BuildId}")]
     public class BuildKey
     {
         public BuildKey(Guid projectId, string buildId)
