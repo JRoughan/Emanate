@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
+using Nancy.Hosting.Self;
 
 namespace Emanate.Service
 {
@@ -11,6 +13,7 @@ namespace Emanate.Service
     {
         private readonly IComponentContext componentContext;
         private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
+        private NancyHost nancyHost;
 
         public EmanateService(IComponentContext componentContext)
         {
@@ -26,6 +29,10 @@ namespace Emanate.Service
                 Trace.TraceInformation("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
             }
+            var apiUrl = new Uri("http://localhost:44444/api/");
+            nancyHost = new NancyHost(apiUrl);
+            nancyHost.Start();
+            Trace.TraceInformation($"Nancy now listening - {apiUrl}.");
         }
 
         public void Pause()
@@ -41,6 +48,7 @@ namespace Emanate.Service
         public void Stop()
         {
             Trace.TraceInformation("=> EmanateService.Stop");
+            nancyHost.Stop();
             foreach (var buildMonitor in buildMonitors.Values)
             {
                 Trace.TraceInformation("Ending build monitor '{0}'", buildMonitor.GetType().Name);
