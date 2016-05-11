@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
+using Emanate.Service.Api;
 using Topshelf;
 using Topshelf.Autofac;
 
@@ -63,6 +64,8 @@ namespace Emanate.Service
             }
 
             builder.Update(container);
+
+            Bootstrapper.SetContainer(container);
 
             return container;
         }

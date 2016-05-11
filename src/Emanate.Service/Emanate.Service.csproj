@@ -60,6 +60,10 @@
       <HintPath>..\packages\Nancy.1.4.1\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nancy.Bootstrappers.Autofac, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Bootstrappers.Autofac.1.4.1\lib\net40\Nancy.Bootstrappers.Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
       <Private>True</Private>
@@ -87,6 +91,9 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\Bootstrapper.cs" />
+    <Compile Include="Api\InputsModule.cs" />
+    <Compile Include="Api\OutputsModule.cs" />
     <Compile Include="Api\DefaultModule.cs" />
     <Compile Include="EmanateService.cs" />
     <Compile Include="Program.cs" />
