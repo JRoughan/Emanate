@@ -38,9 +38,10 @@ namespace Emanate.Vso
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<BuildKey> buildIds)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
         {
             Trace.TraceInformation("=> VsoMonitor.AddBuilds");
+            var buildIds = inputs.Select(i => new BuildKey(i.ProjectId, i.Id)).ToList();
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
@@ -144,6 +145,40 @@ namespace Emanate.Vso
             public BuildKey BuildKey { get; set; }
             public BuildState State { get; set; }
             public DateTime? TimeStamp { get; set; }
+        }
+    }
+
+    [DebuggerDisplay("{ProjectId}:{BuildId}")]
+    public class BuildKey : IEquatable<BuildKey>
+    {
+        public BuildKey(Guid projectId, string buildId)
+        {
+            ProjectId = projectId;
+            BuildId = buildId;
+        }
+
+        public Guid ProjectId { get; }
+        public string BuildId { get; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            return Equals((BuildKey)obj);
+        }
+
+        public bool Equals(BuildKey other)
+        {
+            if (other == null)
+                return false;
+
+            return ProjectId.Equals(other.ProjectId) && BuildId.Equals(other.BuildId);
+        }
+
+        public override int GetHashCode()
+        {
+            return (ProjectId.ToString() + BuildId).GetHashCode();
         }
     }
 }

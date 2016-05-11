@@ -46,7 +46,7 @@ namespace Emanate.Core.Configuration
                 {
                     foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
                     {
-                        IOriginator moduleConfig = null;
+                        IOriginator moduleConfig;
                         switch (moduleMemento.Type)
                         {
                             case "output":
@@ -136,7 +136,7 @@ namespace Emanate.Core.Configuration
             return config;
         }
 
-        public void Save(GlobalConfig globalConfig)
+        public static void Save(GlobalConfig globalConfig)
         {
             Trace.TraceInformation("=> ConfigurationCaretaker.Save");
             var configDoc = new XDocument();

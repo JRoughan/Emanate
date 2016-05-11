@@ -36,9 +36,7 @@ namespace Emanate.Service
                         buildMonitors.Add(inputGroup.Key, monitor);
                         Trace.TraceInformation("Monitor '{0}' added", monitor.GetType());
                     }
-                    var buildIds = inputGroup.Select(i => new BuildKey(i.ProjectId, i.Id)).ToList();
-                    monitor.AddBuilds(outputDevice, buildIds);
-                    Trace.TraceInformation("Builds added: {0}", string.Join(", ", buildIds));
+                    monitor.AddBuilds(outputDevice, inputGroup);
                 }
             }
         }

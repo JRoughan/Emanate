@@ -131,7 +131,7 @@ namespace Emanate.Service.Admin
 
             try
             {
-                configurationCaretaker.Save(globalConfig);
+                ConfigurationCaretaker.Save(globalConfig);
             }
             catch (Exception ex)
             {
