@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using Emanate.Extensibility;
 
@@ -39,6 +40,8 @@ namespace Emanate.Vso.InputSelector
             get { return configurations; }
             set { configurations = value; OnPropertyChanged(); }
         }
+
+        public Guid Id { get; set; }
 
         public void CheckStatus()
         {

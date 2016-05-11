@@ -7,6 +7,7 @@ using System.Net;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Microsoft.TeamFoundation.Core.WebApi;
+using Newtonsoft.Json;
 
 namespace Emanate.Vso.InputSelector
 {
@@ -22,10 +23,10 @@ namespace Emanate.Vso.InputSelector
         public override void Initialize()
         {
             Trace.TraceInformation("=> InputSelectorViewModel.Initialize");
-            IEnumerable<TeamProjectReference> projectRefs;
+            dynamic projectRefs;
             try
             {
-                projectRefs = connection.GetProjects();
+                projectRefs = connection.GetProjects()["value"];
             }
             catch (WebException ex)
             {
@@ -34,25 +35,21 @@ namespace Emanate.Vso.InputSelector
                 return;
             }
 
-            foreach (var projectRef in projectRefs)
+            foreach (dynamic projectRef in projectRefs)
             {
                 var projectVm = new ProjectViewModel();
-                projectVm.Name = projectRef.Name;
+                projectVm.Name = projectRef["name"];
+                projectVm.Id = new Guid(projectRef["id"].Value);
 
-                var buildDefinitions = connection.GetBuildDefinitions(projectRef.Id);
-
-                //var buildRoot = XElement.Parse(buildXml);
-
-                //var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
-                //                    from buildElement in buildTypesElement.Elements("buildType")
-                //                    select buildElement;
+                var buildDefinitions = connection.GetBuildDefinitions(projectVm.Id)["value"];
 
                 foreach (var buildDefinition in buildDefinitions)
                 {
                     var configuration = new ProjectConfigurationViewModel(projectVm);
-                    configuration.Id = buildDefinition.Id.ToString();
-                    configuration.Name = buildDefinition.Name;
-                    configuration.ProjectId = buildDefinition.Project.Id;
+                    configuration.Id = buildDefinition["id"];
+                    configuration.Name = buildDefinition["name"];
+                    configuration.Type = buildDefinition["type"];
+                    configuration.ProjectId = projectVm.Id;
                     projectVm.Configurations.Add(configuration);
                 }
 
