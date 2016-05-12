@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using Emanate.TeamCity.Configuration;
+using Serilog;
 
 namespace Emanate.TeamCity
 {
@@ -28,21 +28,21 @@ namespace Emanate.TeamCity
 
         public string GetProjects()
         {
-            Trace.TraceInformation("=> TeamCityConnection.GetProjects");
+            Log.Information("=> TeamCityConnection.GetProjects");
             var uri = CreateUri("/httpAuth/app/rest/projects");
             return Request(uri);
         }
 
         public string GetProject(string projectId)
         {
-            Trace.TraceInformation("=> TeamCityConnection.GetProject({0})", projectId);
+            Log.Information("=> TeamCityConnection.GetProject({0})", projectId);
             var buildUri = CreateUri($"/httpAuth/app/rest/projects/id:{projectId}");
             return Request(buildUri);
         }
 
         public string GetBuild(string buildId)
         {
-            Trace.TraceInformation("=> TeamCityConnection.GetBuild({0})", buildId);
+            Log.Information("=> TeamCityConnection.GetBuild({0})", buildId);
             var resultUri = CreateUri($"httpAuth/app/rest/builds?locator=running:all,buildType:(id:{buildId}),count:1");
             return Request(resultUri);
         }
@@ -56,7 +56,7 @@ namespace Emanate.TeamCity
         {
             try
             {
-                Trace.TraceInformation("=> TeamCityConnection.Request({0})", uri);
+                Log.Information("=> TeamCityConnection.Request({0})", uri);
                 var webRequest = CreateWebRequest(uri);
                 webRequest.Accept = "application/xml";
 
@@ -67,7 +67,7 @@ namespace Emanate.TeamCity
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Team city request failed: " + ex.Message);
+                Log.Error("Team city request failed: " + ex.Message);
                 throw;
             }
         }

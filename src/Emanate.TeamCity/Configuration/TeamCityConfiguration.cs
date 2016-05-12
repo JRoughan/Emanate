@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
+using Serilog;
 
 namespace Emanate.TeamCity.Configuration
 {
@@ -22,7 +22,7 @@ namespace Emanate.TeamCity.Configuration
 
         public Memento CreateMemento()
         {
-            Trace.TraceInformation("=> TeamCityConfiguration.CreateMemento");
+            Log.Information("=> TeamCityConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("key", key));
             moduleElement.Add(new XAttribute("type", "input"));
@@ -37,7 +37,7 @@ namespace Emanate.TeamCity.Configuration
 
         public void SetMemento(Memento memento)
         {
-            Trace.TraceInformation("=> TeamCityConfiguration.SetMemento");
+            Log.Information("=> TeamCityConfiguration.SetMemento");
             if (memento.Key != key)
                 throw new ArgumentException("Cannot load non-TeamCity configuration");
 

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Emanate.Vso.Configuration;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Emanate.Vso
 {
@@ -21,7 +21,7 @@ namespace Emanate.Vso
 
         public dynamic GetProjects()
         {
-            Trace.TraceInformation("=> VsoConnection.GetProjects");
+            Log.Information("=> VsoConnection.GetProjects");
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, "_apis/projects?api-version=2");
@@ -36,7 +36,7 @@ namespace Emanate.Vso
 
         public dynamic GetBuild(Guid projectId, int definition)
         {
-            Trace.TraceInformation("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
+            Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
@@ -51,7 +51,7 @@ namespace Emanate.Vso
 
         public dynamic GetBuildDefinitions(Guid projectId)
         {
-            Trace.TraceInformation("=> VsoConnection.GetBuildDefinitions({0})", projectId);
+            Log.Information("=> VsoConnection.GetBuildDefinitions({0})", projectId);
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/definitions?api-version=2");

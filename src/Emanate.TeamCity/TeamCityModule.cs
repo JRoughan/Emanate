@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using Autofac;
+﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Extensibility;
 using Emanate.TeamCity.Configuration;
 using Emanate.TeamCity.InputSelector;
+using Serilog;
 
 namespace Emanate.TeamCity
 {
@@ -15,7 +15,7 @@ namespace Emanate.TeamCity
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> TeamCityModule.LoadAdminComponents");
+            Log.Information("=> TeamCityModule.LoadAdminComponents");
             RegisterCommon(builder);
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
@@ -28,14 +28,14 @@ namespace Emanate.TeamCity
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> TeamCityModule.LoadServiceComponents");
+            Log.Information("=> TeamCityModule.LoadServiceComponents");
             RegisterCommon(builder);
             builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
         private void RegisterCommon(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> TeamCityModule.RegisterCommon");
+            Log.Information("=> TeamCityModule.RegisterCommon");
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
             builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }

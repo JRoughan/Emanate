@@ -7,6 +7,7 @@ using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.Vso.Configuration;
+using Serilog;
 using Timer = System.Timers.Timer;
 
 namespace Emanate.Vso
@@ -40,7 +41,7 @@ namespace Emanate.Vso
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
         {
-            Trace.TraceInformation("=> VsoMonitor.AddBuilds");
+            Log.Information("=> VsoMonitor.AddBuilds");
             var buildIds = inputs.Select(i =>
             {
                 var parts = i.Id.Split(':');
@@ -51,24 +52,24 @@ namespace Emanate.Vso
 
         public void BeginMonitoring()
         {
-            Trace.TraceInformation("=> VsoMonitor.BeginMonitoring");
+            Log.Information("=> VsoMonitor.BeginMonitoring");
             UpdateBuildStates();
-            Trace.TraceInformation("Starting polling timer");
+            Log.Information("Starting polling timer");
             timer.Start();
         }
 
         public void EndMonitoring()
         {
-            Trace.TraceInformation("=> VsoMonitor.EndMonitoring");
+            Log.Information("=> VsoMonitor.EndMonitoring");
             timer.Stop();
         }
 
         void PollStatus(object sender, ElapsedEventArgs e)
         {
-            Trace.TraceInformation("=> VsoMonitor.PollStatus");
+            Log.Information("=> VsoMonitor.PollStatus");
             if (!Monitor.TryEnter(pollingLock, lockingInterval))
             {
-                Trace.TraceWarning("Could not acquire polling lock - skipping attempt");
+                Log.Warning("Could not acquire polling lock - skipping attempt");
                 return;
             }
 
@@ -84,7 +85,7 @@ namespace Emanate.Vso
 
         private void UpdateBuildStates()
         {
-            Trace.TraceInformation("=> VsoMonitor.UpdateBuildStates");
+            Log.Information("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -116,7 +117,7 @@ namespace Emanate.Vso
 
         private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
-            Trace.TraceInformation("=> VsoMonitor.GetNewBuildStates");
+            Log.Information("=> VsoMonitor.GetNewBuildStates");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
@@ -129,7 +130,7 @@ namespace Emanate.Vso
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
                 else
-                    Trace.TraceWarning("Build '{0}' invalid", buildKey);
+                    Log.Warning("Build '{0}' invalid", buildKey);
             }
             return buildInfos;
         }

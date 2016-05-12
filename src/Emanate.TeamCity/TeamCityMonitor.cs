@@ -9,6 +9,7 @@ using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.TeamCity.Configuration;
+using Serilog;
 using Timer = System.Timers.Timer;
 
 namespace Emanate.TeamCity
@@ -49,31 +50,31 @@ namespace Emanate.TeamCity
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
         {
-            Trace.TraceInformation("=> TeamCityMonitor.AddBuilds");
+            Log.Information("=> TeamCityMonitor.AddBuilds");
             var builds = inputs.Select(i => i.Id);
             buildStates.Add(outputDevice, builds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
         {
-            Trace.TraceInformation("=> TeamCityMonitor.BeginMonitoring");
+            Log.Information("=> TeamCityMonitor.BeginMonitoring");
             UpdateBuildStates();
-            Trace.TraceInformation("Starting polling timer");
+            Log.Information("Starting polling timer");
             timer.Start();
         }
 
         public void EndMonitoring()
         {
-            Trace.TraceInformation("=> TeamCityModule.EndMonitoring");
+            Log.Information("=> TeamCityModule.EndMonitoring");
             timer.Stop();
         }
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)
         {
-            Trace.TraceInformation("=> TeamCityMonitor.PollTeamCityStatus");
+            Log.Information("=> TeamCityMonitor.PollTeamCityStatus");
             if (!Monitor.TryEnter(pollingLock, lockingInterval))
             {
-                Trace.TraceWarning("Could not acquire polling lock - skipping attempt");
+                Log.Warning("Could not acquire polling lock - skipping attempt");
                 return;
             }
 
@@ -89,7 +90,7 @@ namespace Emanate.TeamCity
 
         private void UpdateBuildStates()
         {
-            Trace.TraceInformation("=> TeamCityModule.UpdateBuildStates");
+            Log.Information("=> TeamCityModule.UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -121,7 +122,7 @@ namespace Emanate.TeamCity
 
         private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
         {
-            Trace.TraceInformation("=> TeamCityModule.GetNewBuildStates");
+            Log.Information("=> TeamCityModule.GetNewBuildStates");
             foreach (var buildId in buildIds)
             {
                 var resultXml = teamCityConnection.GetBuild(buildId);
@@ -145,7 +146,7 @@ namespace Emanate.TeamCity
                     yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
                 }
                 else
-                    Trace.TraceWarning("Build '{0}' invalid", buildId);
+                    Log.Warning("Build '{0}' invalid", buildId);
             }
         }
 
@@ -155,7 +156,7 @@ namespace Emanate.TeamCity
             if (stateMap.TryGetValue(state, out convertedState))
                 return convertedState;
 
-            Trace.TraceInformation("State '{0}' is not supported.", state);
+            Log.Information("State '{0}' is not supported.", state);
             return BuildState.Unknown;
         }
 

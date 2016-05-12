@@ -1,4 +1,3 @@
-using System.Linq;
 using Emanate.Extensibility;
 
 namespace Emanate.TeamCity.InputSelector

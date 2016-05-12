@@ -3,6 +3,7 @@ using System.Windows;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
+using Serilog;
 
 namespace Emanate.Service.Admin
 {
@@ -15,6 +16,10 @@ namespace Emanate.Service.Admin
         {
             if (Debugger.IsAttached)
                 Diagnostics.InitialiseConsole();
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.ColoredConsole()
+                .CreateLogger();
 
             var container = CreateContainer();
             var mainWindowViewModel = container.Resolve<MainWindowViewModel>();

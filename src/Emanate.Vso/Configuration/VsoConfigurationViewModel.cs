@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using Emanate.Extensibility;
+using Serilog;
 
 namespace Emanate.Vso.Configuration
 {
@@ -65,7 +65,7 @@ namespace Emanate.Vso.Configuration
 
         private void TestConnection()
         {
-            Trace.TraceInformation("=> VsoConfigurationViewModel.TestConnection");
+            Log.Information("=> VsoConfigurationViewModel.TestConnection");
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
@@ -83,7 +83,7 @@ namespace Emanate.Vso.Configuration
             {
                 isTesting = false;
                 IsEditable = true;
-                Trace.TraceInformation("VSO connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
+                Log.Information("VSO connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
             }
         }
     }

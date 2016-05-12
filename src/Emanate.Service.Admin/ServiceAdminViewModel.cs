@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.ServiceProcess;
 using System.Windows;
 using Emanate.Extensibility;
+using Serilog;
 
 namespace Emanate.Service.Admin
 {
@@ -32,7 +32,7 @@ namespace Emanate.Service.Admin
             }
             catch (Exception)
             {
-                Trace.TraceWarning("Emanate service missing");
+                Log.Warning("Emanate service missing");
                 IsInstalled = false;
             }
         }
@@ -80,7 +80,7 @@ namespace Emanate.Service.Admin
 
         private void StartService()
         {
-            Trace.TraceInformation("Starting Emanate service");
+            Log.Information("Starting Emanate service");
             var args = new StatusUpdateArgs(s => s.Start(), ServiceControllerStatus.Running);
             statusUpdateWorker.RunWorkerAsync(args);
         }
@@ -95,7 +95,7 @@ namespace Emanate.Service.Admin
 
         private void StopService()
         {
-            Trace.TraceInformation("Stopping Emanate service");
+            Log.Information("Stopping Emanate service");
             var args = new StatusUpdateArgs(s => s.Stop(), ServiceControllerStatus.Stopped);
             statusUpdateWorker.RunWorkerAsync(args);
         }
@@ -105,7 +105,7 @@ namespace Emanate.Service.Admin
 
         private void RestartService()
         {
-            Trace.TraceInformation("Restarting Emanate service");
+            Log.Information("Restarting Emanate service");
             var args = new StatusUpdateArgs(s => { s.Stop(); s.WaitForStatus(ServiceControllerStatus.Stopped); s.Start(); }, ServiceControllerStatus.Running);
             statusUpdateWorker.RunWorkerAsync(args);
         }
@@ -116,7 +116,7 @@ namespace Emanate.Service.Admin
             {
                 IsInstalled = false;
                 var errorMessage = "Could not update service: " + e.Error.Message;
-                Trace.TraceInformation(errorMessage);
+                Log.Information(errorMessage);
                 MessageBox.Show(errorMessage);
                 return;
             }
@@ -134,13 +134,13 @@ namespace Emanate.Service.Admin
         {
             var args = (StatusUpdateArgs)e.Argument;
             args.Method(service);
-            Trace.TraceInformation("Waiting for Emanate service status");
+            Log.Information("Waiting for Emanate service status");
             service.WaitForStatus(args.FinalStatus, TimeSpan.FromSeconds(30));
             var resultStatus = service.Status;
             if (resultStatus == args.FinalStatus)
-                Trace.TraceInformation("Emanate service status: " + resultStatus);
+                Log.Information("Emanate service status: " + resultStatus);
             else
-                Trace.TraceWarning("Unexpected Emanate service status: " + resultStatus);
+                Log.Warning("Unexpected Emanate service status: " + resultStatus);
 
             e.Result = resultStatus;
         }

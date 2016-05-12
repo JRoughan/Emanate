@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
+using Serilog;
 
 namespace Emanate.Delcom.Configuration
 {
@@ -32,7 +32,7 @@ namespace Emanate.Delcom.Configuration
 
         public IOutputProfile GenerateEmptyProfile(string newKey = "")
         {
-            Trace.TraceInformation("=> DelcomConfiguration.GenerateEmptyProfile");
+            Log.Information("=> DelcomConfiguration.GenerateEmptyProfile");
             var defaultProfile = new MonitoringProfile
             {
                 Key = newKey,
@@ -49,7 +49,7 @@ namespace Emanate.Delcom.Configuration
 
         public IOutputProfile AddDefaultProfile(string newKey)
         {
-            Trace.TraceInformation("=> DelcomConfiguration.AddDefaultProfile");
+            Log.Information("=> DelcomConfiguration.AddDefaultProfile");
             var defaultProfile = (MonitoringProfile)GenerateEmptyProfile(newKey);
             foreach (var profileState in defaultProfile.States)
             {
@@ -79,7 +79,7 @@ namespace Emanate.Delcom.Configuration
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
         public void AddOutputDevice(IOutputDevice outputDevice)
         {
-            Trace.TraceInformation("=> DelcomConfiguration.AddOutputDevice");
+            Log.Information("=> DelcomConfiguration.AddOutputDevice");
             outputDevices.Add(outputDevice);
             OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
@@ -87,14 +87,14 @@ namespace Emanate.Delcom.Configuration
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
         public void RemoveOutputDevice(DelcomDevice outputDevice)
         {
-            Trace.TraceInformation("=> DelcomConfiguration.RemoveOutputDevice");
+            Log.Information("=> DelcomConfiguration.RemoveOutputDevice");
             outputDevices.Remove(outputDevice);
             OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
         public Memento CreateMemento()
         {
-            Trace.TraceInformation("=> DelcomConfiguration.CreateMemento");
+            Log.Information("=> DelcomConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             // TODO: Move key and type tagging to CareTaker
             moduleElement.Add(new XAttribute("key", key));
@@ -143,9 +143,9 @@ namespace Emanate.Delcom.Configuration
 
         public void SetMemento(Memento memento)
         {
-            Trace.TraceInformation("=> DelcomConfiguration.SetMemento");
+            Log.Information("=> DelcomConfiguration.SetMemento");
             if (memento.Key != key)
-                Trace.TraceWarning("Possible attempt to load non-Delcom configuration");
+                Log.Warning("Possible attempt to load non-Delcom configuration");
 
             var element = memento.Element;
             var profilesElement = element.Element("profiles");
@@ -180,7 +180,7 @@ namespace Emanate.Delcom.Configuration
                 }
             }
             else
-                Trace.TraceWarning("Missing element: profiles");
+                Log.Warning("Missing element: profiles");
 
             var devicesElement = element.Element("devices");
             if (devicesElement != null)
@@ -190,7 +190,7 @@ namespace Emanate.Delcom.Configuration
                     var profileKey = deviceElement.GetAttributeString("profile");
                     if (string.IsNullOrWhiteSpace(profileKey))
                     {
-                        Trace.TraceWarning("Ignoring invalid profile key");
+                        Log.Warning("Ignoring invalid profile key");
                         continue;
                     }
 
@@ -205,7 +205,7 @@ namespace Emanate.Delcom.Configuration
                 }
             }
             else
-                Trace.TraceWarning("Missing element: devices");
+                Log.Warning("Missing element: devices");
 
             for (uint i = 1; ; i++)
             {

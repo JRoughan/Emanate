@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using Autofac;
+﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Extensibility;
 using Emanate.Vso.Configuration;
 using Emanate.Vso.InputSelector;
+using Serilog;
 
 namespace Emanate.Vso
 {
@@ -15,7 +15,7 @@ namespace Emanate.Vso
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> VsoModule.LoadAdminComponents");
+            Log.Information("=> VsoModule.LoadAdminComponents");
             RegisterCommon(builder);
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
@@ -28,14 +28,14 @@ namespace Emanate.Vso
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> VsoModule.LoadServiceComponents");
+            Log.Information("=> VsoModule.LoadServiceComponents");
             RegisterCommon(builder);
             builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
         private void RegisterCommon(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> VsoModule.RegisterCommon");
+            Log.Information("=> VsoModule.RegisterCommon");
             builder.RegisterType<VsoConnection>().As<IVsoConnection>();
             builder.RegisterType<VsoConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }

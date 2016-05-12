@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using Autofac;
+﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Service.Api;
+using Serilog;
 using Topshelf;
 using Topshelf.Autofac;
 
@@ -12,12 +11,19 @@ namespace Emanate.Service
     static class Program
     {
         public static string ServiceName = "EmanateService";
+
         static void Main()
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.ColoredConsole()
+                .CreateLogger();
+
             HostFactory.Run(c =>
             {
                 // Pass it to Topshelf
                 c.UseAutofacContainer(CreateContainer());
+
+                c.UseSerilog(Log.Logger);
 
                 c.Service<EmanateService>(s =>
                 {
@@ -53,13 +59,13 @@ namespace Emanate.Service
             builder.RegisterInstance(config);
             foreach (var moduleConfiguration in config.OututConfigurations)
             {
-                Trace.TraceInformation("Registering module configuration '{0}'", moduleConfiguration.Name);
+                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Name);
                 builder.RegisterInstance(moduleConfiguration);
             }
 
             foreach (var moduleConfiguration in config.InputConfigurations)
             {
-                Trace.TraceInformation("Registering module configuration '{0}'", moduleConfiguration.Name);
+                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Name);
                 builder.RegisterInstance(moduleConfiguration);
             }
 

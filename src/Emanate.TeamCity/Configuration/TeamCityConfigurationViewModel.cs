@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using Emanate.Extensibility;
+using Serilog;
 
 namespace Emanate.TeamCity.Configuration
 {
@@ -71,7 +71,7 @@ namespace Emanate.TeamCity.Configuration
 
         private void TestConnection()
         {
-            Trace.TraceInformation("=> TeamCityConfigurationViewModel.TestConnection");
+            Log.Information("=> TeamCityConfigurationViewModel.TestConnection");
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
@@ -88,7 +88,7 @@ namespace Emanate.TeamCity.Configuration
             {
                 isTesting = false;
                 IsEditable = true;
-                Trace.TraceInformation("TeamCity connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
+                Log.Information("TeamCity connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
             }
         }
     }

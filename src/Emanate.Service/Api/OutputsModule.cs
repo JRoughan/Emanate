@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Reflection;
 using Emanate.Core.Configuration;
 using Nancy;
 

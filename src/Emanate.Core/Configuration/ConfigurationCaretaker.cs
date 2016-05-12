@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Autofac;
 using Emanate.Core.Output;
+using Serilog;
 
 namespace Emanate.Core.Configuration
 {
@@ -23,11 +23,11 @@ namespace Emanate.Core.Configuration
 
         public GlobalConfig Load()
         {
-            Trace.TraceInformation("=> ConfigurationCaretaker.Load");
+            Log.Information("=> ConfigurationCaretaker.Load");
 
             if (!File.Exists(configFilePath))
             {
-                Trace.TraceInformation("No config file found");
+                Log.Information("No config file found");
                 return GenerateDefaultConfiguration();
             }
 
@@ -38,7 +38,7 @@ namespace Emanate.Core.Configuration
             globalConfig.OututModules.AddRange(componentContext.Resolve<IEnumerable<IOutputModule>>());
 
 
-            Trace.TraceInformation("Loading config file from '{0}'", configFilePath);
+            Log.Information("Loading config file from '{0}'", configFilePath);
             var configDoc = XDocument.Load(configFilePath);
             var rootNode = configDoc.Element("emanate");
 
@@ -69,7 +69,7 @@ namespace Emanate.Core.Configuration
                     }
                 }
                 else
-                    Trace.TraceWarning("Missing element: modules");
+                    Log.Warning("Missing element: modules");
 
                 // Output devices
                 var outputsElement = rootNode.Element("outputs");
@@ -93,24 +93,24 @@ namespace Emanate.Core.Configuration
                                     Id = inputElement.GetAttributeString("id"),
                                     Source = inputElement.GetAttributeString("source"),
                                 };
-                                Trace.TraceInformation("Adding input '{0}' to device '{1}'", input.Id, deviceName);
+                                Log.Information("Adding input '{0}' to device '{1}'", input.Id, deviceName);
                                 device.Inputs.Add(input);
                             }
                         }
                         else
-                            Trace.TraceWarning("Missing element: inputs");
+                            Log.Warning("Missing element: inputs");
 
-                        Trace.TraceInformation("Adding device '{0}'", deviceName);
+                        Log.Information("Adding device '{0}'", deviceName);
                         globalConfig.OutputDevices.Add(device);
                     }
                 }
                 else
-                    Trace.TraceWarning("Missing element: outputs");
+                    Log.Warning("Missing element: outputs");
             }
             else
-                Trace.TraceError("Missing root node");
+                Log.Error("Missing root node");
 
-            Trace.TraceInformation("Updating container from config");
+            Log.Information("Updating container from config");
             builder.Update(componentContext.ComponentRegistry);
 
             return globalConfig;
@@ -118,7 +118,7 @@ namespace Emanate.Core.Configuration
 
         private GlobalConfig GenerateDefaultConfiguration()
         {
-            Trace.TraceInformation("=> ConfigurationCaretaker.GenerateDefaultConfiguration");
+            Log.Information("=> ConfigurationCaretaker.GenerateDefaultConfiguration");
             var builder = new ContainerBuilder();
 
             var config = new GlobalConfig();
@@ -133,7 +133,7 @@ namespace Emanate.Core.Configuration
                 config.InputConfigurations.Add(moduleConfiguration);
             }
 
-            Trace.TraceInformation("Updating container from config");
+            Log.Information("Updating container from config");
             builder.Update(componentContext.ComponentRegistry);
 
             return config;
@@ -141,7 +141,7 @@ namespace Emanate.Core.Configuration
 
         public static void Save(GlobalConfig globalConfig)
         {
-            Trace.TraceInformation("=> ConfigurationCaretaker.Save");
+            Log.Information("=> ConfigurationCaretaker.Save");
             var configDoc = new XDocument();
             var rootElement = new XElement("emanate");
             configDoc.Add(rootElement);

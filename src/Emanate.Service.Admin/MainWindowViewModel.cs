@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
+using Serilog;
 
 namespace Emanate.Service.Admin
 {
@@ -134,7 +134,7 @@ namespace Emanate.Service.Admin
             catch (Exception ex)
             {
                 var errorMessage = "Cannot save config file: " + ex.Message;
-                Trace.TraceError(errorMessage);
+                Log.Error(errorMessage);
                 MessageBox.Show(errorMessage);
             }
         }

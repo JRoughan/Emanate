@@ -1,25 +1,22 @@
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Linq;
+using Serilog;
 
 namespace Emanate.Core.Configuration
 {
     public static class XElementExtensions
     {
-        private static readonly TraceSwitch configOutputSwitch = new TraceSwitch("configOutput", "Log values read from configuration files.");
-
         public static string GetAttributeString(this XElement element, string attributeName)
         {
             var attribute = element.Attribute(attributeName);
             if (attribute != null)
             {
-                if (configOutputSwitch.TraceVerbose)
-                    Trace.TraceInformation("     <{0} {1}='{2}'>", element.Name, attributeName, attribute.Value);
+                Log.Debug("     <{0} {1}='{2}'>", element.Name, attributeName, attribute.Value);
                 return attribute.Value;
             }
 
-            Trace.TraceWarning("     <{0} {1}=??>: *Missing*", element.Name, attributeName);
+            Log.Warning("     <{0} {1}=??>: *Missing*", element.Name, attributeName);
             return null;
         }
 
@@ -33,7 +30,7 @@ namespace Emanate.Core.Configuration
             if (bool.TryParse(rawValue, out value))
                 return value;
 
-            Trace.TraceError("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
+            Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
             return false;
         }
 
@@ -48,7 +45,7 @@ namespace Emanate.Core.Configuration
             if (Enum.TryParse(rawValue, out value))
                 return value;
 
-            Trace.TraceError("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
+            Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
             return defaultValue;
         }
 
@@ -62,7 +59,7 @@ namespace Emanate.Core.Configuration
             if (uint.TryParse(rawValue, out value))
                 return value;
 
-            Trace.TraceError("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
+            Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
             return 0;
         }
 
@@ -78,7 +75,7 @@ namespace Emanate.Core.Configuration
             if (exactFormat != null && DateTimeOffset.TryParseExact(rawValue, exactFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out value))
                 return value;
 
-            Trace.TraceError("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
+            Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
             return DateTimeOffset.MinValue;
         }
     }

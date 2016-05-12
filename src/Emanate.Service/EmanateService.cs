@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Nancy.Hosting.Self;
+using Serilog;
 
 namespace Emanate.Service
 {
@@ -22,56 +22,56 @@ namespace Emanate.Service
 
         public void Start()
         {
-            Trace.TraceInformation("=> EmanateService.Start");
+            Log.Information("=> EmanateService.Start");
             Initialize();
             foreach (var buildMonitor in buildMonitors.Values)
             {
-                Trace.TraceInformation("Starting build monitor '{0}'", buildMonitor.GetType().Name);
+                Log.Information("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
             }
             var apiUrl = new Uri("http://localhost:44444/api/");
             nancyHost = new NancyHost(apiUrl);
             nancyHost.Start();
-            Trace.TraceInformation($"Nancy now listening - {apiUrl}.");
+            Log.Information($"Nancy now listening - {apiUrl}.");
         }
 
         public void Pause()
         {
-            Trace.TraceInformation("=> EmanateService.Pause");
+            Log.Information("=> EmanateService.Pause");
         }
 
         public void Continue()
         {
-            Trace.TraceInformation("=> EmanateService.Continue");
+            Log.Information("=> EmanateService.Continue");
         }
 
         public void Stop()
         {
-            Trace.TraceInformation("=> EmanateService.Stop");
+            Log.Information("=> EmanateService.Stop");
             nancyHost.Stop();
             foreach (var buildMonitor in buildMonitors.Values)
             {
-                Trace.TraceInformation("Ending build monitor '{0}'", buildMonitor.GetType().Name);
+                Log.Information("Ending build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.EndMonitoring();
             }
         }
 
         private void Initialize()
         {
-            Trace.TraceInformation("=> EmanateService.Initialize");
+            Log.Information("=> EmanateService.Initialize");
             var config = componentContext.Resolve<GlobalConfig>();
             foreach (var outputDevice in config.OutputDevices)
             {
-                Trace.TraceInformation("Processing output device '{0}'", outputDevice.Name);
+                Log.Information("Processing output device '{0}'", outputDevice.Name);
                 foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
                 {
-                    Trace.TraceInformation("Processing input group '{0}'", inputGroup.Key);
+                    Log.Information("Processing input group '{0}'", inputGroup.Key);
                     IBuildMonitor monitor;
                     if (!buildMonitors.TryGetValue(inputGroup.Key, out monitor))
                     {
                         monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
                         buildMonitors.Add(inputGroup.Key, monitor);
-                        Trace.TraceInformation("Monitor '{0}' added", monitor.GetType());
+                        Log.Information("Monitor '{0}' added", monitor.GetType());
                     }
                     monitor.AddBuilds(outputDevice, inputGroup);
                 }

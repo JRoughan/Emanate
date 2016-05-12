@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Serilog;
 
 namespace Emanate.Core
 {
@@ -11,29 +11,29 @@ namespace Emanate.Core
     {
         public void LoadAdminModules(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> ModuleLoader.LoadAdminModules");
+            Log.Information("=> ModuleLoader.LoadAdminModules");
             Load(builder, m => m.LoadAdminComponents(builder));
         }
 
         public void LoadServiceModules(ContainerBuilder builder)
         {
-            Trace.TraceInformation("=> ModuleLoader.LoadServiceModules");
+            Log.Information("=> ModuleLoader.LoadServiceModules");
             Load(builder, m => m.LoadServiceComponents(builder));
         }
 
         private static void Load(ContainerBuilder builder, Action<IEmanateModule> moduleAction)
         {
-            Trace.TraceInformation("=> ModuleLoader.Load");
+            Log.Information("=> ModuleLoader.Load");
             var dlls = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "Emanate*.dll");
             foreach (var dll in dlls)
             {
-                Trace.TraceInformation("Scanning DLL '{0}'", Path.GetFileNameWithoutExtension(dll));
+                Log.Information("Scanning DLL '{0}'", Path.GetFileNameWithoutExtension(dll));
                 var assembly = Assembly.LoadFrom(dll);
                 var moduleAttribute = (EmanateModuleAttribute)assembly.GetCustomAttributes(typeof(EmanateModuleAttribute), false).SingleOrDefault();
                 if (moduleAttribute == null)
                     continue;
 
-                Trace.TraceInformation("Loading module '{0}'", moduleAttribute.ModuleType);
+                Log.Information("Loading module '{0}'", moduleAttribute.ModuleType);
                 var module = Activator.CreateInstance(moduleAttribute.ModuleType) as IEmanateModule;
                 if (module != null)
                 {
@@ -45,7 +45,7 @@ namespace Emanate.Core
                     moduleAction(module);
                 }
                 else
-                    Trace.TraceError("Loading module '{0}'", moduleAttribute.ModuleType);
+                    Log.Error("Loading module '{0}'", moduleAttribute.ModuleType);
             }
         }
     }

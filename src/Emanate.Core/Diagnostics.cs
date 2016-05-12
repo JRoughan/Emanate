@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Emanate.Core
 {
@@ -12,10 +11,6 @@ namespace Emanate.Core
                 NativeMethods.AllocConsole();
             else
                 NativeMethods.ShowWindow(handle, NativeMethods.SW_SHOW);
-
-            // TODO: Look into TraceOutputOptions to remove useless info from log lines (or just override Write/WriteLine)
-            var consoleTraceListener = new ConsoleTraceListener();
-            Trace.Listeners.Add(consoleTraceListener);
         }
     }
 }

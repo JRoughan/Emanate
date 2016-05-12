@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
-using Emanate.Core.Output;
+using Serilog;
 
 namespace Emanate.Vso.Configuration
 {
@@ -24,7 +21,7 @@ namespace Emanate.Vso.Configuration
 
         public Memento CreateMemento()
         {
-            Trace.TraceInformation("=> VsoConfiguration.CreateMemento");
+            Log.Information("=> VsoConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("key", key));
             moduleElement.Add(new XAttribute("type", "input"));
@@ -38,7 +35,7 @@ namespace Emanate.Vso.Configuration
 
         public void SetMemento(Memento memento)
         {
-            Trace.TraceInformation("=> VsoConfiguration.SetMemento");
+            Log.Information("=> VsoConfiguration.SetMemento");
             if (memento.Key != key)
                 throw new ArgumentException("Cannot load non-Visual Studio Online configuration");
 
