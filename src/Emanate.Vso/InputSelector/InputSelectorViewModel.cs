@@ -75,8 +75,9 @@ namespace Emanate.Vso.InputSelector
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var inputInfo in inputs)
             {
-                var config = configurations.SingleOrDefault(c => c.Id.Equals(inputInfo.Id, StringComparison.OrdinalIgnoreCase) &&
-                                                                 c.ProjectId.Equals(inputInfo.ProjectId));
+                var parts = inputInfo.Id.Split(':');
+                var config = configurations.SingleOrDefault(c => c.Id.Equals(parts[1], StringComparison.OrdinalIgnoreCase) &&
+                                                                 c.ProjectId.Equals(new Guid(parts[0])));
                 if (config != null)
                     config.IsSelected = true;
             }
@@ -89,7 +90,7 @@ namespace Emanate.Vso.InputSelector
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo {Source = "vso", Id = configuration.Id, ProjectId = configuration.ProjectId};
+                    yield return new InputInfo {Source = "vso", Id = $"{configuration.ProjectId}:{configuration.Id}"};
             }
         }
     }

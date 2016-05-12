@@ -41,7 +41,11 @@ namespace Emanate.Vso
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
         {
             Trace.TraceInformation("=> VsoMonitor.AddBuilds");
-            var buildIds = inputs.Select(i => new BuildKey(i.ProjectId, i.Id)).ToList();
+            var buildIds = inputs.Select(i =>
+            {
+                var parts = i.Id.Split(':');
+                return new BuildKey(new Guid(parts[1]), parts[0]);
+            });
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 

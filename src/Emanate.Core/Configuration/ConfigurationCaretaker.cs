@@ -88,7 +88,6 @@ namespace Emanate.Core.Configuration
                                 {
                                     Id = inputElement.GetAttributeString("id"),
                                     Source = inputElement.GetAttributeString("source"),
-                                    ProjectId = new Guid(inputElement.GetAttributeString("projectId"))
                                 };
                                 Trace.TraceInformation("Adding input '{0}' to device '{1}'", input.Id, deviceName);
                                 device.Inputs.Add(input);
@@ -172,7 +171,6 @@ namespace Emanate.Core.Configuration
                     var inputElement = new XElement("input");
                     inputElement.Add(new XAttribute("source", input.Source));
                     inputElement.Add(new XAttribute("id", input.Id));
-                    inputElement.Add(new XAttribute("projectId", input.ProjectId));
                     inputsElement.Add(inputElement);
                 }
                 outputElement.Add(inputsElement);
