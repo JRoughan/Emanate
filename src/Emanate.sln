@@ -33,8 +33,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C8BB40FA-5219-40FB-8FA7-4E9BC6D8244C}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Vso", "Emanate.Vso\Emanate.Vso.csproj", "{D02CEB1D-3B90-477D-A8E7-04A62786E704}"
@@ -99,3 +97,4 @@ Global
 		{D02CEB1D-3B90-477D-A8E7-04A62786E704} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 	EndGlobalSection
 EndGlobal
+
