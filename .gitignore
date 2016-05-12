@@ -28,7 +28,6 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 src/Emanate.IntegrationTests/Security.config
-App.Config
 Emanate.Service.exe.config
 [Pp]ackages*/
 src/.vs/config/applicationhost.config
