@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Emanate.Core.Configuration;
@@ -14,10 +15,10 @@ namespace Emanate.TeamCity.Configuration
             InitializeComponent();
         }
 
-        public override void SetTarget(IOutputConfiguration moduleConfiguration)
+        public override async Task SetTarget(IOutputConfiguration moduleConfiguration)
         {
             viewModel = new TeamCityConfigurationViewModel(moduleConfiguration as TeamCityConfiguration);
-            viewModel.Initialize();
+            await viewModel.Initialize();
             PasswordInput.Password = viewModel.Password;
             DataContext = viewModel;
         }

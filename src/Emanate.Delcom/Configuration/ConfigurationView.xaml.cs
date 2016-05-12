@@ -1,4 +1,6 @@
-﻿namespace Emanate.Delcom.Configuration
+﻿using System.Threading.Tasks;
+
+namespace Emanate.Delcom.Configuration
 {
     public partial class ConfigurationView
     {
@@ -16,11 +18,11 @@
                 ProfileSelector.SelectedIndex = 0;
         }
 
-        public override void SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
+        public override async Task SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomConfigurationViewModel(config);
-            viewModel.Initialize();
+            await viewModel.Initialize();
             DataContext = viewModel;
         }
     }

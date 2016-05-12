@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Emanate.Core.Configuration;
@@ -30,9 +31,9 @@ namespace Emanate.Service.Admin
         public event EventHandler CloseRequested;
 
 
-        public override void Initialize()
+        public override async Task<InitializationResult> Initialize()
         {
-            globalConfig = configurationCaretaker.Load();
+            globalConfig = await configurationCaretaker.Load();
 
             var outputDevices = new List<IOutputDevice>(globalConfig.OutputDevices);
 
@@ -46,7 +47,7 @@ namespace Emanate.Service.Admin
                 }
 
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
-                configurationEditor.SetTarget(moduleConfig);
+                await configurationEditor.SetTarget(moduleConfig);
 
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
@@ -54,7 +55,8 @@ namespace Emanate.Service.Admin
                 var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
                 Configurations.Add(moduleConfigInfo);
 
-                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
+                var unconfiguredDevices =
+                    moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
 
                 moduleConfig.OutputDeviceAdded += AddOutputDevice;
@@ -63,9 +65,13 @@ namespace Emanate.Service.Admin
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
-                var moduleConfiguration = globalConfig.OututConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
+                var moduleConfiguration =
+                    globalConfig.OututConfigurations.SingleOrDefault(
+                        c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
+            
+            return InitializationResult.Succeeded;
         }
 
         private void AddOutputDevice(object sender, OutputDeviceEventArgs e)

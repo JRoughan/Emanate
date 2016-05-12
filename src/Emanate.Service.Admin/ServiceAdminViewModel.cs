@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.ServiceProcess;
+using System.Threading.Tasks;
 using System.Windows;
 using Emanate.Extensibility;
 using Serilog;
@@ -22,19 +24,24 @@ namespace Emanate.Service.Admin
             statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
         }
 
-        public override void Initialize()
+        public override async Task<InitializationResult> Initialize()
         {
             try
             {
-                // TODO: Dynamically determine service name
-                service = new ServiceController("EmanateService");
-                UpdateStatus();
+                await Task.Run(() =>
+                {
+                    // TODO: Dynamically determine service name
+                    service = new ServiceController("EmanateService");
+                    UpdateStatus();
+                });
             }
             catch (Exception)
             {
                 Log.Warning("Emanate service missing");
                 IsInstalled = false;
+                return InitializationResult.Failed;
             }
+            return InitializationResult.Succeeded;
         }
 
         private bool isRunning;

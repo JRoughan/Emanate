@@ -9,11 +9,11 @@
             InitializeComponent();
         }
 
-        public override void SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
+        public override async void SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomDeviceManagerViewModel(config);
-            viewModel.Initialize();
+            await viewModel.Initialize();
             DataContext = viewModel;
         }
     }

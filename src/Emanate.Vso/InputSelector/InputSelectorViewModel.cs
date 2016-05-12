@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Serilog;
@@ -18,41 +19,45 @@ namespace Emanate.Vso.InputSelector
             this.connection = connection;
         }
 
-        public override void Initialize()
+        public override async Task<InitializationResult> Initialize()
         {
-            Log.Information("=> InputSelectorViewModel.Initialize");
-            dynamic projectRefs;
-            try
+            return await Task.Run(() =>
             {
-                projectRefs = connection.GetProjects()["value"];
-            }
-            catch (WebException ex)
-            {
-                Log.Error("Could not get projects: " + ex.Message);
-                HasBadConfiguration = true;
-                return;
-            }
-
-            foreach (dynamic projectRef in projectRefs)
-            {
-                var projectVm = new ProjectViewModel();
-                projectVm.Name = projectRef["name"];
-                projectVm.Id = new Guid(projectRef["id"].Value);
-
-                var buildDefinitions = connection.GetBuildDefinitions(projectVm.Id)["value"];
-
-                foreach (var buildDefinition in buildDefinitions)
+                Log.Information("=> InputSelectorViewModel.Initialize");
+                dynamic projectRefs;
+                try
                 {
-                    var configuration = new ProjectConfigurationViewModel(projectVm);
-                    configuration.Id = buildDefinition["id"];
-                    configuration.Name = buildDefinition["name"];
-                    configuration.Type = buildDefinition["type"];
-                    configuration.ProjectId = projectVm.Id;
-                    projectVm.Configurations.Add(configuration);
+                    projectRefs = connection.GetProjects()["value"];
+                }
+                catch (WebException ex)
+                {
+                    Log.Error("Could not get projects: " + ex.Message);
+                    HasBadConfiguration = true;
+                    return InitializationResult.Failed;
                 }
 
-                Projects.Add(projectVm);
-            }
+                foreach (dynamic projectRef in projectRefs)
+                {
+                    var projectVm = new ProjectViewModel();
+                    projectVm.Name = projectRef["name"];
+                    projectVm.Id = new Guid(projectRef["id"].Value);
+
+                    var buildDefinitions = connection.GetBuildDefinitions(projectVm.Id)["value"];
+
+                    foreach (var buildDefinition in buildDefinitions)
+                    {
+                        var configuration = new ProjectConfigurationViewModel(projectVm);
+                        configuration.Id = buildDefinition["id"];
+                        configuration.Name = buildDefinition["name"];
+                        configuration.Type = buildDefinition["type"];
+                        configuration.ProjectId = projectVm.Id;
+                        projectVm.Configurations.Add(configuration);
+                    }
+
+                    Projects.Add(projectVm);
+                }
+                return InitializationResult.Succeeded;
+            });
         }
 
         private bool hasBadConfiguration;

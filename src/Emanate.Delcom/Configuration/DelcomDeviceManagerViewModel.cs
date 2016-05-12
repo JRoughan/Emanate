@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
 
@@ -20,34 +21,39 @@ namespace Emanate.Delcom.Configuration
             RemoveDeviceCommand = new DelegateCommand<DelcomDeviceInfo>(RemoveDevice, CanRemoveDevice);
         }
 
-        public override void Initialize()
+        public override async Task<InitializationResult> Initialize()
         {
-            for (uint i = 1; ; i++)
+            return await Task.Run(() =>
             {
-                var delcom = new DelcomHid();
-                if (delcom.OpenNthDevice(i) != 0)
-                    break;
-
-                var physicalDevice = new PhysicalDevice(delcom);
-                var delcomDevice = new DelcomDevice {PhysicalDevice = physicalDevice};
-
-                var deviceId = physicalDevice.Name;
-                var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.Id == deviceId);
-
-                var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice, delcomConfiguration);
-
-                if (configuredDevice != null)
+                for (uint i = 1; ; i++)
                 {
-                    ConfiguredDevices.Add(delcomDeviceInfo);
-                }
-                else
-                {
-                    AvailableDevices.Add(delcomDeviceInfo);
-                }
-            }
+                    var delcom = new DelcomHid();
+                    if (delcom.OpenNthDevice(i) != 0)
+                        break;
 
-            foreach (var missingDevice in delcomConfiguration.OutputDevices.Where(od => ConfiguredDevices.All(cd => cd.Name != od.Name)))
-                ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
+                    var physicalDevice = new PhysicalDevice(delcom);
+                    var delcomDevice = new DelcomDevice { PhysicalDevice = physicalDevice };
+
+                    var deviceId = physicalDevice.Name;
+                    var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.Id == deviceId);
+
+                    var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice, delcomConfiguration);
+
+                    if (configuredDevice != null)
+                    {
+                        ConfiguredDevices.Add(delcomDeviceInfo);
+                    }
+                    else
+                    {
+                        AvailableDevices.Add(delcomDeviceInfo);
+                    }
+                }
+
+                foreach (var missingDevice in delcomConfiguration.OutputDevices.Where(od => ConfiguredDevices.All(cd => cd.Name != od.Name)))
+                    ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
+
+                return InitializationResult.Succeeded;
+            });
         }
 
         public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; }

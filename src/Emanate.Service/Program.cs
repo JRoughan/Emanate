@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Threading.Tasks;
+using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Service.Api;
@@ -18,10 +19,10 @@ namespace Emanate.Service
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
 
-            HostFactory.Run(c =>
+            HostFactory.Run(async c =>
             {
-                // Pass it to Topshelf
-                c.UseAutofacContainer(CreateContainer());
+                var container = await CreateContainer();
+                c.UseAutofacContainer(container);
 
                 c.UseSerilog(Log.Logger);
 
@@ -41,7 +42,7 @@ namespace Emanate.Service
             });
         }
 
-        private static IContainer CreateContainer()
+        private static async Task<IContainer> CreateContainer()
         {
             var bootStrapBuilder = new ContainerBuilder();
             var loader = new ModuleLoader();
@@ -53,7 +54,7 @@ namespace Emanate.Service
             var container = bootStrapBuilder.Build();
 
             var caretaker = container.Resolve<ConfigurationCaretaker>();
-            var config = caretaker.Load();
+            var config = await caretaker.Load();
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(config);

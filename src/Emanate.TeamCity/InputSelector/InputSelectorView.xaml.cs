@@ -15,9 +15,9 @@ namespace Emanate.TeamCity.InputSelector
             InitializeComponent();
         }
 
-        void ViewInitialized(object sender, EventArgs e)
+        async void ViewInitialized(object sender, EventArgs e)
         {
-            viewModel.Initialize();
+            await viewModel.Initialize();
         }
 
         public override void SelectInputs(IEnumerable<InputInfo> inputs)
