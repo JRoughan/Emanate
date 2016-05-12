@@ -34,6 +34,10 @@ namespace Emanate.Core.Configuration
             var builder = new ContainerBuilder();
             var globalConfig = new GlobalConfig();
 
+            globalConfig.InputModules.AddRange(componentContext.Resolve<IEnumerable<IInputModule>>());
+            globalConfig.OututModules.AddRange(componentContext.Resolve<IEnumerable<IOutputModule>>());
+
+
             Trace.TraceInformation("Loading config file from '{0}'", configFilePath);
             var configDoc = XDocument.Load(configFilePath);
             var rootNode = configDoc.Element("emanate");

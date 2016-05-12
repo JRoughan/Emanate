@@ -12,16 +12,16 @@ namespace Emanate.Core
         public void LoadAdminModules(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> ModuleLoader.LoadAdminModules");
-            Load(m => m.LoadAdminComponents(builder));
+            Load(builder, m => m.LoadAdminComponents(builder));
         }
 
         public void LoadServiceModules(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> ModuleLoader.LoadServiceModules");
-            Load(m => m.LoadServiceComponents(builder));
+            Load(builder, m => m.LoadServiceComponents(builder));
         }
 
-        private static void Load(Action<IEmanateModule> moduleAction)
+        private static void Load(ContainerBuilder builder, Action<IEmanateModule> moduleAction)
         {
             Trace.TraceInformation("=> ModuleLoader.Load");
             var dlls = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "Emanate*.dll");
@@ -36,7 +36,14 @@ namespace Emanate.Core
                 Trace.TraceInformation("Loading module '{0}'", moduleAttribute.ModuleType);
                 var module = Activator.CreateInstance(moduleAttribute.ModuleType) as IEmanateModule;
                 if (module != null)
+                {
+                    if (module is IInputModule)
+                        builder.RegisterInstance(module).As<IInputModule>();
+                    if (module is IOutputModule)
+                        builder.RegisterInstance(module).As<IOutputModule>();
+
                     moduleAction(module);
+                }
                 else
                     Trace.TraceError("Loading module '{0}'", moduleAttribute.ModuleType);
             }

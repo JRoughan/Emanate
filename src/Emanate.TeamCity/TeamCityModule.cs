@@ -9,20 +9,20 @@ using Emanate.TeamCity.InputSelector;
 
 namespace Emanate.TeamCity
 {
-    public class TeamCityModule : IEmanateModule
+    public class TeamCityModule : IInputModule
     {
-        private const string key = "teamcity";
+        public string Key { get; } = "teamcity";
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> TeamCityModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(key);
+            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
 
-            builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(key);
+            builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
             builder.RegisterType<TeamCityDeviceManagerViewModel>();
         }
 
@@ -30,14 +30,14 @@ namespace Emanate.TeamCity
         {
             Trace.TraceInformation("=> TeamCityModule.LoadServiceComponents");
             RegisterCommon(builder);
-            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(key);
+            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        private static void RegisterCommon(ContainerBuilder builder)
+        private void RegisterCommon(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> TeamCityModule.RegisterCommon");
             builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(key);
+            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }
     }
 }

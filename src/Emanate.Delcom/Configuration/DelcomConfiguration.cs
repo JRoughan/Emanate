@@ -50,7 +50,28 @@ namespace Emanate.Delcom.Configuration
         public IOutputProfile AddDefaultProfile(string newKey)
         {
             Trace.TraceInformation("=> DelcomConfiguration.AddDefaultProfile");
-            var defaultProfile = GenerateEmptyProfile(newKey);
+            var defaultProfile = (MonitoringProfile)GenerateEmptyProfile(newKey);
+            foreach (var profileState in defaultProfile.States)
+            {
+                switch (profileState.BuildState)
+                {
+                    case BuildState.Unknown:
+                    case BuildState.Error:
+                        profileState.Red = true;
+                        profileState.Flash = true;
+                        break;
+                    case BuildState.Failed:
+                        profileState.Red = true;
+                        break;
+                    case BuildState.Running:
+                        profileState.Yellow = true;
+                        profileState.Flash = true;
+                        break;
+                    case BuildState.Succeeded:
+                        profileState.Green = true;
+                        break;
+                }
+            }
             Profiles.Add(defaultProfile);
             return defaultProfile;
         }

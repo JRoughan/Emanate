@@ -8,18 +8,18 @@ using Emanate.Extensibility;
 
 namespace Emanate.Delcom
 {
-    public class DelcomModule : IEmanateModule
+    public class DelcomModule : IOutputModule
     {
-        private const string key = "delcom";
+        public string Key { get; } = "delcom";
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> DelcomModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
             builder.RegisterType<DelcomConfigurationViewModel>();
 
-            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Extensibility.DeviceManager>(key);
+            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Extensibility.DeviceManager>(Key);
             builder.RegisterType<DelcomDeviceManagerViewModel>();
         }
 
@@ -30,11 +30,18 @@ namespace Emanate.Delcom
             //builder.RegisterType<DelcomBuildOutput>().Keyed<IBuildOutput>(key);
         }
 
-        private static void RegisterCommon(ContainerBuilder builder)
+        public IOutputConfiguration GenerateDefaultConfig()
+        {
+            var config = new DelcomConfiguration();
+            config.AddDefaultProfile("Default");
+            return config;
+        }
+
+        private void RegisterCommon(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> DelcomModule.RegisterCommon");
-            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(key);
-            builder.RegisterType<DelcomConfiguration>().As<IOutputConfiguration>().Keyed<IOutputConfiguration>(key);
+            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(Key);
+            builder.RegisterType<DelcomConfiguration>().As<IOutputConfiguration>().Keyed<IOutputConfiguration>(Key);
         }
     }
 }

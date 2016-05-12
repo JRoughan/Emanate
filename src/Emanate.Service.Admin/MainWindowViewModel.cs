@@ -36,8 +36,15 @@ namespace Emanate.Service.Admin
 
             var outputDevices = new List<IOutputDevice>(globalConfig.OutputDevices);
 
-            foreach (var moduleConfig in globalConfig.OututConfigurations)
+            foreach (var outputModule in globalConfig.OututModules)
             {
+                var moduleConfig = globalConfig.OututConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
+                if (moduleConfig == null)
+                {
+                    moduleConfig = outputModule.GenerateDefaultConfig();
+                    globalConfig.OututConfigurations.Add(moduleConfig);
+                }
+
                 var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
                 configurationEditor.SetTarget(moduleConfig);
 

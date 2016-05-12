@@ -36,14 +36,14 @@ namespace Emanate.TeamCity
         public string GetProject(string projectId)
         {
             Trace.TraceInformation("=> TeamCityConnection.GetProject({0})", projectId);
-            var buildUri = CreateUri(string.Format("/httpAuth/app/rest/projects/id:{0}", projectId));
+            var buildUri = CreateUri($"/httpAuth/app/rest/projects/id:{projectId}");
             return Request(buildUri);
         }
 
         public string GetBuild(string buildId)
         {
             Trace.TraceInformation("=> TeamCityConnection.GetBuild({0})", buildId);
-            var resultUri = CreateUri(string.Format("httpAuth/app/rest/builds?locator=running:all,buildType:(id:{0}),count:1", buildId));
+            var resultUri = CreateUri($"httpAuth/app/rest/builds?locator=running:all,buildType:(id:{buildId}),count:1");
             return Request(resultUri);
         }
 

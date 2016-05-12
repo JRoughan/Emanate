@@ -9,20 +9,20 @@ using Emanate.Vso.InputSelector;
 
 namespace Emanate.Vso
 {
-    public class VsoModule : IEmanateModule
+    public class VsoModule : IInputModule
     {
-        private const string key = "vso";
+        public string Key { get; } = "vso";
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> VsoModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(key);
+            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(key);
+            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
 
-            builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(key);
+            builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
             builder.RegisterType<VsoDeviceManagerViewModel>();
         }
 
@@ -30,14 +30,14 @@ namespace Emanate.Vso
         {
             Trace.TraceInformation("=> VsoModule.LoadServiceComponents");
             RegisterCommon(builder);
-            builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(key);
+            builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        private static void RegisterCommon(ContainerBuilder builder)
+        private void RegisterCommon(ContainerBuilder builder)
         {
             Trace.TraceInformation("=> VsoModule.RegisterCommon");
             builder.RegisterType<VsoConnection>().As<IVsoConnection>();
-            builder.RegisterType<VsoConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(key);
+            builder.RegisterType<VsoConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }
     }
 }

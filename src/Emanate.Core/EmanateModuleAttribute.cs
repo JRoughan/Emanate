@@ -8,7 +8,7 @@ namespace Emanate.Core
         public EmanateModuleAttribute(Type moduleType)
         {
             if (!typeof(IEmanateModule).IsAssignableFrom(moduleType))
-                throw new ArgumentException("'{0}' does not implement IModule");
+                throw new ArgumentException("'{0}' does not implement IEmanateModule");
 
             ModuleType = moduleType;
         }
