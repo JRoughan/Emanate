@@ -60,9 +60,7 @@ namespace Emanate.Delcom.Configuration
         {
             Trace.TraceInformation("=> DelcomConfiguration.AddOutputDevice");
             outputDevices.Add(outputDevice);
-            var handler = OutputDeviceAdded;
-            if (handler != null)
-                handler(this, new OutputDeviceEventArgs(this, outputDevice));
+            OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
         public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
@@ -70,9 +68,7 @@ namespace Emanate.Delcom.Configuration
         {
             Trace.TraceInformation("=> DelcomConfiguration.RemoveOutputDevice");
             outputDevices.Remove(outputDevice);
-            var handler = OutputDeviceAdded;
-            if (handler != null)
-                handler(this, new OutputDeviceEventArgs(this, outputDevice));
+            OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
         public Memento CreateMemento()

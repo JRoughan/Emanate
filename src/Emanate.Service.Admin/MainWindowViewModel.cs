@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
 using Emanate.Core.Configuration;
@@ -95,17 +94,9 @@ namespace Emanate.Service.Admin
             ActiveDevices.Add(outputDeviceInfo);
         }
 
-        private readonly ObservableCollection<ConfigurationInfo> configurations = new ObservableCollection<ConfigurationInfo>();
-        public ObservableCollection<ConfigurationInfo> Configurations
-        {
-            get { return configurations; }
-        }
+        public ObservableCollection<ConfigurationInfo> Configurations { get; } = new ObservableCollection<ConfigurationInfo>();
 
-        private readonly ObservableCollection<OutputDeviceInfo> activeDevices = new ObservableCollection<OutputDeviceInfo>();
-        public ObservableCollection<OutputDeviceInfo> ActiveDevices
-        {
-            get { return activeDevices; }
-        }
+        public ObservableCollection<OutputDeviceInfo> ActiveDevices { get; } = new ObservableCollection<OutputDeviceInfo>();
 
         private readonly DelegateCommand saveCommand;
         public DelegateCommand SaveCommand { get { return saveCommand; } }
@@ -151,9 +142,7 @@ namespace Emanate.Service.Admin
 
         private void OnCloseRequested()
         {
-            var handler = CloseRequested;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }
