@@ -460,8 +460,7 @@
               <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed" />
               <Setter Property="Visibility" TargetName="IndeterminateRoot" Value="Visible" />
             </Trigger>
-            <Trigger Property="IsIndeterminate" Value="false">
-            </Trigger>
+            <Trigger Property="IsIndeterminate" Value="false" />
           </ControlTemplate.Triggers>
         </ControlTemplate>
       </Setter.Value>
@@ -901,8 +900,7 @@
                   <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
                 </MultiBinding>
               </Border.OpacityMask>
-              <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-              </Border>
+              <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
             </Border>
           </Grid>
         </ControlTemplate>

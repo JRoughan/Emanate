@@ -31,7 +31,7 @@
                     <ListView x:Name="DeviceSelector" DockPanel.Dock="Left" MinWidth="120" ItemsSource="{Binding ActiveDevices}" DisplayMemberPath="Name" Margin="10" />
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
-                            <Label Content="Output profile"></Label>
+                            <Label Content="Output profile" />
                             <ComboBox DockPanel.Dock="Right" 
                               ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.AvailableProfiles}" 
                               SelectedItem="{Binding ElementName=DeviceSelector, Path=SelectedItem.Profile}" 
@@ -67,3 +67,4 @@
         </TabControl>
     </DockPanel>
 </Window>
+

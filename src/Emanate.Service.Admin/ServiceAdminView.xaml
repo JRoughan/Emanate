@@ -15,15 +15,22 @@
     <Grid>
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding StartCommand}" Visibility="{Binding IsStopped, Converter={StaticResource BoolToVis}}" ToolTip="Start service">
-                <Image Source="Images\start.png"></Image>
+                <Image Source="Images\start.png" />
             </Button>
             <Button Command="{Binding StopCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVis}}" ToolTip="Stop service">
-                <Image Source="Images\stop.png"></Image>
+                <Image Source="Images\stop.png" />
             </Button>
             <Button Command="{Binding RestartCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BoolToVis}}" ToolTip="Restart Service">
-                <Image Source="Images\restart.png"></Image>
+                <Image Source="Images\restart.png" />
             </Button>
             <Image Source="Images\error.png" Visibility="{Binding IsInstalled, Converter={StaticResource InverseBoolToVis}}" ToolTip="Service is not installed" />
         </StackPanel>
     </Grid>
 </UserControl>
+
+
+
+
+
+
+

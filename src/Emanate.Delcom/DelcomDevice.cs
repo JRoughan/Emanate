@@ -35,7 +35,7 @@ namespace Emanate.Delcom
 
         public string Type { get { return key; } }
 
-        public List<InputInfo> Inputs { get; private set; }
+        public List<InputInfo> Inputs { get; }
 
         private MonitoringProfile profile;
         public IOutputProfile Profile

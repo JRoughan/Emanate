@@ -154,7 +154,7 @@ namespace Emanate.Service.Admin
             FinalStatus = finalStatus;
         }
 
-        public ServiceControllerStatus FinalStatus { get; private set; }
-        public Action<ServiceController> Method { get; private set; }
+        public ServiceControllerStatus FinalStatus { get; }
+        public Action<ServiceController> Method { get; }
     }
 }

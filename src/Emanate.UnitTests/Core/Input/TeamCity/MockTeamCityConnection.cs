@@ -21,8 +21,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 Id = "project" + id;
             }
 
-            public string Id { get; private set; }
-            public string Name { get; private set; }
+            public string Id { get; }
+            public string Name { get; }
 
             public override bool Equals(object obj)
             {
@@ -50,8 +50,8 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 Status = "SUCCESS";
             }
 
-            public string Id { get; private set; }
-            public string Name { get; private set; }
+            public string Id { get; }
+            public string Name { get; }
             public string Status { get; set; }
 
             public bool IsRunning { get; set; }

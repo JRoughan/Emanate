@@ -51,8 +51,8 @@ namespace Emanate.Delcom.Configuration
                 ConfiguredDevices.Add(new DelcomDeviceInfo(null, missingDevice, delcomConfiguration));
         }
 
-        public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; private set; }
-        public ObservableCollection<DelcomDeviceInfo> AvailableDevices { get; private set; }
+        public ObservableCollection<DelcomDeviceInfo> ConfiguredDevices { get; }
+        public ObservableCollection<DelcomDeviceInfo> AvailableDevices { get; }
 
         public ICommand AddDeviceCommand { get; private set; }
         private bool CanAddDevice(DelcomDeviceInfo deviceInfo)
