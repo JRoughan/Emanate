@@ -1,6 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,28 +11,31 @@ namespace Emanate.Service.Admin
     class ServiceAdminViewModel : ViewModel
     {
         private ServiceController service;
-        private readonly BackgroundWorker statusUpdateWorker = new BackgroundWorker();
 
         public ServiceAdminViewModel()
         {
-            startCommand = new DelegateCommand(StartService, CanStartService);
-            stopCommand = new DelegateCommand(StopService, CanStopService);
-            restartCommand = new DelegateCommand(RestartService, CanStopService);
-
-            statusUpdateWorker.DoWork += UpdateServiceStatus;
-            statusUpdateWorker.RunWorkerCompleted += DisplayNewStatus;
+            StartCommand = new DelegateCommand(StartService, CanStartService);
+            StopCommand = new DelegateCommand(StopService, CanStopService);
+            RestartCommand = new DelegateCommand(RestartService, CanStopService);
         }
 
         public override async Task<InitializationResult> Initialize()
         {
             try
             {
-                await Task.Run(() =>
+                service = await GetEmanateService();
+                if (service != null)
                 {
-                    // TODO: Dynamically determine service name
-                    service = new ServiceController("EmanateService");
-                    UpdateStatus();
-                });
+                    Log.Information("Found Emanate service");
+                    IsInstalled = true;
+                    UpdateStatus(service.Status);
+                }
+                else
+                {
+                    Log.Warning("Emanate service missing");
+                    IsInstalled = false;
+                    return InitializationResult.Failed;
+                }
             }
             catch (Exception)
             {
@@ -42,6 +44,16 @@ namespace Emanate.Service.Admin
                 return InitializationResult.Failed;
             }
             return InitializationResult.Succeeded;
+        }
+
+        private async Task<ServiceController> GetEmanateService()
+        {
+            return await Task.Run(() =>
+            {
+                var services = ServiceController.GetServices();
+                var installedService = services.FirstOrDefault(s => s.ServiceName == "EmanateService"); // TODO: Dynamically determine service name
+                return installedService;
+            });
         }
 
         private bool isRunning;
@@ -77,91 +89,71 @@ namespace Emanate.Service.Admin
             }
         }
 
-        private readonly DelegateCommand startCommand;
-        public DelegateCommand StartCommand { get { return startCommand; } }
+        public DelegateCommand StartCommand { get; }
 
         private bool CanStartService()
         {
-            return isInstalled && !statusUpdateWorker.IsBusy && service.Status == ServiceControllerStatus.Stopped;
+            return isInstalled && service.Status == ServiceControllerStatus.Stopped;
         }
 
-        private void StartService()
+        private async void StartService()
         {
             Log.Information("Starting Emanate service");
-            var args = new StatusUpdateArgs(s => s.Start(), ServiceControllerStatus.Running);
-            statusUpdateWorker.RunWorkerAsync(args);
+            await UpdateService(s => s.Start(), ServiceControllerStatus.Running);
         }
 
-        private readonly DelegateCommand stopCommand;
-        public DelegateCommand StopCommand { get { return stopCommand; } }
+        public DelegateCommand StopCommand { get; }
 
         private bool CanStopService()
         {
-            return isInstalled && !statusUpdateWorker.IsBusy && service.CanStop && service.Status == ServiceControllerStatus.Running;
+            return isInstalled && service.CanStop && service.Status == ServiceControllerStatus.Running;
         }
 
-        private void StopService()
+        private async void StopService()
         {
             Log.Information("Stopping Emanate service");
-            var args = new StatusUpdateArgs(s => s.Stop(), ServiceControllerStatus.Stopped);
-            statusUpdateWorker.RunWorkerAsync(args);
+            await UpdateService(s => s.Stop(), ServiceControllerStatus.Stopped);
         }
 
-        private readonly DelegateCommand restartCommand;
-        public DelegateCommand RestartCommand { get { return restartCommand; } }
+        public DelegateCommand RestartCommand { get; }
 
-        private void RestartService()
+        private async void RestartService()
         {
             Log.Information("Restarting Emanate service");
-            var args = new StatusUpdateArgs(s => { s.Stop(); s.WaitForStatus(ServiceControllerStatus.Stopped); s.Start(); }, ServiceControllerStatus.Running);
-            statusUpdateWorker.RunWorkerAsync(args);
+            await UpdateService(s => { s.Stop(); s.WaitForStatus(ServiceControllerStatus.Stopped); s.Start(); }, ServiceControllerStatus.Running);
         }
 
-        private void DisplayNewStatus(object sender, RunWorkerCompletedEventArgs e)
+        void UpdateStatus(ServiceControllerStatus status)
         {
-            if (e.Error != null)
+            IsRunning = status == ServiceControllerStatus.Running;
+            IsStopped = status == ServiceControllerStatus.Stopped;
+        }
+
+        private async Task UpdateService(Action<ServiceController> updateAction, ServiceControllerStatus expectedStatus, int timeoutSeconds = 30)
+        {
+            try
             {
-                IsInstalled = false;
-                var errorMessage = "Could not update service: " + e.Error.Message;
-                Log.Information(errorMessage);
-                MessageBox.Show(errorMessage);
-                return;
+                var status = await Task.Run(() =>
+                {
+                    Log.Information("Updating service");
+                    updateAction(service);
+                    Log.Information("Waiting for Emanate service status");
+                    service.WaitForStatus(expectedStatus, TimeSpan.FromSeconds(timeoutSeconds));
+                    var resultStatus = service.Status;
+                    if (resultStatus == expectedStatus)
+                        Log.Information("Emanate service status: " + resultStatus);
+                    else
+                        Log.Warning("Unexpected Emanate service status: " + resultStatus);
+
+                    return resultStatus;
+                });
+                UpdateStatus(status);
             }
-            UpdateStatus();
+            catch (Exception e)
+            {
+                Log.Warning(e, "Could not update service");
+                MessageBox.Show("Could not update service: " + e.Message);
+            }
         }
-
-        void UpdateStatus()
-        {
-            IsInstalled = true;
-            IsRunning = service.Status == ServiceControllerStatus.Running;
-            IsStopped = service.Status == ServiceControllerStatus.Stopped;
-        }
-
-        void UpdateServiceStatus(object sender, DoWorkEventArgs e)
-        {
-            var args = (StatusUpdateArgs)e.Argument;
-            args.Method(service);
-            Log.Information("Waiting for Emanate service status");
-            service.WaitForStatus(args.FinalStatus, TimeSpan.FromSeconds(30));
-            var resultStatus = service.Status;
-            if (resultStatus == args.FinalStatus)
-                Log.Information("Emanate service status: " + resultStatus);
-            else
-                Log.Warning("Unexpected Emanate service status: " + resultStatus);
-
-            e.Result = resultStatus;
-        }
-    }
-
-    class StatusUpdateArgs
-    {
-        public StatusUpdateArgs(Action<ServiceController> method, ServiceControllerStatus finalStatus)
-        {
-            Method = method;
-            FinalStatus = finalStatus;
-        }
-
-        public ServiceControllerStatus FinalStatus { get; }
-        public Action<ServiceController> Method { get; }
     }
 }
