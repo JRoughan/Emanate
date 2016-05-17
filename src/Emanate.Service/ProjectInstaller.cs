@@ -19,7 +19,7 @@ namespace Emanate.Service
         {
             try
             {
-                var serviceController = new ServiceController(Program.ServiceName);
+                var serviceController = new ServiceController(Settings.ServiceName);
                 serviceController.Start();
             }
             // Don't care if it can't be started automatically; The installation was still successful

@@ -11,18 +11,18 @@ namespace Emanate.Service
 {
     static class Program
     {
-        public static string ServiceName = "EmanateService";
-
         static void Main()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
 
-            HostFactory.Run(async c =>
+            var host = HostFactory.New(async c =>
             {
                 var container = await CreateContainer();
                 c.UseAutofacContainer(container);
+
+                //Settings.Initialize(c);
 
                 c.UseSerilog(Log.Logger);
 
@@ -35,11 +35,13 @@ namespace Emanate.Service
                     s.WhenStopped(es => es.Stop());
                 });
 
-                c.SetServiceName(ServiceName);
+                c.SetServiceName(Settings.ServiceName);
                 c.SetDisplayName("Emanate Monitoring Service");
                 c.RunAsLocalSystem();
                 c.StartAutomaticallyDelayed();
             });
+
+            host.Run();
         }
 
         private static async Task<IContainer> CreateContainer()

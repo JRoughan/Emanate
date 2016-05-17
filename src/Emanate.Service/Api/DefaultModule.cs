@@ -7,7 +7,7 @@ namespace Emanate.Service.Api
     {
         public DefaultModule()
         {
-            Get["/"] = _ => $"{Program.ServiceName} v{Assembly.GetExecutingAssembly().GetName().Version}";
+            Get["/"] = _ => $"{Settings.ServiceName} v{Assembly.GetExecutingAssembly().GetName().Version}";
         }
     }
 }

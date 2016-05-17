@@ -29,7 +29,7 @@ namespace Emanate.Service
                 Log.Information("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
             }
-            var apiUrl = new Uri("http://localhost:44444/api/");
+            var apiUrl = new Uri($"http://localhost:{Settings.Port}/api/");
             nancyHost = new NancyHost(apiUrl);
             nancyHost.Start();
             Log.Information($"Nancy now listening - {apiUrl}.");

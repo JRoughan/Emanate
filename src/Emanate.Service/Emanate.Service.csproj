@@ -115,6 +115,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
@@ -159,4 +160,3 @@
   </Target>
   -->
 </Project>
-
