@@ -21,13 +21,14 @@ namespace Emanate.Vso.InputSelector
 
         public override async Task<InitializationResult> Initialize()
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 Log.Information("=> InputSelectorViewModel.Initialize");
                 dynamic projectRefs;
                 try
                 {
-                    projectRefs = connection.GetProjects()["value"];
+                    var rawProjects = await connection.GetProjects();
+                    projectRefs = rawProjects["value"];
                 }
                 catch (WebException ex)
                 {
@@ -42,7 +43,8 @@ namespace Emanate.Vso.InputSelector
                     projectVm.Name = projectRef["name"];
                     projectVm.Id = new Guid(projectRef["id"].Value);
 
-                    var buildDefinitions = connection.GetBuildDefinitions(projectVm.Id)["value"];
+                    var rawBuilds = await connection.GetBuildDefinitions(projectVm.Id);
+                    var buildDefinitions = rawBuilds["value"];
 
                     foreach (var buildDefinition in buildDefinitions)
                     {

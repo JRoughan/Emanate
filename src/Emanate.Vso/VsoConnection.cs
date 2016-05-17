@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Emanate.Vso.Configuration;
 using Newtonsoft.Json;
 using Serilog;
@@ -19,13 +20,13 @@ namespace Emanate.Vso
             baseUri = new Uri(rawUrl);
         }
 
-        public dynamic GetProjects()
+        public async Task<dynamic> GetProjects()
         {
             Log.Information("=> VsoConnection.GetProjects");
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, "_apis/projects?api-version=2");
-                using (var response = client.GetAsync(requestUri).Result)
+                using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
                     var responseBody = response.Content.ReadAsStringAsync().Result;
@@ -34,31 +35,31 @@ namespace Emanate.Vso
             }
         }
 
-        public dynamic GetBuild(Guid projectId, int definition)
+        public async Task<dynamic> GetBuild(Guid projectId, int definition)
         {
             Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
-                using (var response = client.GetAsync(requestUri).Result)
+                using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
+                    var responseBody = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject(responseBody);
                 }
             }
         }
 
-        public dynamic GetBuildDefinitions(Guid projectId)
+        public async Task<dynamic> GetBuildDefinitions(Guid projectId)
         {
             Log.Information("=> VsoConnection.GetBuildDefinitions({0})", projectId);
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/definitions?api-version=2");
-                using (var response = client.GetAsync(requestUri).Result)
+                using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
+                    var responseBody = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject(responseBody);
                 }
             }

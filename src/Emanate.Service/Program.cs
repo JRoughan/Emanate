@@ -17,9 +17,10 @@ namespace Emanate.Service
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
 
-            var host = HostFactory.New(async c =>
+            var container = CreateContainer().Result;
+
+            var host = HostFactory.New(c =>
             {
-                var container = await CreateContainer();
                 c.UseAutofacContainer(container);
 
                 //Settings.Initialize(c);

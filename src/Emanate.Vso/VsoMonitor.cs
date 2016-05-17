@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -83,7 +84,7 @@ namespace Emanate.Vso
             }
         }
 
-        private void UpdateBuildStates()
+        private async void UpdateBuildStates()
         {
             Log.Information("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
@@ -92,7 +93,7 @@ namespace Emanate.Vso
                 if (!outputDevice.IsAvailable)
                     continue;
 
-                var buildInfos = GetNewBuildStates(output.Value.Keys);
+                var buildInfos = await GetNewBuildStates(output.Value.Keys);
                 var newStates = buildInfos.ToList();
 
                 var newState = BuildState.Unknown;
@@ -115,13 +116,14 @@ namespace Emanate.Vso
             }
         }
 
-        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
+        private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
             Log.Information("=> VsoMonitor.GetNewBuildStates");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var tfsBuild = vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId))["value"][0];
+                var rawBuild = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
+                var tfsBuild = rawBuild["value"][0];
                 if (tfsBuild != null)
                 {
                     var startTime = DateTime.Parse((string) tfsBuild["startTime"]);
