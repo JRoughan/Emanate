@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
@@ -13,10 +15,11 @@ namespace Emanate.Vso.Configuration
         {
             this.vsoConfiguration = vsoConfiguration;
 
-            Devices = new ObservableCollection<VsoDeviceInfo>(vsoConfiguration.Devices);
+            var deviceVms = vsoConfiguration.Devices.Select(d => new VsoDeviceViewModel(d));
+            Devices = new ObservableCollection<VsoDeviceViewModel>(deviceVms);
 
             AddDeviceCommand = new DelegateCommand(AddDevice);
-            RemoveDeviceCommand = new DelegateCommand<VsoDeviceInfo>(RemoveDevice, CanRemoveDevice);
+            RemoveDeviceCommand = new DelegateCommand<VsoDeviceViewModel>(RemoveDevice, CanRemoveDevice);
         }
 
         public override async Task<InitializationResult> Initialize()
@@ -24,36 +27,30 @@ namespace Emanate.Vso.Configuration
             return await Task.Run(() => InitializationResult.Succeeded);
         }
 
-        public ObservableCollection<VsoDeviceInfo> Devices { get; }
+        public ObservableCollection<VsoDeviceViewModel> Devices { get; }
 
         public ICommand AddDeviceCommand { get; private set; }
 
         private void AddDevice()
         {
-            var deviceInfo = new VsoDeviceInfo
+            var deviceInfo = new VsoDevice
             {
+                Id = Guid.NewGuid(),
                 Name = "New"
             };
-            //deviceInfo.Id = device.PhysicalDevice.Name;
-            //deviceInfo.Name = deviceInfo.Name;
-            //device.Profile = vsoConfiguration.Profiles.FirstOrDefault() ?? vsoConfiguration.AddDefaultProfile("Default");
-            //deviceInfo.Profile = deviceInfo.Device.Profile.Key; // TODO: Binding should deal with this
             vsoConfiguration.AddDevice(deviceInfo);
-            Devices.Add(deviceInfo);
+            Devices.Add(new VsoDeviceViewModel(deviceInfo));
         }
 
         public ICommand RemoveDeviceCommand { get; private set; }
-        private bool CanRemoveDevice(VsoDeviceInfo deviceInfo)
+        private bool CanRemoveDevice(VsoDeviceViewModel deviceInfo)
         {
             return deviceInfo != null;
         }
-        private void RemoveDevice(VsoDeviceInfo deviceInfo)
+        private void RemoveDevice(VsoDeviceViewModel deviceVm)
         {
-            //deviceInfo.Device.Profile = null;
-            //deviceInfo.Profile = null; // TODO: Binding should deal with this
-
-            vsoConfiguration.RemoveDevice(deviceInfo);
-            Devices.Remove(deviceInfo);
+            vsoConfiguration.RemoveDevice(deviceVm.Device);
+            Devices.Remove(deviceVm);
         }
     }
 }

@@ -94,7 +94,7 @@
     </Compile>
     <Compile Include="InputSelector\InputSelectorViewModel.cs" />
     <Compile Include="InputSelector\ProjectViewModel.cs" />
-    <Compile Include="VsoDeviceInfo.cs" />
+    <Compile Include="VsoDeviceViewModel.cs" />
     <Compile Include="VsoModule.cs" />
     <Compile Include="IVsoConnection.cs" />
     <Compile Include="VsoConnection.cs" />

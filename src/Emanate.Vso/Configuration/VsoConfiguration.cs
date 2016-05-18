@@ -49,8 +49,9 @@ namespace Emanate.Vso.Configuration
             var devicesElement = element.Element("devices");
             foreach (var deviceElement in devicesElement.Elements("device"))
             {
-                var device = new VsoDeviceInfo
+                var device = new VsoDevice
                 {
+                    Id = Guid.Parse(deviceElement.Attribute("id").Value),
                     Name = deviceElement.Attribute("name").Value,
                     Uri = deviceElement.Attribute("uri").Value,
                     PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
@@ -73,14 +74,14 @@ namespace Emanate.Vso.Configuration
             return outSb.ToString();
         }
 
-        public void AddDevice(VsoDeviceInfo deviceInfo)
+        public void AddDevice(VsoDevice deviceInfo)
         {
             Devices.Add(deviceInfo);
         }
 
-        public List<VsoDeviceInfo> Devices { get; } = new List<VsoDeviceInfo>();
+        public List<VsoDevice> Devices { get; } = new List<VsoDevice>();
 
-        public void RemoveDevice(VsoDeviceInfo deviceInfo)
+        public void RemoveDevice(VsoDevice deviceInfo)
         {
             Devices.Remove(deviceInfo);
         }

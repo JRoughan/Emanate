@@ -23,7 +23,7 @@ namespace Emanate.Vso
         private static readonly string InProgressStatus = "inProgress";
         private static readonly string SucceededStatus = "succeeded";
         
-        public VsoMonitor(IVsoConnection vsoConnection, VsoDeviceInfo device)
+        public VsoMonitor(IVsoConnection vsoConnection, VsoDeviceViewModel device)
         {
             this.vsoConnection = vsoConnection;
 
