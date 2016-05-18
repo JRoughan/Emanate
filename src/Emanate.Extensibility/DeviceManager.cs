@@ -5,6 +5,6 @@ namespace Emanate.Extensibility
 {
     public class DeviceManager : UserControl
     {
-        public virtual void SetTarget(IOutputConfiguration moduleConfiguration) { }
+        public virtual void SetTarget(IConfiguration moduleConfiguration) { }
     }
 }

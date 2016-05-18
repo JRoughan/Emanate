@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Emanate.Core.Configuration;
 
 namespace Emanate.Delcom.Configuration
 {
@@ -18,7 +19,7 @@ namespace Emanate.Delcom.Configuration
                 ProfileSelector.SelectedIndex = 0;
         }
 
-        public override async Task SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
+        public override async Task SetTarget(IConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomConfigurationViewModel(config);

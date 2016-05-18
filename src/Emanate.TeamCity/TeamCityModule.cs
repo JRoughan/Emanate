@@ -33,6 +33,11 @@ namespace Emanate.TeamCity
             builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
+        public IInputConfiguration GenerateDefaultConfig()
+        {
+            return new TeamCityConfiguration();
+        }
+
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> TeamCityModule.RegisterCommon");

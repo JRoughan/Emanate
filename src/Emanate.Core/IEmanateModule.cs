@@ -17,6 +17,6 @@ namespace Emanate.Core
 
     public interface IInputModule : IEmanateModule
     {
-
+        IInputConfiguration GenerateDefaultConfig();
     }
 }

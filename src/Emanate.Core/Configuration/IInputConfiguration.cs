@@ -1,6 +1,6 @@
 ﻿namespace Emanate.Core.Configuration
 {
-    public interface IInputConfiguration : IOriginator
+    public interface IInputConfiguration : IConfiguration, IOriginator
     {
         string Key { get; }
         string Name { get; }

@@ -15,7 +15,7 @@ namespace Emanate.Vso.Configuration
             InitializeComponent();
         }
 
-        public override async Task SetTarget(IOutputConfiguration moduleConfiguration)
+        public override async Task SetTarget(IConfiguration moduleConfiguration)
         {
             viewModel = new VsoConfigurationViewModel(moduleConfiguration as VsoConfiguration);
             await viewModel.Initialize();

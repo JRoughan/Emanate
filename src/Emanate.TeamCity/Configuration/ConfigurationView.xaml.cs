@@ -15,7 +15,7 @@ namespace Emanate.TeamCity.Configuration
             InitializeComponent();
         }
 
-        public override async Task SetTarget(IOutputConfiguration moduleConfiguration)
+        public override async Task SetTarget(IConfiguration moduleConfiguration)
         {
             viewModel = new TeamCityConfigurationViewModel(moduleConfiguration as TeamCityConfiguration);
             await viewModel.Initialize();

@@ -63,6 +63,25 @@ namespace Emanate.Service.Admin
                 moduleConfig.OutputDeviceRemoved += RemoveOutputDevice;
             }
 
+            foreach (var outputModule in globalConfig.InputModules)
+            {
+                var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
+                if (moduleConfig == null)
+                {
+                    moduleConfig = outputModule.GenerateDefaultConfig();
+                    globalConfig.InputConfigurations.Add(moduleConfig);
+                }
+
+                var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
+                await configurationEditor.SetTarget(moduleConfig);
+
+                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
+                deviceManager.SetTarget(moduleConfig);
+
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
+                Configurations.Add(moduleConfigInfo);
+            }
+
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
                 var moduleConfiguration =

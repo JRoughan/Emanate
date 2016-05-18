@@ -1,4 +1,6 @@
-﻿namespace Emanate.Delcom.Configuration
+﻿using Emanate.Core.Configuration;
+
+namespace Emanate.Delcom.Configuration
 {
     public partial class DelcomDeviceManagerView
     {
@@ -9,7 +11,7 @@
             InitializeComponent();
         }
 
-        public override async void SetTarget(Core.Configuration.IOutputConfiguration moduleConfiguration)
+        public override async void SetTarget(IConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
             viewModel = new DelcomDeviceManagerViewModel(config);

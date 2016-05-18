@@ -6,6 +6,6 @@ namespace Emanate.Extensibility
 {
     public class ConfigurationEditor : UserControl
     {
-        public virtual Task SetTarget(IOutputConfiguration moduleConfiguration) { return Task.CompletedTask; }
+        public virtual Task SetTarget(IConfiguration moduleConfiguration) { return Task.CompletedTask; }
     }
 }
