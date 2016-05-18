@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Emanate.Vso.Configuration;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -10,13 +9,13 @@ namespace Emanate.Vso
 {
     public class VsoConnection : IVsoConnection
     {
-        private readonly VsoConfiguration configuration;
+        private readonly VsoDeviceInfo device;
         private readonly Uri baseUri;
 
-        public VsoConnection(VsoConfiguration configuration)
+        public VsoConnection(VsoDeviceInfo device)
         {
-            this.configuration = configuration;
-            var rawUrl = $"https://{configuration.Uri}.visualstudio.com/DefaultCollection/";
+            this.device = device;
+            var rawUrl = $"https://{this.device.Uri}.visualstudio.com/DefaultCollection/";
             baseUri = new Uri(rawUrl);
         }
 
@@ -69,7 +68,7 @@ namespace Emanate.Vso
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var authText = System.Text.Encoding.ASCII.GetBytes($"{configuration.UserName}:{configuration.Password}");
+            var authText = System.Text.Encoding.ASCII.GetBytes($"{device.UserName}:{device.Password}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authText));
             return client;
         }

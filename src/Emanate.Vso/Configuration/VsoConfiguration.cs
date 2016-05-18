@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
@@ -14,21 +15,25 @@ namespace Emanate.Vso.Configuration
         string IInputConfiguration.Key { get { return key; } }
         string IInputConfiguration.Name { get { return name; } }
 
-        public string Uri { get; set; }
-        public int PollingInterval { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-
         public Memento CreateMemento()
         {
             Log.Information("=> VsoConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("key", key));
             moduleElement.Add(new XAttribute("type", "input"));
-            moduleElement.Add(new XElement("uri", Uri));
-            moduleElement.Add(new XElement("polling-interval", PollingInterval));
-            moduleElement.Add(new XElement("username", UserName));
-            moduleElement.Add(new XElement("password", EncryptDecrypt(Password)));
+            var devicesElement = new XElement("devices");
+            foreach (var device in Devices)
+            {
+                var deviceElement = new XElement("device");
+                deviceElement.Add(new XAttribute("id", device.Id));
+                deviceElement.Add(new XAttribute("name", device.Name));
+                deviceElement.Add(new XAttribute("uri", device.Uri));
+                deviceElement.Add(new XAttribute("polling-interval", device.PollingInterval));
+                deviceElement.Add(new XAttribute("username", device.UserName));
+                deviceElement.Add(new XAttribute("password", EncryptDecrypt(device.Password)));
+                moduleElement.Add(deviceElement);
+            }
+            moduleElement.Add(devicesElement);
 
             return new Memento(moduleElement);
         }
@@ -41,10 +46,19 @@ namespace Emanate.Vso.Configuration
 
             // TODO: Error handling
             var element = memento.Element;
-            Uri = element.Element("uri").Value;
-            PollingInterval = int.Parse(element.Element("polling-interval").Value);
-            UserName = element.Element("username").Value;
-            Password = EncryptDecrypt(element.Element("password").Value);
+            var devicesElement = element.Element("devices");
+            foreach (var deviceElement in devicesElement.Elements("device"))
+            {
+                var device = new VsoDeviceInfo
+                {
+                    Name = deviceElement.Attribute("name").Value,
+                    Uri = deviceElement.Attribute("uri").Value,
+                    PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
+                    UserName = deviceElement.Attribute("username").Value,
+                    Password = EncryptDecrypt(deviceElement.Attribute("password").Value),
+                };
+                Devices.Add(device);
+            }
         }
 
         // TODO: Extrmemely simplistic encrytion used here - will keep honest people honest but not much else
@@ -57,6 +71,18 @@ namespace Emanate.Vso.Configuration
                 outSb.Append(xored);
             }
             return outSb.ToString();
+        }
+
+        public void AddDevice(VsoDeviceInfo deviceInfo)
+        {
+            Devices.Add(deviceInfo);
+        }
+
+        public List<VsoDeviceInfo> Devices { get; } = new List<VsoDeviceInfo>();
+
+        public void RemoveDevice(VsoDeviceInfo deviceInfo)
+        {
+            Devices.Remove(deviceInfo);
         }
     }
 }

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
-using Emanate.Vso.Configuration;
 using Serilog;
 using Timer = System.Timers.Timer;
 
@@ -24,11 +23,11 @@ namespace Emanate.Vso
         private static readonly string InProgressStatus = "inProgress";
         private static readonly string SucceededStatus = "succeeded";
         
-        public VsoMonitor(IVsoConnection vsoConnection, VsoConfiguration configuration)
+        public VsoMonitor(IVsoConnection vsoConnection, VsoDeviceInfo device)
         {
             this.vsoConnection = vsoConnection;
 
-            var pollingInterval = configuration.PollingInterval * 1000;
+            var pollingInterval = device.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
 

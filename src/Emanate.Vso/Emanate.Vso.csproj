@@ -76,6 +76,9 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\InputConfigurationControl.xaml.cs">
+      <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,7 @@
     </Compile>
     <Compile Include="InputSelector\InputSelectorViewModel.cs" />
     <Compile Include="InputSelector\ProjectViewModel.cs" />
+    <Compile Include="VsoDeviceInfo.cs" />
     <Compile Include="VsoModule.cs" />
     <Compile Include="IVsoConnection.cs" />
     <Compile Include="VsoConnection.cs" />
@@ -133,6 +137,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Configuration\InputConfigurationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Configuration\ConfigurationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -150,6 +158,9 @@
     <Resource Include="Images\failure.png" />
     <Resource Include="Images\success.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetDir)*.dll $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)\
@@ -165,4 +176,3 @@ xcopy /y $(TargetDir)*.dll $(SolutionDir)\Emanate.Service.Admin\bin\$(Configurat
   </Target>
   -->
 </Project>
-

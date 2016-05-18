@@ -63,12 +63,12 @@ namespace Emanate.Service.Admin
                 moduleConfig.OutputDeviceRemoved += RemoveOutputDevice;
             }
 
-            foreach (var outputModule in globalConfig.InputModules)
+            foreach (var inputModule in globalConfig.InputModules)
             {
-                var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
+                var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == inputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = outputModule.GenerateDefaultConfig();
+                    moduleConfig = inputModule.GenerateDefaultConfig();
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 
