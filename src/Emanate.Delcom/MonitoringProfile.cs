@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Emanate.Core.Output;
 
 namespace Emanate.Delcom
 {
     public class MonitoringProfile : IOutputProfile
     {
-        public string Key { get; set; }
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
 
         public List<ProfileState> States { get; } = new List<ProfileState>();
 

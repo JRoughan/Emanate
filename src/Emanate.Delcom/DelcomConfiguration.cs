@@ -30,12 +30,13 @@ namespace Emanate.Delcom
             get { return outputDevices; }
         }
 
-        public IOutputProfile GenerateEmptyProfile(string newKey = "")
+        public IOutputProfile GenerateEmptyProfile(string newName = "")
         {
             Log.Information("=> DelcomConfiguration.GenerateEmptyProfile");
             var defaultProfile = new MonitoringProfile
             {
-                Key = newKey,
+                Id = Guid.NewGuid(),
+                Name = newName,
                 HasRestrictedHours = false,
                 StartTime = 0,
                 EndTime = 24
@@ -105,7 +106,8 @@ namespace Emanate.Delcom
             foreach (var profile in Profiles.OfType<MonitoringProfile>())
             {
                 var profileElement = new XElement("profile");
-                profileElement.Add(new XAttribute("key", profile.Key));
+                profileElement.Add(new XAttribute("id", profile.Id));
+                profileElement.Add(new XAttribute("name", profile.Name));
                 profileElement.Add(new XAttribute("decay", profile.Decay));
                 profileElement.Add(new XAttribute("restrictedhours", profile.HasRestrictedHours));
                 profileElement.Add(new XAttribute("starttime", profile.StartTime));
@@ -133,7 +135,7 @@ namespace Emanate.Delcom
                 var deviceElement = new XElement("device");
                 deviceElement.Add(new XAttribute("name", device.Name));
                 deviceElement.Add(new XAttribute("id", device.Id));
-                deviceElement.Add(new XAttribute("profile", device.Profile.Key));
+                deviceElement.Add(new XAttribute("profile", device.Profile.Name));
 
                 devicesElement.Add(deviceElement);
             }
@@ -155,7 +157,8 @@ namespace Emanate.Delcom
                 {
                     var profile = new MonitoringProfile
                     {
-                        Key = profileElement.GetAttributeString("key"),
+                        Id = Guid.Parse(profileElement.GetAttributeString("id")),
+                        Name = profileElement.GetAttributeString("name"),
                         Decay = profileElement.GetAttributeUint("decay"),
                         HasRestrictedHours = profileElement.GetAttributeBoolean("restrictedhours"),
                         StartTime = profileElement.GetAttributeUint("starttime"),
@@ -198,7 +201,7 @@ namespace Emanate.Delcom
                     {
                         Id = deviceElement.GetAttributeString("id"),
                         Name = deviceElement.GetAttributeString("name"),
-                        Profile = Profiles.Single(p => p.Key == profileKey)
+                        Profile = Profiles.Single(p => p.Name == profileKey)
                     };
 
                     AddOutputDevice(device);

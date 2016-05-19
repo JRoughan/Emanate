@@ -16,8 +16,8 @@ namespace Emanate.Delcom.Admin.Profiles
 
         public string Key
         {
-            get { return monitoringProfile.Key; }
-            set { monitoringProfile.Key = value; OnPropertyChanged(); }
+            get { return monitoringProfile.Name; }
+            set { monitoringProfile.Name = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<ProfileStateViewModel> States { get; } = new ObservableCollection<ProfileStateViewModel>();

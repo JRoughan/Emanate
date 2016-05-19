@@ -2,6 +2,6 @@
 {
     public interface IOutputProfile
     {
-        string Key { get; }
+        string Name { get; }
     }
 }
