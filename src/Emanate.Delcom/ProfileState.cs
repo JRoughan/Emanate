@@ -1,50 +1,19 @@
 ﻿using Emanate.Core.Input;
-using Emanate.Extensibility;
 
 namespace Emanate.Delcom
 {
-    public class ProfileState : ViewModel
+    public class ProfileState
     {
-        private BuildState buildState;
-        public BuildState BuildState
-        {
-            get { return buildState; }
-            set { buildState = value; OnPropertyChanged(); }
-        }
+        public BuildState BuildState { get; set; }
 
-        private bool green;
-        public bool Green
-        {
-            get { return green; }
-            set { green = value; OnPropertyChanged(); }
-        }
+        public bool Green { get; set; }
 
-        private bool yellow;
-        public bool Yellow
-        {
-            get { return yellow; }
-            set { yellow = value; OnPropertyChanged(); }
-        }
+        public bool Yellow { get; set; }
 
-        private bool red;
-        public bool Red
-        {
-            get { return red; }
-            set { red = value; OnPropertyChanged(); }
-        }
+        public bool Red { get; set; }
 
-        private bool flash;
-        public bool Flash
-        {
-            get { return flash; }
-            set { flash = value; OnPropertyChanged(); }
-        }
+        public bool Flash { get; set; }
 
-        private bool buzzer;
-        public bool Buzzer
-        {
-            get { return buzzer; }
-            set { buzzer = value; OnPropertyChanged(); }
-        }
+        public bool Buzzer { get; set; }
     }
 }

@@ -110,10 +110,6 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Extensibility\Emanate.Extensibility.csproj">
-      <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
-      <Name>Emanate.Extensibility</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

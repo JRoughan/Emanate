@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Emanate.Core.Output;
 using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Configuration
@@ -13,7 +13,10 @@ namespace Emanate.Delcom.Admin.Configuration
         public DelcomConfigurationViewModel(DelcomConfiguration delcomConfiguration)
         {
             this.delcomConfiguration = delcomConfiguration;
-            IsEditable = delcomConfiguration != null;
+            foreach (var profile in delcomConfiguration.Profiles.OfType<MonitoringProfile>())
+                Profiles.Add(new MonitoringProfileViewModel(profile));
+
+            IsEditable = true;
 
             AddProfileCommand = new DelegateCommand(AddProfile);
         }
@@ -35,9 +38,6 @@ namespace Emanate.Delcom.Admin.Configuration
             set { isEditable = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<IOutputProfile> Profiles
-        {
-            get { return delcomConfiguration.Profiles; }
-        }
+        public ObservableCollection<MonitoringProfileViewModel> Profiles { get; } = new ObservableCollection<MonitoringProfileViewModel>();
     }
 }

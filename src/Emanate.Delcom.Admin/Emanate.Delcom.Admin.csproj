@@ -73,6 +73,8 @@
       <DependentUpon>ProfileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DelcomAdminModule.cs" />
+    <Compile Include="MonitoringProfileViewModel.cs" />
+    <Compile Include="ProfileStateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,51 +1,20 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using Emanate.Core.Output;
-using Emanate.Extensibility;
 
 namespace Emanate.Delcom
 {
-    public class MonitoringProfile : ViewModel, IOutputProfile
+    public class MonitoringProfile : IOutputProfile
     {
-        private string key;
-        public string Key
-        {
-            get { return key; }
-            set { key = value; OnPropertyChanged(); }
-        }
+        public string Key { get; set; }
 
-        private ObservableCollection<ProfileState> states = new ObservableCollection<ProfileState>();
-        public ObservableCollection<ProfileState> States
-        {
-            get { return states; }
-            set { states = value; OnPropertyChanged(); }
-        }
+        public List<ProfileState> States { get; } = new List<ProfileState>();
 
-        private uint decay;
-        public uint Decay
-        {
-            get { return decay; }
-            set { decay = value; OnPropertyChanged(); }
-        }
+        public uint Decay { get; set; }
 
-        private bool hasRestrictedHours;
-        public bool HasRestrictedHours
-        {
-            get { return hasRestrictedHours; }
-            set { hasRestrictedHours = value; OnPropertyChanged(); }
-        }
+        public bool HasRestrictedHours { get; set; }
 
-        private uint startTime;
-        public uint StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; OnPropertyChanged(); }
-        }
+        public uint StartTime { get; set; }
 
-        private uint endTime;
-        public uint EndTime
-        {
-            get { return endTime; }
-            set { endTime = value; OnPropertyChanged(); }
-        }
+        public uint EndTime { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Emanate.Delcom
 
             return defaultProfile;
         }
-
+        
         public IOutputProfile AddDefaultProfile(string newKey)
         {
             Log.Information("=> DelcomConfiguration.AddDefaultProfile");

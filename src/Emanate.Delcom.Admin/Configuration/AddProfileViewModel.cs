@@ -1,45 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Emanate.Core.Output;
 using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Configuration
 {
     public class AddProfileViewModel : ViewModel
     {
-        private readonly ObservableCollection<IOutputProfile> existingProfiles;
+        private readonly ObservableCollection<MonitoringProfileViewModel> existingProfiles;
 
-        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<IOutputProfile> existingProfiles)
+        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<MonitoringProfileViewModel> existingProfiles)
         {
             this.existingProfiles = existingProfiles;
 
-            NewProfile = (MonitoringProfile)delcomConfiguration.GenerateEmptyProfile("");
+            var emptyProfile = (MonitoringProfile)delcomConfiguration.GenerateEmptyProfile();
+            NewProfile = new MonitoringProfileViewModel(emptyProfile);
                 
-            CloneProfileCommand = new DelegateCommand<MonitoringProfile>(CloneProfile, p => p != null);
-            SaveProfileCommand = new DelegateCommand<MonitoringProfile>(SaveProfile, CanSaveProfile);
+            CloneProfileCommand = new DelegateCommand<MonitoringProfileViewModel>(CloneProfile, p => p != null);
+            SaveProfileCommand = new DelegateCommand<MonitoringProfileViewModel>(SaveProfile, CanSaveProfile);
         }
 
-        private MonitoringProfile newProfile;
-        public MonitoringProfile NewProfile
+        private MonitoringProfileViewModel newProfile;
+        public MonitoringProfileViewModel NewProfile
         {
             get { return newProfile; }
             set { newProfile = value; OnPropertyChanged(); }
         }
 
-        public IEnumerable<IOutputProfile> ExistingProfiles
+        public IEnumerable<MonitoringProfileViewModel> ExistingProfiles
         {
             get { return existingProfiles; }
         }
 
         public ICommand CloneProfileCommand { get; private set; }
 
-        private void CloneProfile(MonitoringProfile profileToClone)
+        private void CloneProfile(MonitoringProfileViewModel profileToClone)
         {
             NewProfile.States.Clear();
             foreach (var state in profileToClone.States)
             {
-                var newState = new ProfileState
+                var newState = new ProfileStateViewModel(new ProfileState())
                     {
                         BuildState = state.BuildState,
                         Green = state.Green,
@@ -53,14 +53,14 @@ namespace Emanate.Delcom.Admin.Configuration
 
         public ICommand SaveProfileCommand { get; private set; }
 
-        private bool CanSaveProfile(MonitoringProfile profile)
+        private bool CanSaveProfile(MonitoringProfileViewModel profile)
         {
             return profile != null && !string.IsNullOrWhiteSpace(profile.Key);
         }
 
-        private void SaveProfile(MonitoringProfile profile)
+        private void SaveProfile(MonitoringProfileViewModel profileViewModel)
         {
-            existingProfiles.Add(profile);
+            existingProfiles.Add(profileViewModel);
         }
     }
 }

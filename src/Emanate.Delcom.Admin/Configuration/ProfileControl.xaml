@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Emanate.Extensibility.Controls;assembly=Emanate.Extensibility"
-             xmlns:delcom="clr-namespace:Emanate.Delcom;assembly=Emanate.Delcom"
-             d:DataContext="{d:DesignInstance delcom:MonitoringProfile }"
+             xmlns:admin="clr-namespace:Emanate.Delcom.Admin"
+             d:DataContext="{d:DesignInstance admin:MonitoringProfileViewModel }"
              mc:Ignorable="d">
     <DockPanel>
         <GroupBox DockPanel.Dock="Bottom">
