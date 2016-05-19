@@ -61,7 +61,7 @@ namespace Emanate.Service
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(config);
-            foreach (var moduleConfiguration in config.OututConfigurations)
+            foreach (var moduleConfiguration in config.OutputConfigurations)
             {
                 Log.Information("Registering module configuration '{0}'", moduleConfiguration.Name);
                 builder.RegisterInstance(moduleConfiguration);

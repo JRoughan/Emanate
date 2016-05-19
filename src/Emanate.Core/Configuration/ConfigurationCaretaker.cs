@@ -37,7 +37,7 @@ namespace Emanate.Core.Configuration
                 var globalConfig = new GlobalConfig();
 
                 globalConfig.InputModules.AddRange(componentContext.Resolve<IEnumerable<IInputModule>>());
-                globalConfig.OututModules.AddRange(componentContext.Resolve<IEnumerable<IOutputModule>>());
+                globalConfig.OutputModules.AddRange(componentContext.Resolve<IEnumerable<IOutputModule>>());
 
 
                 Log.Information("Loading config file from '{0}'", configFilePath);
@@ -57,7 +57,7 @@ namespace Emanate.Core.Configuration
                             {
                                 case "output":
                                     moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(moduleMemento.Key);
-                                    globalConfig.OututConfigurations.Add((IOutputConfiguration) moduleConfig);
+                                    globalConfig.OutputConfigurations.Add((IOutputConfiguration) moduleConfig);
                                     break;
                                 case "input":
                                     moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(moduleMemento.Key);
@@ -82,7 +82,7 @@ namespace Emanate.Core.Configuration
                             var outputType = outputElement.GetAttributeString("type");
                             var deviceName = outputElement.GetAttributeString("device");
 
-                            var config = globalConfig.OututConfigurations.Single(c => c.Key == outputType);
+                            var config = globalConfig.OutputConfigurations.Single(c => c.Key == outputType);
                             var device = config.OutputDevices.Single(p => p.Name == deviceName);
 
                             var inputsElement = outputElement.Element("inputs");
@@ -128,7 +128,7 @@ namespace Emanate.Core.Configuration
             foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IOutputConfiguration>>())
             {
                 builder.RegisterInstance(moduleConfiguration).AsSelf();
-                config.OututConfigurations.Add(moduleConfiguration);
+                config.OutputConfigurations.Add(moduleConfiguration);
             }
             foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IInputConfiguration>>())
             {
@@ -151,7 +151,7 @@ namespace Emanate.Core.Configuration
 
             // Modules
             var modulesElement = new XElement("modules");
-            foreach (var configuration in globalConfig.OututConfigurations)
+            foreach (var configuration in globalConfig.OutputConfigurations)
             {
                 var moduleMemento = configuration.CreateMemento();
                 modulesElement.Add(moduleMemento.Element);

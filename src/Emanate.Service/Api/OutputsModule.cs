@@ -10,7 +10,7 @@ namespace Emanate.Service.Api
         {
             Get["/outputs"] = _ =>
             {
-                return config.OututConfigurations.Select(o => new {o.Key, o.Name});
+                return config.OutputConfigurations.Select(o => new {o.Key, o.Name});
             };
         }
     }
