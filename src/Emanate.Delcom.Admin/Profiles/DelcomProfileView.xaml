@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Emanate.Delcom.Admin.Profiles.ProfileControl"
+﻿<UserControl x:Class="Emanate.Delcom.Admin.Profiles.DelcomProfileView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Emanate.Extensibility.Controls;assembly=Emanate.Extensibility"
              xmlns:profiles="clr-namespace:Emanate.Delcom.Admin.Profiles"
-             d:DataContext="{d:DesignInstance profiles:MonitoringProfileViewModel }"
+             d:DataContext="{d:DesignInstance profiles:DelcomProfileViewModel }"
              mc:Ignorable="d">
     <DockPanel>
         <GroupBox DockPanel.Dock="Bottom">

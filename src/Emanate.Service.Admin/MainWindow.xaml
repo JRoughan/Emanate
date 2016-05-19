@@ -60,7 +60,7 @@
                 <DockPanel>
                     <ListView DockPanel.Dock="Left" x:Name="ConfigEditorSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
                     <Border Margin="10">
-                        <ContentPresenter Content="{Binding ElementName=ConfigEditorSelector, Path=SelectedItem.ConfigurationEditor}" Margin="5"  />
+                        <ContentPresenter Content="{Binding ElementName=ConfigEditorSelector, Path=SelectedItem.ProfileManager}" Margin="5"  />
                     </Border>
                 </DockPanel>
             </TabItem>

@@ -3,11 +3,11 @@ using Emanate.Core.Configuration;
 
 namespace Emanate.Delcom.Admin.Configuration
 {
-    public partial class DelcomConfigurationView
+    public partial class DelcomProfileManagerView
     {
-        private DelcomConfigurationViewModel viewModel;
+        private DelcomProfileManagerViewModel viewModel;
 
-        public DelcomConfigurationView()
+        public DelcomProfileManagerView()
         {
             Loaded += SelectInitialProfile;
             InitializeComponent();
@@ -22,7 +22,7 @@ namespace Emanate.Delcom.Admin.Configuration
         public override async Task SetTarget(IConfiguration moduleConfiguration)
         {
             var config = moduleConfiguration as DelcomConfiguration;
-            viewModel = new DelcomConfigurationViewModel(config);
+            viewModel = new DelcomProfileManagerViewModel(config);
             await viewModel.Initialize();
             DataContext = viewModel;
         }

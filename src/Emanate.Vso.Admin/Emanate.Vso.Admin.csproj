@@ -52,11 +52,11 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\VsoConfigurationView.xaml.cs">
-      <DependentUpon>VsoConfigurationView.xaml</DependentUpon>
+    <Compile Include="Profiles\VsoProfileManagerView.xaml.cs">
+      <DependentUpon>VsoProfileManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\InputConfigurationControl.xaml.cs">
-      <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
+    <Compile Include="Devices\VsoDeviceView.xaml.cs">
+      <DependentUpon>VsoDeviceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\VsoDeviceManagerView.xaml.cs">
       <DependentUpon>VsoDeviceManagerView.xaml</DependentUpon>
@@ -69,9 +69,9 @@
     <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
     <Compile Include="InputSelector\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Configuration\VsoConfigurationViewModel.cs" />
+    <Compile Include="Profiles\VsoProfileManagerViewModel.cs" />
     <Compile Include="Devices\VsoDeviceViewModel.cs" />
-    <Compile Include="VsoModule.cs" />
+    <Compile Include="VsoAdminModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
@@ -101,11 +101,11 @@
     <Resource Include="Images\success.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Configuration\VsoConfigurationView.xaml">
+    <Page Include="Profiles\VsoProfileManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Devices\InputConfigurationControl.xaml">
+    <Page Include="Devices\VsoDeviceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -118,9 +118,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Profiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetDir)*.dll $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationName)\</PostBuildEvent>

@@ -8,4 +8,14 @@ namespace Emanate.Extensibility
     {
         public virtual Task SetTarget(IConfiguration moduleConfiguration) { return Task.CompletedTask; }
     }
+
+    public class DeviceEditor : UserControl
+    {
+        public virtual Task SetTarget(IConfiguration moduleConfiguration) { return Task.CompletedTask; }
+    }
+
+    public class ProfileManager : UserControl
+    {
+        public virtual Task SetTarget(IConfiguration moduleConfiguration) { return Task.CompletedTask; }
+    }
 }

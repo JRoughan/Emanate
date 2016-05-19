@@ -55,20 +55,20 @@
       <DependentUpon>AddProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\AddProfileViewModel.cs" />
-    <Compile Include="Configuration\DelcomConfigurationView.xaml.cs">
-      <DependentUpon>DelcomConfigurationView.xaml</DependentUpon>
+    <Compile Include="Profiles\DelcomProfileManagerView.xaml.cs">
+      <DependentUpon>DelcomProfileManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
+    <Compile Include="Profiles\DelcomProfileManagerViewModel.cs" />
     <Compile Include="Devices\DelcomDeviceInfo.cs" />
     <Compile Include="Devices\DelcomDeviceManagerView.xaml.cs">
       <DependentUpon>DelcomDeviceManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\DelcomDeviceManagerViewModel.cs" />
-    <Compile Include="Profiles\ProfileControl.xaml.cs">
-      <DependentUpon>ProfileControl.xaml</DependentUpon>
+    <Compile Include="Profiles\DelcomProfileView.xaml.cs">
+      <DependentUpon>DelcomProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DelcomAdminModule.cs" />
-    <Compile Include="Profiles\MonitoringProfileViewModel.cs" />
+    <Compile Include="Profiles\DelcomProfileViewModel.cs" />
     <Compile Include="Profiles\ProfileStateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -91,7 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\DelcomConfigurationView.xaml">
+    <Page Include="Profiles\DelcomProfileManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -99,7 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\ProfileControl.xaml">
+    <Page Include="Profiles\DelcomProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

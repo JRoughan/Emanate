@@ -18,10 +18,10 @@ namespace Emanate.Delcom.Admin
         {
             Log.Information("=> DelcomModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<DelcomConfigurationView>().Keyed<ConfigurationEditor>(Key);
-            builder.RegisterType<DelcomConfigurationViewModel>();
+            builder.RegisterType<DelcomProfileManagerView>().Keyed<ProfileManager>(Key);
+            builder.RegisterType<DelcomProfileManagerViewModel>();
 
-            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Extensibility.DeviceManager>(Key);
+            builder.RegisterType<DelcomDeviceManagerView>().Keyed<DeviceManager>(Key);
             builder.RegisterType<DelcomDeviceManagerViewModel>();
         }
 

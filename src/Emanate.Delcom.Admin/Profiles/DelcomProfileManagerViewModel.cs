@@ -7,15 +7,15 @@ using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Configuration
 {
-    public class DelcomConfigurationViewModel : ViewModel
+    public class DelcomProfileManagerViewModel : ViewModel
     {
         private readonly DelcomConfiguration delcomConfiguration;
 
-        public DelcomConfigurationViewModel(DelcomConfiguration delcomConfiguration)
+        public DelcomProfileManagerViewModel(DelcomConfiguration delcomConfiguration)
         {
             this.delcomConfiguration = delcomConfiguration;
             foreach (var profile in delcomConfiguration.Profiles.OfType<MonitoringProfile>())
-                Profiles.Add(new MonitoringProfileViewModel(profile));
+                Profiles.Add(new DelcomProfileViewModel(profile));
 
             IsEditable = true;
 
@@ -39,6 +39,6 @@ namespace Emanate.Delcom.Admin.Configuration
             set { isEditable = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<MonitoringProfileViewModel> Profiles { get; } = new ObservableCollection<MonitoringProfileViewModel>();
+        public ObservableCollection<DelcomProfileViewModel> Profiles { get; } = new ObservableCollection<DelcomProfileViewModel>();
     }
 }

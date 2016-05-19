@@ -46,17 +46,16 @@ namespace Emanate.Service.Admin
                     globalConfig.OutputConfigurations.Add(moduleConfig);
                 }
 
-                var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
-                await configurationEditor.SetTarget(moduleConfig);
+                var profileManager = componentContext.ResolveKeyed<ProfileManager>(moduleConfig.Key);
+                await profileManager.SetTarget(moduleConfig);
 
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, profileManager, deviceManager);
                 Configurations.Add(moduleConfigInfo);
 
-                var unconfiguredDevices =
-                    moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
+                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
 
                 moduleConfig.OutputDeviceAdded += AddOutputDevice;
@@ -72,13 +71,13 @@ namespace Emanate.Service.Admin
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 
-                var configurationEditor = componentContext.ResolveKeyed<ConfigurationEditor>(moduleConfig.Key);
-                await configurationEditor.SetTarget(moduleConfig);
+                var profileManager = componentContext.ResolveKeyed<ProfileManager>(moduleConfig.Key);
+                await profileManager.SetTarget(moduleConfig);
 
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, configurationEditor, deviceManager);
+                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, profileManager, deviceManager);
                 Configurations.Add(moduleConfigInfo);
             }
 

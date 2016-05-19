@@ -13,6 +13,8 @@ namespace Emanate.Vso.Admin.Devices
         {
             this.device = device;
             TestConnectionCommand = new DelegateCommand(TestConnection, CanTestConnection);
+
+            IsEditable = true;
         }
 
         public Guid Id { get { return device.Id; } }

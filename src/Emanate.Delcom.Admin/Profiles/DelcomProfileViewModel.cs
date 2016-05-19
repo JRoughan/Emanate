@@ -3,11 +3,11 @@ using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Profiles
 {
-    public class MonitoringProfileViewModel : ViewModel
+    public class DelcomProfileViewModel : ViewModel
     {
         private readonly MonitoringProfile monitoringProfile;
 
-        public MonitoringProfileViewModel(MonitoringProfile monitoringProfile)
+        public DelcomProfileViewModel(MonitoringProfile monitoringProfile)
         {
             this.monitoringProfile = monitoringProfile;
             foreach (var profileState in monitoringProfile.States)

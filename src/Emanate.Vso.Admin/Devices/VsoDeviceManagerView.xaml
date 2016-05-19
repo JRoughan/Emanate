@@ -19,7 +19,7 @@
             </GroupBox.Header>
             <ListView x:Name="ProfileSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
         </GroupBox>
-        <devices:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
+        <devices:VsoDeviceView DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:DeviceManager>
 

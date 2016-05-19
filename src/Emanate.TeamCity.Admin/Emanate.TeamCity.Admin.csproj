@@ -52,18 +52,18 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\TeamCityConfigurationView.xaml.cs">
-      <DependentUpon>TeamCityConfigurationView.xaml</DependentUpon>
+    <Compile Include="Profiles\TeamCityProfileManagerView.xaml.cs">
+      <DependentUpon>TeamCityProfileManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\InputConfigurationControl.xaml.cs">
-      <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
+    <Compile Include="Devices\TeamCityDeviceView.xaml.cs">
+      <DependentUpon>TeamCityDeviceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\TeamCityDeviceViewModel.cs" />
     <Compile Include="Devices\TeamCityDeviceManagerView.xaml.cs">
       <DependentUpon>TeamCityDeviceManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\TeamCityDeviceManagerViewModel.cs" />
-    <Compile Include="Configuration\TeamCityConfigurationViewModel.cs" />
+    <Compile Include="Profiles\TeamCityProfileManagerViewModel.cs" />
     <Compile Include="InputSelector\InputSelectorView.xaml.cs">
       <DependentUpon>InputSelectorView.xaml</DependentUpon>
     </Compile>
@@ -91,11 +91,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Configuration\TeamCityConfigurationView.xaml">
+    <Page Include="Profiles\TeamCityProfileManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Devices\InputConfigurationControl.xaml">
+    <Page Include="Devices\TeamCityDeviceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -117,9 +117,7 @@
   <ItemGroup>
     <Resource Include="Images\add.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Profiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationName)\</PostBuildEvent>

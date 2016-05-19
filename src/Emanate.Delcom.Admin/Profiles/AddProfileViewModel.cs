@@ -7,34 +7,34 @@ namespace Emanate.Delcom.Admin.Profiles
 {
     public class AddProfileViewModel : ViewModel
     {
-        private readonly ObservableCollection<MonitoringProfileViewModel> existingProfiles;
+        private readonly ObservableCollection<DelcomProfileViewModel> existingProfiles;
 
-        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<MonitoringProfileViewModel> existingProfiles)
+        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<DelcomProfileViewModel> existingProfiles)
         {
             this.existingProfiles = existingProfiles;
 
             var emptyProfile = (MonitoringProfile)delcomConfiguration.GenerateEmptyProfile();
-            NewProfile = new MonitoringProfileViewModel(emptyProfile);
+            NewProfile = new DelcomProfileViewModel(emptyProfile);
                 
-            CloneProfileCommand = new DelegateCommand<MonitoringProfileViewModel>(CloneProfile, p => p != null);
-            SaveProfileCommand = new DelegateCommand<MonitoringProfileViewModel>(SaveProfile, CanSaveProfile);
+            CloneProfileCommand = new DelegateCommand<DelcomProfileViewModel>(CloneProfile, p => p != null);
+            SaveProfileCommand = new DelegateCommand<DelcomProfileViewModel>(SaveProfile, CanSaveProfile);
         }
 
-        private MonitoringProfileViewModel newProfile;
-        public MonitoringProfileViewModel NewProfile
+        private DelcomProfileViewModel newProfile;
+        public DelcomProfileViewModel NewProfile
         {
             get { return newProfile; }
             set { newProfile = value; OnPropertyChanged(); }
         }
 
-        public IEnumerable<MonitoringProfileViewModel> ExistingProfiles
+        public IEnumerable<DelcomProfileViewModel> ExistingProfiles
         {
             get { return existingProfiles; }
         }
 
         public ICommand CloneProfileCommand { get; private set; }
 
-        private void CloneProfile(MonitoringProfileViewModel profileToClone)
+        private void CloneProfile(DelcomProfileViewModel profileToClone)
         {
             NewProfile.States.Clear();
             foreach (var state in profileToClone.States)
@@ -53,12 +53,12 @@ namespace Emanate.Delcom.Admin.Profiles
 
         public ICommand SaveProfileCommand { get; private set; }
 
-        private bool CanSaveProfile(MonitoringProfileViewModel profile)
+        private bool CanSaveProfile(DelcomProfileViewModel profile)
         {
             return profile != null && !string.IsNullOrWhiteSpace(profile.Key);
         }
 
-        private void SaveProfile(MonitoringProfileViewModel profileViewModel)
+        private void SaveProfile(DelcomProfileViewModel profileViewModel)
         {
             existingProfiles.Add(profileViewModel);
         }

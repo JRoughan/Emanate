@@ -2,13 +2,13 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Emanate.TeamCity.Admin.Devices
+namespace Emanate.Vso.Admin.Devices
 {
-    public partial class InputConfigurationControl
+    public partial class VsoDeviceView
     {
-        private TeamCityDeviceViewModel viewModel;
+        private VsoDeviceViewModel viewModel;
 
-        public InputConfigurationControl()
+        public VsoDeviceView()
         {
             DataContextChanged += InputConfigurationControl_DataContextChanged;
             InitializeComponent();
@@ -16,8 +16,10 @@ namespace Emanate.TeamCity.Admin.Devices
 
         private void InputConfigurationControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            viewModel = (TeamCityDeviceViewModel)e.NewValue;
+            viewModel = (VsoDeviceViewModel)e.NewValue;
+            //await viewModel.Initialize();
             PasswordInput.Password = viewModel.Password;
+            //DataContext = viewModel;
         }
 
         private void PasswordInputInitialized(object sender, EventArgs e)

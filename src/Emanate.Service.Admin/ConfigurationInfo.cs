@@ -1,18 +1,18 @@
-﻿using System.Windows.Controls;
+﻿using Emanate.Extensibility;
 
 namespace Emanate.Service.Admin
 {
     public class ConfigurationInfo
     {
-        public ConfigurationInfo(string name, UserControl configurationEditor, UserControl deviceManager)
+        public ConfigurationInfo(string name, ProfileManager profileManager, DeviceManager deviceManager)
         {
             Name = name;
-            ConfigurationEditor = configurationEditor;
+            ProfileManager = profileManager;
             DeviceManager = deviceManager;
         }
 
         public string Name { get; private set; }
-        public UserControl ConfigurationEditor { get; private set; }
-        public UserControl DeviceManager { get; private set; }
+        public ProfileManager ProfileManager { get; private set; }
+        public DeviceManager DeviceManager { get; private set; }
     }
 }

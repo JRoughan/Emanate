@@ -35,7 +35,7 @@
                 <ComboBox x:Name="CloneProfileSelector" ItemsSource="{Binding ExistingProfiles}" DisplayMemberPath="Key" />
             </DockPanel>
             
-            <profiles:ProfileControl DataContext="{Binding NewProfile}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" />
+            <profiles:DelcomProfileView DataContext="{Binding NewProfile}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" />
         </Grid>
     </DockPanel>
 </Window>

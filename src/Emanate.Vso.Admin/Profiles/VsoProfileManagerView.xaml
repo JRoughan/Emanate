@@ -1,15 +1,65 @@
-﻿<extensibility:ConfigurationEditor x:Class="Emanate.TeamCity.Admin.Configuration.TeamCityConfigurationView"
+﻿<extensibility:ProfileManager x:Class="Emanate.Vso.Admin.Profiles.VsoProfileManagerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
+             xmlns:profiles="clr-namespace:Emanate.Vso.Admin.Profiles"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance profiles:VsoProfileManagerViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
-        <TextBlock Text="TeamCity Configuration View"></TextBlock>
+        <TextBlock Text="VSO Configuration View"></TextBlock>
     </DockPanel>
-</extensibility:ConfigurationEditor>
+</extensibility:ProfileManager>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

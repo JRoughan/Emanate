@@ -2,9 +2,9 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.TeamCity.Admin.Configuration;
 using Emanate.TeamCity.Admin.Devices;
 using Emanate.TeamCity.Admin.InputSelector;
+using Emanate.TeamCity.Admin.Profiles;
 using Serilog;
 using TeamCityDeviceManagerView = Emanate.TeamCity.Admin.Devices.TeamCityDeviceManagerView;
 
@@ -21,10 +21,9 @@ namespace Emanate.TeamCity.Admin
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<TeamCityConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<TeamCityProfileManagerView>().Keyed<ProfileManager>(Key);
 
             builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
-            builder.RegisterType<TeamCityDeviceManagerViewModel>();
         }
 
         public IInputConfiguration GenerateDefaultConfig()

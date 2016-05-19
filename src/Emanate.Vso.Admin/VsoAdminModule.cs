@@ -2,11 +2,10 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.Vso.Admin.Configuration;
 using Emanate.Vso.Admin.Devices;
 using Emanate.Vso.Admin.InputSelector;
+using Emanate.Vso.Admin.Profiles;
 using Serilog;
-using VsoDeviceManagerView = Emanate.Vso.Admin.Devices.VsoDeviceManagerView;
 
 namespace Emanate.Vso.Admin
 {
@@ -21,10 +20,9 @@ namespace Emanate.Vso.Admin
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<VsoConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<VsoProfileManagerView>().Keyed<ProfileManager>(Key);
 
             builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
-            builder.RegisterType<VsoDeviceManagerViewModel>();
         }
 
         public IInputConfiguration GenerateDefaultConfig()
