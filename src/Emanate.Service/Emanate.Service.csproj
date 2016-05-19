@@ -120,10 +120,6 @@
       <Project>{d7c53489-a78d-408d-ad21-1d85566a760e}</Project>
       <Name>Emanate.Delcom</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Service.Admin\Emanate.Service.Admin.csproj">
-      <Project>{b1ce719a-b725-41fe-a2fb-9a2fb67862ba}</Project>
-      <Name>Emanate.Service.Admin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
       <Name>Emanate.TeamCity</Name>
