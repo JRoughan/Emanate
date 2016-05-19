@@ -3,7 +3,7 @@ using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
 using Emanate.TeamCity.Admin.Devices;
-using Emanate.TeamCity.Admin.InputSelector;
+using Emanate.TeamCity.Admin.Inputs;
 using Emanate.TeamCity.Admin.Profiles;
 using Serilog;
 using TeamCityDeviceManagerView = Emanate.TeamCity.Admin.Devices.TeamCityDeviceManagerView;

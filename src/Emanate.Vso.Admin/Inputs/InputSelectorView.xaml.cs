@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Emanate.Core.Output;
 
-namespace Emanate.Vso.Admin.InputSelector
+namespace Emanate.Vso.Admin.Inputs
 {
     public partial class InputSelectorView
     {

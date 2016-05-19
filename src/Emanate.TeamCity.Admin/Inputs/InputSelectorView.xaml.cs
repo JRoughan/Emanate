@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Emanate.Core.Output;
 
-namespace Emanate.TeamCity.Admin.InputSelector
+namespace Emanate.TeamCity.Admin.Inputs
 {
     public partial class InputSelectorView
     {

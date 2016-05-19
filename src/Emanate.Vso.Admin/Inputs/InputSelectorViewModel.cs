@@ -4,32 +4,31 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Serilog;
 
-namespace Emanate.TeamCity.Admin.InputSelector
+namespace Emanate.Vso.Admin.Inputs
 {
     public class InputSelectorViewModel : ViewModel
     {
-        private readonly ITeamCityConnection connection;
+        private readonly IVsoConnection connection;
 
-        public InputSelectorViewModel(ITeamCityConnection connection)
+        public InputSelectorViewModel(IVsoConnection connection)
         {
             this.connection = connection;
         }
 
         public override async Task<InitializationResult> Initialize()
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 Log.Information("=> InputSelectorViewModel.Initialize");
-                string projectsXml;
+                dynamic projectRefs;
                 try
                 {
-                    projectsXml = connection.GetProjects();
+                    var rawProjects = await connection.GetProjects();
+                    projectRefs = rawProjects["value"];
                 }
                 catch (WebException ex)
                 {
@@ -38,33 +37,29 @@ namespace Emanate.TeamCity.Admin.InputSelector
                     return InitializationResult.Failed;
                 }
 
-                var projectsElement = XElement.Parse(projectsXml);
-                foreach (var projectElement in projectsElement.Elements())
+                foreach (dynamic projectRef in projectRefs)
                 {
-                    var project = new ProjectViewModel();
-                    project.Name = projectElement.GetAttributeString("name");
-                    var projectId = projectElement.GetAttributeString("id");
+                    var projectVm = new ProjectViewModel();
+                    projectVm.Name = projectRef["name"];
+                    projectVm.Id = new Guid(projectRef["id"].Value);
 
-                    var buildXml = connection.GetProject(projectId);
-                    var buildRoot = XElement.Parse(buildXml);
+                    var rawBuilds = await connection.GetBuildDefinitions(projectVm.Id);
+                    var buildDefinitions = rawBuilds["value"];
 
-                    var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
-                                        from buildElement in buildTypesElement.Elements("buildType")
-                                        select buildElement;
-
-                    foreach (var buildElement in buildElements)
+                    foreach (var buildDefinition in buildDefinitions)
                     {
-                        var configuration = new ProjectConfigurationViewModel(project);
-                        configuration.Id = buildElement.GetAttributeString("id");
-                        configuration.Name = buildElement.GetAttributeString("name");
-                        project.Configurations.Add(configuration);
+                        var configuration = new ProjectConfigurationViewModel(projectVm);
+                        configuration.Id = buildDefinition["id"];
+                        configuration.Name = buildDefinition["name"];
+                        configuration.Type = buildDefinition["type"];
+                        configuration.ProjectId = projectVm.Id;
+                        projectVm.Configurations.Add(configuration);
                     }
 
-                    Projects.Add(project);
+                    Projects.Add(projectVm);
                 }
                 return InitializationResult.Succeeded;
             });
-            
         }
 
         private bool hasBadConfiguration;
@@ -87,7 +82,9 @@ namespace Emanate.TeamCity.Admin.InputSelector
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var inputInfo in inputs)
             {
-                var config = configurations.SingleOrDefault(c => c.Id.Equals(inputInfo.Id, StringComparison.OrdinalIgnoreCase));
+                var parts = inputInfo.Id.Split(':');
+                var config = configurations.SingleOrDefault(c => c.Id.Equals(parts[1], StringComparison.OrdinalIgnoreCase) &&
+                                                                 c.ProjectId.Equals(new Guid(parts[0])));
                 if (config != null)
                     config.IsSelected = true;
             }
@@ -100,7 +97,7 @@ namespace Emanate.TeamCity.Admin.InputSelector
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo {Source = "teamcity", Id = configuration.Id};
+                    yield return new InputInfo {Source = "vso", Id = $"{configuration.ProjectId}:{configuration.Id}"};
             }
         }
     }

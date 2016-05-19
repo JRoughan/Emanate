@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using Emanate.Extensibility;
 
-namespace Emanate.Vso.Admin.InputSelector
+namespace Emanate.Vso.Admin.Inputs
 {
     public class ProjectViewModel : ViewModel
     {

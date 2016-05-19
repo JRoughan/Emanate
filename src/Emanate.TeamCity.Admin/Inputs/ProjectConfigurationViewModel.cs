@@ -1,7 +1,6 @@
-using System;
 using Emanate.Extensibility;
 
-namespace Emanate.Vso.Admin.InputSelector
+namespace Emanate.TeamCity.Admin.Inputs
 {
     public class ProjectConfigurationViewModel : ViewModel
     {
@@ -21,13 +20,6 @@ namespace Emanate.Vso.Admin.InputSelector
             set { name = value; OnPropertyChanged(); }
         }
 
-        private Guid projectId;
-        public Guid ProjectId
-        {
-            get { return projectId; }
-            set { projectId = value; OnPropertyChanged(); }
-        }
-
         private bool isSelected;
         public bool IsSelected
         {
@@ -42,13 +34,6 @@ namespace Emanate.Vso.Admin.InputSelector
                     project.CheckStatus();
                 }
             }
-        }
-
-        private string type;
-        public string Type
-        {
-            get { return type; }
-            set { type = value; OnPropertyChanged(); }
         }
     }
 }

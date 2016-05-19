@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using Emanate.Extensibility;
 
-namespace Emanate.TeamCity.Admin.InputSelector
+namespace Emanate.TeamCity.Admin.Inputs
 {
     public class ProjectViewModel : ViewModel
     {
