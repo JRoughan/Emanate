@@ -2,10 +2,9 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Emanate.Delcom.Admin.Profiles;
 using Emanate.Extensibility;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Profiles
 {
     public class DelcomProfileManagerViewModel : ViewModel
     {

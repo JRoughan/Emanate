@@ -1,13 +1,12 @@
-﻿<extensibility:ProfileManager x:Class="Emanate.Delcom.Admin.Configuration.DelcomProfileManagerView"
+﻿<extensibility:ProfileManager x:Class="Emanate.Delcom.Admin.Profiles.DelcomProfileManagerView"
                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                                   xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-                                   xmlns:configuration="clr-namespace:Emanate.Delcom.Admin.Configuration"
-                                   xmlns:profiles="clr-namespace:Emanate.Delcom.Admin.Profiles"
-                                   mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance configuration:DelcomProfileManagerViewModel}">
+                           xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
+                           xmlns:profiles="clr-namespace:Emanate.Delcom.Admin.Profiles"
+                           mc:Ignorable="d" 
+                           d:DataContext="{d:DesignInstance profiles:DelcomProfileManagerViewModel}">
     <DockPanel IsEnabled="{Binding IsEditable}">
         <GroupBox DockPanel.Dock="Left" >
             <GroupBox.Header>

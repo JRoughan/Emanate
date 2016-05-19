@@ -2,8 +2,8 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Delcom.Admin.Configuration;
 using Emanate.Delcom.Admin.Devices;
+using Emanate.Delcom.Admin.Profiles;
 using Emanate.Extensibility;
 using Serilog;
 using DelcomDeviceManagerView = Emanate.Delcom.Admin.Devices.DelcomDeviceManagerView;

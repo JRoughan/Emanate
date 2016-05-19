@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Profiles
 {
     public partial class DelcomProfileManagerView
     {
