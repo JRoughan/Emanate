@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Serilog;
 
@@ -30,7 +30,7 @@ namespace Emanate.Vso
                 deviceElement.Add(new XAttribute("uri", device.Uri));
                 deviceElement.Add(new XAttribute("polling-interval", device.PollingInterval));
                 deviceElement.Add(new XAttribute("username", device.UserName));
-                deviceElement.Add(new XAttribute("password", EncryptDecrypt(device.Password)));
+                deviceElement.Add(new XAttribute("password", SimpleCrypto.EncryptDecrypt(device.Password)));
                 moduleElement.Add(deviceElement);
             }
             moduleElement.Add(devicesElement);
@@ -56,22 +56,10 @@ namespace Emanate.Vso
                     Uri = deviceElement.Attribute("uri").Value,
                     PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
                     UserName = deviceElement.Attribute("username").Value,
-                    Password = EncryptDecrypt(deviceElement.Attribute("password").Value),
+                    Password = SimpleCrypto.EncryptDecrypt(deviceElement.Attribute("password").Value),
                 };
                 Devices.Add(device);
             }
-        }
-
-        // TODO: Extrmemely simplistic encrytion used here - will keep honest people honest but not much else
-        private static string EncryptDecrypt(string text)
-        {
-            var outSb = new StringBuilder(text.Length);
-            foreach (var c in text)
-            {
-                var xored = (char)(c ^ 129);
-                outSb.Append(xored);
-            }
-            return outSb.ToString();
         }
 
         public void AddDevice(VsoDevice deviceInfo)

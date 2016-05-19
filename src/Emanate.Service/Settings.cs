@@ -10,7 +10,7 @@ namespace Emanate.Service
 
         public static void Initialize(HostConfigurator hostConfigurator)
         {
-            hostConfigurator.AddCommandLineDefinition("port", v => Settings.Port = int.Parse(v));
+            hostConfigurator.AddCommandLineDefinition("port", v => Port = int.Parse(v));
         }
     }
 }

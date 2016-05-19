@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
-        <TextBlock Text="TeamCity Configuration View"></TextBlock>
+        <TextBlock Text="TeamCity Configuration View" />
     </DockPanel>
 </extensibility:ProfileManager>
 

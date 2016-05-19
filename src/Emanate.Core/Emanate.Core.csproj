@@ -71,6 +71,7 @@
     <Compile Include="Output\IOutputProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\XElementExtensions.cs" />
+    <Compile Include="SimpleCrypto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

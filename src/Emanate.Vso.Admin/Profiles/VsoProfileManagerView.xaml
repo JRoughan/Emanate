@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance profiles:VsoProfileManagerViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
-        <TextBlock Text="VSO Configuration View"></TextBlock>
+        <TextBlock Text="VSO Configuration View" />
     </DockPanel>
 </extensibility:ProfileManager>
 
