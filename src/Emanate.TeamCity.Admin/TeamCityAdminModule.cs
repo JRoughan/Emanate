@@ -2,7 +2,6 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.TeamCity.Admin.Devices;
 using Emanate.TeamCity.Admin.Inputs;
 using Emanate.TeamCity.Admin.Profiles;
 using Serilog;
@@ -18,11 +17,10 @@ namespace Emanate.TeamCity.Admin
         {
             Log.Information("=> TeamCityModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
+            builder.RegisterType<InputSelectorView>().Keyed<InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
             builder.RegisterType<TeamCityProfileManagerView>().Keyed<ProfileManager>(Key);
-
             builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 

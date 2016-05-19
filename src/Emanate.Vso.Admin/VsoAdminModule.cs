@@ -21,7 +21,6 @@ namespace Emanate.Vso.Admin
             builder.RegisterType<InputSelectorViewModel>();
 
             builder.RegisterType<VsoProfileManagerView>().Keyed<ProfileManager>(Key);
-
             builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 

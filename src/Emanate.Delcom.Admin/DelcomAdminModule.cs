@@ -6,7 +6,6 @@ using Emanate.Delcom.Admin.Devices;
 using Emanate.Delcom.Admin.Profiles;
 using Emanate.Extensibility;
 using Serilog;
-using DelcomDeviceManagerView = Emanate.Delcom.Admin.Devices.DelcomDeviceManagerView;
 
 namespace Emanate.Delcom.Admin
 {
@@ -19,10 +18,7 @@ namespace Emanate.Delcom.Admin
             Log.Information("=> DelcomModule.LoadAdminComponents");
             RegisterCommon(builder);
             builder.RegisterType<DelcomProfileManagerView>().Keyed<ProfileManager>(Key);
-            builder.RegisterType<DelcomProfileManagerViewModel>();
-
             builder.RegisterType<DelcomDeviceManagerView>().Keyed<DeviceManager>(Key);
-            builder.RegisterType<DelcomDeviceManagerViewModel>();
         }
 
         public IOutputConfiguration GenerateDefaultConfig()
