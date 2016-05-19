@@ -20,7 +20,7 @@ namespace Emanate.Vso.Admin
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<VsoConfigurationView>().Keyed<ConfigurationEditor>(Key);
 
             builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
             builder.RegisterType<VsoDeviceManagerViewModel>();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
@@ -14,24 +15,29 @@ namespace Emanate.TeamCity
         string IInputConfiguration.Key { get { return key; } }
         string IInputConfiguration.Name { get { return name; } }
 
-        public string Uri { get; set; }
-        public int PollingInterval { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public bool RequiresAuthentication { get; set; }
-
         public Memento CreateMemento()
         {
             Log.Information("=> TeamCityConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("key", key));
             moduleElement.Add(new XAttribute("type", "input"));
-            moduleElement.Add(new XElement("uri", Uri));
-            moduleElement.Add(new XElement("polling-interval", PollingInterval));
-            moduleElement.Add(new XElement("requires-authentication", RequiresAuthentication));
-            moduleElement.Add(new XElement("username", RequiresAuthentication ? UserName : ""));
-            moduleElement.Add(new XElement("password", RequiresAuthentication ? EncryptDecrypt(Password) : ""));
-
+            var devicesElement = new XElement("devices");
+            foreach (var device in Devices)
+            {
+                var deviceElement = new XElement("device");
+                deviceElement.Add(new XAttribute("id", device.Id));
+                deviceElement.Add(new XAttribute("name", device.Name));
+                deviceElement.Add(new XAttribute("uri", device.Uri));
+                deviceElement.Add(new XAttribute("polling-interval", device.PollingInterval));
+                deviceElement.Add(new XAttribute("requires-authentication", device.RequiresAuthentication));
+                if (device.RequiresAuthentication)
+                {
+                    deviceElement.Add(new XAttribute("username", device.UserName));
+                    deviceElement.Add(new XAttribute("password", EncryptDecrypt(device.Password)));
+                }
+                moduleElement.Add(deviceElement);
+            }
+            moduleElement.Add(devicesElement);
             return new Memento(moduleElement);
         }
 
@@ -43,13 +49,24 @@ namespace Emanate.TeamCity
 
             // TODO: Error handling
             var element = memento.Element;
-            Uri = element.Element("uri").Value;
-            PollingInterval = int.Parse(element.Element("polling-interval").Value);
-            RequiresAuthentication = bool.Parse(element.Element("requires-authentication").Value);
-            if (RequiresAuthentication)
+            var devicesElement = element.Element("devices");
+            foreach (var deviceElement in devicesElement.Elements("device"))
             {
-                UserName = element.Element("username").Value;
-                Password = EncryptDecrypt(element.Element("password").Value);
+                var device = new TeamCityDevice
+                {
+                    Id = Guid.Parse(deviceElement.Attribute("id").Value),
+                    Name = deviceElement.Attribute("name").Value,
+                    Uri = deviceElement.Attribute("uri").Value,
+                    RequiresAuthentication = bool.Parse(deviceElement.Attribute("requires-authentication").Value),
+                    PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
+                    
+                };
+                if (device.RequiresAuthentication)
+                {
+                    device.UserName = deviceElement.Attribute("username").Value;
+                    device.Password = EncryptDecrypt(deviceElement.Attribute("password").Value);
+                }
+                Devices.Add(device);
             }
         }
 
@@ -63,6 +80,18 @@ namespace Emanate.TeamCity
                 outSb.Append(xored);
             }
             return outSb.ToString();
+        }
+
+        public void AddDevice(TeamCityDevice device)
+        {
+            Devices.Add(device);
+        }
+
+        public List<TeamCityDevice> Devices { get; } = new List<TeamCityDevice>();
+
+        public void RemoveDevice(TeamCityDevice device)
+        {
+            Devices.Remove(device);
         }
     }
 }

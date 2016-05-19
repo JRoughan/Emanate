@@ -52,8 +52,8 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
+    <Compile Include="Configuration\VsoConfigurationView.xaml.cs">
+      <DependentUpon>VsoConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\InputConfigurationControl.xaml.cs">
       <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
@@ -69,7 +69,7 @@
     <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
     <Compile Include="InputSelector\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VsoConfigurationViewModel.cs" />
+    <Compile Include="Configuration\VsoConfigurationViewModel.cs" />
     <Compile Include="VsoDeviceViewModel.cs" />
     <Compile Include="VsoModule.cs" />
   </ItemGroup>
@@ -101,7 +101,7 @@
     <Resource Include="Images\success.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Configuration\ConfigurationView.xaml">
+    <Page Include="Configuration\VsoConfigurationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Emanate.Core.Configuration;
 
 namespace Emanate.TeamCity.Admin.Configuration
 {
-    public partial class ConfigurationView
+    public partial class InputConfigurationControl
     {
-        private TeamCityConfigurationViewModel viewModel;
+        private TeamCityDeviceViewModel viewModel;
 
-        public ConfigurationView()
+        public InputConfigurationControl()
         {
+            DataContextChanged += InputConfigurationControl_DataContextChanged;
             InitializeComponent();
         }
 
-        public override async Task SetTarget(IConfiguration moduleConfiguration)
+        private void InputConfigurationControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            viewModel = new TeamCityConfigurationViewModel(moduleConfiguration as TeamCityConfiguration);
-            await viewModel.Initialize();
+            viewModel = (TeamCityDeviceViewModel)e.NewValue;
             PasswordInput.Password = viewModel.Password;
-            DataContext = viewModel;
         }
 
         private void PasswordInputInitialized(object sender, EventArgs e)
@@ -40,7 +37,6 @@ namespace Emanate.TeamCity.Admin.Configuration
             var passwordBox = sender as PasswordBox;
             if (passwordBox == null)
                 return;
-
 
             viewModel.Password = passwordBox.Password;
         }

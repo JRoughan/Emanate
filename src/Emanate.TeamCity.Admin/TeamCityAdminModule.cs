@@ -5,7 +5,6 @@ using Emanate.Extensibility;
 using Emanate.TeamCity.Admin.Configuration;
 using Emanate.TeamCity.Admin.InputSelector;
 using Serilog;
-using ConfigurationView = Emanate.TeamCity.Admin.Configuration.ConfigurationView;
 using TeamCityDeviceManagerView = Emanate.TeamCity.Admin.Configuration.TeamCityDeviceManagerView;
 
 namespace Emanate.TeamCity.Admin
@@ -21,7 +20,7 @@ namespace Emanate.TeamCity.Admin
             builder.RegisterType<InputSelectorView>().Keyed<Extensibility.InputSelector>(Key);
             builder.RegisterType<InputSelectorViewModel>();
 
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
+            builder.RegisterType<TeamCityConfigurationView>().Keyed<ConfigurationEditor>(Key);
 
             builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
             builder.RegisterType<TeamCityDeviceManagerViewModel>();

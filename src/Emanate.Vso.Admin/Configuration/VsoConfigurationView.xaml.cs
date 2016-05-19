@@ -1,21 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
-using Emanate.Vso.Configuration;
 
 namespace Emanate.Vso.Admin.Configuration
 {
-    public partial class ConfigurationView
+    public partial class VsoConfigurationView
     {
         private VsoConfigurationViewModel viewModel;
 
-        public ConfigurationView()
+        public VsoConfigurationView()
         {
             InitializeComponent();
         }
 
         public override async Task SetTarget(IConfiguration moduleConfiguration)
         {
-            viewModel = new VsoConfigurationViewModel(moduleConfiguration as VsoConfiguration);
+            viewModel = new VsoConfigurationViewModel();
             await viewModel.Initialize();
             DataContext = viewModel;
         }

@@ -60,6 +60,7 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="TeamCityConfiguration.cs" />
+    <Compile Include="TeamCityDevice.cs" />
     <Compile Include="TeamCityModule.cs" />
     <Compile Include="ITeamCityConnection.cs" />
     <Compile Include="TeamCityConnection.cs" />

@@ -8,7 +8,18 @@
                      mc:Ignorable="d" 
                      d:DataContext="{d:DesignInstance configuration:TeamCityDeviceManagerViewModel}">
     <DockPanel>
-        <TextBlock Text="TeamCity Device Manager" />
+        <GroupBox DockPanel.Dock="Left" >
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Devices" />
+                    <Button Margin="20,0,0,0" Command="{Binding AddDeviceCommand}">
+                        <Image Source="..\Images\add.png" Height="16" Width="16" />
+                    </Button>
+                </StackPanel>
+            </GroupBox.Header>
+            <ListView x:Name="ProfileSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
+        </GroupBox>
+        <configuration:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:DeviceManager>
 

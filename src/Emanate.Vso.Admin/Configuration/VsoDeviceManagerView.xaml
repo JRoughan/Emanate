@@ -4,9 +4,9 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-                     xmlns:configuration1="clr-namespace:Emanate.Vso.Admin.Configuration"
+                     xmlns:configuration="clr-namespace:Emanate.Vso.Admin.Configuration"
                      mc:Ignorable="d" 
-                     d:DataContext="{d:DesignInstance configuration1:VsoDeviceManagerViewModel}">
+                     d:DataContext="{d:DesignInstance configuration:VsoDeviceManagerViewModel}">
     <DockPanel>
         <GroupBox DockPanel.Dock="Left" >
             <GroupBox.Header>
@@ -19,7 +19,7 @@
             </GroupBox.Header>
             <ListView x:Name="ProfileSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
         </GroupBox>
-        <configuration1:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
+        <configuration:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:DeviceManager>
 

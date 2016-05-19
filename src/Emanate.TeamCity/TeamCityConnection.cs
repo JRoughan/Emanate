@@ -11,16 +11,16 @@ namespace Emanate.TeamCity
         private readonly NetworkCredential networkCredential;
         private readonly bool requiresAuthentication;
 
-        public TeamCityConnection(TeamCityConfiguration configuration)
+        public TeamCityConnection(TeamCityDevice device)
         {
-            var rawUri = configuration.Uri ?? "http://localhost";
+            var rawUri = device.Uri ?? "http://localhost";
             baseUri = new Uri(rawUri);
 
-            requiresAuthentication = configuration.RequiresAuthentication;
+            requiresAuthentication = device.RequiresAuthentication;
             if (requiresAuthentication)
             {
-                var userName = configuration.UserName;
-                var password = configuration.Password;
+                var userName = device.UserName;
+                var password = device.Password;
                 networkCredential = new NetworkCredential(userName, password);
             }
         }

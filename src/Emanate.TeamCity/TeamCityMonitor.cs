@@ -31,11 +31,11 @@ namespace Emanate.TeamCity
                                                               };
 
 
-        public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityConfiguration configuration)
+        public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityDevice device)
         {
             this.teamCityConnection = teamCityConnection;
 
-            var pollingInterval = configuration.PollingInterval * 1000;
+            var pollingInterval = device.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
 
