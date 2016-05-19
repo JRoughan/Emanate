@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Vso.Admin", "Emanat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Delcom.Admin", "Emanate.Delcom.Admin\Emanate.Delcom.Admin.csproj", "{EFB821B4-1997-457D-BE99-3FD64C344F84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.TeamCity.Admin", "Emanate.TeamCity.Admin\Emanate.TeamCity.Admin.csproj", "{7D682147-DFA8-4DE4-85BC-37F85896DBE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{EFB821B4-1997-457D-BE99-3FD64C344F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFB821B4-1997-457D-BE99-3FD64C344F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFB821B4-1997-457D-BE99-3FD64C344F84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D682147-DFA8-4DE4-85BC-37F85896DBE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,5 +110,6 @@ Global
 		{D02CEB1D-3B90-477D-A8E7-04A62786E704} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 		{43C8D75B-E435-4BAC-A2B0-2EBFDBF8D29E} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 		{EFB821B4-1997-457D-BE99-3FD64C344F84} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
+		{7D682147-DFA8-4DE4-85BC-37F85896DBE9} = {D023D7CA-B605-4479-8E11-A5748DB6E7BA}
 	EndGlobalSection
 EndGlobal

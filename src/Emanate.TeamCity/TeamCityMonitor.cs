@@ -8,7 +8,6 @@ using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
-using Emanate.TeamCity.Configuration;
 using Serilog;
 using Timer = System.Timers.Timer;
 

@@ -189,6 +189,10 @@
       <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Emanate.TeamCity.Admin\Emanate.TeamCity.Admin.csproj">
+      <Project>{7d682147-dfa8-4de4-85bc-37f85896dbe9}</Project>
+      <Name>Emanate.TeamCity.Admin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
       <Name>Emanate.TeamCity</Name>

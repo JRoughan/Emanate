@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using Emanate.TeamCity.Configuration;
 using Serilog;
 
 namespace Emanate.TeamCity

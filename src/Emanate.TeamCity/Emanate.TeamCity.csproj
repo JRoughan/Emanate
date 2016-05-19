@@ -63,21 +63,7 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\TeamCityDeviceManagerView.xaml.cs">
-      <DependentUpon>TeamCityDeviceManagerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\TeamCityDeviceManagerViewModel.cs" />
-    <Compile Include="Configuration\TeamCityConfiguration.cs" />
-    <Compile Include="Configuration\TeamCityConfigurationViewModel.cs" />
-    <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
-    <Compile Include="InputSelector\InputSelectorView.xaml.cs">
-      <DependentUpon>InputSelectorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="InputSelector\InputSelectorViewModel.cs" />
-    <Compile Include="InputSelector\ProjectViewModel.cs" />
+    <Compile Include="TeamCityConfiguration.cs" />
     <Compile Include="TeamCityModule.cs" />
     <Compile Include="ITeamCityConnection.cs" />
     <Compile Include="TeamCityConnection.cs" />
@@ -118,24 +104,6 @@
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="Configuration\ConfigurationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Configuration\TeamCityDeviceManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="InputSelector\InputSelectorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\failure.png" />
-    <Resource Include="Images\success.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)\
@@ -149,4 +117,3 @@ xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationN
   </Target>
   -->
 </Project>
-
