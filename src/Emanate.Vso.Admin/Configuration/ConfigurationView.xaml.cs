@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
+using Emanate.Vso.Configuration;
 
-namespace Emanate.Vso.Configuration
+namespace Emanate.Vso.Admin.Configuration
 {
     public partial class ConfigurationView
     {

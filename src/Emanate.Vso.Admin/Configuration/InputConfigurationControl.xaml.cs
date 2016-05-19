@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using Emanate.Extensibility;
-using Serilog;
 
-namespace Emanate.Vso.Configuration
+namespace Emanate.Vso.Admin.Configuration
 {
     public partial class InputConfigurationControl
     {

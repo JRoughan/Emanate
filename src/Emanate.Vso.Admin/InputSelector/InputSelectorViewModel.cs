@@ -8,7 +8,7 @@ using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Serilog;
 
-namespace Emanate.Vso.InputSelector
+namespace Emanate.Vso.Admin.InputSelector
 {
     public class InputSelectorViewModel : ViewModel
     {

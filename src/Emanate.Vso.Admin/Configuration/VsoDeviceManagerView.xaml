@@ -1,12 +1,12 @@
-﻿<extensibility:DeviceManager x:Class="Emanate.Vso.Configuration.VsoDeviceManagerView"
+﻿<extensibility:DeviceManager x:Class="Emanate.Vso.Admin.Configuration.VsoDeviceManagerView"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                     xmlns:configuration="clr-namespace:Emanate.Vso.Configuration"
                      xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
+                     xmlns:configuration1="clr-namespace:Emanate.Vso.Admin.Configuration"
                      mc:Ignorable="d" 
-                     d:DataContext="{d:DesignInstance configuration:VsoDeviceManagerViewModel}">
+                     d:DataContext="{d:DesignInstance configuration1:VsoDeviceManagerViewModel}">
     <DockPanel>
         <GroupBox DockPanel.Dock="Left" >
             <GroupBox.Header>
@@ -19,7 +19,7 @@
             </GroupBox.Header>
             <ListView x:Name="ProfileSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
         </GroupBox>
-        <configuration:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
+        <configuration1:InputConfigurationControl DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:DeviceManager>
 

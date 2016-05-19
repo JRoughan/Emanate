@@ -1,6 +1,7 @@
 ﻿using Emanate.Extensibility;
+using Emanate.Vso.Configuration;
 
-namespace Emanate.Vso.Configuration
+namespace Emanate.Vso.Admin
 {
     public class VsoConfigurationViewModel : ViewModel
     {

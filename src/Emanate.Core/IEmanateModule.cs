@@ -5,18 +5,23 @@ namespace Emanate.Core
 {
     public interface IEmanateModule
     {
-        string Key { get; }
-        void LoadAdminComponents(ContainerBuilder builder);
         void LoadServiceComponents(ContainerBuilder builder);
     }
 
-    public interface IOutputModule : IEmanateModule
+    public interface IEmanateAdminModule
     {
+        void LoadAdminComponents(ContainerBuilder builder);
+    }
+
+    public interface IOutputModule
+    {
+        string Key { get; }
         IOutputConfiguration GenerateDefaultConfig();
     }
 
-    public interface IInputModule : IEmanateModule
+    public interface IInputModule
     {
+        string Key { get; }
         IInputConfiguration GenerateDefaultConfig();
     }
 }

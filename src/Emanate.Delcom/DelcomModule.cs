@@ -8,7 +8,7 @@ using Serilog;
 
 namespace Emanate.Delcom
 {
-    public class DelcomModule : IOutputModule
+    public class DelcomModule : IEmanateModule, IEmanateAdminModule, IOutputModule
     {
         public string Key { get; } = "delcom";
 

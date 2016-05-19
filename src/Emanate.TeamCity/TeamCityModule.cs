@@ -9,7 +9,7 @@ using Serilog;
 
 namespace Emanate.TeamCity
 {
-    public class TeamCityModule : IInputModule
+    public class TeamCityModule : IEmanateModule, IEmanateAdminModule, IInputModule
     {
         public string Key { get; } = "teamcity";
 

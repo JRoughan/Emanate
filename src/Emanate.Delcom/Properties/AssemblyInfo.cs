@@ -40,3 +40,4 @@ using Emanate.Delcom;
 [assembly: InternalsVisibleTo("Emanate.IntegrationTests")]
 
 [assembly: EmanateModule(typeof(DelcomModule))]
+[assembly: EmanateAdminModule(typeof(DelcomModule))]

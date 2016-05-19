@@ -23,7 +23,7 @@ namespace Emanate.Vso
         private static readonly string InProgressStatus = "inProgress";
         private static readonly string SucceededStatus = "succeeded";
         
-        public VsoMonitor(IVsoConnection vsoConnection, VsoDeviceViewModel device)
+        public VsoMonitor(IVsoConnection vsoConnection, VsoDevice device)
         {
             this.vsoConnection = vsoConnection;
 
@@ -109,7 +109,7 @@ namespace Emanate.Vso
                     timeStamp = newStates.Where(s => s.TimeStamp.HasValue).Max(s => s.TimeStamp.Value);
                 }
 
-                var oldState = CurrentState;
+                var asoldState = CurrentState;
                 CurrentState = newState;
                 outputDevice.UpdateStatus(newState, timeStamp);
             }

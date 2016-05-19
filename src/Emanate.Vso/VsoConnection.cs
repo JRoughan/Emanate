@@ -9,10 +9,10 @@ namespace Emanate.Vso
 {
     public class VsoConnection : IVsoConnection
     {
-        private readonly VsoDeviceViewModel device;
+        private readonly VsoDevice device;
         private readonly Uri baseUri;
 
-        public VsoConnection(VsoDeviceViewModel device)
+        public VsoConnection(VsoDevice device)
         {
             this.device = device;
             var rawUrl = $"https://{this.device.Uri}.visualstudio.com/DefaultCollection/";

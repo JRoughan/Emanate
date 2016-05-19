@@ -3,7 +3,7 @@ using System.Windows.Input;
 using Emanate.Extensibility;
 using Serilog;
 
-namespace Emanate.Vso
+namespace Emanate.Vso.Admin
 {
     public class VsoDeviceViewModel : ViewModel
     {
@@ -76,7 +76,7 @@ namespace Emanate.Vso
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
-            var connection = new VsoConnection(this);
+            var connection = new VsoConnection(device);
             try
             {
                 var projects = await connection.GetProjects();
@@ -93,15 +93,5 @@ namespace Emanate.Vso
                 Log.Information("VSO connection test " + (IsTestSuccessful.HasValue && IsTestSuccessful.Value ? "succeeded" : "failed"));
             }
         }
-    }
-
-    public class VsoDevice
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Uri { get; set; }
-        public int PollingInterval { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
     }
 }

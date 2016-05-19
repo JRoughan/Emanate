@@ -50,7 +50,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -64,11 +63,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
@@ -76,25 +70,8 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\InputConfigurationControl.xaml.cs">
-      <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\VsoDeviceManagerView.xaml.cs">
-      <DependentUpon>VsoDeviceManagerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\VsoDeviceManagerViewModel.cs" />
-    <Compile Include="Configuration\VsoConfiguration.cs" />
-    <Compile Include="Configuration\VsoConfigurationViewModel.cs" />
-    <Compile Include="InputSelector\ProjectConfigurationViewModel.cs" />
-    <Compile Include="InputSelector\InputSelectorView.xaml.cs">
-      <DependentUpon>InputSelectorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="InputSelector\InputSelectorViewModel.cs" />
-    <Compile Include="InputSelector\ProjectViewModel.cs" />
-    <Compile Include="VsoDeviceViewModel.cs" />
+    <Compile Include="VsoConfiguration.cs" />
+    <Compile Include="VsoDevice.cs" />
     <Compile Include="VsoModule.cs" />
     <Compile Include="IVsoConnection.cs" />
     <Compile Include="VsoConnection.cs" />
@@ -119,7 +96,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -135,31 +114,6 @@
       <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Configuration\InputConfigurationControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Configuration\ConfigurationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Configuration\VsoDeviceManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="InputSelector\InputSelectorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\failure.png" />
-    <Resource Include="Images\success.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

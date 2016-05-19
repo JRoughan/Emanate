@@ -1,11 +1,11 @@
-﻿<extensibility:InputSelector x:Class="Emanate.Vso.InputSelector.InputSelectorView"
+﻿<extensibility:InputSelector x:Class="Emanate.Vso.Admin.InputSelector.InputSelectorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                     xmlns:inputSelector="clr-namespace:Emanate.Vso.InputSelector"
-                     xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-                     mc:Ignorable="d" 
+                             xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
+                             xmlns:inputSelector="clr-namespace:Emanate.Vso.Admin.InputSelector"
+                             mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance inputSelector:InputSelectorViewModel}">
     <extensibility:InputSelector.Resources>
 

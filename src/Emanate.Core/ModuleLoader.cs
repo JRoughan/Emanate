@@ -12,16 +12,18 @@ namespace Emanate.Core
         public void LoadAdminModules(ContainerBuilder builder)
         {
             Log.Information("=> ModuleLoader.LoadAdminModules");
-            Load(builder, m => m.LoadAdminComponents(builder));
+            Load<IEmanateAdminModule, EmanateAdminModuleAttribute>(builder, m => m.LoadAdminComponents(builder));
         }
 
         public void LoadServiceModules(ContainerBuilder builder)
         {
             Log.Information("=> ModuleLoader.LoadServiceModules");
-            Load(builder, m => m.LoadServiceComponents(builder));
+            Load<IEmanateModule, EmanateModuleAttribute>(builder, m => m.LoadServiceComponents(builder));
         }
 
-        private static void Load(ContainerBuilder builder, Action<IEmanateModule> moduleAction)
+        private static void Load<TModule, TAttribute>(ContainerBuilder builder, Action<TModule> moduleAction)
+            where TModule : class
+            where TAttribute : IModuleType
         {
             Log.Information("=> ModuleLoader.Load");
             var dlls = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "Emanate*.dll");
@@ -29,12 +31,12 @@ namespace Emanate.Core
             {
                 Log.Information("Scanning DLL '{0}'", Path.GetFileNameWithoutExtension(dll));
                 var assembly = Assembly.LoadFrom(dll);
-                var moduleAttribute = (EmanateModuleAttribute)assembly.GetCustomAttributes(typeof(EmanateModuleAttribute), false).SingleOrDefault();
+                var moduleAttribute = (TAttribute)assembly.GetCustomAttributes(typeof(TAttribute), false).SingleOrDefault();
                 if (moduleAttribute == null)
                     continue;
 
                 Log.Information("Loading module '{0}'", moduleAttribute.ModuleType);
-                var module = Activator.CreateInstance(moduleAttribute.ModuleType) as IEmanateModule;
+                var module = Activator.CreateInstance(moduleAttribute.ModuleType) as TModule;
                 if (module != null)
                 {
                     if (module is IInputModule)

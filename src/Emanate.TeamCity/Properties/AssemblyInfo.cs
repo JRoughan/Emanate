@@ -40,3 +40,4 @@ using Emanate.TeamCity;
 [assembly: InternalsVisibleTo("Emanate.IntegrationTests")]
 
 [assembly: EmanateModule(typeof(TeamCityModule))]
+[assembly: EmanateAdminModule(typeof(TeamCityModule))]

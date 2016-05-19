@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Emanate.Core.Configuration;
+﻿using Emanate.Core.Configuration;
+using Emanate.Vso.Configuration;
 
-namespace Emanate.Vso.Configuration
+namespace Emanate.Vso.Admin.Configuration
 {
     public partial class VsoDeviceManagerView
     {

@@ -1,7 +1,7 @@
 using System;
 using Emanate.Extensibility;
 
-namespace Emanate.Vso.InputSelector
+namespace Emanate.Vso.Admin.InputSelector
 {
     public class ProjectConfigurationViewModel : ViewModel
     {
