@@ -52,8 +52,8 @@ namespace Emanate.Service.Admin
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, profileManager, deviceManager);
-                Configurations.Add(moduleConfigInfo);
+                var moduleViewModel = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager);
+                Modules.Add(moduleViewModel);
 
                 var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
@@ -77,8 +77,8 @@ namespace Emanate.Service.Admin
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleConfigInfo = new ConfigurationInfo(moduleConfig.Name, profileManager, deviceManager);
-                Configurations.Add(moduleConfigInfo);
+                var moduleConfigInfo = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager);
+                Modules.Add(moduleConfigInfo);
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)
@@ -125,7 +125,7 @@ namespace Emanate.Service.Admin
             ActiveDevices.Add(outputDeviceInfo);
         }
 
-        public ObservableCollection<ConfigurationInfo> Configurations { get; } = new ObservableCollection<ConfigurationInfo>();
+        public ObservableCollection<ModuleViewModel> Modules { get; } = new ObservableCollection<ModuleViewModel>();
 
         public ObservableCollection<OutputDeviceInfo> ActiveDevices { get; } = new ObservableCollection<OutputDeviceInfo>();
 

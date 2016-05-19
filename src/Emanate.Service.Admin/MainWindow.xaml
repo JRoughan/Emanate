@@ -47,9 +47,9 @@
                     <TextBlock Text="Devices" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
-                    <ListView DockPanel.Dock="Left" x:Name="ConfigDevicesSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
+                    <ListView DockPanel.Dock="Left" x:Name="ModuleDevicesSelector" ItemsSource="{Binding Modules}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
                     <Border Margin="10">
-                        <ContentPresenter Content="{Binding ElementName=ConfigDevicesSelector, Path=SelectedItem.DeviceManager}" Margin="5"  />
+                        <ContentPresenter Content="{Binding ElementName=ModuleDevicesSelector, Path=SelectedItem.DeviceManager}" Margin="5"  />
                     </Border>
                 </DockPanel>
             </TabItem>
@@ -58,9 +58,9 @@
                     <TextBlock Text="Profiles" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
-                    <ListView DockPanel.Dock="Left" x:Name="ConfigEditorSelector" ItemsSource="{Binding Configurations}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
+                    <ListView DockPanel.Dock="Left" x:Name="ModuleProfilesSelector" ItemsSource="{Binding Modules}" MinWidth="120" DisplayMemberPath="Name"  Margin="10" />
                     <Border Margin="10">
-                        <ContentPresenter Content="{Binding ElementName=ConfigEditorSelector, Path=SelectedItem.ProfileManager}" Margin="5"  />
+                        <ContentPresenter Content="{Binding ElementName=ModuleProfilesSelector, Path=SelectedItem.ProfileManager}" Margin="5"  />
                     </Border>
                 </DockPanel>
             </TabItem>

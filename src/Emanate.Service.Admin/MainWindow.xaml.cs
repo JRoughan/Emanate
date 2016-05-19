@@ -23,11 +23,11 @@ namespace Emanate.Service.Admin
             if (DeviceSelector.Items.Count > 0)
                 DeviceSelector.SelectedIndex = 0;
 
-            if (ConfigEditorSelector.Items.Count > 0)
-                ConfigEditorSelector.SelectedIndex = 0;
+            if (ModuleProfilesSelector.Items.Count > 0)
+                ModuleProfilesSelector.SelectedIndex = 0;
 
-            if (ConfigDevicesSelector.Items.Count > 0)
-                ConfigDevicesSelector.SelectedIndex = 0;
+            if (ModuleDevicesSelector.Items.Count > 0)
+                ModuleDevicesSelector.SelectedIndex = 0;
         }
 
         void ViewModelCloseRequested(object sender, EventArgs e)
