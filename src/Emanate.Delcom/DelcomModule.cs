@@ -2,32 +2,18 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
-using Emanate.Delcom.Configuration;
-using Emanate.Extensibility;
 using Serilog;
 
 namespace Emanate.Delcom
 {
-    public class DelcomModule : IEmanateModule, IEmanateAdminModule, IOutputModule
+    public class DelcomModule : IEmanateModule, IOutputModule
     {
         public string Key { get; } = "delcom";
-
-        public void LoadAdminComponents(ContainerBuilder builder)
-        {
-            Log.Information("=> DelcomModule.LoadAdminComponents");
-            RegisterCommon(builder);
-            builder.RegisterType<ConfigurationView>().Keyed<ConfigurationEditor>(Key);
-            builder.RegisterType<DelcomConfigurationViewModel>();
-
-            builder.RegisterType<DelcomDeviceManagerView>().Keyed<Extensibility.DeviceManager>(Key);
-            builder.RegisterType<DelcomDeviceManagerViewModel>();
-        }
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
             Log.Information("=> DelcomModule.LoadServiceComponents");
             RegisterCommon(builder);
-            //builder.RegisterType<DelcomBuildOutput>().Keyed<IBuildOutput>(key);
         }
 
         public IOutputConfiguration GenerateDefaultConfig()

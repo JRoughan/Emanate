@@ -26,18 +26,7 @@ using Emanate.Delcom;
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 
-
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
-    //(used if a resource is not found in the page, 
-    // or application resource dictionaries)
-    ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
-    //(used if a resource is not found in the page, 
-    // app, or any theme specific resource dictionaries)
-)]
-
 [assembly: InternalsVisibleTo("Emanate.UnitTests")]
 [assembly: InternalsVisibleTo("Emanate.IntegrationTests")]
 
 [assembly: EmanateModule(typeof(DelcomModule))]
-[assembly: EmanateAdminModule(typeof(DelcomModule))]

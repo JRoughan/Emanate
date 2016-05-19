@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
-using Emanate.Delcom.Configuration;
 using Serilog;
 
 namespace Emanate.Delcom

@@ -53,39 +53,16 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Color.cs" />
-    <Compile Include="Configuration\AddProfileView.xaml.cs">
-      <DependentUpon>AddProfileView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\AddProfileViewModel.cs" />
-    <Compile Include="Configuration\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\DelcomDeviceInfo.cs" />
-    <Compile Include="Configuration\DelcomDeviceManagerView.xaml.cs">
-      <DependentUpon>DelcomDeviceManagerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\DelcomDeviceManagerViewModel.cs" />
-    <Compile Include="Configuration\DelcomConfiguration.cs" />
-    <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
-    <Compile Include="Configuration\MonitoringProfile.cs" />
-    <Compile Include="Configuration\ProfileControl.xaml.cs">
-      <DependentUpon>ProfileControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\ProfileState.cs" />
+    <Compile Include="DelcomConfiguration.cs" />
     <Compile Include="DelcomDevice.cs" />
     <Compile Include="DelcomHID.cs" />
+    <Compile Include="MonitoringProfile.cs" />
     <Compile Include="PhysicalDevice.cs" />
     <Compile Include="DeviceManagementDeclarations.cs" />
     <Compile Include="DeviceManager.cs" />
@@ -95,6 +72,7 @@
     <Compile Include="DelcomModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProfileState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -129,40 +107,6 @@
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="Configuration\AddProfileView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Configuration\ConfigurationView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Configuration\DelcomDeviceManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Configuration\ProfileControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\edit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\MoveLeft.png" />
-    <Resource Include="Images\MoveRight.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Identify.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\error.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service\bin\$(ConfigurationName)\
@@ -176,4 +120,3 @@ xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationN
   </Target>
   -->
 </Project>
-
