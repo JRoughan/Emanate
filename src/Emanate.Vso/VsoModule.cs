@@ -2,7 +2,6 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Vso.Configuration;
 using Serilog;
 
 namespace Emanate.Vso

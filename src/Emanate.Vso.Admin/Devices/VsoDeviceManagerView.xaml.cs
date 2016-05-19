@@ -1,7 +1,6 @@
 ﻿using Emanate.Core.Configuration;
-using Emanate.Vso.Configuration;
 
-namespace Emanate.Vso.Admin.Configuration
+namespace Emanate.Vso.Admin.Devices
 {
     public partial class VsoDeviceManagerView
     {

@@ -1,4 +1,4 @@
-﻿namespace Emanate.TeamCity.Admin.Configuration
+﻿namespace Emanate.TeamCity.Admin.Devices
 {
     public partial class TeamCityDeviceManagerView
     {

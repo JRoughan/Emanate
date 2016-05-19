@@ -1,12 +1,12 @@
-﻿<extensibility:ConfigurationEditor x:Class="Emanate.TeamCity.Admin.Configuration.InputConfigurationControl"
+﻿<extensibility:ConfigurationEditor x:Class="Emanate.TeamCity.Admin.Devices.InputConfigurationControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-           xmlns:configuration="clr-namespace:Emanate.TeamCity.Admin.Configuration"
+           xmlns:devices="clr-namespace:Emanate.TeamCity.Admin.Devices"
            mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance configuration:TeamCityDeviceViewModel}"
+             d:DataContext="{d:DesignInstance devices:TeamCityDeviceViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid IsEnabled="{Binding IsEditable}">
         <Grid.ColumnDefinitions>

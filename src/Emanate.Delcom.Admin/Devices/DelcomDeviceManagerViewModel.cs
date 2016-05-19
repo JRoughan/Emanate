@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Devices
 {
     public class DelcomDeviceManagerViewModel : ViewModel
     {

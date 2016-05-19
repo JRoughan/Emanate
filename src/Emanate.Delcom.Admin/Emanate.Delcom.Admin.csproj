@@ -51,25 +51,25 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
-    <Compile Include="Configuration\AddProfileView.xaml.cs">
+    <Compile Include="Profiles\AddProfileView.xaml.cs">
       <DependentUpon>AddProfileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\AddProfileViewModel.cs" />
-    <Compile Include="Configuration\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
+    <Compile Include="Profiles\AddProfileViewModel.cs" />
+    <Compile Include="Configuration\DelcomConfigurationView.xaml.cs">
+      <DependentUpon>DelcomConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\DelcomConfigurationViewModel.cs" />
-    <Compile Include="Configuration\DelcomDeviceInfo.cs" />
-    <Compile Include="Configuration\DelcomDeviceManagerView.xaml.cs">
+    <Compile Include="Devices\DelcomDeviceInfo.cs" />
+    <Compile Include="Devices\DelcomDeviceManagerView.xaml.cs">
       <DependentUpon>DelcomDeviceManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\DelcomDeviceManagerViewModel.cs" />
-    <Compile Include="Configuration\ProfileControl.xaml.cs">
+    <Compile Include="Devices\DelcomDeviceManagerViewModel.cs" />
+    <Compile Include="Profiles\ProfileControl.xaml.cs">
       <DependentUpon>ProfileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DelcomAdminModule.cs" />
-    <Compile Include="MonitoringProfileViewModel.cs" />
-    <Compile Include="ProfileStateViewModel.cs" />
+    <Compile Include="Profiles\MonitoringProfileViewModel.cs" />
+    <Compile Include="Profiles\ProfileStateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,19 +87,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Configuration\AddProfileView.xaml">
+    <Page Include="Profiles\AddProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\ConfigurationView.xaml">
+    <Page Include="Configuration\DelcomConfigurationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\DelcomDeviceManagerView.xaml">
+    <Page Include="Devices\DelcomDeviceManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\ProfileControl.xaml">
+    <Page Include="Profiles\ProfileControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -125,6 +125,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetPath) $(SolutionDir)\Emanate.Service.Admin\bin\$(ConfigurationName)\</PostBuildEvent>

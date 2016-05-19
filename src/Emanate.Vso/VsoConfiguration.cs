@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Serilog;
 
-namespace Emanate.Vso.Configuration
+namespace Emanate.Vso
 {
     public class VsoConfiguration : IInputConfiguration
     {

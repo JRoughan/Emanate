@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Profiles
 {
     /// <summary>
     /// Interaction logic for ProfileControl.xaml

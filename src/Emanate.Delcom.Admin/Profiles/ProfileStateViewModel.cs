@@ -1,7 +1,7 @@
 ﻿using Emanate.Core.Input;
 using Emanate.Extensibility;
 
-namespace Emanate.Delcom.Admin
+namespace Emanate.Delcom.Admin.Profiles
 {
     public class ProfileStateViewModel : ViewModel
     {

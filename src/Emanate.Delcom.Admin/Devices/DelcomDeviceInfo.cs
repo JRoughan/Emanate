@@ -6,7 +6,7 @@ using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Devices
 {
     public class DelcomDeviceInfo : ViewModel
     {

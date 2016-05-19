@@ -3,11 +3,11 @@ using Emanate.Core.Configuration;
 
 namespace Emanate.Delcom.Admin.Configuration
 {
-    public partial class ConfigurationView
+    public partial class DelcomConfigurationView
     {
         private DelcomConfigurationViewModel viewModel;
 
-        public ConfigurationView()
+        public DelcomConfigurationView()
         {
             Loaded += SelectInitialProfile;
             InitializeComponent();

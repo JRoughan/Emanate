@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Emanate.Extensibility;
 
-namespace Emanate.Delcom.Admin
+namespace Emanate.Delcom.Admin.Profiles
 {
     public class MonitoringProfileViewModel : ViewModel
     {

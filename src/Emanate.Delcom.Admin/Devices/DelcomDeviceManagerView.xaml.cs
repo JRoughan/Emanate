@@ -1,6 +1,6 @@
 ﻿using Emanate.Core.Configuration;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Devices
 {
     public partial class DelcomDeviceManagerView
     {

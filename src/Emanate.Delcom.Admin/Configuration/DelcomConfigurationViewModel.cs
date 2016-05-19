@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Emanate.Delcom.Admin.Profiles;
 using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Configuration
@@ -26,7 +27,7 @@ namespace Emanate.Delcom.Admin.Configuration
         private void AddProfile()
         {
             var addProfileViewModel = new AddProfileViewModel(delcomConfiguration, Profiles);
-            var addProfileView = new AddProfileView { DataContext = addProfileViewModel };
+            var addProfileView = new Profiles.AddProfileView { DataContext = addProfileViewModel };
             addProfileView.Owner = Application.Current.MainWindow;
             addProfileView.ShowDialog();
         }

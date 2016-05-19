@@ -55,14 +55,14 @@
     <Compile Include="Configuration\TeamCityConfigurationView.xaml.cs">
       <DependentUpon>TeamCityConfigurationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\InputConfigurationControl.xaml.cs">
+    <Compile Include="Devices\InputConfigurationControl.xaml.cs">
       <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\TeamCityDeviceViewModel.cs" />
-    <Compile Include="Configuration\TeamCityDeviceManagerView.xaml.cs">
+    <Compile Include="Devices\TeamCityDeviceViewModel.cs" />
+    <Compile Include="Devices\TeamCityDeviceManagerView.xaml.cs">
       <DependentUpon>TeamCityDeviceManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\TeamCityDeviceManagerViewModel.cs" />
+    <Compile Include="Devices\TeamCityDeviceManagerViewModel.cs" />
     <Compile Include="Configuration\TeamCityConfigurationViewModel.cs" />
     <Compile Include="InputSelector\InputSelectorView.xaml.cs">
       <DependentUpon>InputSelectorView.xaml</DependentUpon>
@@ -95,11 +95,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\InputConfigurationControl.xaml">
+    <Page Include="Devices\InputConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\TeamCityDeviceManagerView.xaml">
+    <Page Include="Devices\TeamCityDeviceManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -116,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Profiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

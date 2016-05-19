@@ -1,19 +1,19 @@
-﻿<extensibility:DeviceManager x:Class="Emanate.Delcom.Admin.Configuration.DelcomDeviceManagerView"
+﻿<extensibility:DeviceManager x:Class="Emanate.Delcom.Admin.Devices.DelcomDeviceManagerView"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                              xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
                      xmlns:converters="clr-namespace:Emanate.Extensibility.Converters;assembly=Emanate.Extensibility"
-                     xmlns:configuration="clr-namespace:Emanate.Delcom.Admin.Configuration"
+                     xmlns:devices="clr-namespace:Emanate.Delcom.Admin.Devices"
                      mc:Ignorable="d" 
-                     d:DataContext="{d:DesignInstance configuration:DelcomDeviceManagerViewModel}">
+                     d:DataContext="{d:DesignInstance devices:DelcomDeviceManagerViewModel}">
     <extensibility:DeviceManager.Resources>
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis" />
 
-        <DataTemplate x:Key="DeviceTemplate" DataType="{x:Type configuration:DelcomDeviceInfo}">
+        <DataTemplate x:Key="DeviceTemplate" DataType="{x:Type devices:DelcomDeviceInfo}">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

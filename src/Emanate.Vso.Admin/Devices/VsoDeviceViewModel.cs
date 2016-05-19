@@ -3,7 +3,7 @@ using System.Windows.Input;
 using Emanate.Extensibility;
 using Serilog;
 
-namespace Emanate.Vso.Admin
+namespace Emanate.Vso.Admin.Devices
 {
     public class VsoDeviceViewModel : ViewModel
     {

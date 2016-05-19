@@ -55,13 +55,13 @@
     <Compile Include="Configuration\VsoConfigurationView.xaml.cs">
       <DependentUpon>VsoConfigurationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\InputConfigurationControl.xaml.cs">
+    <Compile Include="Devices\InputConfigurationControl.xaml.cs">
       <DependentUpon>InputConfigurationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\VsoDeviceManagerView.xaml.cs">
+    <Compile Include="Devices\VsoDeviceManagerView.xaml.cs">
       <DependentUpon>VsoDeviceManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\VsoDeviceManagerViewModel.cs" />
+    <Compile Include="Devices\VsoDeviceManagerViewModel.cs" />
     <Compile Include="InputSelector\InputSelectorView.xaml.cs">
       <DependentUpon>InputSelectorView.xaml</DependentUpon>
     </Compile>
@@ -70,7 +70,7 @@
     <Compile Include="InputSelector\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\VsoConfigurationViewModel.cs" />
-    <Compile Include="VsoDeviceViewModel.cs" />
+    <Compile Include="Devices\VsoDeviceViewModel.cs" />
     <Compile Include="VsoModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -105,11 +105,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\InputConfigurationControl.xaml">
+    <Page Include="Devices\InputConfigurationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Configuration\VsoDeviceManagerView.xaml">
+    <Page Include="Devices\VsoDeviceManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -117,6 +117,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Profiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

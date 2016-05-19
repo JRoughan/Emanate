@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Emanate.Delcom.Admin.Configuration
+namespace Emanate.Delcom.Admin.Profiles
 {
     public partial class AddProfileView
     {

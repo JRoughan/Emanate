@@ -3,9 +3,10 @@ using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
 using Emanate.Vso.Admin.Configuration;
+using Emanate.Vso.Admin.Devices;
 using Emanate.Vso.Admin.InputSelector;
-using Emanate.Vso.Configuration;
 using Serilog;
+using VsoDeviceManagerView = Emanate.Vso.Admin.Devices.VsoDeviceManagerView;
 
 namespace Emanate.Vso.Admin
 {

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
-using Emanate.Vso.Configuration;
 
-namespace Emanate.Vso.Admin.Configuration
+namespace Emanate.Vso.Admin.Devices
 {
     public class VsoDeviceManagerViewModel : ViewModel
     {

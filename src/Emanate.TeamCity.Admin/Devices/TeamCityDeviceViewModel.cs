@@ -3,7 +3,7 @@ using System.Windows.Input;
 using Emanate.Extensibility;
 using Serilog;
 
-namespace Emanate.TeamCity.Admin.Configuration
+namespace Emanate.TeamCity.Admin.Devices
 {
     public class TeamCityDeviceViewModel : ViewModel
     {

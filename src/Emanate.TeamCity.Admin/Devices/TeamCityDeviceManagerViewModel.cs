@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
 
-namespace Emanate.TeamCity.Admin.Configuration
+namespace Emanate.TeamCity.Admin.Devices
 {
     public class TeamCityDeviceManagerViewModel : ViewModel
     {
