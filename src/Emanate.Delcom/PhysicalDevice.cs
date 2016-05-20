@@ -40,7 +40,7 @@ namespace Emanate.Delcom
 
         public bool IsOpen { get { return delcom.IsOpen(); } }
 
-        public string Name { get { return delcom.GetDeviceName(); } }
+        public string Id { get { return delcom.GetDeviceName(); } }
 
         public void Close()
         {

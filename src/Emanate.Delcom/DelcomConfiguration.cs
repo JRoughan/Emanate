@@ -163,9 +163,9 @@ namespace Emanate.Delcom
                     break;
 
                 var physicalDevice = new PhysicalDevice(delcom);
-                var deviceId = physicalDevice.Name;
+                var deviceId = physicalDevice.Id;
 
-                var delcomDevice = outputDevices.OfType<DelcomDevice>().SingleOrDefault(d => d.Id == deviceId);
+                var delcomDevice = outputDevices.OfType<DelcomDevice>().SingleOrDefault(d => d.PhysicalDeviceId == deviceId);
                 if (delcomDevice != null)
                     delcomDevice.PhysicalDevice = physicalDevice;
             }

@@ -34,8 +34,8 @@ namespace Emanate.Delcom.Admin.Devices
                     var physicalDevice = new PhysicalDevice(delcom);
                     var delcomDevice = new DelcomDevice { PhysicalDevice = physicalDevice };
 
-                    var deviceId = physicalDevice.Name;
-                    var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.Id == deviceId);
+                    var physicalDeviceId = physicalDevice.Id;
+                    var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.PhysicalDeviceId == physicalDeviceId);
 
                     var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice, delcomConfiguration);
 
@@ -67,7 +67,7 @@ namespace Emanate.Delcom.Admin.Devices
         private void AddDevice(DelcomDeviceInfo deviceInfo)
         {
             var device = deviceInfo.Device;
-            device.Id = device.PhysicalDevice.Name;
+            device.PhysicalDeviceId = device.PhysicalDevice.Id;
             device.Name = deviceInfo.Name;
             device.Profile = delcomConfiguration.Profiles.FirstOrDefault() ?? delcomConfiguration.AddDefaultProfile("Default");
             deviceInfo.Profile = deviceInfo.Device.Profile.Id.ToString(); // TODO: Binding should deal with this

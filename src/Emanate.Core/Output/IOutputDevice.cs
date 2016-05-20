@@ -7,7 +7,7 @@ namespace Emanate.Core.Output
     public interface IOutputDevice : IDevice
     {
         string Key { get; }
-        string Id { get; }
+        string PhysicalDeviceId { get; }
         string Name { get; set; }
 
         string Type { get; }

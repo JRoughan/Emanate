@@ -20,26 +20,23 @@ namespace Emanate.Delcom
 
         string IOutputDevice.Key { get { return key; } }
 
-        private string name;
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Name
-        {
-            get { return name ?? defaultName; }
-            set { name = value; }
-        }
+        public string Name { get; set; } = defaultName;
 
         public DelcomDevice()
         {
             Inputs = new List<InputInfo>();
         }
 
-        public string Id { get; set; }
+        public string PhysicalDeviceId { get; set; }
 
         public string Type { get { return key; } }
 
         public List<InputInfo> Inputs { get; }
 
         private MonitoringProfile profile;
+
         public IProfile Profile
         {
             get { return profile; }
@@ -181,15 +178,18 @@ namespace Emanate.Delcom
         public XElement CreateMemento()
         {
             var deviceElement = new XElement("device");
-            deviceElement.Add(new XAttribute("name", Name));
             deviceElement.Add(new XAttribute("id", Id));
+            deviceElement.Add(new XAttribute("name", Name));
+            deviceElement.Add(new XAttribute("physical-device-id", PhysicalDeviceId));
             deviceElement.Add(new XAttribute("profile", Profile.Id));
             return deviceElement;
         }
 
+
         public void SetMemento(XElement deviceElement)
         {
-            Id = deviceElement.GetAttributeString("id");
+            Id = Guid.Parse(deviceElement.GetAttributeString("id"));
+            PhysicalDeviceId = deviceElement.GetAttributeString("physical-device-id");
             Name = deviceElement.GetAttributeString("name");
         }
     }

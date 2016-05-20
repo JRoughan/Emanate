@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using Emanate.Core;
 using Emanate.Core.Output;
@@ -39,7 +40,7 @@ namespace Emanate.TeamCity.Admin.Inputs
 
         public override IEnumerable<InputInfo> GetSelectedInputs()
         {
-            return viewModel.GetSelectedInputs();
+            return viewModel?.GetSelectedInputs() ?? Enumerable.Empty<InputInfo>();
         }
     }
 }
