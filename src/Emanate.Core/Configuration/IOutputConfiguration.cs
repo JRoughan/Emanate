@@ -12,8 +12,7 @@ namespace Emanate.Core.Configuration
         string Key { get; }
         string Name { get; }
 
-        IOutputProfile GenerateEmptyProfile(string newName = "");
-        ObservableCollection<IOutputProfile> Profiles { get; }
+        ObservableCollection<IProfile> Profiles { get; }
 
         IEnumerable<IOutputDevice> OutputDevices { get; }
 

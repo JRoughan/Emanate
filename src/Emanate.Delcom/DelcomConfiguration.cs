@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -18,8 +19,8 @@ namespace Emanate.Delcom
         string IOutputConfiguration.Key { get { return key; } }
         string IOutputConfiguration.Name { get { return name; } }
 
-        private readonly ObservableCollection<IOutputProfile> profiles = new ObservableCollection<IOutputProfile>();
-        public ObservableCollection<IOutputProfile> Profiles
+        private readonly ObservableCollection<IProfile> profiles = new ObservableCollection<IProfile>();
+        public ObservableCollection<IProfile> Profiles
         {
             get { return profiles; }
         }
@@ -145,16 +146,10 @@ namespace Emanate.Delcom
             {
                 foreach (var deviceElement in devicesElement.Elements("device"))
                 {
-                    var profileKey = deviceElement.GetAttributeString("profile");
-                    if (string.IsNullOrWhiteSpace(profileKey))
-                    {
-                        Log.Warning("Ignoring invalid profile key");
-                        continue;
-                    }
-
+                    var profileKey = Guid.Parse(deviceElement.GetAttributeString("profile"));
                     var device = new DelcomDevice();
                     device.SetMemento(deviceElement);
-                    device.Profile = Profiles.Single(p => p.Name == profileKey);
+                    device.Profile = Profiles.Single(p => p.Id == profileKey);
                     AddOutputDevice(device);
                 }
             }

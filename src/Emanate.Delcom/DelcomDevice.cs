@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -39,7 +40,7 @@ namespace Emanate.Delcom
         public List<InputInfo> Inputs { get; }
 
         private MonitoringProfile profile;
-        public IOutputProfile Profile
+        public IProfile Profile
         {
             get { return profile; }
             set { profile = value as MonitoringProfile; }
@@ -182,7 +183,7 @@ namespace Emanate.Delcom
             var deviceElement = new XElement("device");
             deviceElement.Add(new XAttribute("name", Name));
             deviceElement.Add(new XAttribute("id", Id));
-            deviceElement.Add(new XAttribute("profile", Profile.Name));
+            deviceElement.Add(new XAttribute("profile", Profile.Id));
             return deviceElement;
         }
 

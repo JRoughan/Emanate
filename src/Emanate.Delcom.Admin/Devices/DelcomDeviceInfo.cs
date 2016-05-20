@@ -21,7 +21,7 @@ namespace Emanate.Delcom.Admin.Devices
             if (configuredDevice != null)
             {
                 Name = configuredDevice.Name;
-                Profile = configuredDevice.Profile.Name;
+                Profile = configuredDevice.Profile.Id.ToString();
             }
             else
             {

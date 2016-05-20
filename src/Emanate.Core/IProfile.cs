@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
 namespace Emanate.Core
 {
@@ -6,5 +7,6 @@ namespace Emanate.Core
     {
         XElement CreateMemento();
         void SetMemento(XElement deviceElement);
+        Guid Id { get; set; }
     }
 }

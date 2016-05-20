@@ -13,7 +13,7 @@ namespace Emanate.Core.Output
         string Type { get; }
 
         List<InputInfo> Inputs { get; }
-        IOutputProfile Profile { get; set; }
+        IProfile Profile { get; set; }
 
         bool IsAvailable { get; }
         void UpdateStatus(BuildState state, DateTimeOffset timeStamp);

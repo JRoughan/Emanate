@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
@@ -17,12 +18,12 @@ namespace Emanate.Service.Admin
             OutputDevice = outputDevice;
         }
 
-        public ObservableCollection<IOutputProfile> AvailableProfiles
+        public ObservableCollection<IProfile> AvailableProfiles
         {
             get { return configuration.Profiles; }
         }
 
-        public IOutputProfile Profile
+        public IProfile Profile
         {
             get { return OutputDevice.Profile; }
             set { OutputDevice.Profile = value; OnPropertyChanged(); }
