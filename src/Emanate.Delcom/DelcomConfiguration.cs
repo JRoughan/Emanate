@@ -31,7 +31,7 @@ namespace Emanate.Delcom
             get { return outputDevices; }
         }
 
-        public IOutputProfile GenerateEmptyProfile(string newName = "")
+        public IProfile GenerateEmptyProfile(string newName = "")
         {
             Log.Information("=> DelcomConfiguration.GenerateEmptyProfile");
             var defaultProfile = new MonitoringProfile
@@ -49,7 +49,7 @@ namespace Emanate.Delcom
             return defaultProfile;
         }
         
-        public IOutputProfile AddDefaultProfile(string newKey)
+        public IProfile AddDefaultProfile(string newKey)
         {
             Log.Information("=> DelcomConfiguration.AddDefaultProfile");
             var defaultProfile = (MonitoringProfile)GenerateEmptyProfile(newKey);

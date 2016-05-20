@@ -70,7 +70,6 @@
     <Compile Include="Output\InputInfo.cs" />
     <Compile Include="Output\IOutputDevice.cs" />
     <Compile Include="Output\IBuildOutput.cs" />
-    <Compile Include="Output\IOutputProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\XElementExtensions.cs" />
     <Compile Include="SimpleCrypto.cs" />

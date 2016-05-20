@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Core.Output;
 
 namespace Emanate.Delcom
 {
-    public class MonitoringProfile : IOutputProfile
+    public class MonitoringProfile : IProfile
     {
         public Guid Id { get; set; }
 
