@@ -14,9 +14,9 @@ namespace Emanate.Vso.Admin.Inputs
     {
         private readonly IVsoConnection connection;
 
-        public InputSelectorViewModel(IVsoConnection connection)
+        public InputSelectorViewModel(VsoDevice device)
         {
-            this.connection = connection;
+            connection = new VsoConnection(device);
         }
 
         public override async Task<InitializationResult> Initialize()

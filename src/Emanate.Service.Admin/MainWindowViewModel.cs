@@ -52,7 +52,7 @@ namespace Emanate.Service.Admin
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleViewModel = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager);
+                var moduleViewModel = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager, null);
                 Modules.Add(moduleViewModel);
 
                 var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
@@ -77,7 +77,9 @@ namespace Emanate.Service.Admin
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleConfigInfo = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager);
+                var inputSelector = componentContext.ResolveKeyed<InputSelector>(moduleConfig.Key);
+
+                var moduleConfigInfo = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager, inputSelector);
                 Modules.Add(moduleConfigInfo);
             }
 

@@ -1,23 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
+using Emanate.Core;
 using Emanate.Core.Output;
 
 namespace Emanate.Vso.Admin.Inputs
 {
     public partial class InputSelectorView
     {
-        private readonly InputSelectorViewModel viewModel;
+        private InputSelectorViewModel viewModel;
 
-        public InputSelectorView(InputSelectorViewModel inputSelectorViewModel)
+        public InputSelectorView()
         {
-            DataContext = viewModel = inputSelectorViewModel;
-            Initialized += ViewInitialized;
             InitializeComponent();
         }
 
-        async void ViewInitialized(object sender, EventArgs e)
+        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(InputSelectorView), new PropertyMetadata(null, DeviceChanged));
+
+        public IDevice Device
         {
-            await viewModel.Initialize();
+            get { return (IDevice)GetValue(DeviceProperty); }
+            set { SetValue(DeviceProperty, value); }
+        }
+
+        private static async void DeviceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var target = (InputSelectorView)d;
+            var device = (VsoDevice)e.NewValue;
+
+            target.viewModel = new InputSelectorViewModel(device);
+            await target.viewModel.Initialize();
+            target.DataContext = target.viewModel;
         }
 
         public override void SelectInputs(IEnumerable<InputInfo> inputs)

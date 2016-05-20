@@ -5,8 +5,9 @@ namespace Emanate.Core
 {
     public interface IProfile
     {
+        Guid Id { get; set; }
+
         XElement CreateMemento();
         void SetMemento(XElement deviceElement);
-        Guid Id { get; set; }
     }
 }

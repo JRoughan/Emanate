@@ -16,9 +16,9 @@ namespace Emanate.TeamCity.Admin.Inputs
     {
         private readonly ITeamCityConnection connection;
 
-        public InputSelectorViewModel(ITeamCityConnection connection)
+        public InputSelectorViewModel(TeamCityDevice device)
         {
-            this.connection = connection;
+            connection = new TeamCityConnection(device);
         }
 
         public override async Task<InitializationResult> Initialize()
