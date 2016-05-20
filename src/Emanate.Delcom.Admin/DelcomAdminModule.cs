@@ -9,9 +9,10 @@ using Serilog;
 
 namespace Emanate.Delcom.Admin
 {
-    public class DelcomAdminModule : IEmanateAdminModule, IOutputModule
+    public class DelcomAdminModule : IEmanateAdminModule, IModule
     {
         public string Key { get; } = "delcom";
+        public Direction Direction  { get; } = Direction.Output;
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
@@ -21,7 +22,7 @@ namespace Emanate.Delcom.Admin
             builder.RegisterType<DelcomDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 
-        public IOutputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             var config = new DelcomConfiguration();
             config.AddDefaultProfile("Default");

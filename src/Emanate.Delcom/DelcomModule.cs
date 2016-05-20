@@ -6,9 +6,10 @@ using Serilog;
 
 namespace Emanate.Delcom
 {
-    public class DelcomModule : IEmanateModule, IOutputModule
+    public class DelcomModule : IEmanateModule, IModule
     {
         public string Key { get; } = "delcom";
+        public Direction Direction { get; } = Direction.Output;
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
@@ -16,7 +17,7 @@ namespace Emanate.Delcom
             RegisterCommon(builder);
         }
 
-        public IOutputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             var config = new DelcomConfiguration();
             config.AddDefaultProfile("Default");

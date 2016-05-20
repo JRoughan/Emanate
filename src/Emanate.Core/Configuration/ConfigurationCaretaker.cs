@@ -36,8 +36,10 @@ namespace Emanate.Core.Configuration
                 var builder = new ContainerBuilder();
                 var globalConfig = new GlobalConfig();
 
-                globalConfig.InputModules.AddRange(componentContext.Resolve<IEnumerable<IInputModule>>());
-                globalConfig.OutputModules.AddRange(componentContext.Resolve<IEnumerable<IOutputModule>>());
+                var allModules = componentContext.Resolve<IEnumerable<IModule>>();
+
+                globalConfig.InputModules.AddRange(allModules.Where(m => m.Direction == Direction.Input));
+                globalConfig.OutputModules.AddRange(allModules.Where(m => m.Direction == Direction.Output));
 
 
                 Log.Information("Loading config file from '{0}'", configFilePath);

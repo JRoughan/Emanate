@@ -6,9 +6,10 @@ using Serilog;
 
 namespace Emanate.Vso
 {
-    public class VsoModule : IEmanateModule, IInputModule
+    public class VsoModule : IEmanateModule, IModule
     {
         public string Key { get; } = "vso";
+        public Direction Direction { get; } = Direction.Input;
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
@@ -17,7 +18,7 @@ namespace Emanate.Vso
             builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        public IInputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             return new VsoConfiguration();
         }

@@ -13,15 +13,18 @@ namespace Emanate.Core
         void LoadAdminComponents(ContainerBuilder builder);
     }
 
-    public interface IOutputModule
+    public interface IModule
     {
         string Key { get; }
-        IOutputConfiguration GenerateDefaultConfig();
+        Direction Direction { get; }
+
+        IConfiguration GenerateDefaultConfig();
     }
 
-    public interface IInputModule
+    public enum Direction
     {
-        string Key { get; }
-        IInputConfiguration GenerateDefaultConfig();
+        Unknown = 0,
+        Input,
+        Output
     }
 }

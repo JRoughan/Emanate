@@ -42,7 +42,7 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = outputModule.GenerateDefaultConfig();
+                    moduleConfig = (IOutputConfiguration)outputModule.GenerateDefaultConfig();
                     globalConfig.OutputConfigurations.Add(moduleConfig);
                 }
 
@@ -67,7 +67,7 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == inputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = inputModule.GenerateDefaultConfig();
+                    moduleConfig = (IInputConfiguration)inputModule.GenerateDefaultConfig();
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 

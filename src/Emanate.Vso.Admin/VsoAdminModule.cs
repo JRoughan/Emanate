@@ -9,9 +9,10 @@ using Serilog;
 
 namespace Emanate.Vso.Admin
 {
-    public class VsoAdminModule : IEmanateAdminModule, IInputModule
+    public class VsoAdminModule : IEmanateAdminModule, IModule
     {
         public string Key { get; } = "vso";
+        public Direction Direction { get; } = Direction.Input;
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
@@ -24,7 +25,7 @@ namespace Emanate.Vso.Admin
             builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 
-        public IInputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             return new VsoConfiguration();
         }

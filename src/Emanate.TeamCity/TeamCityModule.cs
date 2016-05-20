@@ -6,9 +6,10 @@ using Serilog;
 
 namespace Emanate.TeamCity
 {
-    public class TeamCityModule : IEmanateModule, IInputModule
+    public class TeamCityModule : IEmanateModule, IModule
     {
         public string Key { get; } = "teamcity";
+        public Direction Direction { get; } = Direction.Input;
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
@@ -17,7 +18,7 @@ namespace Emanate.TeamCity
             builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        public IInputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             return new TeamCityConfiguration();
         }

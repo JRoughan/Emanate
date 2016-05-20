@@ -2,16 +2,17 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
+using Emanate.TeamCity.Admin.Devices;
 using Emanate.TeamCity.Admin.Inputs;
 using Emanate.TeamCity.Admin.Profiles;
 using Serilog;
-using TeamCityDeviceManagerView = Emanate.TeamCity.Admin.Devices.TeamCityDeviceManagerView;
 
 namespace Emanate.TeamCity.Admin
 {
-    public class TeamCityAdminModule : IEmanateAdminModule, IInputModule
+    public class TeamCityAdminModule : IEmanateAdminModule, IModule
     {
         public string Key { get; } = "teamcity";
+        public Direction Direction { get; } = Direction.Input;
 
         public void LoadAdminComponents(ContainerBuilder builder)
         {
@@ -24,7 +25,7 @@ namespace Emanate.TeamCity.Admin
             builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 
-        public IInputConfiguration GenerateDefaultConfig()
+        public IConfiguration GenerateDefaultConfig()
         {
             return new TeamCityConfiguration();
         }

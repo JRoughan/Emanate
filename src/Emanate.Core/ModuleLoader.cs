@@ -39,11 +39,7 @@ namespace Emanate.Core
                 var module = Activator.CreateInstance(moduleAttribute.ModuleType) as TModule;
                 if (module != null)
                 {
-                    if (module is IInputModule)
-                        builder.RegisterInstance(module).As<IInputModule>();
-                    if (module is IOutputModule)
-                        builder.RegisterInstance(module).As<IOutputModule>();
-
+                    builder.RegisterInstance(module).As<IModule>();
                     moduleAction(module);
                 }
                 else
