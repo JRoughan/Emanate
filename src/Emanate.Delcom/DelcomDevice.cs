@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Serilog;
@@ -173,6 +175,21 @@ namespace Emanate.Delcom
 
             var power = color.MaxPower - (minutesSinceLastBuild / profile.Decay * 60) * (color.MaxPower - color.MinPower);
             return (byte)power;
+        }
+
+        public XElement CreateMemento()
+        {
+            var deviceElement = new XElement("device");
+            deviceElement.Add(new XAttribute("name", Name));
+            deviceElement.Add(new XAttribute("id", Id));
+            deviceElement.Add(new XAttribute("profile", Profile.Name));
+            return deviceElement;
+        }
+
+        public void SetMemento(XElement deviceElement)
+        {
+            Id = deviceElement.GetAttributeString("id");
+            Name = deviceElement.GetAttributeString("name");
         }
     }
 }

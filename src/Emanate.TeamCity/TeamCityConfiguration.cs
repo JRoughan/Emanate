@@ -24,17 +24,7 @@ namespace Emanate.TeamCity
             var devicesElement = new XElement("devices");
             foreach (var device in Devices)
             {
-                var deviceElement = new XElement("device");
-                deviceElement.Add(new XAttribute("id", device.Id));
-                deviceElement.Add(new XAttribute("name", device.Name));
-                deviceElement.Add(new XAttribute("uri", device.Uri));
-                deviceElement.Add(new XAttribute("polling-interval", device.PollingInterval));
-                deviceElement.Add(new XAttribute("requires-authentication", device.RequiresAuthentication));
-                if (device.RequiresAuthentication)
-                {
-                    deviceElement.Add(new XAttribute("username", device.UserName));
-                    deviceElement.Add(new XAttribute("password", SimpleCrypto.EncryptDecrypt(device.Password)));
-                }
+                var deviceElement = device.CreateMemento();
                 moduleElement.Add(deviceElement);
             }
             moduleElement.Add(devicesElement);
@@ -52,20 +42,8 @@ namespace Emanate.TeamCity
             var devicesElement = element.Element("devices");
             foreach (var deviceElement in devicesElement.Elements("device"))
             {
-                var device = new TeamCityDevice
-                {
-                    Id = Guid.Parse(deviceElement.Attribute("id").Value),
-                    Name = deviceElement.Attribute("name").Value,
-                    Uri = deviceElement.Attribute("uri").Value,
-                    RequiresAuthentication = bool.Parse(deviceElement.Attribute("requires-authentication").Value),
-                    PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
-                    
-                };
-                if (device.RequiresAuthentication)
-                {
-                    device.UserName = deviceElement.Attribute("username").Value;
-                    device.Password = SimpleCrypto.EncryptDecrypt(deviceElement.Attribute("password").Value);
-                }
+                var device = new TeamCityDevice();
+                device.SetMemento(deviceElement);
                 Devices.Add(device);
             }
         }

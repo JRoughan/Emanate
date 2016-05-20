@@ -59,6 +59,8 @@
     <Compile Include="Configuration\IOutputConfiguration.cs" />
     <Compile Include="Configuration\OutputDeviceEventArgs.cs" />
     <Compile Include="Diagnostics.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="IProfile.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
     <Compile Include="Input\BuildState.cs" />

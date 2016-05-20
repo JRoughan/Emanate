@@ -1,6 +1,6 @@
 ﻿namespace Emanate.Core.Output
 {
-    public interface IOutputProfile
+    public interface IOutputProfile : IProfile
     {
         string Name { get; }
     }

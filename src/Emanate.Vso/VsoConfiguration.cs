@@ -24,13 +24,7 @@ namespace Emanate.Vso
             var devicesElement = new XElement("devices");
             foreach (var device in Devices)
             {
-                var deviceElement = new XElement("device");
-                deviceElement.Add(new XAttribute("id", device.Id));
-                deviceElement.Add(new XAttribute("name", device.Name));
-                deviceElement.Add(new XAttribute("uri", device.Uri));
-                deviceElement.Add(new XAttribute("polling-interval", device.PollingInterval));
-                deviceElement.Add(new XAttribute("username", device.UserName));
-                deviceElement.Add(new XAttribute("password", SimpleCrypto.EncryptDecrypt(device.Password)));
+                var deviceElement = device.CreateMemento();
                 moduleElement.Add(deviceElement);
             }
             moduleElement.Add(devicesElement);
@@ -47,18 +41,14 @@ namespace Emanate.Vso
             // TODO: Error handling
             var element = memento.Element;
             var devicesElement = element.Element("devices");
-            foreach (var deviceElement in devicesElement.Elements("device"))
+            if (devicesElement != null)
             {
-                var device = new VsoDevice
+                foreach (var deviceElement in devicesElement.Elements("device"))
                 {
-                    Id = Guid.Parse(deviceElement.Attribute("id").Value),
-                    Name = deviceElement.Attribute("name").Value,
-                    Uri = deviceElement.Attribute("uri").Value,
-                    PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value),
-                    UserName = deviceElement.Attribute("username").Value,
-                    Password = SimpleCrypto.EncryptDecrypt(deviceElement.Attribute("password").Value),
-                };
-                Devices.Add(device);
+                    var device = new VsoDevice();
+                    device.SetMemento(deviceElement);
+                    Devices.Add(device);
+                }
             }
         }
 

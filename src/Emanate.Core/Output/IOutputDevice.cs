@@ -4,7 +4,7 @@ using Emanate.Core.Input;
 
 namespace Emanate.Core.Output
 {
-    public interface IOutputDevice
+    public interface IOutputDevice : IDevice
     {
         string Key { get; }
         string Id { get; }

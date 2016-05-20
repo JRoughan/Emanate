@@ -103,28 +103,9 @@ namespace Emanate.Delcom
 
             var profilesElement = new XElement("profiles");
             moduleElement.Add(profilesElement);
-            foreach (var profile in Profiles.OfType<MonitoringProfile>())
+            foreach (var profile in Profiles)
             {
-                var profileElement = new XElement("profile");
-                profileElement.Add(new XAttribute("id", profile.Id));
-                profileElement.Add(new XAttribute("name", profile.Name));
-                profileElement.Add(new XAttribute("decay", profile.Decay));
-                profileElement.Add(new XAttribute("restrictedhours", profile.HasRestrictedHours));
-                profileElement.Add(new XAttribute("starttime", profile.StartTime));
-                profileElement.Add(new XAttribute("endtime", profile.EndTime));
-
-                foreach (var state in profile.States)
-                {
-                    var stateElement = new XElement("state");
-                    stateElement.Add(new XAttribute("name", Enum.GetName(typeof(BuildState), state.BuildState)));
-                    stateElement.Add(new XAttribute("green", state.Green));
-                    stateElement.Add(new XAttribute("yellow", state.Yellow));
-                    stateElement.Add(new XAttribute("red", state.Red));
-                    stateElement.Add(new XAttribute("flash", state.Flash));
-                    stateElement.Add(new XAttribute("buzzer", state.Buzzer));
-                    profileElement.Add(stateElement);
-                }
-
+                var profileElement = profile.CreateMemento(); 
                 profilesElement.Add(profileElement);
             }
 
@@ -132,11 +113,7 @@ namespace Emanate.Delcom
             moduleElement.Add(devicesElement);
             foreach (var device in OutputDevices)
             {
-                var deviceElement = new XElement("device");
-                deviceElement.Add(new XAttribute("name", device.Name));
-                deviceElement.Add(new XAttribute("id", device.Id));
-                deviceElement.Add(new XAttribute("profile", device.Profile.Name));
-
+                var deviceElement = device.CreateMemento();
                 devicesElement.Add(deviceElement);
             }
 
@@ -155,30 +132,8 @@ namespace Emanate.Delcom
             {
                 foreach (var profileElement in profilesElement.Elements("profile"))
                 {
-                    var profile = new MonitoringProfile
-                    {
-                        Id = Guid.Parse(profileElement.GetAttributeString("id")),
-                        Name = profileElement.GetAttributeString("name"),
-                        Decay = profileElement.GetAttributeUint("decay"),
-                        HasRestrictedHours = profileElement.GetAttributeBoolean("restrictedhours"),
-                        StartTime = profileElement.GetAttributeUint("starttime"),
-                        EndTime = profileElement.GetAttributeUint("endtime"),
-                    };
-
-                    foreach (var stateElement in profileElement.Elements("state"))
-                    {
-                        var state = new ProfileState
-                        {
-                            BuildState = stateElement.GetAttributeEnum("name", BuildState.Unknown),
-                            Green = stateElement.GetAttributeBoolean("green"),
-                            Yellow = stateElement.GetAttributeBoolean("yellow"),
-                            Red = stateElement.GetAttributeBoolean("red"),
-                            Flash = stateElement.GetAttributeBoolean("flash"),
-                            Buzzer = stateElement.GetAttributeBoolean("buzzer")
-                        };
-                        profile.States.Add(state);
-                    }
-
+                    var profile = new MonitoringProfile();
+                    profile.SetMemento(profileElement);
                     Profiles.Add(profile);
                 }
             }
@@ -197,13 +152,9 @@ namespace Emanate.Delcom
                         continue;
                     }
 
-                    var device = new DelcomDevice
-                    {
-                        Id = deviceElement.GetAttributeString("id"),
-                        Name = deviceElement.GetAttributeString("name"),
-                        Profile = Profiles.Single(p => p.Name == profileKey)
-                    };
-
+                    var device = new DelcomDevice();
+                    device.SetMemento(deviceElement);
+                    device.Profile = Profiles.Single(p => p.Name == profileKey);
                     AddOutputDevice(device);
                 }
             }
