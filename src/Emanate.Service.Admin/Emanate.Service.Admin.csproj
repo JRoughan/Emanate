@@ -97,7 +97,7 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="ModuleViewModel.cs" />
-    <Compile Include="OutputDeviceInfo.cs" />
+    <Compile Include="DeviceViewModel.cs" />
     <Compile Include="ServiceAdminView.xaml.cs">
       <DependentUpon>ServiceAdminView.xaml</DependentUpon>
     </Compile>

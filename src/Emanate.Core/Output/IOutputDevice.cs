@@ -8,7 +8,7 @@ namespace Emanate.Core.Output
     {
         string Key { get; }
         string Id { get; }
-        string Name { get; }
+        string Name { get; set; }
 
         string Type { get; }
 

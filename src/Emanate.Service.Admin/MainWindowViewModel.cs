@@ -106,7 +106,7 @@ namespace Emanate.Service.Admin
 
         private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
-            var outputDeviceInfo = new OutputDeviceInfo(outputDevice.Name, outputDevice, moduleConfiguration);
+            var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration);
 
             // HACK: Force an input for a new device without any. Ugly!
             if (!outputDevice.Inputs.Any())
@@ -127,7 +127,7 @@ namespace Emanate.Service.Admin
 
         public ObservableCollection<ModuleViewModel> Modules { get; } = new ObservableCollection<ModuleViewModel>();
 
-        public ObservableCollection<OutputDeviceInfo> ActiveDevices { get; } = new ObservableCollection<OutputDeviceInfo>();
+        public ObservableCollection<DeviceViewModel> ActiveDevices { get; } = new ObservableCollection<DeviceViewModel>();
 
         private readonly DelegateCommand saveCommand;
         public DelegateCommand SaveCommand { get { return saveCommand; } }
