@@ -6,16 +6,16 @@ using Emanate.Core.Output;
 
 namespace Emanate.Vso.Admin.Inputs
 {
-    public partial class InputSelectorView
+    public partial class VsoInputSelectorView
     {
-        private InputSelectorViewModel viewModel;
+        private VsoInputSelectorViewModel viewModel;
 
-        public InputSelectorView()
+        public VsoInputSelectorView()
         {
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(InputSelectorView), new PropertyMetadata(null, DeviceChanged));
+        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(VsoInputSelectorView), new PropertyMetadata(null, DeviceChanged));
 
         public IDevice Device
         {
@@ -25,10 +25,10 @@ namespace Emanate.Vso.Admin.Inputs
 
         private static async void DeviceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var target = (InputSelectorView)d;
+            var target = (VsoInputSelectorView)d;
             var device = (VsoDevice)e.NewValue;
 
-            target.viewModel = new InputSelectorViewModel(device);
+            target.viewModel = new VsoInputSelectorViewModel(device);
             await target.viewModel.Initialize();
             target.DataContext = target.viewModel;
         }

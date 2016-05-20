@@ -6,16 +6,16 @@ using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.Admin.Inputs
 {
-    public partial class InputSelectorView
+    public partial class TeamCityInputSelectorView
     {
-        private InputSelectorViewModel viewModel;
+        private TeamCityInputSelectorViewModel viewModel;
 
-        public InputSelectorView()
+        public TeamCityInputSelectorView()
         {
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(InputSelectorView), new PropertyMetadata(null, DeviceChanged));
+        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(TeamCityInputSelectorView), new PropertyMetadata(null, DeviceChanged));
 
         public IDevice Device
         {
@@ -25,10 +25,10 @@ namespace Emanate.TeamCity.Admin.Inputs
 
         private static async void DeviceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var target = (InputSelectorView)d;
+            var target = (TeamCityInputSelectorView)d;
             var device = (TeamCityDevice)e.NewValue;
 
-            target.viewModel = new InputSelectorViewModel(device);
+            target.viewModel = new TeamCityInputSelectorViewModel(device);
             await target.viewModel.Initialize();
             target.DataContext = target.viewModel;
         }

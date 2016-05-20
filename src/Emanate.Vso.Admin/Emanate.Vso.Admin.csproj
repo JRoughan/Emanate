@@ -62,10 +62,10 @@
       <DependentUpon>VsoDeviceManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\VsoDeviceManagerViewModel.cs" />
-    <Compile Include="Inputs\InputSelectorView.xaml.cs">
-      <DependentUpon>InputSelectorView.xaml</DependentUpon>
+    <Compile Include="Inputs\VsoInputSelectorView.xaml.cs">
+      <DependentUpon>VsoInputSelectorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Inputs\InputSelectorViewModel.cs" />
+    <Compile Include="Inputs\VsoInputSelectorViewModel.cs" />
     <Compile Include="Inputs\ProjectConfigurationViewModel.cs" />
     <Compile Include="Inputs\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,7 +113,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Inputs\InputSelectorView.xaml">
+    <Page Include="Inputs\VsoInputSelectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

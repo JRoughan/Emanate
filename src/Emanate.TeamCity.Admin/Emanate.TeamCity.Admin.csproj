@@ -64,10 +64,10 @@
     </Compile>
     <Compile Include="Devices\TeamCityDeviceManagerViewModel.cs" />
     <Compile Include="Profiles\TeamCityProfileManagerViewModel.cs" />
-    <Compile Include="Inputs\InputSelectorView.xaml.cs">
-      <DependentUpon>InputSelectorView.xaml</DependentUpon>
+    <Compile Include="Inputs\TeamCityInputSelectorView.xaml.cs">
+      <DependentUpon>TeamCityInputSelectorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Inputs\InputSelectorViewModel.cs" />
+    <Compile Include="Inputs\TeamCityInputSelectorViewModel.cs" />
     <Compile Include="Inputs\ProjectConfigurationViewModel.cs" />
     <Compile Include="Inputs\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,7 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Inputs\InputSelectorView.xaml">
+    <Page Include="Inputs\TeamCityInputSelectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

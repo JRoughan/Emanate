@@ -12,11 +12,11 @@ using Serilog;
 
 namespace Emanate.TeamCity.Admin.Inputs
 {
-    public class InputSelectorViewModel : ViewModel
+    public class TeamCityInputSelectorViewModel : ViewModel
     {
         private readonly ITeamCityConnection connection;
 
-        public InputSelectorViewModel(TeamCityDevice device)
+        public TeamCityInputSelectorViewModel(TeamCityDevice device)
         {
             connection = new TeamCityConnection(device);
         }

@@ -10,11 +10,11 @@ using Serilog;
 
 namespace Emanate.Vso.Admin.Inputs
 {
-    public class InputSelectorViewModel : ViewModel
+    public class VsoInputSelectorViewModel : ViewModel
     {
         private readonly IVsoConnection connection;
 
-        public InputSelectorViewModel(VsoDevice device)
+        public VsoInputSelectorViewModel(VsoDevice device)
         {
             connection = new VsoConnection(device);
         }

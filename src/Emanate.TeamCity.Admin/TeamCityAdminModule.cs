@@ -18,8 +18,8 @@ namespace Emanate.TeamCity.Admin
         {
             Log.Information("=> TeamCityModule.LoadAdminComponents");
             RegisterCommon(builder);
-            builder.RegisterType<InputSelectorView>().Keyed<InputSelector>(Key);
-            builder.RegisterType<InputSelectorViewModel>();
+            builder.RegisterType<TeamCityInputSelectorView>().Keyed<InputSelector>(Key);
+            builder.RegisterType<TeamCityInputSelectorViewModel>();
 
             builder.RegisterType<TeamCityProfileManagerView>().Keyed<ProfileManager>(Key);
             builder.RegisterType<TeamCityDeviceManagerView>().Keyed<DeviceManager>(Key);
