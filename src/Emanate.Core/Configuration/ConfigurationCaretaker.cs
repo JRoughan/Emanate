@@ -60,15 +60,17 @@ namespace Emanate.Core.Configuration
                                 case "output":
                                     moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(moduleMemento.Key);
                                     globalConfig.OutputConfigurations.Add((IOutputConfiguration) moduleConfig);
+                                    moduleConfig.SetMemento(moduleMemento);
                                     break;
                                 case "input":
                                     moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(moduleMemento.Key);
                                     globalConfig.InputConfigurations.Add((IInputConfiguration) moduleConfig);
+                                    moduleConfig.SetMemento(moduleMemento);
+                                    globalConfig.InputDevices.AddRange(((IInputConfiguration)moduleConfig).Devices);
                                     break;
                                 default:
                                     throw new Exception("Unknown module type");
                             }
-                            moduleConfig.SetMemento(moduleMemento);
                             builder.RegisterInstance(moduleConfig).AsSelf();
                         }
                     }
