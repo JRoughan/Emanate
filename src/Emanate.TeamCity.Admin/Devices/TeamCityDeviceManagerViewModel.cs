@@ -15,7 +15,7 @@ namespace Emanate.TeamCity.Admin.Devices
         {
             this.teamCityConfiguration = teamCityConfiguration;
 
-            var deviceVms = teamCityConfiguration.Devices.Select(d => new TeamCityDeviceViewModel(d));
+            var deviceVms = teamCityConfiguration.Devices.Select(d => new TeamCityDeviceViewModel((TeamCityDevice)d));
             Devices = new ObservableCollection<TeamCityDeviceViewModel>(deviceVms);
 
             AddDeviceCommand = new DelegateCommand(AddDevice);

@@ -15,7 +15,7 @@ namespace Emanate.Vso.Admin.Devices
         {
             this.vsoConfiguration = vsoConfiguration;
 
-            var deviceVms = vsoConfiguration.Devices.Select(d => new VsoDeviceViewModel(d));
+            var deviceVms = vsoConfiguration.Devices.Select(d => new VsoDeviceViewModel((VsoDevice)d));
             Devices = new ObservableCollection<VsoDeviceViewModel>(deviceVms);
 
             AddDeviceCommand = new DelegateCommand(AddDevice);

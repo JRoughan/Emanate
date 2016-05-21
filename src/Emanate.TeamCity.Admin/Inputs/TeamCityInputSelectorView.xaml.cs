@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using Emanate.Core;
 using Emanate.Core.Output;
 
@@ -15,22 +14,11 @@ namespace Emanate.TeamCity.Admin.Inputs
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(TeamCityInputSelectorView), new PropertyMetadata(null, DeviceChanged));
-
-        public IDevice Device
+        protected override async void SetDevice(IDevice device)
         {
-            get { return (IDevice)GetValue(DeviceProperty); }
-            set { SetValue(DeviceProperty, value); }
-        }
-
-        private static async void DeviceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var target = (TeamCityInputSelectorView)d;
-            var device = (TeamCityDevice)e.NewValue;
-
-            target.viewModel = new TeamCityInputSelectorViewModel(device);
-            await target.viewModel.Initialize();
-            target.DataContext = target.viewModel;
+            viewModel = new TeamCityInputSelectorViewModel((TeamCityDevice)device);
+            await viewModel.Initialize();
+            DataContext = viewModel;
         }
 
         public override void SelectInputs(IEnumerable<InputInfo> inputs)

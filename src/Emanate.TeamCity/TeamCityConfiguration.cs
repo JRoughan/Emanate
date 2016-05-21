@@ -44,20 +44,21 @@ namespace Emanate.TeamCity
             {
                 var device = new TeamCityDevice();
                 device.SetMemento(deviceElement);
-                Devices.Add(device);
+                devices.Add(device);
             }
         }
 
         public void AddDevice(TeamCityDevice device)
         {
-            Devices.Add(device);
+            devices.Add(device);
         }
 
-        public List<TeamCityDevice> Devices { get; } = new List<TeamCityDevice>();
+        private readonly List<TeamCityDevice> devices = new List<TeamCityDevice>();
+        public IEnumerable<IDevice> Devices => devices;
 
         public void RemoveDevice(TeamCityDevice device)
         {
-            Devices.Remove(device);
+            devices.Remove(device);
         }
     }
 }

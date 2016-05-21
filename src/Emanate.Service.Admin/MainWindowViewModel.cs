@@ -114,6 +114,7 @@ namespace Emanate.Service.Admin
             if (!outputDevice.Inputs.Any())
             {
                 var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
+                inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
                 outputDeviceInfo.InputSelector = inputSelector;
             }
 

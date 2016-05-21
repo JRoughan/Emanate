@@ -47,21 +47,22 @@ namespace Emanate.Vso
                 {
                     var device = new VsoDevice();
                     device.SetMemento(deviceElement);
-                    Devices.Add(device);
+                    devices.Add(device);
                 }
             }
         }
 
         public void AddDevice(VsoDevice deviceInfo)
         {
-            Devices.Add(deviceInfo);
+            devices.Add(deviceInfo);
         }
 
-        public List<VsoDevice> Devices { get; } = new List<VsoDevice>();
+        private readonly List<VsoDevice> devices = new List<VsoDevice>();
+        public IEnumerable<IDevice> Devices => devices;
 
         public void RemoveDevice(VsoDevice deviceInfo)
         {
-            Devices.Remove(deviceInfo);
+            devices.Remove(deviceInfo);
         }
     }
 }

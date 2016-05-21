@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using Emanate.Core;
 using Emanate.Core.Output;
 
@@ -15,22 +14,11 @@ namespace Emanate.Vso.Admin.Inputs
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(IDevice), typeof(VsoInputSelectorView), new PropertyMetadata(null, DeviceChanged));
-
-        public IDevice Device
+        protected override async void SetDevice(IDevice device)
         {
-            get { return (IDevice)GetValue(DeviceProperty); }
-            set { SetValue(DeviceProperty, value); }
-        }
-
-        private static async void DeviceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var target = (VsoInputSelectorView)d;
-            var device = (VsoDevice)e.NewValue;
-
-            target.viewModel = new VsoInputSelectorViewModel(device);
-            await target.viewModel.Initialize();
-            target.DataContext = target.viewModel;
+            viewModel = new VsoInputSelectorViewModel((VsoDevice)device);
+            await viewModel.Initialize();
+            DataContext = viewModel;
         }
 
         public override void SelectInputs(IEnumerable<InputInfo> inputs)

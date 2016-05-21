@@ -40,7 +40,7 @@ namespace Emanate.Vso.Admin.Inputs
                 foreach (dynamic projectRef in projectRefs)
                 {
                     var projectVm = new ProjectViewModel();
-                    projectVm.Name = projectRef["name"];
+                    projectVm.Name = projectRef["name"].Value;
                     projectVm.Id = new Guid(projectRef["id"].Value);
 
                     var rawBuilds = await connection.GetBuildDefinitions(projectVm.Id);
@@ -49,9 +49,9 @@ namespace Emanate.Vso.Admin.Inputs
                     foreach (var buildDefinition in buildDefinitions)
                     {
                         var configuration = new ProjectConfigurationViewModel(projectVm);
-                        configuration.Id = buildDefinition["id"];
-                        configuration.Name = buildDefinition["name"];
-                        configuration.Type = buildDefinition["type"];
+                        configuration.Id = buildDefinition["id"].Value.ToString();
+                        configuration.Name = buildDefinition["name"].Value;
+                        configuration.Type = buildDefinition["type"].Value;
                         configuration.ProjectId = projectVm.Id;
                         projectVm.Configurations.Add(configuration);
                     }
