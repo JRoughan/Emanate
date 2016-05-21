@@ -25,7 +25,7 @@ namespace Emanate.Vso
             foreach (var device in Devices)
             {
                 var deviceElement = device.CreateMemento();
-                moduleElement.Add(deviceElement);
+                devicesElement.Add(deviceElement);
             }
             moduleElement.Add(devicesElement);
 
