@@ -60,10 +60,11 @@ namespace Emanate.Service
         {
             Log.Information("=> EmanateService.Initialize");
             var config = componentContext.Resolve<GlobalConfig>();
-            foreach (var outputDevice in config.OutputDevices)
+            foreach (var mapping in config.Mappings)
             {
-                Log.Information("Processing output device '{0}'", outputDevice.Name);
-                foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
+                Log.Information("Finding output device '{0}'", mapping.OutputId);
+                var outputDevice = config.OutputDevices.Single(d => d.Id == mapping.OutputId);
+                foreach (var inputGroup in mapping.Inputs.GroupBy(i => i.Source))
                 {
                     Log.Information("Processing input group '{0}'", inputGroup.Key);
                     IBuildMonitor monitor;
@@ -73,7 +74,11 @@ namespace Emanate.Service
                         buildMonitors.Add(inputGroup.Key, monitor);
                         Log.Information("Monitor '{0}' added", monitor.GetType());
                     }
-                    monitor.AddBuilds(outputDevice, inputGroup);
+                    foreach (var inputInfo in inputGroup)
+                    {
+                        var inputDevice = config.InputDevices.Single(d => d.Id == inputInfo.InputDeviceId);
+                        monitor.AddMapping(inputDevice, outputDevice, inputInfo);
+                    }
                 }
             }
         }

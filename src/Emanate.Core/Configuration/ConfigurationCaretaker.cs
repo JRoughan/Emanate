@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Autofac;
+using Emanate.Core.Output;
 using Serilog;
 
 namespace Emanate.Core.Configuration
@@ -91,13 +92,17 @@ namespace Emanate.Core.Configuration
                             {
                                 foreach (var inputElement in inputsElement.Elements("input"))
                                 {
-                                    mapping.InputIds.Add(Guid.Parse(inputElement.GetAttributeString("id")));
+                                    var source = inputElement.GetAttributeString("source");
+                                    var inputId = inputElement.GetAttributeString("input-id");
+                                    var inputDeviceId = inputElement.GetAttributeGuid("input-device-id");
+                                    var inputInfo = new InputInfo(source, inputDeviceId, inputId);
+                                    mapping.Inputs.Add(inputInfo);
                                 }
                             }
                             else
                                 Log.Warning("Missing element: inputs");
 
-                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.InputIds));
+                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.Inputs));
                             globalConfig.Mappings.Add(mapping);
                         }
                     }
@@ -167,10 +172,12 @@ namespace Emanate.Core.Configuration
                 mappingElement.Add(new XAttribute("output-id", mapping.OutputId));
 
                 var inputsElement = new XElement("inputs");
-                foreach (var inputId in mapping.InputIds)
+                foreach (var input in mapping.Inputs)
                 {
                     var inputElement = new XElement("input");
-                    inputElement.Add(new XAttribute("id", inputId));
+                    inputElement.Add(new XAttribute("source", input.Source));
+                    inputElement.Add(new XAttribute("input-id", input.Id));
+                    inputElement.Add(new XAttribute("input-device-id", input.InputDeviceId));
                     inputsElement.Add(inputElement);
                 }
                 mappingsElement.Add(mappingElement);
@@ -186,7 +193,7 @@ namespace Emanate.Core.Configuration
 
     public class Mapping
     {
-        public List<Guid> InputIds { get; private set; } = new List<Guid>();
+        public List<InputInfo> Inputs { get; } = new List<InputInfo>();
         public Guid OutputId { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 using System.Xml.Linq;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -17,9 +18,9 @@ namespace Emanate.TeamCity
     {
         private readonly object pollingLock = new object();
         private const string teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
-        private readonly TimeSpan lockingInterval;
-        private readonly ITeamCityConnection teamCityConnection;
-        private readonly Timer timer;
+        private TimeSpan lockingInterval;
+        private ITeamCityConnection teamCityConnection;
+        private Timer timer;
         private readonly Dictionary<IOutputDevice, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<string, BuildState>>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
@@ -31,11 +32,12 @@ namespace Emanate.TeamCity
                                                               };
 
 
-        public TeamCityMonitor(ITeamCityConnection teamCityConnection, TeamCityDevice device)
+        public void SetDevice(IDevice device)
         {
-            this.teamCityConnection = teamCityConnection;
+            var vsoDevice = (TeamCityDevice)device;
+            teamCityConnection = new TeamCityConnection(vsoDevice);
 
-            var pollingInterval = device.PollingInterval * 1000;
+            var pollingInterval = vsoDevice.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
 
@@ -66,6 +68,10 @@ namespace Emanate.TeamCity
         {
             Log.Information("=> TeamCityModule.EndMonitoring");
             timer.Stop();
+        }
+
+        public void AddMapping(IDevice inputDevice, IOutputDevice outputDevice, InputInfo inputInfo)
+        {
         }
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)

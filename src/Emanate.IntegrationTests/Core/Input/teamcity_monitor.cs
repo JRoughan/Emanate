@@ -30,7 +30,8 @@ namespace Emanate.IntegrationTests.Core.Input
         public void should_be_in_unknown_state_before_started()
         {
             var device = new TeamCityDevice { Uri = "http://dummy", PollingInterval = 60 };
-            var monitor = new TeamCityMonitor(null, device);
+            var monitor = new TeamCityMonitor();
+            monitor.SetDevice(device);
 
             Assert.AreEqual(BuildState.Unknown, monitor.CurrentState);
         }
@@ -39,7 +40,8 @@ namespace Emanate.IntegrationTests.Core.Input
         public void should_run_update_when_started()
         {
             var device = new TeamCityDevice { Uri = teamCityUri, PollingInterval = 60 };
-            var monitor = new TeamCityMonitor(null, device);
+            var monitor = new TeamCityMonitor();
+            monitor.SetDevice(device);
 
             //monitor.BeginMonitoring();
 

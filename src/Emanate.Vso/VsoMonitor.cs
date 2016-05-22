@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Serilog;
@@ -15,19 +16,20 @@ namespace Emanate.Vso
     public class VsoMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
-        private readonly TimeSpan lockingInterval;
-        private readonly IVsoConnection vsoConnection;
-        private readonly Timer timer;
+        private TimeSpan lockingInterval;
+        private IVsoConnection vsoConnection;
+        private Timer timer;
         private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
 
         private static readonly string InProgressStatus = "inProgress";
         private static readonly string SucceededStatus = "succeeded";
-        
-        public VsoMonitor(IVsoConnection vsoConnection, VsoDevice device)
-        {
-            this.vsoConnection = vsoConnection;
 
-            var pollingInterval = device.PollingInterval * 1000;
+        public void SetDevice(IDevice device)
+        {
+            var vsoDevice = (VsoDevice)device;
+            vsoConnection = new VsoConnection(vsoDevice);
+
+            var pollingInterval = vsoDevice.PollingInterval * 1000;
             if (pollingInterval < 1)
                 pollingInterval = 30000; // default to 30 seconds
 
@@ -62,6 +64,10 @@ namespace Emanate.Vso
         {
             Log.Information("=> VsoMonitor.EndMonitoring");
             timer.Stop();
+        }
+
+        public void AddMapping(IDevice inputDevice, IOutputDevice outputDevice, InputInfo inputInfo)
+        {
         }
 
         void PollStatus(object sender, ElapsedEventArgs e)

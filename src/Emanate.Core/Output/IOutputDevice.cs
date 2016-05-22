@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Emanate.Core.Input;
 
 namespace Emanate.Core.Output
@@ -12,7 +11,6 @@ namespace Emanate.Core.Output
 
         string Type { get; }
 
-        List<InputInfo> Inputs { get; }
         IProfile Profile { get; set; }
 
         bool IsAvailable { get; }

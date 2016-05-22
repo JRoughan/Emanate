@@ -110,20 +110,20 @@ namespace Emanate.Service.Admin
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration);
 
-            // HACK: Force an input for a new device without any. Ugly!
-            if (!outputDevice.Inputs.Any())
-            {
-                var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
-                inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
-                outputDeviceInfo.InputSelector = inputSelector;
-            }
+            //// HACK: Force an input for a new device without any. Ugly!
+            //if (!outputDevice.Inputs.Any())
+            //{
+            //    var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
+            //    inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
+            //    outputDeviceInfo.InputSelector = inputSelector;
+            //}
 
-            foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
-            {
-                var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
-                inputSelector.SelectInputs(inputGroup);
-                outputDeviceInfo.InputSelector = inputSelector;
-            }
+            //foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
+            //{
+            //    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
+            //    inputSelector.SelectInputs(inputGroup);
+            //    outputDeviceInfo.InputSelector = inputSelector;
+            //}
 
             ActiveDevices.Add(outputDeviceInfo);
         }
@@ -146,12 +146,17 @@ namespace Emanate.Service.Admin
 
         private void SaveConfiguration()
         {
+            globalConfig.Mappings.Clear();
             // TODO: The respective GUIs should take care of keeping this in sync
             foreach (var deviceInfo in ActiveDevices)
             {
-                var device = deviceInfo.OutputDevice;
-                device.Inputs.Clear();
-                device.Inputs.AddRange(deviceInfo.InputSelector.GetSelectedInputs());
+                var mapping = new Mapping();
+                mapping.OutputId = deviceInfo.OutputDevice.Id;
+                foreach (var selectedInput in deviceInfo.InputSelector.GetSelectedInputs())
+                {
+                    mapping.Inputs.Add(selectedInput);
+                };
+                globalConfig.Mappings.Add(mapping);
             }
 
             try

@@ -78,5 +78,19 @@ namespace Emanate.Core.Configuration
             Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
             return DateTimeOffset.MinValue;
         }
+
+        public static Guid GetAttributeGuid(this XElement element, string attributeName)
+        {
+            var rawValue = GetAttributeString(element, attributeName);
+            if (rawValue == null)
+                return Guid.Empty;
+
+            Guid value;
+            if (Guid.TryParse(rawValue, out value))
+                return value;
+
+            Log.Error("     <{0} {1}='{2}'>: *Invalid Value*", element.Name, attributeName, rawValue);
+            return Guid.Empty;
+        }
     }
 }
