@@ -13,7 +13,7 @@ namespace Emanate.Service
     {
         private readonly IComponentContext componentContext;
         private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
-        private NancyHost nancyHost;
+        //private NancyHost nancyHost;
 
         public EmanateService(IComponentContext componentContext)
         {
@@ -29,10 +29,10 @@ namespace Emanate.Service
                 Log.Information("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
             }
-            var apiUrl = new Uri($"http://localhost:{Settings.Port}/api/");
-            nancyHost = new NancyHost(apiUrl);
-            nancyHost.Start();
-            Log.Information($"Nancy now listening - {apiUrl}.");
+            //var apiUrl = new Uri($"http://localhost:{Settings.Port}/api/");
+            //nancyHost = new NancyHost(apiUrl);
+            //nancyHost.Start();
+            //Log.Information($"Nancy now listening - {apiUrl}.");
         }
 
         public void Pause()
@@ -48,7 +48,7 @@ namespace Emanate.Service
         public void Stop()
         {
             Log.Information("=> EmanateService.Stop");
-            nancyHost.Stop();
+            //nancyHost.Stop();
             foreach (var buildMonitor in buildMonitors.Values)
             {
                 Log.Information("Ending build monitor '{0}'", buildMonitor.GetType().Name);
