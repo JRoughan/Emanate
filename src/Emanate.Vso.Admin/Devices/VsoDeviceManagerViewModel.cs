@@ -35,7 +35,6 @@ namespace Emanate.Vso.Admin.Devices
         {
             var deviceInfo = new VsoDevice
             {
-                Id = Guid.NewGuid(),
                 Name = "New"
             };
             vsoConfiguration.AddDevice(deviceInfo);

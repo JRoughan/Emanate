@@ -7,7 +7,7 @@ namespace Emanate.Vso
 {
     public class VsoDevice : IDevice
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public string Name { get; set; }
         public string Uri { get; set; }
         public int PollingInterval { get; set; }

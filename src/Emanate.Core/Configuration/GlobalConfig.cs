@@ -13,6 +13,7 @@ namespace Emanate.Core.Configuration
             OutputConfigurations = new List<IOutputConfiguration>();
             InputDevices = new List<IDevice>();
             OutputDevices = new List<IOutputDevice>();
+            Mappings = new List<Mapping>();
         }
 
 
@@ -24,5 +25,7 @@ namespace Emanate.Core.Configuration
 
         public List<IDevice> InputDevices { get; private set; }
         public List<IOutputDevice> OutputDevices { get; private set; }
+
+        public List<Mapping> Mappings { get; private set; }
     }
 }

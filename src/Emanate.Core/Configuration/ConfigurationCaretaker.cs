@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Autofac;
-using Emanate.Core.Output;
 using Serilog;
 
 namespace Emanate.Core.Configuration
@@ -61,6 +60,7 @@ namespace Emanate.Core.Configuration
                                     moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(moduleMemento.Key);
                                     globalConfig.OutputConfigurations.Add((IOutputConfiguration) moduleConfig);
                                     moduleConfig.SetMemento(moduleMemento);
+                                    globalConfig.OutputDevices.AddRange(((IOutputConfiguration)moduleConfig).OutputDevices);
                                     break;
                                 case "input":
                                     moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(moduleMemento.Key);
@@ -77,37 +77,28 @@ namespace Emanate.Core.Configuration
                     else
                         Log.Warning("Missing element: modules");
 
-                    // Output devices
-                    var outputsElement = rootNode.Element("outputs");
-                    if (outputsElement != null)
+                    // Mappings
+                    var mappingsElement = rootNode.Element("mappings");
+                    if (mappingsElement != null)
                     {
-                        foreach (var outputElement in outputsElement.Elements("output"))
+                        foreach (var mappingElement in mappingsElement.Elements("mapping"))
                         {
-                            var outputType = outputElement.GetAttributeString("type");
-                            var deviceName = outputElement.GetAttributeString("device");
+                            var mapping = new Mapping();
+                            mapping.OutputId = Guid.Parse(mappingElement.GetAttributeString("output-id"));
 
-                            var config = globalConfig.OutputConfigurations.Single(c => c.Key == outputType);
-                            var device = config.OutputDevices.Single(p => p.Name == deviceName);
-
-                            var inputsElement = outputElement.Element("inputs");
+                            var inputsElement = mappingElement.Element("inputs");
                             if (inputsElement != null)
                             {
                                 foreach (var inputElement in inputsElement.Elements("input"))
                                 {
-                                    var input = new InputInfo
-                                    {
-                                        Id = inputElement.GetAttributeString("id"),
-                                        Source = inputElement.GetAttributeString("source"),
-                                    };
-                                    Log.Information("Adding input '{0}' to device '{1}'", input.Id, deviceName);
-                                    device.Inputs.Add(input);
+                                    mapping.InputIds.Add(Guid.Parse(inputElement.GetAttributeString("id")));
                                 }
                             }
                             else
                                 Log.Warning("Missing element: inputs");
 
-                            Log.Information("Adding device '{0}'", deviceName);
-                            globalConfig.OutputDevices.Add(device);
+                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.InputIds));
+                            globalConfig.Mappings.Add(mapping);
                         }
                     }
                     else
@@ -167,32 +158,35 @@ namespace Emanate.Core.Configuration
             }
             rootElement.Add(modulesElement);
 
-            // Output devices
-            var outputsElement = new XElement("outputs");
+            // Mappings
+            var mappingsElement = new XElement("mappings");
 
-            foreach (var device in globalConfig.OutputDevices)
+            foreach (var mapping in globalConfig.Mappings)
             {
-                var outputElement = new XElement("output");
-                outputElement.Add(new XAttribute("type", device.Key));
-                outputElement.Add(new XAttribute("device", device.Name));
+                var mappingElement = new XElement("mapping");
+                mappingElement.Add(new XAttribute("output-id", mapping.OutputId));
 
                 var inputsElement = new XElement("inputs");
-                foreach (var input in device.Inputs)
+                foreach (var inputId in mapping.InputIds)
                 {
                     var inputElement = new XElement("input");
-                    inputElement.Add(new XAttribute("source", input.Source));
-                    inputElement.Add(new XAttribute("id", input.Id));
+                    inputElement.Add(new XAttribute("id", inputId));
                     inputsElement.Add(inputElement);
                 }
-                outputElement.Add(inputsElement);
-                outputsElement.Add(outputElement);
+                mappingsElement.Add(mappingElement);
             }
-            rootElement.Add(outputsElement);
+            rootElement.Add(mappingsElement);
 
             if (!Directory.Exists(configDir))
                 Directory.CreateDirectory(configDir);
 
             configDoc.Save(configFilePath);
         }
+    }
+
+    public class Mapping
+    {
+        public List<Guid> InputIds { get; private set; } = new List<Guid>();
+        public Guid OutputId { get; set; }
     }
 }
