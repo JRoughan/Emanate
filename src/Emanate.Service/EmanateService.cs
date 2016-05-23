@@ -71,14 +71,12 @@ namespace Emanate.Service
                     if (!buildMonitors.TryGetValue(inputGroup.Key, out monitor))
                     {
                         monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
+                        var inputDevice = config.InputDevices.Single(d => d.Id == inputGroup.First().InputDeviceId);
+                        monitor.SetDevice(inputDevice);
                         buildMonitors.Add(inputGroup.Key, monitor);
                         Log.Information("Monitor '{0}' added", monitor.GetType());
                     }
-                    foreach (var inputInfo in inputGroup)
-                    {
-                        var inputDevice = config.InputDevices.Single(d => d.Id == inputInfo.InputDeviceId);
-                        monitor.AddMapping(inputDevice, outputDevice, inputInfo);
-                    }
+                    monitor.AddBuilds(outputDevice, inputGroup);
                 }
             }
         }

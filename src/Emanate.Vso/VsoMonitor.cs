@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace Emanate.Vso
             var buildIds = inputs.Select(i =>
             {
                 var parts = i.Id.Split(':');
-                return new BuildKey(new Guid(parts[1]), parts[0]);
+                return new BuildKey(new Guid(parts[0]), parts[1]);
             });
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
@@ -131,7 +132,8 @@ namespace Emanate.Vso
                 var tfsBuild = rawBuild["value"][0];
                 if (tfsBuild != null)
                 {
-                    var startTime = DateTime.Parse((string) tfsBuild["startTime"]);
+                    var rawDate = ((string) tfsBuild["startTime"]).Trim('{','}');
+                    var startTime = DateTime.ParseExact(rawDate, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                     var state = ConvertState(tfsBuild);
 
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
@@ -144,7 +146,7 @@ namespace Emanate.Vso
 
         private BuildState ConvertState(dynamic build)
         {
-            string result = build["result"];
+            string result = build["result"].Value;
             if (string.IsNullOrWhiteSpace(result) && build["status"] == InProgressStatus)
                 return BuildState.Running;
 

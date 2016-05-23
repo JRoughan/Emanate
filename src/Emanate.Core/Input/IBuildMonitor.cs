@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Input
@@ -6,6 +7,7 @@ namespace Emanate.Core.Input
     {
         void BeginMonitoring();
         void EndMonitoring();
-        void AddMapping(IDevice inputDevice, IOutputDevice outputDevice, InputInfo inputInfo);
+        void SetDevice(IDevice device);
+        void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs);
     }
 }
