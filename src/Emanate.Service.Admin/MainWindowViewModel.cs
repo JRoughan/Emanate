@@ -55,7 +55,7 @@ namespace Emanate.Service.Admin
                 var moduleViewModel = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager, null);
                 Modules.Add(moduleViewModel);
 
-                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Key == d.Key));
+                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Id == d.Id));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
 
                 moduleConfig.OutputDeviceAdded += AddOutputDevice;

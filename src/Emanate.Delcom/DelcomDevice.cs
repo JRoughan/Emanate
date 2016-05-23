@@ -18,9 +18,7 @@ namespace Emanate.Delcom
         private DateTimeOffset lastUpdateTime; // TODO: This should be used for device reconnection to discover decay level
         //private const int minutesTillFullDim = 24 * 60; // 1 full day
 
-        string IOutputDevice.Key { get { return key; } }
-
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; private set; } = Guid.NewGuid();
 
         public string Name { get; set; } = defaultName;
 
