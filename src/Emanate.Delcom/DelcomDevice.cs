@@ -181,7 +181,7 @@ namespace Emanate.Delcom
             deviceElement.Add(new XAttribute("id", Id));
             deviceElement.Add(new XAttribute("name", Name));
             deviceElement.Add(new XAttribute("physical-device-id", PhysicalDeviceId));
-            deviceElement.Add(new XAttribute("profile", Profile.Id));
+            deviceElement.Add(new XAttribute("profile-id", Profile.Id));
             return deviceElement;
         }
 
