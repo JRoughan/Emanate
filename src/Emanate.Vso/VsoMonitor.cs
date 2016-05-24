@@ -132,7 +132,7 @@ namespace Emanate.Vso
                 var tfsBuild = rawBuild["value"][0];
                 if (tfsBuild != null)
                 {
-                    var rawDate = ((string) tfsBuild["startTime"]).Trim('{','}');
+                    var rawDate = ((string)tfsBuild["startTime"]).Trim('{', '}');
                     var startTime = DateTime.ParseExact(rawDate, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                     var state = ConvertState(tfsBuild);
 
@@ -146,8 +146,8 @@ namespace Emanate.Vso
 
         private BuildState ConvertState(dynamic build)
         {
-            string result = build["result"].Value;
-            if (string.IsNullOrWhiteSpace(result) && build["status"] == InProgressStatus)
+            string result = build["result"]?.Value;
+            if (string.IsNullOrWhiteSpace(result) && build["status"]?.Value == InProgressStatus)
                 return BuildState.Running;
 
             return !string.IsNullOrWhiteSpace(result) && result == SucceededStatus ? BuildState.Succeeded : BuildState.Failed;
