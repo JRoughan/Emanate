@@ -146,10 +146,9 @@ namespace Emanate.Delcom
             {
                 foreach (var deviceElement in devicesElement.Elements("device"))
                 {
-                    var profileId = Guid.Parse(deviceElement.GetAttributeString("profile-id"));
                     var device = new DelcomDevice();
                     device.SetMemento(deviceElement);
-                    device.Profile = Profiles.Single(p => p.Id == profileId);
+                    device.Profile = Profiles.Single(p => p.Id == device.ProfileId);
                     AddOutputDevice(device);
                 }
             }

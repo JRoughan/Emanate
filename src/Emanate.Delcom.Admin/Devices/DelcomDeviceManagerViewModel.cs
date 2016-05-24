@@ -35,7 +35,7 @@ namespace Emanate.Delcom.Admin.Devices
                     var delcomDevice = new DelcomDevice { PhysicalDevice = physicalDevice };
 
                     var physicalDeviceId = physicalDevice.Id;
-                    var configuredDevice = delcomConfiguration.OutputDevices.SingleOrDefault(d => d.PhysicalDeviceId == physicalDeviceId);
+                    var configuredDevice = delcomConfiguration.OutputDevices.OfType<DelcomDevice>().SingleOrDefault(d => d.PhysicalDeviceId == physicalDeviceId);
 
                     var delcomDeviceInfo = new DelcomDeviceInfo(delcomDevice, configuredDevice, delcomConfiguration);
 

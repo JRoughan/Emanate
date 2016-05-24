@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core;
@@ -18,23 +17,19 @@ namespace Emanate.Delcom
         private DateTimeOffset lastUpdateTime; // TODO: This should be used for device reconnection to discover decay level
         //private const int minutesTillFullDim = 24 * 60; // 1 full day
 
+        public string Key { get; } = key;
+
         public Guid Id { get; private set; } = Guid.NewGuid();
 
         public string Name { get; set; } = defaultName;
-
-        public DelcomDevice()
-        {
-            Inputs = new List<InputInfo>();
-        }
 
         public string PhysicalDeviceId { get; set; }
 
         public string Type { get { return key; } }
 
-        public List<InputInfo> Inputs { get; }
+        public Guid ProfileId { get; set; }
 
         private MonitoringProfile profile;
-
         public IProfile Profile
         {
             get { return profile; }
@@ -179,7 +174,7 @@ namespace Emanate.Delcom
             deviceElement.Add(new XAttribute("id", Id));
             deviceElement.Add(new XAttribute("name", Name));
             deviceElement.Add(new XAttribute("physical-device-id", PhysicalDeviceId));
-            deviceElement.Add(new XAttribute("profile-id", Profile.Id));
+            deviceElement.Add(new XAttribute("profile-id", ProfileId));
             return deviceElement;
         }
 
@@ -187,8 +182,9 @@ namespace Emanate.Delcom
         public void SetMemento(XElement deviceElement)
         {
             Id = Guid.Parse(deviceElement.GetAttributeString("id"));
-            PhysicalDeviceId = deviceElement.GetAttributeString("physical-device-id");
             Name = deviceElement.GetAttributeString("name");
+            PhysicalDeviceId = deviceElement.GetAttributeString("physical-device-id");
+            ProfileId = deviceElement.GetAttributeGuid("profile-id");
         }
     }
 }

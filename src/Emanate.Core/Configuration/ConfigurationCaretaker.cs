@@ -85,24 +85,22 @@ namespace Emanate.Core.Configuration
                         foreach (var mappingElement in mappingsElement.Elements("mapping"))
                         {
                             var mapping = new Mapping();
-                            mapping.OutputId = Guid.Parse(mappingElement.GetAttributeString("output-id"));
+                            mapping.OutputId = mappingElement.GetAttributeGuid("output-id");
 
-                            var inputsElement = mappingElement.Element("inputs");
-                            if (inputsElement != null)
+                            foreach (var inputsElements in mappingElement.Elements("inputs"))
                             {
-                                foreach (var inputElement in inputsElement.Elements("input"))
+                                var inputGroup = new InputGroup();
+                                inputGroup.InputDeviceId = inputsElements.GetAttributeGuid("input-device-id");
+                                foreach (var inputElement in inputsElements.Elements("input"))
                                 {
-                                    var source = inputElement.GetAttributeString("source");
                                     var inputId = inputElement.GetAttributeString("input-id");
-                                    var inputDeviceId = inputElement.GetAttributeGuid("input-device-id");
-                                    var inputInfo = new InputInfo(source, inputDeviceId, inputId);
-                                    mapping.Inputs.Add(inputInfo);
+                                    var inputInfo = new InputInfo(inputId);
+                                    inputGroup.Inputs.Add(inputInfo);
                                 }
+                                mapping.InputGroups.Add(inputGroup);
                             }
-                            else
-                                Log.Warning("Missing element: inputs");
 
-                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.Inputs));
+                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.InputGroups.SelectMany(g => g.Inputs)));
                             globalConfig.Mappings.Add(mapping);
                         }
                     }
@@ -171,14 +169,20 @@ namespace Emanate.Core.Configuration
                 var mappingElement = new XElement("mapping");
                 mappingElement.Add(new XAttribute("output-id", mapping.OutputId));
 
-                var inputsElement = new XElement("inputs");
-                foreach (var input in mapping.Inputs)
+                
+                foreach (var inputGroup in mapping.InputGroups)
                 {
-                    var inputElement = new XElement("input");
-                    inputElement.Add(new XAttribute("source", input.Source));
-                    inputElement.Add(new XAttribute("input-id", input.Id));
-                    inputElement.Add(new XAttribute("input-device-id", input.InputDeviceId));
-                    inputsElement.Add(inputElement);
+                    var inputsElement = new XElement("inputs");
+                    inputsElement.Add(new XAttribute("input-device-id", inputGroup.InputDeviceId));
+
+                    foreach (var input in inputGroup.Inputs)
+                    {
+                        var inputElement = new XElement("input");
+                        inputElement.Add(new XAttribute("input-id", input.Id));
+                        inputsElement.Add(inputElement);
+                    }
+
+                    mappingsElement.Add(inputsElement);
                 }
                 mappingsElement.Add(mappingElement);
             }
@@ -189,11 +193,5 @@ namespace Emanate.Core.Configuration
 
             configDoc.Save(configFilePath);
         }
-    }
-
-    public class Mapping
-    {
-        public List<InputInfo> Inputs { get; } = new List<InputInfo>();
-        public Guid OutputId { get; set; }
     }
 }

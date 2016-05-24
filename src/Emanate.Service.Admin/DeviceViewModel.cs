@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Emanate.Core;
 using Emanate.Core.Configuration;
@@ -36,6 +37,6 @@ namespace Emanate.Service.Admin
 
         public IOutputDevice OutputDevice => outputDevice;
 
-        public InputSelector InputSelector { get; set; } // TODO: This should handle more than one input source
+        public List<InputSelector> InputSelectors { get; } = new List<InputSelector>();
     }
 }

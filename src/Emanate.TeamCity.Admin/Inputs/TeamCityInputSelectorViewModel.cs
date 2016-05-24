@@ -100,7 +100,7 @@ namespace Emanate.TeamCity.Admin.Inputs
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo ("teamcity", Guid.Empty, configuration.Id);
+                    yield return new InputInfo (configuration.Id);
             }
         }
     }

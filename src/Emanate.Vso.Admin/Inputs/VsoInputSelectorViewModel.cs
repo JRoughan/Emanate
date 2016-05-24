@@ -97,7 +97,7 @@ namespace Emanate.Vso.Admin.Inputs
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo("vso", new Guid("30b0091d-6c5c-4460-8da7-8059a5461a41"), $"{configuration.ProjectId}:{configuration.Id}");
+                    yield return new InputInfo($"{configuration.ProjectId}:{configuration.Id}");
             }
         }
     }

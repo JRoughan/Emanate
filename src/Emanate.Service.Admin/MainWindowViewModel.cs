@@ -109,14 +109,10 @@ namespace Emanate.Service.Admin
         private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration);
-
-            //// HACK: Force an input for a new device without any. Ugly!
-            //if (!outputDevice.Inputs.Any())
-            //{
-            //    var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
-            //    inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
-            //    outputDeviceInfo.InputSelector = inputSelector;
-            //}
+            // HACK: Force an input for a new device without any. Ugly!
+            var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
+            inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
+            outputDeviceInfo.InputSelectors.Add(inputSelector);
 
             //foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
             //{
@@ -152,10 +148,17 @@ namespace Emanate.Service.Admin
             {
                 var mapping = new Mapping();
                 mapping.OutputId = deviceInfo.OutputDevice.Id;
-                foreach (var selectedInput in deviceInfo.InputSelector.GetSelectedInputs())
+
+                foreach (var inputSelector in deviceInfo.InputSelectors)
                 {
-                    mapping.Inputs.Add(selectedInput);
-                };
+                    var inputGroup = new InputGroup();
+                    inputGroup.InputDeviceId = inputSelector.Device.Id;
+                    foreach (var selectedInput in inputSelector.GetSelectedInputs())
+                    {
+                        inputGroup.Inputs.Add(selectedInput);
+                    }
+                    mapping.InputGroups.Add(inputGroup);
+                }
                 globalConfig.Mappings.Add(mapping);
             }
 

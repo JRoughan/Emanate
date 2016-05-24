@@ -7,6 +7,8 @@ namespace Emanate.Vso
 {
     public class VsoDevice : IDevice
     {
+        public string Key { get; } = "vso";
+
         public Guid Id { get; private set; } = Guid.NewGuid();
         public string Name { get; set; }
         public string Uri { get; set; }

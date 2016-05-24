@@ -5,13 +5,8 @@ namespace Emanate.Core.Output
 {
     public interface IOutputDevice : IDevice
     {
-        string PhysicalDeviceId { get; }
-        string Name { get; set; }
-
         string Type { get; }
-
         IProfile Profile { get; set; }
-
         bool IsAvailable { get; }
         void UpdateStatus(BuildState state, DateTimeOffset timeStamp);
     }

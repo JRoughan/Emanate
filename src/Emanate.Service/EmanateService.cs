@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Nancy.Hosting.Self;
@@ -12,7 +13,7 @@ namespace Emanate.Service
     public class EmanateService
     {
         private readonly IComponentContext componentContext;
-        private readonly Dictionary<string, IBuildMonitor> buildMonitors = new Dictionary<string, IBuildMonitor>();
+        private readonly Dictionary<IDevice, IBuildMonitor> buildMonitors = new Dictionary<IDevice, IBuildMonitor>();
         //private NancyHost nancyHost;
 
         public EmanateService(IComponentContext componentContext)
@@ -64,19 +65,19 @@ namespace Emanate.Service
             {
                 Log.Information("Finding output device '{0}'", mapping.OutputId);
                 var outputDevice = config.OutputDevices.Single(d => d.Id == mapping.OutputId);
-                foreach (var inputGroup in mapping.Inputs.GroupBy(i => i.Source))
+                foreach (var inputGroup in mapping.InputGroups)
                 {
-                    Log.Information("Processing input group '{0}'", inputGroup.Key);
+                    Log.Information("Processing input group for device '{0}'", inputGroup.InputDeviceId);
+                    var inputDevice = config.InputDevices.Single(d => d.Id == inputGroup.InputDeviceId);
                     IBuildMonitor monitor;
-                    if (!buildMonitors.TryGetValue(inputGroup.Key, out monitor))
+                    if (!buildMonitors.TryGetValue(inputDevice, out monitor))
                     {
-                        monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputGroup.Key);
-                        var inputDevice = config.InputDevices.Single(d => d.Id == inputGroup.First().InputDeviceId);
+                        monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputDevice.Key);
                         monitor.SetDevice(inputDevice);
-                        buildMonitors.Add(inputGroup.Key, monitor);
+                        buildMonitors.Add(inputDevice, monitor);
                         Log.Information("Monitor '{0}' added", monitor.GetType());
                     }
-                    monitor.AddBuilds(outputDevice, inputGroup);
+                    monitor.AddBuilds(outputDevice, inputGroup.Inputs);
                 }
             }
         }

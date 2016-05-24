@@ -57,6 +57,7 @@
     <Compile Include="Configuration\IOriginator.cs" />
     <Compile Include="Configuration\GlobalConfig.cs" />
     <Compile Include="Configuration\IOutputConfiguration.cs" />
+    <Compile Include="Configuration\Mapping.cs" />
     <Compile Include="Configuration\OutputDeviceEventArgs.cs" />
     <Compile Include="Diagnostics.cs" />
     <Compile Include="IDevice.cs" />
