@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Serilog;
 
@@ -41,7 +40,7 @@ namespace Emanate.Vso.Admin.Inputs
                 {
                     var projectVm = new ProjectViewModel();
                     projectVm.Name = projectRef["name"].Value;
-                    projectVm.Id = new Guid(projectRef["id"].Value);
+                    projectVm.Id = Guid.Parse(projectRef["id"].Value);
 
                     var rawBuilds = await connection.GetBuildDefinitions(projectVm.Id);
                     var buildDefinitions = rawBuilds["value"];
@@ -76,13 +75,13 @@ namespace Emanate.Vso.Admin.Inputs
             set { projects = value; OnPropertyChanged(); }
         }
 
-        public void SelectInputs(IEnumerable<InputInfo> inputs)
+        public void SelectInputs(IEnumerable<string> inputs)
         {
             Log.Information("=> InputSelectorViewModel.SelectInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var inputInfo in inputs)
             {
-                var parts = inputInfo.Id.Split(':');
+                var parts = inputInfo.Split(':');
                 var config = configurations.SingleOrDefault(c => c.Id.Equals(parts[1], StringComparison.OrdinalIgnoreCase) &&
                                                                  c.ProjectId.Equals(new Guid(parts[0])));
                 if (config != null)
@@ -90,14 +89,14 @@ namespace Emanate.Vso.Admin.Inputs
             }
         }
 
-        public IEnumerable<InputInfo> GetSelectedInputs()
+        public IEnumerable<string> GetSelectedInputs()
         {
             Log.Information("=> InputSelectorViewModel.GetSelectedInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo($"{configuration.ProjectId}:{configuration.Id}");
+                    yield return $"{configuration.ProjectId}:{configuration.Id}";
             }
         }
     }

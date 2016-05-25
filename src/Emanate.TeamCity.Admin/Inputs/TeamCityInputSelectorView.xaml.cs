@@ -21,14 +21,14 @@ namespace Emanate.TeamCity.Admin.Inputs
             DataContext = viewModel;
         }
 
-        public override void SelectInputs(IEnumerable<InputInfo> inputs)
+        public override void SelectInputs(IEnumerable<string> inputs)
         {
             viewModel.SelectInputs(inputs);
         }
 
-        public override IEnumerable<InputInfo> GetSelectedInputs()
+        public override IEnumerable<string> GetSelectedInputs()
         {
-            return viewModel?.GetSelectedInputs() ?? Enumerable.Empty<InputInfo>();
+            return viewModel?.GetSelectedInputs() ?? Enumerable.Empty<string>();
         }
     }
 }

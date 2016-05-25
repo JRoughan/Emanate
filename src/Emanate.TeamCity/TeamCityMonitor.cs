@@ -49,11 +49,10 @@ namespace Emanate.TeamCity
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
             Log.Information("=> TeamCityMonitor.AddBuilds");
-            var builds = inputs.Select(i => i.Id);
-            buildStates.Add(outputDevice, builds.ToDictionary(b => b, b => BuildState.Unknown));
+            buildStates.Add(outputDevice, inputs.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public void BeginMonitoring()
@@ -68,10 +67,6 @@ namespace Emanate.TeamCity
         {
             Log.Information("=> TeamCityModule.EndMonitoring");
             timer.Stop();
-        }
-
-        public void AddMapping(IDevice inputDevice, IOutputDevice outputDevice, InputInfo inputInfo)
-        {
         }
 
         void PollTeamCityStatus(object sender, ElapsedEventArgs e)

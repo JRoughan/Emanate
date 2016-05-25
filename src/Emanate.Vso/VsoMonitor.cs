@@ -42,12 +42,12 @@ namespace Emanate.Vso
 
         public BuildState CurrentState { get; private set; }
 
-        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<InputInfo> inputs)
+        public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
             Log.Information("=> VsoMonitor.AddBuilds");
             var buildIds = inputs.Select(i =>
             {
-                var parts = i.Id.Split(':');
+                var parts = i.Split(':');
                 return new BuildKey(new Guid(parts[0]), parts[1]);
             });
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
@@ -65,10 +65,6 @@ namespace Emanate.Vso
         {
             Log.Information("=> VsoMonitor.EndMonitoring");
             timer.Stop();
-        }
-
-        public void AddMapping(IDevice inputDevice, IOutputDevice outputDevice, InputInfo inputInfo)
-        {
         }
 
         void PollStatus(object sender, ElapsedEventArgs e)

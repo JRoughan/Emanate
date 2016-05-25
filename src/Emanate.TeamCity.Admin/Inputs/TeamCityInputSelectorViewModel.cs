@@ -81,26 +81,26 @@ namespace Emanate.TeamCity.Admin.Inputs
             set { projects = value; OnPropertyChanged(); }
         }
 
-        public void SelectInputs(IEnumerable<InputInfo> inputs)
+        public void SelectInputs(IEnumerable<string> inputs)
         {
             Log.Information("=> InputSelectorViewModel.SelectInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
-            foreach (var inputInfo in inputs)
+            foreach (var inputId in inputs)
             {
-                var config = configurations.SingleOrDefault(c => c.Id.Equals(inputInfo.Id, StringComparison.OrdinalIgnoreCase));
+                var config = configurations.SingleOrDefault(c => c.Id.Equals(inputId, StringComparison.OrdinalIgnoreCase));
                 if (config != null)
                     config.IsSelected = true;
             }
         }
 
-        public IEnumerable<InputInfo> GetSelectedInputs()
+        public IEnumerable<string> GetSelectedInputs()
         {
             Log.Information("=> InputSelectorViewModel.GetSelectedInputs");
             var configurations = Projects.SelectMany(p => p.Configurations).ToList();
             foreach (var configuration in configurations)
             {
                 if (configuration.IsSelected)
-                    yield return new InputInfo (configuration.Id);
+                    yield return configuration.Id;
             }
         }
     }

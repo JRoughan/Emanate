@@ -94,8 +94,7 @@ namespace Emanate.Core.Configuration
                                 foreach (var inputElement in inputsElements.Elements("input"))
                                 {
                                     var inputId = inputElement.GetAttributeString("input-id");
-                                    var inputInfo = new InputInfo(inputId);
-                                    inputGroup.Inputs.Add(inputInfo);
+                                    inputGroup.Inputs.Add(inputId);
                                 }
                                 mapping.InputGroups.Add(inputGroup);
                             }
@@ -175,10 +174,10 @@ namespace Emanate.Core.Configuration
                     var inputsElement = new XElement("inputs");
                     inputsElement.Add(new XAttribute("input-device-id", inputGroup.InputDeviceId));
 
-                    foreach (var input in inputGroup.Inputs)
+                    foreach (var inputId in inputGroup.Inputs)
                     {
                         var inputElement = new XElement("input");
-                        inputElement.Add(new XAttribute("input-id", input.Id));
+                        inputElement.Add(new XAttribute("input-id", inputId));
                         inputsElement.Add(inputElement);
                     }
 

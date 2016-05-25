@@ -38,7 +38,18 @@
                               DisplayMemberPath="Key"
                               Margin="100,0,0,0" />
                         </StackPanel>
-                        <ContentPresenter Content="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelector}" />
+                        <TabControl ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelectors}">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DeviceName}" />
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <ContentPresenter Content="{Binding}" />
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                        </TabControl>
                     </DockPanel>
                 </DockPanel>
             </TabItem>
