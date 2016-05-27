@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace Emanate.Extensibility
 {
-    public class ConfigurationEditor : UserControl
+    public class DeviceEditor : UserControl
     {
     }
 }

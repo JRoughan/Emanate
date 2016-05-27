@@ -235,7 +235,7 @@ namespace Emanate.Delcom
 
             if (!FindTheHid(nthDevice))
                 return (1);
-            deviceHandle = FileIO.CreateFile(devicePathName, FileIO.GENERIC_READ | FileIO.GENERIC_WRITE, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
+            deviceHandle = NativeMethods.CreateFile(devicePathName, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE, NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, 0);
             if (deviceHandle.IsInvalid)
                 return (2);
             return (0);  // device found
@@ -292,7 +292,7 @@ namespace Emanate.Delcom
                 do
                 {
                     //  Open the device
-                    var hidHandle = FileIO.CreateFile(devicePathBuffer[memberIndex], 0, FileIO.FILE_SHARE_READ | FileIO.FILE_SHARE_WRITE, IntPtr.Zero, FileIO.OPEN_EXISTING, 0, 0);
+                    var hidHandle = NativeMethods.CreateFile(devicePathBuffer[memberIndex], 0, NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, 0);
 
                     if (!hidHandle.IsInvalid)
                     {   //  Device openned, now find out if it's the device we want.

@@ -118,7 +118,7 @@ namespace Emanate.Delcom
                 //  Returns: True on success, False on failure.
                 //  ***
                     
-                FileIO.CancelIo(readHandle);               
+                NativeMethods.CancelIo(readHandle);               
                                                            
                 //  The failure may have been because the device was removed,
                 //  so close any open handles and
@@ -164,7 +164,7 @@ namespace Emanate.Delcom
                 //  Returns: a handle to the event object
                 //  ***
 
-                eventObject = FileIO.CreateEvent(IntPtr.Zero, false, false, "");                     
+                eventObject = NativeMethods.CreateEvent(IntPtr.Zero, false, false, "");                     
                                     
                 //  Set the members of the overlapped structure.
                     
@@ -220,7 +220,7 @@ namespace Emanate.Delcom
                 //  ***                    
 
                 var numberOfBytesRead = 0;
-                var success = FileIO.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
+                var success = NativeMethods.ReadFile(readHandle, nonManagedBuffer, inputReportBuffer.Length, ref numberOfBytesRead, nonManagedOverlapped);
  
                 if (!success)
                 {
@@ -237,13 +237,13 @@ namespace Emanate.Delcom
 
                     //  Returns: A result code.
 
-                    var result = FileIO.WaitForSingleObject(eventObject, 3000);
+                    var result = NativeMethods.WaitForSingleObject(eventObject, 3000);
 
                     //  Find out if ReadFile completed or timeout.
 
                     switch (result)
                     {
-                        case FileIO.WAIT_OBJECT_0:
+                        case NativeMethods.WAIT_OBJECT_0:
 
                             //  ReadFile has completed
 
@@ -264,11 +264,11 @@ namespace Emanate.Delcom
 								
                             //  Returns: non-zero on success and the number of bytes read.	
 
-                            FileIO.GetOverlappedResult(readHandle, nonManagedOverlapped, ref numberOfBytesRead, false);
+                            NativeMethods.GetOverlappedResult(readHandle, nonManagedOverlapped, ref numberOfBytesRead, false);
 
                             break;
 
-                        case FileIO.WAIT_TIMEOUT:
+                        case NativeMethods.WAIT_TIMEOUT:
 
                             //  Cancel the operation on timeout
 
@@ -438,7 +438,7 @@ namespace Emanate.Delcom
                 //  Returns: True on success, False on failure.
                 //  ***
                     
-                var success = FileIO.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
+                var success = NativeMethods.WriteFile(writeHandle, outputReportBuffer, outputReportBuffer.Length, ref numberOfBytesWritten, IntPtr.Zero);
                     
                 Debug.Print( "WriteFile success = " + success ); 
                     

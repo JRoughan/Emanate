@@ -4,7 +4,7 @@ using System;
 
 namespace Emanate.Delcom
 {   
-    internal sealed class FileIO  
+    internal sealed class NativeMethods  
     {
         internal const Int32 FILE_SHARE_READ = 1; 
         internal const Int32 FILE_SHARE_WRITE = 2; 

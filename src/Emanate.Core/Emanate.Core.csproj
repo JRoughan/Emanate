@@ -53,14 +53,22 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ConfigurationCaretaker.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IInputConfiguration.cs" />
     <Compile Include="Configuration\IOriginator.cs" />
     <Compile Include="Configuration\GlobalConfig.cs" />
     <Compile Include="Configuration\IOutputConfiguration.cs" />
     <Compile Include="Configuration\Mapping.cs" />
+    <Compile Include="Configuration\Memento.cs" />
     <Compile Include="Configuration\OutputDeviceEventArgs.cs" />
+    <Compile Include="Configuration\Paths.cs" />
     <Compile Include="Diagnostics.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="EmanateAdminModuleAttribute.cs" />
     <Compile Include="IDevice.cs" />
+    <Compile Include="IEmanateAdminModule.cs" />
+    <Compile Include="IModule.cs" />
+    <Compile Include="IModuleType.cs" />
     <Compile Include="IProfile.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Input\IBuildMonitor.cs" />
@@ -68,7 +76,7 @@
     <Compile Include="IEmanateModule.cs" />
     <Compile Include="EmanateModuleAttribute.cs" />
     <Compile Include="ModuleLoader.cs" />
-    <Compile Include="Output\InputInfo.cs" />
+    <Compile Include="Output\InputGroup.cs" />
     <Compile Include="Output\IOutputDevice.cs" />
     <Compile Include="Output\IBuildOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

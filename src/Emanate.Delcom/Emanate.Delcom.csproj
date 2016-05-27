@@ -62,7 +62,7 @@
     <Compile Include="PhysicalDevice.cs" />
     <Compile Include="DeviceManagementDeclarations.cs" />
     <Compile Include="DeviceManager.cs" />
-    <Compile Include="FileIODeclarations.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Hid.cs" />
     <Compile Include="HidDeclarations.cs" />
     <Compile Include="DelcomModule.cs" />

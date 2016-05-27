@@ -14,12 +14,4 @@ namespace Emanate.Extensibility
 
         public virtual Task<InitializationResult> Initialize() { return Task.FromResult(InitializationResult.NoneRequired); }
     }
-
-    public enum InitializationResult
-    {
-        Unknown = 0,
-        NoneRequired,
-        Failed,
-        Succeeded
-    }
 }

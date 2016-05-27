@@ -5,8 +5,6 @@ using Emanate.Core.Output;
 
 namespace Emanate.Core.Configuration
 {
-    public interface IConfiguration { } 
-
     public interface IOutputConfiguration : IConfiguration, IOriginator
     {
         string Key { get; }
