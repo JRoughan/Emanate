@@ -47,7 +47,7 @@ namespace Emanate.Vso
             var buildIds = inputs.Select(i =>
             {
                 var parts = i.Split(':');
-                return new BuildKey(new Guid(parts[0]), parts[1]);
+                return new BuildKey(Guid.Parse(parts[0]), int.Parse(parts[1]));
             });
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
@@ -111,7 +111,6 @@ namespace Emanate.Vso
                     timeStamp = newStates.Where(s => s.TimeStamp.HasValue).Max(s => s.TimeStamp.Value);
                 }
 
-                var asoldState = CurrentState;
                 CurrentState = newState;
                 outputDevice.UpdateStatus(newState, timeStamp);
             }
@@ -123,7 +122,7 @@ namespace Emanate.Vso
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var build = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
+                var build = await vsoConnection.GetBuild(buildKey.ProjectId, buildKey.BuildId);
                 if (build != null)
                 {
                     var startTime = build.StartTime;
@@ -152,40 +151,6 @@ namespace Emanate.Vso
             public BuildKey BuildKey { get; set; }
             public BuildState State { get; set; }
             public DateTime? TimeStamp { get; set; }
-        }
-    }
-
-    [DebuggerDisplay("{ProjectId}:{BuildId}")]
-    public class BuildKey : IEquatable<BuildKey>
-    {
-        public BuildKey(Guid projectId, string buildId)
-        {
-            ProjectId = projectId;
-            BuildId = buildId;
-        }
-
-        public Guid ProjectId { get; }
-        public string BuildId { get; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            return Equals((BuildKey)obj);
-        }
-
-        public bool Equals(BuildKey other)
-        {
-            if (other == null)
-                return false;
-
-            return ProjectId.Equals(other.ProjectId) && BuildId.Equals(other.BuildId);
-        }
-
-        public override int GetHashCode()
-        {
-            return (ProjectId.ToString() + BuildId).GetHashCode();
         }
     }
 }
