@@ -18,13 +18,6 @@ namespace Emanate.Delcom
             RegisterCommon(builder);
         }
 
-        public IConfiguration GenerateDefaultConfig()
-        {
-            var config = new DelcomConfiguration();
-            config.AddDefaultProfile("Default");
-            return config;
-        }
-
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> DelcomModule.RegisterCommon");

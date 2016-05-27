@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Emanate.Core.Configuration;
 
 namespace Emanate.Core
 {
@@ -19,8 +18,6 @@ namespace Emanate.Core
         string Name { get; }
 
         Direction Direction { get; }
-
-        IConfiguration GenerateDefaultConfig();
     }
 
     public enum Direction

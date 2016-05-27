@@ -42,7 +42,7 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = (IOutputConfiguration)outputModule.GenerateDefaultConfig();
+                    moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(outputModule.Key);
                     globalConfig.OutputConfigurations.Add(moduleConfig);
                 }
 
@@ -67,7 +67,7 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == inputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = (IInputConfiguration)inputModule.GenerateDefaultConfig();
+                    moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(inputModule.Key);
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 

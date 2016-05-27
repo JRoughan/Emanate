@@ -19,11 +19,6 @@ namespace Emanate.Vso
             builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        public IConfiguration GenerateDefaultConfig()
-        {
-            return new VsoConfiguration();
-        }
-
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> VsoModule.RegisterCommon");

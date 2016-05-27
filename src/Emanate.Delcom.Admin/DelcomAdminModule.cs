@@ -24,13 +24,6 @@ namespace Emanate.Delcom.Admin
             builder.RegisterType<DelcomDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 
-        public IConfiguration GenerateDefaultConfig()
-        {
-            var config = new DelcomConfiguration();
-            config.AddDefaultProfile("Default");
-            return config;
-        }
-
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> DelcomModule.RegisterCommon");

@@ -29,11 +29,6 @@ namespace Emanate.Vso.Admin
             builder.RegisterType<VsoDeviceManagerView>().Keyed<DeviceManager>(Key);
         }
 
-        public IConfiguration GenerateDefaultConfig()
-        {
-            return new VsoConfiguration();
-        }
-
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> VsoModule.RegisterCommon");

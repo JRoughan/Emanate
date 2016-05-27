@@ -19,11 +19,6 @@ namespace Emanate.TeamCity
             builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
         }
 
-        public IConfiguration GenerateDefaultConfig()
-        {
-            return new TeamCityConfiguration();
-        }
-
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> TeamCityModule.RegisterCommon");
