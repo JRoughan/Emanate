@@ -9,17 +9,13 @@ namespace Emanate.Vso
 {
     public class VsoConfiguration : IInputConfiguration
     {
-        private const string key = "vso";
-        private const string name = "Visual Studio Online";
-
-        string IInputConfiguration.Key { get { return key; } }
-        string IInputConfiguration.Name { get { return name; } }
+        public string Key { get; } = "vso";
 
         public Memento CreateMemento()
         {
             Log.Information("=> VsoConfiguration.CreateMemento");
             var moduleElement = new XElement("module");
-            moduleElement.Add(new XAttribute("key", key));
+            moduleElement.Add(new XAttribute("key", Key));
             moduleElement.Add(new XAttribute("type", "input"));
             var devicesElement = new XElement("devices");
             foreach (var device in Devices)
@@ -35,7 +31,7 @@ namespace Emanate.Vso
         public void SetMemento(Memento memento)
         {
             Log.Information("=> VsoConfiguration.SetMemento");
-            if (memento.Key != key)
+            if (memento.Key != Key)
                 throw new ArgumentException("Cannot load non-Visual Studio Online configuration");
 
             // TODO: Error handling

@@ -9,6 +9,7 @@ namespace Emanate.Vso
     public class VsoModule : IEmanateModule, IModule
     {
         public string Key { get; } = "vso";
+        public string Name { get; } = "Visual Studio Online";
         public Direction Direction { get; } = Direction.Input;
 
         public void LoadServiceComponents(ContainerBuilder builder)

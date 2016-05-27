@@ -65,13 +65,13 @@ namespace Emanate.Service
             builder.RegisterInstance(config);
             foreach (var moduleConfiguration in config.OutputConfigurations)
             {
-                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Name);
+                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Key);
                 builder.RegisterInstance(moduleConfiguration);
             }
 
             foreach (var moduleConfiguration in config.InputConfigurations)
             {
-                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Name);
+                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Key);
                 builder.RegisterInstance(moduleConfiguration);
             }
 

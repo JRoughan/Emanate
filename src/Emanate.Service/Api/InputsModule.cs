@@ -10,7 +10,7 @@ namespace Emanate.Service.Api
         {
             Get["/inputs"] = _ =>
             {
-                return config.InputConfigurations.Select(o => new {o.Key, o.Name});
+                return config.InputModules.Select(o => new {o.Key, o.Name});
             };
         }
     }

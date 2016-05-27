@@ -14,10 +14,7 @@ namespace Emanate.Delcom
     public class DelcomConfiguration : IOutputConfiguration
     {
         private const string key = "delcom";
-        private const string name = "Delcom";
-
         string IOutputConfiguration.Key { get { return key; } }
-        string IOutputConfiguration.Name { get { return name; } }
 
         private readonly ObservableCollection<IProfile> profiles = new ObservableCollection<IProfile>();
         public ObservableCollection<IProfile> Profiles

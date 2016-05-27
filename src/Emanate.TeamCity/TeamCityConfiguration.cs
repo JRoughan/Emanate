@@ -10,10 +10,8 @@ namespace Emanate.TeamCity
     public class TeamCityConfiguration : IInputConfiguration
     {
         private const string key = "teamcity";
-        private const string name = "TeamCity";
 
         string IInputConfiguration.Key { get { return key; } }
-        string IInputConfiguration.Name { get { return name; } }
 
         public Memento CreateMemento()
         {

@@ -10,7 +10,6 @@ namespace Emanate.Core.Configuration
     public interface IOutputConfiguration : IConfiguration, IOriginator
     {
         string Key { get; }
-        string Name { get; }
 
         ObservableCollection<IProfile> Profiles { get; }
 

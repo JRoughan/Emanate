@@ -46,13 +46,13 @@ namespace Emanate.Service.Admin
                     globalConfig.OutputConfigurations.Add(moduleConfig);
                 }
 
-                var profileManager = componentContext.ResolveKeyed<ProfileManager>(moduleConfig.Key);
+                var profileManager = componentContext.ResolveKeyed<ProfileManager>(outputModule.Key);
                 await profileManager.SetTarget(moduleConfig);
 
-                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
+                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(outputModule.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var moduleViewModel = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager, null);
+                var moduleViewModel = new ModuleViewModel(outputModule.Name, profileManager, deviceManager, null);
                 Modules.Add(moduleViewModel);
 
                 var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Id == d.Id));
@@ -71,15 +71,15 @@ namespace Emanate.Service.Admin
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 
-                var profileManager = componentContext.ResolveKeyed<ProfileManager>(moduleConfig.Key);
+                var profileManager = componentContext.ResolveKeyed<ProfileManager>(inputModule.Key);
                 await profileManager.SetTarget(moduleConfig);
 
-                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(moduleConfig.Key);
+                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(inputModule.Key);
                 deviceManager.SetTarget(moduleConfig);
 
-                var inputSelector = componentContext.ResolveKeyed<InputSelector>(moduleConfig.Key);
+                var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputModule.Key);
 
-                var moduleConfigInfo = new ModuleViewModel(moduleConfig.Name, profileManager, deviceManager, inputSelector);
+                var moduleConfigInfo = new ModuleViewModel(inputModule.Name, profileManager, deviceManager, inputSelector);
                 Modules.Add(moduleConfigInfo);
             }
 

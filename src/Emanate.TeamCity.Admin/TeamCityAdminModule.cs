@@ -12,6 +12,7 @@ namespace Emanate.TeamCity.Admin
     public class TeamCityAdminModule : IEmanateAdminModule, IModule
     {
         public string Key { get; } = "teamcity";
+        public string Name { get; } = "TeamCity";
         public Direction Direction { get; } = Direction.Input;
 
         public void LoadAdminComponents(ContainerBuilder builder)

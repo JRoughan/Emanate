@@ -9,6 +9,7 @@ namespace Emanate.Delcom
     public class DelcomModule : IEmanateModule, IModule
     {
         public string Key { get; } = "delcom";
+        public string Name { get; } = "Delcom";
         public Direction Direction { get; } = Direction.Output;
 
         public void LoadServiceComponents(ContainerBuilder builder)

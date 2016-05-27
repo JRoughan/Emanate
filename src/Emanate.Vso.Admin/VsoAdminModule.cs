@@ -11,7 +11,11 @@ namespace Emanate.Vso.Admin
 {
     public class VsoAdminModule : IEmanateAdminModule, IModule
     {
-        public string Key { get; } = "vso";
+        private const string key = "vso";
+        private const string name = "Visual Studio Online";
+
+        public string Key { get { return key; } }
+        public string Name { get { return name; } }
         public Direction Direction { get; } = Direction.Input;
 
         public void LoadAdminComponents(ContainerBuilder builder)

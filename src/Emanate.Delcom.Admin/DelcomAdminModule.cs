@@ -12,6 +12,8 @@ namespace Emanate.Delcom.Admin
     public class DelcomAdminModule : IEmanateAdminModule, IModule
     {
         public string Key { get; } = "delcom";
+        public string Name { get; } = "Delcom";
+
         public Direction Direction  { get; } = Direction.Output;
 
         public void LoadAdminComponents(ContainerBuilder builder)
