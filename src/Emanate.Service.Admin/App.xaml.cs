@@ -4,6 +4,7 @@ using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Serilog;
+using Serilog.Sinks.RollingFile;
 
 namespace Emanate.Service.Admin
 {
@@ -19,6 +20,7 @@ namespace Emanate.Service.Admin
 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.ColoredConsole()
+                .WriteTo.RollingFile(Paths.AdminLogFilePath)
                 .CreateLogger();
 
             var container = CreateContainer();

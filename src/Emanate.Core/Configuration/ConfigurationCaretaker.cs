@@ -10,11 +10,21 @@ using Serilog;
 
 namespace Emanate.Core.Configuration
 {
-    public class ConfigurationCaretaker
+    public static class Paths
     {
         private static readonly string configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Emanate");
         private static readonly string configFilePath = Path.Combine(configDir, "Configuration.xml");
+        private static readonly string adminLogFilePath = Path.Combine(configDir, "Emanate.Service.Admin-{Date}.log");
+        private static readonly string serviceLogFilePath = Path.Combine(configDir, "Emanate.Service-{Date}.log");
 
+        public static string ConfigFolder => configDir;
+        public static string ConfigFilePath => configFilePath;
+        public static string AdminLogFilePath => adminLogFilePath;
+        public static string ServiceLogFilePath => serviceLogFilePath;
+    }
+
+    public class ConfigurationCaretaker
+    {
         private readonly IComponentContext componentContext;
 
         public ConfigurationCaretaker(IComponentContext componentContext)
@@ -27,7 +37,7 @@ namespace Emanate.Core.Configuration
             Log.Information("=> ConfigurationCaretaker.Load");
             return await Task.Run(() =>
             {
-                if (!File.Exists(configFilePath))
+                if (!File.Exists(Paths.ConfigFilePath))
                 {
                     Log.Information("No config file found");
                     return GenerateDefaultConfiguration();
@@ -42,8 +52,8 @@ namespace Emanate.Core.Configuration
                 globalConfig.OutputModules.AddRange(allModules.Where(m => m.Direction == Direction.Output));
 
 
-                Log.Information("Loading config file from '{0}'", configFilePath);
-                var configDoc = XDocument.Load(configFilePath);
+                Log.Information("Loading config file from '{0}'", Paths.ConfigFilePath);
+                var configDoc = XDocument.Load(Paths.ConfigFilePath);
                 var rootNode = configDoc.Element("emanate");
 
                 if (rootNode != null)
@@ -187,10 +197,10 @@ namespace Emanate.Core.Configuration
             }
             rootElement.Add(mappingsElement);
 
-            if (!Directory.Exists(configDir))
-                Directory.CreateDirectory(configDir);
+            if (!Directory.Exists(Paths.ConfigFolder))
+                Directory.CreateDirectory(Paths.ConfigFolder);
 
-            configDoc.Save(configFilePath);
+            configDoc.Save(Paths.ConfigFilePath);
         }
     }
 }

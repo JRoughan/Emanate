@@ -4,6 +4,7 @@ using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Service.Api;
 using Serilog;
+using Serilog.Sinks.RollingFile;
 using Topshelf;
 using Topshelf.Autofac;
 
@@ -15,6 +16,7 @@ namespace Emanate.Service
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.ColoredConsole()
+                .WriteTo.RollingFile(Paths.ServiceLogFilePath)
                 .CreateLogger();
 
             var container = CreateContainer().Result;
