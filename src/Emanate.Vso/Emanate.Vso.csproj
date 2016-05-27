@@ -70,6 +70,11 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="Build.cs" />
+    <Compile Include="BuildDefinition.cs" />
+    <Compile Include="BuildDefinitionCollection.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectCollection.cs" />
     <Compile Include="VsoConfiguration.cs" />
     <Compile Include="VsoDevice.cs" />
     <Compile Include="VsoModule.cs" />

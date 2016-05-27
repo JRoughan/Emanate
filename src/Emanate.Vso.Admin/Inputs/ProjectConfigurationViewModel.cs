@@ -6,27 +6,27 @@ namespace Emanate.Vso.Admin.Inputs
     public class ProjectConfigurationViewModel : ViewModel
     {
         private readonly ProjectViewModel project;
+        private readonly BuildDefinition buildDefinition;
 
-        public ProjectConfigurationViewModel(ProjectViewModel project)
+        public ProjectConfigurationViewModel(ProjectViewModel project, BuildDefinition buildDefinition)
         {
             this.project = project;
+            this.buildDefinition = buildDefinition;
         }
 
-        public string Id { get; set; }
+        public string Id
+        {
+            get { return buildDefinition.Id; }
+            set { buildDefinition.Id = value; }
+        }
 
-        private string name;
         public string Name
         {
-            get { return name; }
-            set { name = value; OnPropertyChanged(); }
+            get { return buildDefinition.Name; }
+            set { buildDefinition.Name = value; OnPropertyChanged(); }
         }
 
-        private Guid projectId;
-        public Guid ProjectId
-        {
-            get { return projectId; }
-            set { projectId = value; OnPropertyChanged(); }
-        }
+        public Guid ProjectId => project.Id;
 
         private bool isSelected;
         public bool IsSelected
@@ -44,11 +44,10 @@ namespace Emanate.Vso.Admin.Inputs
             }
         }
 
-        private string type;
         public string Type
         {
-            get { return type; }
-            set { type = value; OnPropertyChanged(); }
+            get { return buildDefinition.Type; }
+            set { buildDefinition.Type = value; OnPropertyChanged(); }
         }
     }
 }

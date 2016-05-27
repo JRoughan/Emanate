@@ -6,17 +6,25 @@ namespace Emanate.Vso.Admin.Inputs
 {
     public class ProjectViewModel : ViewModel
     {
-        public ProjectViewModel()
+        private readonly Project project;
+
+        public ProjectViewModel(Project project)
         {
+            this.project = project;
             configurations = new ObservableCollection<ProjectConfigurationViewModel>();
             configurations.CollectionChanged += (s, e) => CheckStatus();
         }
 
-        private string name;
+        public Guid Id
+        {
+            get { return project.Id; }
+            set { project.Id = value; OnPropertyChanged(); }
+        }
+
         public string Name
         {
-            get { return name; }
-            set { name = value; OnPropertyChanged(); }
+            get { return project.Name; }
+            set { project.Name = value; OnPropertyChanged(); }
         }
 
         private bool? isSelected;
@@ -40,8 +48,6 @@ namespace Emanate.Vso.Admin.Inputs
             get { return configurations; }
             set { configurations = value; OnPropertyChanged(); }
         }
-
-        public Guid Id { get; set; }
 
         public void CheckStatus()
         {

@@ -23,11 +23,10 @@ namespace Emanate.Vso.Admin.Inputs
             return await Task.Run(async () =>
             {
                 Log.Information("=> InputSelectorViewModel.Initialize");
-                dynamic projectRefs;
+                ProjectCollection projectCollection;
                 try
                 {
-                    var rawProjects = await connection.GetProjects();
-                    projectRefs = rawProjects["value"];
+                    projectCollection = await connection.GetProjects();
                 }
                 catch (WebException ex)
                 {
@@ -36,22 +35,25 @@ namespace Emanate.Vso.Admin.Inputs
                     return InitializationResult.Failed;
                 }
 
-                foreach (dynamic projectRef in projectRefs)
+                foreach (var project in projectCollection.Value)
                 {
-                    var projectVm = new ProjectViewModel();
-                    projectVm.Name = projectRef["name"].Value;
-                    projectVm.Id = Guid.Parse(projectRef["id"].Value);
+                    var projectVm = new ProjectViewModel(project);
 
-                    var rawBuilds = await connection.GetBuildDefinitions(projectVm.Id);
-                    var buildDefinitions = rawBuilds["value"];
-
-                    foreach (var buildDefinition in buildDefinitions)
+                    BuildDefinitionCollection buildDefinitionCollection;
+                    try
                     {
-                        var configuration = new ProjectConfigurationViewModel(projectVm);
-                        configuration.Id = buildDefinition["id"].Value.ToString();
-                        configuration.Name = buildDefinition["name"].Value;
-                        configuration.Type = buildDefinition["type"].Value;
-                        configuration.ProjectId = projectVm.Id;
+                        buildDefinitionCollection = await connection.GetBuildDefinitions(projectVm.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Could not get build definitions: " + ex.Message);
+                        HasBadConfiguration = true;
+                        return InitializationResult.Failed;
+                    }
+
+                    foreach (var buildDefinition in buildDefinitionCollection.Value)
+                    {
+                        var configuration = new ProjectConfigurationViewModel(projectVm, buildDefinition);
                         projectVm.Configurations.Add(configuration);
                     }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -124,13 +123,11 @@ namespace Emanate.Vso
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var rawBuild = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
-                var tfsBuild = rawBuild["value"][0];
-                if (tfsBuild != null)
+                var build = await vsoConnection.GetBuild(buildKey.ProjectId, int.Parse(buildKey.BuildId));
+                if (build != null)
                 {
-                    var rawDate = ((string)tfsBuild["startTime"]).Trim('{', '}');
-                    var startTime = DateTime.ParseExact(rawDate, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-                    var state = ConvertState(tfsBuild);
+                    var startTime = build.StartTime;
+                    var state = ConvertState(build);
 
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
@@ -140,10 +137,10 @@ namespace Emanate.Vso
             return buildInfos;
         }
 
-        private BuildState ConvertState(dynamic build)
+        private BuildState ConvertState(Build build)
         {
-            string result = build["result"]?.Value;
-            if (string.IsNullOrWhiteSpace(result) && build["status"]?.Value == InProgressStatus)
+            string result = build.Result;
+            if (string.IsNullOrWhiteSpace(result) && build.Status == InProgressStatus)
                 return BuildState.Running;
 
             return !string.IsNullOrWhiteSpace(result) && result == SucceededStatus ? BuildState.Succeeded : BuildState.Failed;

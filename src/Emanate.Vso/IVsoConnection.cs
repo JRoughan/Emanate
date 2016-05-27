@@ -5,8 +5,8 @@ namespace Emanate.Vso
 {
     public interface IVsoConnection
     {
-        Task<dynamic> GetProjects();
-        Task<dynamic> GetBuild(Guid projectId, int buildId);
-        Task<dynamic> GetBuildDefinitions(Guid projectId);
+        Task<ProjectCollection> GetProjects();
+        Task<Build> GetBuild(Guid projectId, int buildId);
+        Task<BuildDefinitionCollection> GetBuildDefinitions(Guid projectId);
     }
 }

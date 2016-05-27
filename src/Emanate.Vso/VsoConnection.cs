@@ -19,7 +19,7 @@ namespace Emanate.Vso
             baseUri = new Uri(rawUrl);
         }
 
-        public async Task<dynamic> GetProjects()
+        public async Task<ProjectCollection> GetProjects()
         {
             Log.Information("=> VsoConnection.GetProjects");
             using (var client = CreateHttpClient())
@@ -28,13 +28,13 @@ namespace Emanate.Vso
                 using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
-                    return JsonConvert.DeserializeObject(responseBody);
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ProjectCollection>(responseBody);
                 }
             }
         }
 
-        public async Task<dynamic> GetBuild(Guid projectId, int definition)
+        public async Task<Build> GetBuild(Guid projectId, int definition)
         {
             Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
             using (var client = CreateHttpClient())
@@ -44,12 +44,12 @@ namespace Emanate.Vso
                 {
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject(responseBody);
+                    return JsonConvert.DeserializeObject<Build>(responseBody);
                 }
             }
         }
 
-        public async Task<dynamic> GetBuildDefinitions(Guid projectId)
+        public async Task<BuildDefinitionCollection> GetBuildDefinitions(Guid projectId)
         {
             Log.Information("=> VsoConnection.GetBuildDefinitions({0})", projectId);
             using (var client = CreateHttpClient())
@@ -59,7 +59,7 @@ namespace Emanate.Vso
                 {
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject(responseBody);
+                    return JsonConvert.DeserializeObject<BuildDefinitionCollection>(responseBody);
                 }
             }
         }
