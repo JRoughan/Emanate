@@ -39,7 +39,6 @@ namespace Emanate.Vso
             timer.Elapsed += PollStatus;
         }
 
-        public BuildState CurrentState { get; private set; }
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
@@ -111,7 +110,6 @@ namespace Emanate.Vso
                     timeStamp = newStates.Where(s => s.TimeStamp.HasValue).Max(s => s.TimeStamp.Value);
                 }
 
-                CurrentState = newState;
                 outputDevice.UpdateStatus(newState, timeStamp);
             }
         }
@@ -150,7 +148,7 @@ namespace Emanate.Vso
         }
 
         [DebuggerDisplay("{BuildKey} - {State}")]
-        class BuildInfo
+        private class BuildInfo
         {
             public BuildKey BuildKey { get; set; }
             public BuildState State { get; set; }
