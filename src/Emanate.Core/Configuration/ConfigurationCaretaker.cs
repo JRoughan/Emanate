@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Autofac;
+using Autofac.Features.Indexed;
 using Emanate.Core.Output;
 using Serilog;
 
@@ -12,11 +13,23 @@ namespace Emanate.Core.Configuration
 {
     public class ConfigurationCaretaker
     {
-        private readonly IComponentContext componentContext;
+        private readonly IEnumerable<IModule> modules;
+        private readonly IIndex<string, IInputConfiguration> inputConfigurations;
+        private readonly IIndex<string, IOutputConfiguration> outputConfigurations;
+        private readonly Lazy<IEnumerable<IInputConfiguration>> lazyInputConfigurations;
+        private readonly Lazy<IEnumerable<IOutputConfiguration>> lazyOutputConfigurations;
 
-        public ConfigurationCaretaker(IComponentContext componentContext)
+        public ConfigurationCaretaker(IEnumerable<IModule> modules, 
+            IIndex<string, IInputConfiguration> inputConfigurations, 
+            IIndex<string, IOutputConfiguration> outputConfigurations,
+            Lazy<IEnumerable<IInputConfiguration>> lazyInputConfigurations,
+            Lazy<IEnumerable<IOutputConfiguration>> lazyOutputConfigurations)
         {
-            this.componentContext = componentContext;
+            this.modules = modules;
+            this.inputConfigurations = inputConfigurations;
+            this.outputConfigurations = outputConfigurations;
+            this.lazyInputConfigurations = lazyInputConfigurations;
+            this.lazyOutputConfigurations = lazyOutputConfigurations;
         }
 
         public async Task<GlobalConfig> Load()
@@ -30,13 +43,10 @@ namespace Emanate.Core.Configuration
                     return GenerateDefaultConfiguration();
                 }
 
-                var builder = new ContainerBuilder();
                 var globalConfig = new GlobalConfig();
 
-                var allModules = componentContext.Resolve<IEnumerable<IModule>>();
-
-                globalConfig.InputModules.AddRange(allModules.Where(m => m.Direction == Direction.Input));
-                globalConfig.OutputModules.AddRange(allModules.Where(m => m.Direction == Direction.Output));
+                globalConfig.InputModules.AddRange(modules.Where(m => m.Direction == Direction.Input));
+                globalConfig.OutputModules.AddRange(modules.Where(m => m.Direction == Direction.Output));
 
 
                 Log.Information("Loading config file from '{0}'", Paths.ConfigFilePath);
@@ -46,22 +56,22 @@ namespace Emanate.Core.Configuration
                 if (rootNode != null)
                 {
                     // Modules
-                    var modules = rootNode.Element("modules");
-                    if (modules != null)
+                    var modulesElement = rootNode.Element("modules");
+                    if (modulesElement != null)
                     {
-                        foreach (var moduleMemento in modules.Elements("module").Select(e => new Memento(e)))
+                        foreach (var moduleMemento in modulesElement.Elements("module").Select(e => new Memento(e)))
                         {
                             IOriginator moduleConfig;
                             switch (moduleMemento.Type)
                             {
                                 case "output":
-                                    moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(moduleMemento.Key);
+                                    moduleConfig = outputConfigurations[moduleMemento.Key];
                                     globalConfig.OutputConfigurations.Add((IOutputConfiguration) moduleConfig);
                                     moduleConfig.SetMemento(moduleMemento);
                                     globalConfig.OutputDevices.AddRange(((IOutputConfiguration)moduleConfig).OutputDevices);
                                     break;
                                 case "input":
-                                    moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(moduleMemento.Key);
+                                    moduleConfig = inputConfigurations[moduleMemento.Key];
                                     globalConfig.InputConfigurations.Add((IInputConfiguration) moduleConfig);
                                     moduleConfig.SetMemento(moduleMemento);
                                     globalConfig.InputDevices.AddRange(((IInputConfiguration)moduleConfig).Devices);
@@ -69,7 +79,6 @@ namespace Emanate.Core.Configuration
                                 default:
                                     throw new Exception("Unknown module type");
                             }
-                            builder.RegisterInstance(moduleConfig).AsSelf();
                         }
                     }
                     else
@@ -106,9 +115,6 @@ namespace Emanate.Core.Configuration
                 else
                     Log.Error("Missing root node");
 
-                Log.Information("Updating container from config");
-                builder.Update(componentContext.ComponentRegistry);
-
                 return globalConfig;
             });
         }
@@ -116,22 +122,16 @@ namespace Emanate.Core.Configuration
         private GlobalConfig GenerateDefaultConfiguration()
         {
             Log.Information("=> ConfigurationCaretaker.GenerateDefaultConfiguration");
-            var builder = new ContainerBuilder();
 
             var config = new GlobalConfig();
-            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IOutputConfiguration>>())
+            foreach (var moduleConfiguration in lazyOutputConfigurations.Value)
             {
-                builder.RegisterInstance(moduleConfiguration).AsSelf();
                 config.OutputConfigurations.Add(moduleConfiguration);
             }
-            foreach (var moduleConfiguration in componentContext.Resolve<IEnumerable<IInputConfiguration>>())
+            foreach (var moduleConfiguration in lazyInputConfigurations.Value)
             {
-                builder.RegisterInstance(moduleConfiguration).AsSelf();
                 config.InputConfigurations.Add(moduleConfiguration);
             }
-
-            Log.Information("Updating container from config");
-            builder.Update(componentContext.ComponentRegistry);
 
             return config;
         }

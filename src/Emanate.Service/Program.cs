@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Service.Api;
@@ -19,11 +18,9 @@ namespace Emanate.Service
                 .WriteTo.RollingFile(Paths.ServiceLogFilePath)
                 .CreateLogger();
 
-            var container = CreateContainer().Result;
-
             var host = HostFactory.New(c =>
             {
-                c.UseAutofacContainer(container);
+                c.UseAutofacContainer(CreateContainer());
 
                 //Settings.Initialize(c);
 
@@ -47,35 +44,21 @@ namespace Emanate.Service
             host.Run();
         }
 
-        private static async Task<IContainer> CreateContainer()
+        private static IContainer CreateContainer()
         {
-            var bootStrapBuilder = new ContainerBuilder();
-            var loader = new ModuleLoader();
-            loader.LoadServiceModules(bootStrapBuilder);
-
-            bootStrapBuilder.RegisterType<ConfigurationCaretaker>();
-            bootStrapBuilder.RegisterType<EmanateService>();
-
-            var container = bootStrapBuilder.Build();
-
-            var caretaker = container.Resolve<ConfigurationCaretaker>();
-            var config = await caretaker.Load();
-
             var builder = new ContainerBuilder();
-            builder.RegisterInstance(config);
-            foreach (var moduleConfiguration in config.OutputConfigurations)
-            {
-                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Key);
-                builder.RegisterInstance(moduleConfiguration);
-            }
+            var loader = new ModuleLoader();
+            loader.LoadServiceModules(builder);
 
-            foreach (var moduleConfiguration in config.InputConfigurations)
+            builder.RegisterType<ConfigurationCaretaker>();
+            builder.RegisterType<EmanateService>();
+            builder.RegisterType<GlobalConfig>().OnActivating(async e =>
             {
-                Log.Information("Registering module configuration '{0}'", moduleConfiguration.Key);
-                builder.RegisterInstance(moduleConfiguration);
-            }
+                var caretaker = e.Context.Resolve<ConfigurationCaretaker>();
+                e.ReplaceInstance(await caretaker.Load());
+            });
 
-            builder.Update(container);
+            var container = builder.Build();
 
             Bootstrapper.SetContainer(container);
 
