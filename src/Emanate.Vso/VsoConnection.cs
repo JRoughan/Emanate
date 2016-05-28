@@ -11,8 +11,8 @@ namespace Emanate.Vso
 {
     public class VsoConnection : IVsoConnection
     {
-        private static readonly ConcurrentDictionary<string, Task<ProjectCollection>> projectCollectionCache = new ConcurrentDictionary<string, Task<ProjectCollection>>();
-        private static readonly ConcurrentDictionary<string, Task<BuildDefinitionCollection>> buildDefinitionCollectionCache = new ConcurrentDictionary<string, Task<BuildDefinitionCollection>>();
+        private readonly ConcurrentDictionary<string, Task<ProjectCollection>> projectCollectionCache = new ConcurrentDictionary<string, Task<ProjectCollection>>();
+        private readonly ConcurrentDictionary<string, Task<BuildDefinitionCollection>> buildDefinitionCollectionCache = new ConcurrentDictionary<string, Task<BuildDefinitionCollection>>();
 
         private readonly VsoDevice device;
         private readonly Uri baseUri;
