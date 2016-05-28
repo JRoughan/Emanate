@@ -122,16 +122,20 @@ namespace Emanate.Vso
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
-                var build = await vsoConnection.GetBuild(buildKey.ProjectId, buildKey.BuildId);
-                if (build != null)
+                try
                 {
+                    var build = await vsoConnection.GetBuild(buildKey.ProjectId, buildKey.BuildId);
                     var startTime = build.StartTime;
                     var state = ConvertState(build);
 
+                    Log.Error($"Adding build state for {buildKey.ProjectId}:{buildKey.BuildId}");
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
-                else
-                    Log.Warning("Build '{0}' invalid", buildKey);
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Failed to get build state for {buildKey.ProjectId}:{buildKey.BuildId}");
+                    buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = BuildState.Error, TimeStamp = DateTime.Now });
+                }
             }
             return buildInfos;
         }
