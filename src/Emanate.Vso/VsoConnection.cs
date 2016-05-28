@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace Emanate.Vso
             }
         }
 
+        // TODO: Change method to GetBuilds as an optimisation for multiple definitions under the same project
         public async Task<Build> GetBuild(Guid projectId, int definition)
         {
             Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
@@ -44,7 +46,8 @@ namespace Emanate.Vso
                 {
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Build>(responseBody);
+                    var buildCollection = JsonConvert.DeserializeObject<BuildCollection>(responseBody);
+                    return buildCollection.Value.Single();
                 }
             }
         }

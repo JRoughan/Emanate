@@ -71,6 +71,7 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Build.cs" />
+    <Compile Include="BuildCollection.cs" />
     <Compile Include="BuildDefinition.cs" />
     <Compile Include="BuildDefinitionCollection.cs" />
     <Compile Include="BuildKey.cs" />
