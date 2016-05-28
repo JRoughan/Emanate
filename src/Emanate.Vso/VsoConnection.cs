@@ -23,46 +23,33 @@ namespace Emanate.Vso
         public async Task<ProjectCollection> GetProjects()
         {
             Log.Information("=> VsoConnection.GetProjects");
-            using (var client = CreateHttpClient())
-            {
-                var requestUri = new Uri(baseUri, "_apis/projects?api-version=2");
-                using (var response = await client.GetAsync(requestUri))
-                {
-                    response.EnsureSuccessStatusCode();
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<ProjectCollection>(responseBody);
-                }
-            }
+            return await GetWebResource<ProjectCollection>("_apis/projects?api-version=2");
         }
 
         // TODO: Change method to GetBuilds as an optimisation for multiple definitions under the same project
         public async Task<Build> GetBuild(Guid projectId, int definition)
         {
             Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
-            using (var client = CreateHttpClient())
-            {
-                var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
-                using (var response = await client.GetAsync(requestUri))
-                {
-                    response.EnsureSuccessStatusCode();
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    var buildCollection = JsonConvert.DeserializeObject<BuildCollection>(responseBody);
-                    return buildCollection.Value.Single();
-                }
-            }
+            var buildCollection = await GetWebResource<BuildCollection>($"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
+            return buildCollection.Value.Single();
         }
 
         public async Task<BuildDefinitionCollection> GetBuildDefinitions(Guid projectId)
         {
             Log.Information("=> VsoConnection.GetBuildDefinitions({0})", projectId);
+            return await GetWebResource<BuildDefinitionCollection>($"{projectId}/_apis/build/definitions?api-version=2");
+        }
+
+        private async Task<TResource> GetWebResource<TResource>(string url)
+        {
             using (var client = CreateHttpClient())
             {
-                var requestUri = new Uri(baseUri, $"{projectId}/_apis/build/definitions?api-version=2");
+                var requestUri = new Uri(baseUri, url);
                 using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<BuildDefinitionCollection>(responseBody);
+                    return JsonConvert.DeserializeObject<TResource>(responseBody);
                 }
             }
         }
