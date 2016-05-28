@@ -128,7 +128,7 @@ namespace Emanate.Vso
                     var startTime = build.StartTime;
                     var state = ConvertState(build);
 
-                    Log.Error($"Adding build state for {buildKey.ProjectId}:{buildKey.BuildId}");
+                    Log.Information($"Adding build state for {buildKey.ProjectId}:{buildKey.BuildId}");
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
                 catch (Exception ex)

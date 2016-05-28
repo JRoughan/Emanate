@@ -74,7 +74,7 @@ namespace Emanate.Delcom
                 }
             }
 
-            Log.Warning("Finding profile for state '{0}'", state);
+            Log.Information("Finding profile for state '{0}'", state);
             var profileState = profile.States.SingleOrDefault(p => p.BuildState == state);
             if (profileState == null)
             {

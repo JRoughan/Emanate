@@ -39,6 +39,15 @@ namespace Emanate.Service
                 c.SetDisplayName("Emanate Monitoring Service");
                 c.RunAsLocalSystem();
                 c.StartAutomaticallyDelayed();
+
+                c.EnableServiceRecovery(r =>
+                {
+                    r.RestartService(1);
+                    r.RestartComputer(5, "Restarting service did not recover Emanate service behaviour. Restarting machine.");
+
+                    r.OnCrashOnly();
+                    r.SetResetPeriod(1);
+                });
             });
 
             host.Run();
