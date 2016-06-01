@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Emanate.Core;
 using Emanate.Extensibility;
 
 namespace Emanate.Delcom.Admin.Profiles
@@ -44,6 +45,11 @@ namespace Emanate.Delcom.Admin.Profiles
         {
             get { return monitoringProfile.EndTime; }
             set { monitoringProfile.EndTime = value; OnPropertyChanged(); }
+        }
+
+        public IProfile GetProfile()
+        {
+            return monitoringProfile;
         }
     }
 }

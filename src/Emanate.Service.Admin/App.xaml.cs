@@ -3,6 +3,7 @@ using System.Windows;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
+using Emanate.Extensibility.Composition;
 using Serilog;
 using Serilog.Sinks.RollingFile;
 
@@ -35,6 +36,7 @@ namespace Emanate.Service.Admin
             var loader = new ModuleLoader();
             loader.LoadAdminModules(builder);
 
+            builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
             builder.RegisterType<MainWindow>();
             builder.RegisterType<MainWindowViewModel>();
             builder.RegisterType<DiskAccessor>().As<IDiskAccessor>().SingleInstance();

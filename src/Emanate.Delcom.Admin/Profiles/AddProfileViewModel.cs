@@ -2,16 +2,19 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Emanate.Extensibility;
+using Emanate.Extensibility.Composition;
 
 namespace Emanate.Delcom.Admin.Profiles
 {
     public class AddProfileViewModel : ViewModel
     {
         private readonly ObservableCollection<DelcomProfileViewModel> existingProfiles;
+        private readonly IMediator mediator;
 
-        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<DelcomProfileViewModel> existingProfiles)
+        public AddProfileViewModel(DelcomConfiguration delcomConfiguration, ObservableCollection<DelcomProfileViewModel> existingProfiles, IMediator mediator)
         {
             this.existingProfiles = existingProfiles;
+            this.mediator = mediator;
 
             var emptyProfile = (MonitoringProfile)delcomConfiguration.GenerateEmptyProfile();
             NewProfile = new DelcomProfileViewModel(emptyProfile);
@@ -60,7 +63,7 @@ namespace Emanate.Delcom.Admin.Profiles
 
         private void SaveProfile(DelcomProfileViewModel profileViewModel)
         {
-            existingProfiles.Add(profileViewModel);
+            mediator.Publish(new ProfileAddedEvent(profileViewModel.GetProfile()));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
+using Emanate.Extensibility.Composition;
 
 namespace Emanate.Vso.Admin.Profiles
 {
@@ -12,7 +13,7 @@ namespace Emanate.Vso.Admin.Profiles
             InitializeComponent();
         }
 
-        public override async Task SetTarget(IConfiguration moduleConfiguration)
+        public override async Task SetTarget(IConfiguration moduleConfiguration, IMediator mediator)
         {
             viewModel = new VsoProfileManagerViewModel();
             await viewModel.Initialize();

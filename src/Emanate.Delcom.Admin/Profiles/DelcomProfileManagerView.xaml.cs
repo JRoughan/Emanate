@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
+using Emanate.Extensibility.Composition;
 
 namespace Emanate.Delcom.Admin.Profiles
 {
@@ -19,10 +20,10 @@ namespace Emanate.Delcom.Admin.Profiles
                 ProfileSelector.SelectedIndex = 0;
         }
 
-        public override async Task SetTarget(IConfiguration moduleConfiguration)
+        public override async Task SetTarget(IConfiguration moduleConfiguration, IMediator mediator)
         {
             var config = moduleConfiguration as DelcomConfiguration;
-            viewModel = new DelcomProfileManagerViewModel(config);
+            viewModel = new DelcomProfileManagerViewModel(config, mediator);
             await viewModel.Initialize();
             DataContext = viewModel;
         }

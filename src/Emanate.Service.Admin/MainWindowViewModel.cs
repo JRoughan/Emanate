@@ -8,6 +8,7 @@ using Autofac;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
+using Emanate.Extensibility.Composition;
 using Serilog;
 
 namespace Emanate.Service.Admin
@@ -16,9 +17,10 @@ namespace Emanate.Service.Admin
     {
         private readonly IComponentContext componentContext;
         private readonly ConfigurationCaretaker configurationCaretaker;
+        private readonly IMediator mediator;
         private GlobalConfig globalConfig;
 
-        public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker)
+        public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker, IMediator mediator)
         {
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
@@ -26,6 +28,7 @@ namespace Emanate.Service.Admin
 
             this.componentContext = componentContext;
             this.configurationCaretaker = configurationCaretaker;
+            this.mediator = mediator;
         }
 
         public event EventHandler CloseRequested;
@@ -47,7 +50,7 @@ namespace Emanate.Service.Admin
                 }
 
                 var profileManager = componentContext.ResolveKeyed<ProfileManager>(outputModule.Key);
-                await profileManager.SetTarget(moduleConfig);
+                await profileManager.SetTarget(moduleConfig, mediator);
 
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(outputModule.Key);
                 deviceManager.SetTarget(moduleConfig);
@@ -69,7 +72,7 @@ namespace Emanate.Service.Admin
                 }
 
                 var profileManager = componentContext.ResolveKeyed<ProfileManager>(inputModule.Key);
-                await profileManager.SetTarget(moduleConfig);
+                await profileManager.SetTarget(moduleConfig, mediator);
 
                 var deviceManager = componentContext.ResolveKeyed<DeviceManager>(inputModule.Key);
                 deviceManager.SetTarget(moduleConfig);
@@ -93,7 +96,7 @@ namespace Emanate.Service.Admin
 
         private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
-            var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration);
+            var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
             // HACK: Force an input for a new device without any. Ugly!
             var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
             inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
