@@ -7,6 +7,6 @@ namespace Emanate.Core.Configuration
     public class Mapping
     {
         public List<InputGroup> InputGroups { get; } = new List<InputGroup>();
-        public Guid OutputId { get; set; }
+        public Guid OutputDeviceId { get; set; }
     }
 }

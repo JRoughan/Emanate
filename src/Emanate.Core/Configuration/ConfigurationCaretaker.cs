@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -13,18 +12,21 @@ namespace Emanate.Core.Configuration
 {
     public class ConfigurationCaretaker
     {
+        private readonly IDiskAccessor diskAccessor;
         private readonly IEnumerable<IModule> modules;
         private readonly IIndex<string, IOutputConfiguration> outputConfigurations;
         private readonly IIndex<string, IInputConfiguration> inputConfigurations;
         private readonly IEnumerable<Lazy<IOutputConfiguration>> lazyOutputConfigurations;
         private readonly IEnumerable<Lazy<IInputConfiguration>> lazyInputConfigurations;
 
-        public ConfigurationCaretaker(IEnumerable<IModule> modules,
+        public ConfigurationCaretaker(IDiskAccessor diskAccessor,
+            IEnumerable<IModule> modules,
             IIndex<string, IOutputConfiguration> outputConfigurations,
             IIndex<string, IInputConfiguration> inputConfigurations,
             IEnumerable<Lazy<IOutputConfiguration>> lazyOutputConfigurations,
             IEnumerable<Lazy<IInputConfiguration>> lazyInputConfigurations)
         {
+            this.diskAccessor = diskAccessor;
             this.modules = modules;
             this.outputConfigurations = outputConfigurations;
             this.inputConfigurations = inputConfigurations;
@@ -37,7 +39,8 @@ namespace Emanate.Core.Configuration
             Log.Information("=> ConfigurationCaretaker.Load");
             return await Task.Run(() =>
             {
-                if (!File.Exists(Paths.ConfigFilePath))
+                var configDoc = diskAccessor.Load(Paths.ConfigFilePath);
+                if (configDoc == null)
                 {
                     Log.Information("No config file found");
                     return GenerateDefaultConfiguration();
@@ -50,7 +53,6 @@ namespace Emanate.Core.Configuration
 
 
                 Log.Information("Loading config file from '{0}'", Paths.ConfigFilePath);
-                var configDoc = XDocument.Load(Paths.ConfigFilePath);
                 var rootNode = configDoc.Element("emanate");
 
                 if (rootNode != null)
@@ -90,7 +92,7 @@ namespace Emanate.Core.Configuration
                         foreach (var mappingElement in mappingsElement.Elements("mapping"))
                         {
                             var mapping = new Mapping();
-                            mapping.OutputId = mappingElement.GetAttributeGuid("output-id");
+                            mapping.OutputDeviceId = mappingElement.GetAttributeGuid("output-device-id");
 
                             foreach (var inputsElements in mappingElement.Elements("inputs"))
                             {
@@ -104,7 +106,7 @@ namespace Emanate.Core.Configuration
                                 mapping.InputGroups.Add(inputGroup);
                             }
 
-                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputId, string.Join(", ", mapping.InputGroups.SelectMany(g => g.Inputs)));
+                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputDeviceId, string.Join(", ", mapping.InputGroups.SelectMany(g => g.Inputs)));
                             globalConfig.Mappings.Add(mapping);
                         }
                     }
@@ -138,7 +140,7 @@ namespace Emanate.Core.Configuration
             return config;
         }
 
-        public static void Save(GlobalConfig globalConfig)
+        public void Save(GlobalConfig globalConfig)
         {
             Log.Information("=> ConfigurationCaretaker.Save");
             var configDoc = new XDocument();
@@ -165,7 +167,7 @@ namespace Emanate.Core.Configuration
             foreach (var mapping in globalConfig.Mappings)
             {
                 var mappingElement = new XElement("mapping");
-                mappingElement.Add(new XAttribute("output-id", mapping.OutputId));
+                mappingElement.Add(new XAttribute("output-device-id", mapping.OutputDeviceId));
 
                 
                 foreach (var inputGroup in mapping.InputGroups)
@@ -186,10 +188,13 @@ namespace Emanate.Core.Configuration
             }
             rootElement.Add(mappingsElement);
 
-            if (!Directory.Exists(Paths.ConfigFolder))
-                Directory.CreateDirectory(Paths.ConfigFolder);
-
-            configDoc.Save(Paths.ConfigFilePath);
+            diskAccessor.Save(configDoc, Paths.ConfigFilePath);
         }
+    }
+
+    public interface IDiskAccessor
+    {
+        void Save(XDocument configDoc, string path);
+        XDocument Load(string path);
     }
 }

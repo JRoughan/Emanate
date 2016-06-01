@@ -147,7 +147,7 @@ namespace Emanate.Service.Admin
             foreach (var deviceInfo in ActiveDevices)
             {
                 var mapping = new Mapping();
-                mapping.OutputId = deviceInfo.OutputDevice.Id;
+                mapping.OutputDeviceId = deviceInfo.OutputDevice.Id;
 
                 foreach (var inputSelector in deviceInfo.InputSelectors)
                 {
@@ -164,7 +164,7 @@ namespace Emanate.Service.Admin
 
             try
             {
-                ConfigurationCaretaker.Save(globalConfig);
+                configurationCaretaker.Save(globalConfig);
             }
             catch (Exception ex)
             {

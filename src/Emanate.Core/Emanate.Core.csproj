@@ -53,6 +53,7 @@
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ConfigurationCaretaker.cs" />
+    <Compile Include="Configuration\DiskAccessor.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IInputConfiguration.cs" />
     <Compile Include="Configuration\IOriginator.cs" />

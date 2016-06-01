@@ -63,8 +63,8 @@ namespace Emanate.Service
             var config = componentContext.Resolve<GlobalConfig>();
             foreach (var mapping in config.Mappings)
             {
-                Log.Information("Finding output device '{0}'", mapping.OutputId);
-                var outputDevice = config.OutputDevices.Single(d => d.Id == mapping.OutputId);
+                Log.Information("Finding output device '{0}'", mapping.OutputDeviceId);
+                var outputDevice = config.OutputDevices.Single(d => d.Id == mapping.OutputDeviceId);
                 foreach (var inputGroup in mapping.InputGroups)
                 {
                     Log.Information("Processing input group for device '{0}'", inputGroup.InputDeviceId);

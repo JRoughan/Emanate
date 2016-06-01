@@ -62,6 +62,7 @@ namespace Emanate.Service
             var loader = new ModuleLoader();
             loader.LoadServiceModules(bootStrapBuilder);
 
+            bootStrapBuilder.RegisterType<DiskAccessor>().As<IDiskAccessor>().SingleInstance();
             bootStrapBuilder.RegisterType<ConfigurationCaretaker>();
             bootStrapBuilder.RegisterType<EmanateService>();
 
