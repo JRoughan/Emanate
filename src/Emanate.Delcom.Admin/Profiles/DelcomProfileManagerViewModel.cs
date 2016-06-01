@@ -27,9 +27,11 @@ namespace Emanate.Delcom.Admin.Profiles
             DeleteProfileCommand = new DelegateCommand<DelcomProfileViewModel>(DeleteProfile, CanDeleteProfile);
         }
 
-        private bool CanDeleteProfile(DelcomProfileViewModel arg)
+        private bool CanDeleteProfile(DelcomProfileViewModel profileViewModel)
         {
-            return arg != null;
+            return profileViewModel != null && 
+                Profiles.Contains(profileViewModel) &&
+                Profiles.Count > 1; // Do not delete last profile
         }
 
         private void DeleteProfile(DelcomProfileViewModel obj)

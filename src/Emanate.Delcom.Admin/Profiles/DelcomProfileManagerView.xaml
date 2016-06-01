@@ -8,7 +8,7 @@
                            mc:Ignorable="d" 
                            d:DataContext="{d:DesignInstance profiles:DelcomProfileManagerViewModel}">
     <DockPanel IsEnabled="{Binding IsEditable}">
-        <GroupBox DockPanel.Dock="Left" >
+        <GroupBox DockPanel.Dock="Left" Margin="0,0,10,0" >
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Profiles" />
@@ -30,6 +30,7 @@
                 </ListView.ItemTemplate>
             </ListView>
         </GroupBox>
+        <TextBox DockPanel.Dock="Top" Text="{Binding ElementName=ProfileSelector, Path=SelectedItem.Name}" FontSize="24" HorizontalContentAlignment="Center" />
         <profiles:DelcomProfileView DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:ProfileManager>

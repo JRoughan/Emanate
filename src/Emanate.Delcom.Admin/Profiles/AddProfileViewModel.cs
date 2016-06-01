@@ -39,18 +39,21 @@ namespace Emanate.Delcom.Admin.Profiles
 
         private void CloneProfile(DelcomProfileViewModel profileToClone)
         {
+            var profile = (MonitoringProfile)NewProfile.GetProfile();
+            profile.States.Clear();
             NewProfile.States.Clear();
             foreach (var state in profileToClone.States)
             {
-                var newState = new ProfileStateViewModel(new ProfileState())
-                    {
-                        BuildState = state.BuildState,
-                        Green = state.Green,
-                        Yellow = state.Yellow,
-                        Red = state.Red,
-                        Flash = state.Flash
-                    };
-                NewProfile.States.Add(newState);
+                var profileState = new ProfileState
+                {
+                    BuildState = state.BuildState,
+                    Green = state.Green,
+                    Yellow = state.Yellow,
+                    Red = state.Red,
+                    Flash = state.Flash
+                };
+                profile.States.Add(profileState);
+                NewProfile.States.Add(new ProfileStateViewModel(profileState));
             }
         }
 
