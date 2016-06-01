@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using Emanate.Core;
@@ -16,13 +15,13 @@ namespace Emanate.Delcom
         private const string key = "delcom";
         string IOutputConfiguration.Key { get { return key; } }
 
-        private readonly ObservableCollection<IProfile> profiles = new ObservableCollection<IProfile>();
-        public ObservableCollection<IProfile> Profiles
+        private readonly List<IProfile> profiles = new List<IProfile>();
+        public IEnumerable<IProfile> Profiles
         {
             get { return profiles; }
         }
 
-        private readonly ObservableCollection<IOutputDevice> outputDevices = new ObservableCollection<IOutputDevice>();
+        private readonly List<IOutputDevice> outputDevices = new List<IOutputDevice>();
         public IEnumerable<IOutputDevice> OutputDevices
         {
             get { return outputDevices; }
@@ -71,24 +70,20 @@ namespace Emanate.Delcom
                         break;
                 }
             }
-            Profiles.Add(defaultProfile);
+            profiles.Add(defaultProfile);
             return defaultProfile;
         }
 
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
         public void AddOutputDevice(IOutputDevice outputDevice)
         {
             Log.Information("=> DelcomConfiguration.AddOutputDevice");
             outputDevices.Add(outputDevice);
-            OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
-        public event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
         public void RemoveOutputDevice(DelcomDevice outputDevice)
         {
             Log.Information("=> DelcomConfiguration.RemoveOutputDevice");
             outputDevices.Remove(outputDevice);
-            OutputDeviceAdded?.Invoke(this, new OutputDeviceEventArgs(this, outputDevice));
         }
 
         public Memento CreateMemento()
@@ -132,7 +127,7 @@ namespace Emanate.Delcom
                 {
                     var profile = new MonitoringProfile();
                     profile.SetMemento(profileElement);
-                    Profiles.Add(profile);
+                    profiles.Add(profile);
                 }
             }
             else

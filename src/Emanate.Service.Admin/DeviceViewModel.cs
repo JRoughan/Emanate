@@ -16,12 +16,10 @@ namespace Emanate.Service.Admin
         {
             this.outputDevice = outputDevice;
             this.configuration = configuration;
+            AvailableProfiles = new ObservableCollection<IProfile>(configuration.Profiles);
         }
 
-        public ObservableCollection<IProfile> AvailableProfiles
-        {
-            get { return configuration.Profiles; }
-        }
+        public ObservableCollection<IProfile> AvailableProfiles { get; }
 
         public IProfile Profile
         {

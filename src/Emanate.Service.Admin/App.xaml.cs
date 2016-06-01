@@ -37,6 +37,7 @@ namespace Emanate.Service.Admin
 
             builder.RegisterType<MainWindow>();
             builder.RegisterType<MainWindowViewModel>();
+            builder.RegisterType<DiskAccessor>().As<IDiskAccessor>().SingleInstance();
             builder.RegisterType<ConfigurationCaretaker>();
 
             return builder.Build();

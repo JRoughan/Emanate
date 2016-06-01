@@ -9,11 +9,8 @@ namespace Emanate.Core.Configuration
     {
         string Key { get; }
 
-        ObservableCollection<IProfile> Profiles { get; }
+        IEnumerable<IProfile> Profiles { get; }
 
         IEnumerable<IOutputDevice> OutputDevices { get; }
-
-        event EventHandler<OutputDeviceEventArgs> OutputDeviceAdded;
-        event EventHandler<OutputDeviceEventArgs> OutputDeviceRemoved;
     }
 }

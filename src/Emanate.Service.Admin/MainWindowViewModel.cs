@@ -57,9 +57,6 @@ namespace Emanate.Service.Admin
 
                 var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Id == d.Id));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
-
-                moduleConfig.OutputDeviceAdded += AddOutputDevice;
-                moduleConfig.OutputDeviceRemoved += RemoveOutputDevice;
             }
 
             foreach (var inputModule in globalConfig.InputModules)
@@ -92,18 +89,6 @@ namespace Emanate.Service.Admin
             }
             
             return InitializationResult.Succeeded;
-        }
-
-        private void AddOutputDevice(object sender, OutputDeviceEventArgs e)
-        {
-            AddActiveDevice(e.ModuleConfiguration, e.OutputDevice);
-        }
-
-        private void RemoveOutputDevice(object sender, OutputDeviceEventArgs e)
-        {
-            var deviceToRemove = ActiveDevices.SingleOrDefault(d => d.Name == e.OutputDevice.Name);
-            if (deviceToRemove != null)
-                ActiveDevices.Remove(deviceToRemove);
         }
 
         private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
