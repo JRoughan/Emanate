@@ -35,7 +35,7 @@ namespace Emanate.Service.Admin
         public string Name
         {
             get { return outputDevice.Name; }
-            private set { outputDevice.Name = value; OnPropertyChanged(); }
+            set { outputDevice.Name = value; OnPropertyChanged(); }
         }
 
         public IOutputDevice OutputDevice => outputDevice;

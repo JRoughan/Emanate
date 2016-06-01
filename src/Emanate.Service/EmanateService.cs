@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Autofac;
+using Autofac.Features.Indexed;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
@@ -12,20 +11,23 @@ namespace Emanate.Service
 {
     public class EmanateService
     {
-        private readonly IComponentContext componentContext;
-        private readonly Dictionary<IDevice, IBuildMonitor> buildMonitors = new Dictionary<IDevice, IBuildMonitor>();
+        private readonly GlobalConfig config;
+        private readonly IIndex<string, IBuildMonitor> buildMonitors;
+
+        private readonly Dictionary<IDevice, IBuildMonitor> activeBuildMonitors = new Dictionary<IDevice, IBuildMonitor>();
         //private NancyHost nancyHost;
 
-        public EmanateService(IComponentContext componentContext)
+        public EmanateService(GlobalConfig config, IIndex<string, IBuildMonitor> buildMonitors)
         {
-            this.componentContext = componentContext;
+            this.config = config;
+            this.buildMonitors = buildMonitors;
         }
 
         public void Start()
         {
             Log.Information("=> EmanateService.Start");
             Initialize();
-            foreach (var buildMonitor in buildMonitors.Values)
+            foreach (var buildMonitor in activeBuildMonitors.Values)
             {
                 Log.Information("Starting build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.BeginMonitoring();
@@ -50,7 +52,7 @@ namespace Emanate.Service
         {
             Log.Information("=> EmanateService.Stop");
             //nancyHost.Stop();
-            foreach (var buildMonitor in buildMonitors.Values)
+            foreach (var buildMonitor in activeBuildMonitors.Values)
             {
                 Log.Information("Ending build monitor '{0}'", buildMonitor.GetType().Name);
                 buildMonitor.EndMonitoring();
@@ -60,7 +62,6 @@ namespace Emanate.Service
         private void Initialize()
         {
             Log.Information("=> EmanateService.Initialize");
-            var config = componentContext.Resolve<GlobalConfig>();
             foreach (var mapping in config.Mappings)
             {
                 Log.Information("Finding output device '{0}'", mapping.OutputDeviceId);
@@ -70,11 +71,11 @@ namespace Emanate.Service
                     Log.Information("Processing input group for device '{0}'", inputGroup.InputDeviceId);
                     var inputDevice = config.InputDevices.Single(d => d.Id == inputGroup.InputDeviceId);
                     IBuildMonitor monitor;
-                    if (!buildMonitors.TryGetValue(inputDevice, out monitor))
+                    if (!activeBuildMonitors.TryGetValue(inputDevice, out monitor))
                     {
-                        monitor = componentContext.ResolveKeyed<IBuildMonitor>(inputDevice.Key);
+                        monitor = buildMonitors[inputDevice.Key];
                         monitor.SetDevice(inputDevice);
-                        buildMonitors.Add(inputDevice, monitor);
+                        activeBuildMonitors.Add(inputDevice, monitor);
                         Log.Information("Monitor '{0}' added", monitor.GetType());
                     }
                     monitor.AddBuilds(outputDevice, inputGroup.Inputs);

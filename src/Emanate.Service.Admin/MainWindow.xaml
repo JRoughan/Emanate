@@ -28,9 +28,10 @@
                     <TextBlock Text="Builds" FontSize="18" />
                 </TabItem.Header>
                 <DockPanel>
-                    <ListView x:Name="DeviceSelector" DockPanel.Dock="Left" MinWidth="120" ItemsSource="{Binding ActiveDevices}" DisplayMemberPath="Name" Margin="10" />
+                    <ListView x:Name="DeviceSelector" DockPanel.Dock="Left" MinWidth="120" ItemsSource="{Binding ActiveDevices}" DisplayMemberPath="Name" Margin="10" SelectionChanged="DeviceSelector_OnSelectionChanged" />
                     <DockPanel>
-                        <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
+                        <TextBox DockPanel.Dock="Top" Text="{Binding ElementName=DeviceSelector, Path=SelectedItem.Name}" FontSize="24" TextAlignment="Center" />
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                             <Label Content="Output profile" />
                             <ComboBox DockPanel.Dock="Right" 
                               ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.AvailableProfiles}" 
@@ -38,7 +39,7 @@
                               DisplayMemberPath="Name"
                               Margin="100,0,0,0" />
                         </StackPanel>
-                        <TabControl ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelectors}">
+                        <TabControl x:Name="inputTabControl" ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelectors}">
                             <TabControl.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding DeviceName}" />

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Autofac;
+using Autofac.Features.Indexed;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
@@ -15,20 +15,34 @@ namespace Emanate.Service.Admin
 {
     public class MainWindowViewModel : ViewModel
     {
-        private readonly IComponentContext componentContext;
         private readonly ConfigurationCaretaker configurationCaretaker;
         private readonly IMediator mediator;
+        private readonly IIndex<string, IInputConfiguration> inputConfigurations;
+        private readonly IIndex<string, IOutputConfiguration> outputConfigurations;
+        private readonly IIndex<string, ProfileManager> profileManagers;
+        private readonly IIndex<string, DeviceManager> deviceManagers;
+        private readonly IIndex<string, InputSelector> inputSelectors;
         private GlobalConfig globalConfig;
 
-        public MainWindowViewModel(IComponentContext componentContext, ConfigurationCaretaker configurationCaretaker, IMediator mediator)
+        public MainWindowViewModel(ConfigurationCaretaker configurationCaretaker,
+            IMediator mediator,
+            IIndex<string, IInputConfiguration> inputConfigurations,
+            IIndex<string, IOutputConfiguration> outputConfigurations,
+            IIndex<string, ProfileManager> profileManagers,
+            IIndex<string, DeviceManager> deviceManagers,
+            IIndex<string, InputSelector> inputSelectors)
         {
+            this.configurationCaretaker = configurationCaretaker;
+            this.mediator = mediator;
+            this.inputConfigurations = inputConfigurations;
+            this.outputConfigurations = outputConfigurations;
+            this.profileManagers = profileManagers;
+            this.deviceManagers = deviceManagers;
+            this.inputSelectors = inputSelectors;
+
             saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
-
-            this.componentContext = componentContext;
-            this.configurationCaretaker = configurationCaretaker;
-            this.mediator = mediator;
         }
 
         public event EventHandler CloseRequested;
@@ -45,14 +59,14 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key == outputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = componentContext.ResolveKeyed<IOutputConfiguration>(outputModule.Key);
+                    moduleConfig = outputConfigurations[outputModule.Key];
                     globalConfig.OutputConfigurations.Add(moduleConfig);
                 }
 
-                var profileManager = componentContext.ResolveKeyed<ProfileManager>(outputModule.Key);
+                var profileManager = profileManagers[outputModule.Key];
                 await profileManager.SetTarget(moduleConfig, mediator);
 
-                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(outputModule.Key);
+                var deviceManager = deviceManagers[outputModule.Key];
                 deviceManager.SetTarget(moduleConfig);
 
                 var moduleViewModel = new ModuleViewModel(outputModule.Name, profileManager, deviceManager, null);
@@ -67,17 +81,17 @@ namespace Emanate.Service.Admin
                 var moduleConfig = globalConfig.InputConfigurations.SingleOrDefault(c => c.Key == inputModule.Key);
                 if (moduleConfig == null)
                 {
-                    moduleConfig = componentContext.ResolveKeyed<IInputConfiguration>(inputModule.Key);
+                    moduleConfig = inputConfigurations[inputModule.Key];
                     globalConfig.InputConfigurations.Add(moduleConfig);
                 }
 
-                var profileManager = componentContext.ResolveKeyed<ProfileManager>(inputModule.Key);
+                var profileManager = profileManagers[inputModule.Key];
                 await profileManager.SetTarget(moduleConfig, mediator);
 
-                var deviceManager = componentContext.ResolveKeyed<DeviceManager>(inputModule.Key);
+                var deviceManager = deviceManagers[inputModule.Key];
                 deviceManager.SetTarget(moduleConfig);
 
-                var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputModule.Key);
+                var inputSelector = inputSelectors[inputModule.Key];
 
                 var moduleConfigInfo = new ModuleViewModel(inputModule.Name, profileManager, deviceManager, inputSelector);
                 Modules.Add(moduleConfigInfo);
@@ -85,9 +99,7 @@ namespace Emanate.Service.Admin
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
-                var moduleConfiguration =
-                    globalConfig.OutputConfigurations.SingleOrDefault(
-                        c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
+                var moduleConfiguration = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
                 AddActiveDevice(moduleConfiguration, outputDevice);
             }
             
@@ -98,7 +110,7 @@ namespace Emanate.Service.Admin
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
             // HACK: Force an input for a new device without any. Ugly!
-            var inputSelector = componentContext.ResolveKeyed<InputSelector>("vso");
+            var inputSelector = inputSelectors["vso"];
             inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
             outputDeviceInfo.InputSelectors.Add(inputSelector);
 

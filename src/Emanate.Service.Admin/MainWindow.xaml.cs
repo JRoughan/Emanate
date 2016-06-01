@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 
 namespace Emanate.Service.Admin
 {
@@ -33,6 +34,12 @@ namespace Emanate.Service.Admin
         void ViewModelCloseRequested(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void DeviceSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (inputTabControl.SelectedIndex < 0)
+                inputTabControl.SelectedIndex = 0;
         }
     }
 }
