@@ -58,7 +58,7 @@ namespace Emanate.Delcom.Admin.Profiles
 
         private bool CanSaveProfile(DelcomProfileViewModel profile)
         {
-            return profile != null && !string.IsNullOrWhiteSpace(profile.Key);
+            return profile != null && !string.IsNullOrWhiteSpace(profile.Name);
         }
 
         private void SaveProfile(DelcomProfileViewModel profileViewModel)

@@ -24,6 +24,18 @@ namespace Emanate.Delcom.Admin.Profiles
             IsEditable = true;
 
             AddProfileCommand = new DelegateCommand(AddProfile);
+            DeleteProfileCommand = new DelegateCommand<DelcomProfileViewModel>(DeleteProfile, CanDeleteProfile);
+        }
+
+        private bool CanDeleteProfile(DelcomProfileViewModel arg)
+        {
+            return arg != null;
+        }
+
+        private void DeleteProfile(DelcomProfileViewModel obj)
+        {
+            Profiles.Remove(obj);
+            mediator.Publish(new ProfileDeletedEvent(obj.GetProfile()));
         }
 
         public ICommand AddProfileCommand { get; private set; }
@@ -44,6 +56,8 @@ namespace Emanate.Delcom.Admin.Profiles
         }
 
         public ObservableCollection<DelcomProfileViewModel> Profiles { get; } = new ObservableCollection<DelcomProfileViewModel>();
+
+        public DelegateCommand<DelcomProfileViewModel> DeleteProfileCommand { get; private set; }
 
         public void Handle(ProfileAddedEvent e)
         {

@@ -8,20 +8,17 @@ using Emanate.Extensibility.Composition;
 
 namespace Emanate.Service.Admin
 {
-    public class DeviceViewModel : ViewModel, ISubscriber<ProfileAddedEvent>
+    public class DeviceViewModel : ViewModel, ISubscriber<ProfileAddedEvent>, ISubscriber<ProfileDeletedEvent>
     {
         private readonly IOutputDevice outputDevice;
-        private readonly IOutputConfiguration configuration;
-        private readonly IMediator mediator;
 
         public DeviceViewModel(IOutputDevice outputDevice, IOutputConfiguration configuration, IMediator mediator)
         {
             this.outputDevice = outputDevice;
-            this.configuration = configuration;
-            this.mediator = mediator;
             AvailableProfiles = new ObservableCollection<IProfile>(configuration.Profiles);
 
             mediator.Subscribe<ProfileAddedEvent>(this);
+            mediator.Subscribe<ProfileDeletedEvent>(this);
         }
 
         public ObservableCollection<IProfile> AvailableProfiles { get; }
@@ -45,6 +42,11 @@ namespace Emanate.Service.Admin
         public void Handle(ProfileAddedEvent e)
         {
             AvailableProfiles.Add(e.Profile);
+        }
+
+        public void Handle(ProfileDeletedEvent e)
+        {
+            AvailableProfiles.Remove(e.Profile);
         }
     }
 }

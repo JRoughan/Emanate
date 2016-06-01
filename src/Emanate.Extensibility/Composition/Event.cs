@@ -12,4 +12,13 @@ namespace Emanate.Extensibility.Composition
         }
         public IProfile Profile { get; private set; }
     }
+
+    public class ProfileDeletedEvent : Event
+    {
+        public ProfileDeletedEvent(IProfile profile)
+        {
+            Profile = profile;
+        }
+        public IProfile Profile { get; private set; }
+    }
 }

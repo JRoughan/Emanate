@@ -15,7 +15,7 @@ namespace Emanate.Delcom.Admin.Profiles
                 States.Add(new ProfileStateViewModel(profileState));
         }
 
-        public string Key
+        public string Name
         {
             get { return monitoringProfile.Name; }
             set { monitoringProfile.Name = value; OnPropertyChanged(); }
