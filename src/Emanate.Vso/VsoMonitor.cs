@@ -119,7 +119,10 @@ namespace Emanate.Vso
             {
                 var outputDevice = output.Key;
                 if (!outputDevice.IsAvailable)
+                {
+                    Log.Warning($"Output device '{outputDevice.Name}' unavailable - skipping update");
                     continue;
+                }
 
                 var buildInfos = await GetNewBuildStates(output.Value.Keys);
                 var newStates = buildInfos.ToList();

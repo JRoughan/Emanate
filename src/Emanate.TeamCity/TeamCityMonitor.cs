@@ -122,7 +122,10 @@ namespace Emanate.TeamCity
             {
                 var outputDevice = output.Key;
                 if (!outputDevice.IsAvailable)
+                {
+                    Log.Warning($"Output device '{outputDevice.Name}' unavailable - skipping update");
                     continue;
+                }
 
                 var newStates = GetNewBuildStates(output.Value.Keys).ToList();
 
