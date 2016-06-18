@@ -2,58 +2,34 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Serilog;
-using Timer = System.Timers.Timer;
 
 namespace Emanate.Vso
 {
-    public class VsoMonitorFactory : IBuildMonitorFactory
-    {
-        private readonly Func<IDevice, VsoMonitor> monitorFactory;
-
-        public VsoMonitorFactory(Func<IDevice, VsoMonitor> monitorFactory)
-        {
-            this.monitorFactory = monitorFactory;
-        }
-
-        public IBuildMonitor Create(IDevice device)
-        {
-            return monitorFactory(device);
-        }
-    }
-
     public class VsoMonitor : IBuildMonitor
-    {
-        private readonly object pollingLock = new object();
-        private readonly TimeSpan lockingInterval;
+    { 
+        private readonly TimeSpan delayInterval;
         private readonly IVsoConnection vsoConnection;
-        private readonly Timer timer;
+
         private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
 
-        private static readonly string InProgressStatus = "inProgress";
-        private static readonly string SucceededStatus = "succeeded";
+        private const string inProgressStatus = "inProgress";
+        private const string succeededStatus = "succeeded";
+
+        private bool isMonitoring;
 
         public VsoMonitor(IDevice device)
         {
             var vsoDevice = (VsoDevice)device;
             vsoConnection = new VsoConnection(vsoDevice);
 
-            var pollingInterval = vsoDevice.PollingInterval * 1000;
-            if (pollingInterval < 1)
-                pollingInterval = 30000; // default to 30 seconds
-
-            lockingInterval = TimeSpan.FromSeconds(pollingInterval / 2.0);
-
-            timer = new Timer(pollingInterval);
-            timer.Elapsed += PollStatus;
+            var pollingInterval = vsoDevice.PollingInterval > 0 ? vsoDevice.PollingInterval : 30; // default to 30 seconds
+            delayInterval = TimeSpan.FromSeconds(pollingInterval);
         }
-
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
@@ -69,50 +45,43 @@ namespace Emanate.Vso
         public void BeginMonitoring()
         {
             Log.Information("=> VsoMonitor.BeginMonitoring");
-            UpdateBuildStates();
-            Log.Information("Starting polling timer");
-            timer.Start();
+            isMonitoring = true;
+            Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()
         {
             Log.Information("=> VsoMonitor.EndMonitoring");
-            timer.Stop();
+            isMonitoring = false;
         }
 
-        private void PollStatus(object sender, ElapsedEventArgs e)
+        private async void UpdateLoop()
         {
-            Log.Information("=> VsoMonitor.PollStatus");
-            if (!Monitor.TryEnter(pollingLock, lockingInterval))
+            while (isMonitoring)
             {
-                Log.Warning("Could not acquire polling lock - skipping attempt");
-                return;
-            }
-
-            try
-            {
-                UpdateBuildStates();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Could not update build states");
                 try
                 {
-                    DisplayErrorOnAllOutputs();
+                    await UpdateBuildStates();
                 }
-                catch (Exception ex1)
+                catch (Exception ex)
                 {
-                    Log.Error(ex1, "Could not display error on output devices");
-                    throw;
+                    Log.Error(ex, "Could not update build states");
+                    try
+                    {
+                        DisplayErrorOnAllOutputs();
+                    }
+                    catch (Exception ex1)
+                    {
+                        Log.Error(ex1, "Could not display error on output devices");
+                        throw;
+                    }
                 }
-            }
-            finally
-            {
-                Monitor.Exit(pollingLock);
+                Log.Information($"Waiting for {delayInterval} seconds");
+                await Task.Delay(delayInterval);
             }
         }
 
-        private async void UpdateBuildStates()
+        private async Task UpdateBuildStates()
         {
             Log.Information("=> VsoMonitor.UpdateBuildStates");
             foreach (var output in buildStates)
@@ -147,6 +116,7 @@ namespace Emanate.Vso
 
         private void DisplayErrorOnAllOutputs()
         {
+            Log.Information("=> VsoMonitor.DisplayErrorOnAllOutputs");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -182,10 +152,10 @@ namespace Emanate.Vso
         private BuildState ConvertState(Build build)
         {
             string result = build.Result;
-            if (string.IsNullOrWhiteSpace(result) && build.Status == InProgressStatus)
+            if (string.IsNullOrWhiteSpace(result) && build.Status == inProgressStatus)
                 return BuildState.Running;
 
-            return !string.IsNullOrWhiteSpace(result) && result == SucceededStatus ? BuildState.Succeeded : BuildState.Failed;
+            return !string.IsNullOrWhiteSpace(result) && result == succeededStatus ? BuildState.Succeeded : BuildState.Failed;
         }
 
         [DebuggerDisplay("{BuildKey} - {State}")]

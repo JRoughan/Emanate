@@ -65,6 +65,7 @@
     <Compile Include="ITeamCityConnection.cs" />
     <Compile Include="TeamCityConnection.cs" />
     <Compile Include="TeamCityMonitor.cs" />
+    <Compile Include="TeamCityMonitorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

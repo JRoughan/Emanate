@@ -83,6 +83,7 @@
     <Compile Include="IVsoConnection.cs" />
     <Compile Include="VsoConnection.cs" />
     <Compile Include="VsoMonitor.cs" />
+    <Compile Include="VsoMonitorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
