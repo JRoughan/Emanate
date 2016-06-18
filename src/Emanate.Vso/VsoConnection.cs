@@ -16,37 +16,39 @@ namespace Emanate.Vso
 
         private readonly VsoDevice device;
         private readonly Uri baseUri;
+        private readonly string name;
 
         public VsoConnection(VsoDevice device)
         {
             this.device = device;
+            name = device.Name;
             var rawUrl = $"https://{this.device.Uri}.visualstudio.com/DefaultCollection/";
             baseUri = new Uri(rawUrl);
         }
 
         public async Task<ProjectCollection> GetProjects(bool forceRefresh = false)
         {
-            Log.Information("=> VsoConnection.GetProjects");
+            Log.Information($"VsoConnection[{name}] - GetProjects({forceRefresh})");
             return await GetCachedWebResource("_apis/projects?api-version=2", projectCollectionCache, forceRefresh);
         }
 
         // TODO: Change method to GetBuilds as an optimisation for multiple definitions under the same project
         public async Task<Build> GetBuild(Guid projectId, int definition)
         {
-            Log.Information("=> VsoConnection.GetBuild({0}, {1})", projectId, definition);
+            Log.Information($"VsoConnection[{name}] - GetBuild({projectId}, {definition})");
             var buildCollection = await GetWebResource<BuildCollection>($"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
             return buildCollection.Value.Single();
         }
 
         public async Task<BuildDefinitionCollection> GetBuildDefinitions(Guid projectId, bool forceRefresh = false)
         {
-            Log.Information("=> VsoConnection.GetBuildDefinitions({0})", projectId);
+            Log.Information($"VsoConnection[{name}] - GetBuildDefinitions({projectId}, {forceRefresh})");
             return await GetCachedWebResource($"{projectId}/_apis/build/definitions?api-version=2", buildDefinitionCollectionCache, forceRefresh);
         }
 
         private async Task<TResource> GetCachedWebResource<TResource>(string url, ConcurrentDictionary<string, Task<TResource>> cache, bool forceRefresh)
         {
-            Log.Information("=> VsoConnection.GetCachedWebResource");
+            Log.Information($"VsoConnection[{name}] - GetCachedWebResource({url}, cache, {forceRefresh}");
             if (forceRefresh)
                 return await cache.AddOrUpdate(url, GetWebResource<TResource>, (u, e) => GetWebResource<TResource>(u));
 
@@ -58,7 +60,7 @@ namespace Emanate.Vso
             using (var client = CreateHttpClient())
             {
                 var requestUri = new Uri(baseUri, url);
-                Log.Information($"Requesting {typeof(TResource)} from {url}");
+                Log.Information($"VsoConnection[{name}] - Requesting {typeof(TResource)} from {url}");
                 using (var response = await client.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
@@ -69,7 +71,7 @@ namespace Emanate.Vso
                     }
                     catch (Exception)
                     {
-                        Log.Error($"Cannot deserialise {typeof(TResource)} from JSON {responseBody}");
+                        Log.Error($"VsoConnection[{name}] - Cannot deserialise {typeof(TResource)} from JSON {responseBody}");
                         throw;
                     }
                 }

@@ -21,9 +21,11 @@ namespace Emanate.Vso
         private const string succeededStatus = "succeeded";
 
         private bool isMonitoring;
+        private readonly string name;
 
         public VsoMonitor(IDevice device)
         {
+            name = device.Name;
             var vsoDevice = (VsoDevice)device;
             vsoConnection = new VsoConnection(vsoDevice);
 
@@ -33,7 +35,7 @@ namespace Emanate.Vso
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
-            Log.Information("=> VsoMonitor.AddBuilds");
+            Log.Information($"VsoMonitor[{name}] - AddBuilds({outputDevice.Name}, {inputs})");
             var buildIds = inputs.Select(i =>
             {
                 var parts = i.Split(':');
@@ -44,19 +46,20 @@ namespace Emanate.Vso
 
         public void BeginMonitoring()
         {
-            Log.Information("=> VsoMonitor.BeginMonitoring");
+            Log.Information($"VsoMonitor[{name}] - BeginMonitoring()");
             isMonitoring = true;
             Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()
         {
-            Log.Information("=> VsoMonitor.EndMonitoring");
+            Log.Information($"VsoMonitor[{name}] - EndMonitoring()");
             isMonitoring = false;
         }
 
         private async void UpdateLoop()
         {
+            Log.Information($"VsoMonitor[{name}] - UpdateLoop()");
             while (isMonitoring)
             {
                 try
@@ -65,31 +68,31 @@ namespace Emanate.Vso
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "Could not update build states");
+                    Log.Error(ex, $"VsoMonitor[{name}] - Could not update build states");
                     try
                     {
                         DisplayErrorOnAllOutputs();
                     }
                     catch (Exception ex1)
                     {
-                        Log.Error(ex1, "Could not display error on output devices");
+                        Log.Error(ex1, $"VsoMonitor[{name}] - Could not display error on output devices");
                         throw;
                     }
                 }
-                Log.Information($"Waiting for {delayInterval} seconds");
+                Log.Information($"VsoMonitor[{name}] - Waiting for {delayInterval} seconds");
                 await Task.Delay(delayInterval);
             }
         }
 
         private async Task UpdateBuildStates()
         {
-            Log.Information("=> VsoMonitor.UpdateBuildStates");
+            Log.Information($"VsoMonitor[{name}] - UpdateBuildStates()");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
                 if (!outputDevice.IsAvailable)
                 {
-                    Log.Warning($"Output device '{outputDevice.Name}' unavailable - skipping update");
+                    Log.Warning($"VsoMonitor[{name}] - Output device '{outputDevice.Name}' unavailable - skipping update");
                     continue;
                 }
 
@@ -116,7 +119,7 @@ namespace Emanate.Vso
 
         private void DisplayErrorOnAllOutputs()
         {
-            Log.Information("=> VsoMonitor.DisplayErrorOnAllOutputs");
+            Log.Information($"VsoMonitor[{name}] - DisplayErrorOnAllOutputs()");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -127,7 +130,7 @@ namespace Emanate.Vso
 
         private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
-            Log.Information("=> VsoMonitor.GetNewBuildStates");
+            Log.Information($"VsoMonitor[{name}] - GetNewBuildStates()");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
@@ -137,12 +140,12 @@ namespace Emanate.Vso
                     var startTime = build.StartTime;
                     var state = ConvertState(build);
 
-                    Log.Information($"Adding build state for {buildKey.ProjectId}:{buildKey.BuildId}");
+                    Log.Information($"VsoMonitor[{name}] - Adding build state for {buildKey.ProjectId}:{buildKey.BuildId}");
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = state, TimeStamp = startTime });
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Failed to get build state for {buildKey.ProjectId}:{buildKey.BuildId}");
+                    Log.Error(ex, $"VsoMonitor[{name}] - Failed to get build state for {buildKey.ProjectId}:{buildKey.BuildId}");
                     buildInfos.Add(new BuildInfo { BuildKey = buildKey, State = BuildState.Error, TimeStamp = DateTime.Now });
                 }
             }
@@ -151,6 +154,7 @@ namespace Emanate.Vso
 
         private BuildState ConvertState(Build build)
         {
+            Log.Information($"VsoMonitor[{name}] - ConvertState({build})");
             string result = build.Result;
             if (string.IsNullOrWhiteSpace(result) && build.Status == inProgressStatus)
                 return BuildState.Running;
