@@ -4,7 +4,7 @@ using Autofac.Features.Indexed;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Nancy.Hosting.Self;
+//using Nancy.Hosting.Self;
 using Serilog;
 
 namespace Emanate.Service
@@ -12,15 +12,15 @@ namespace Emanate.Service
     public class EmanateService
     {
         private readonly GlobalConfig config;
-        private readonly IIndex<string, IBuildMonitor> buildMonitors;
+        private readonly IIndex<string, IBuildMonitorFactory> buildMonitorFactories;
 
         private readonly Dictionary<IDevice, IBuildMonitor> activeBuildMonitors = new Dictionary<IDevice, IBuildMonitor>();
         //private NancyHost nancyHost;
 
-        public EmanateService(GlobalConfig config, IIndex<string, IBuildMonitor> buildMonitors)
+        public EmanateService(GlobalConfig config, IIndex<string, IBuildMonitorFactory> buildMonitorFactories)
         {
             this.config = config;
-            this.buildMonitors = buildMonitors;
+            this.buildMonitorFactories = buildMonitorFactories;
         }
 
         public void Start()
@@ -73,8 +73,8 @@ namespace Emanate.Service
                     IBuildMonitor monitor;
                     if (!activeBuildMonitors.TryGetValue(inputDevice, out monitor))
                     {
-                        monitor = buildMonitors[inputDevice.Key];
-                        monitor.SetDevice(inputDevice);
+                        var factory = buildMonitorFactories[inputDevice.Key];
+                        monitor = factory.Create(inputDevice);
                         activeBuildMonitors.Add(inputDevice, monitor);
                         Log.Information("Monitor '{0}' added", monitor.GetType());
                     }

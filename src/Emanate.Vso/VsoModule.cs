@@ -16,7 +16,8 @@ namespace Emanate.Vso
         {
             Log.Information("=> VsoModule.LoadServiceComponents");
             RegisterCommon(builder);
-            builder.RegisterType<VsoMonitor>().Keyed<IBuildMonitor>(Key);
+            builder.RegisterType<VsoMonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
+            builder.RegisterType<VsoMonitor>();
         }
 
         private void RegisterCommon(ContainerBuilder builder)

@@ -14,13 +14,28 @@ using Timer = System.Timers.Timer;
 
 namespace Emanate.TeamCity
 {
+    public class TeamCityMonitorFactory : IBuildMonitorFactory
+    {
+        private readonly Func<IDevice, TeamCityMonitor> monitorFactory;
+
+        public TeamCityMonitorFactory(Func<IDevice, TeamCityMonitor> monitorFactory)
+        {
+            this.monitorFactory = monitorFactory;
+        }
+
+        public IBuildMonitor Create(IDevice device)
+        {
+            return monitorFactory(device);
+        }
+    }
+
     public class TeamCityMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
         private const string teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
-        private TimeSpan lockingInterval;
-        private ITeamCityConnection teamCityConnection;
-        private Timer timer;
+        private readonly TimeSpan lockingInterval;
+        private readonly ITeamCityConnection teamCityConnection;
+        private readonly Timer timer;
         private readonly Dictionary<IOutputDevice, Dictionary<string, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<string, BuildState>>();
         private readonly Dictionary<string, BuildState> stateMap = new Dictionary<string, BuildState>
                                                               {
@@ -31,8 +46,7 @@ namespace Emanate.TeamCity
                                                                   { "SUCCESS", BuildState.Succeeded }
                                                               };
 
-
-        public void SetDevice(IDevice device)
+        public TeamCityMonitor(IDevice device)
         {
             var vsoDevice = (TeamCityDevice)device;
             teamCityConnection = new TeamCityConnection(vsoDevice);

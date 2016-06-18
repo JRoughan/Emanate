@@ -13,18 +13,33 @@ using Timer = System.Timers.Timer;
 
 namespace Emanate.Vso
 {
+    public class VsoMonitorFactory : IBuildMonitorFactory
+    {
+        private readonly Func<IDevice, VsoMonitor> monitorFactory;
+
+        public VsoMonitorFactory(Func<IDevice, VsoMonitor> monitorFactory)
+        {
+            this.monitorFactory = monitorFactory;
+        }
+
+        public IBuildMonitor Create(IDevice device)
+        {
+            return monitorFactory(device);
+        }
+    }
+
     public class VsoMonitor : IBuildMonitor
     {
         private readonly object pollingLock = new object();
-        private TimeSpan lockingInterval;
-        private IVsoConnection vsoConnection;
-        private Timer timer;
+        private readonly TimeSpan lockingInterval;
+        private readonly IVsoConnection vsoConnection;
+        private readonly Timer timer;
         private readonly Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>> buildStates = new Dictionary<IOutputDevice, Dictionary<BuildKey, BuildState>>();
 
         private static readonly string InProgressStatus = "inProgress";
         private static readonly string SucceededStatus = "succeeded";
 
-        public void SetDevice(IDevice device)
+        public VsoMonitor(IDevice device)
         {
             var vsoDevice = (VsoDevice)device;
             vsoConnection = new VsoConnection(vsoDevice);

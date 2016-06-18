@@ -16,7 +16,8 @@ namespace Emanate.TeamCity
         {
             Log.Information("=> TeamCityModule.LoadServiceComponents");
             RegisterCommon(builder);
-            builder.RegisterType<TeamCityMonitor>().Keyed<IBuildMonitor>(Key);
+            builder.RegisterType<TeamCityMonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
+            builder.RegisterType<TeamCityMonitor>();
         }
 
         private void RegisterCommon(ContainerBuilder builder)
