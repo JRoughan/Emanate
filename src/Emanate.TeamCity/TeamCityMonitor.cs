@@ -44,7 +44,7 @@ namespace Emanate.TeamCity
             lockingInterval = TimeSpan.FromSeconds(pollingInterval / 2.0);
 
             timer = new Timer(pollingInterval);
-            timer.Elapsed += PollTeamCityStatus;
+            timer.Elapsed += PollStatus;
         }
 
         public BuildState CurrentState { get; private set; }
@@ -69,9 +69,9 @@ namespace Emanate.TeamCity
             timer.Stop();
         }
 
-        void PollTeamCityStatus(object sender, ElapsedEventArgs e)
+        private void PollStatus(object sender, ElapsedEventArgs e)
         {
-            Log.Information("=> TeamCityMonitor.PollTeamCityStatus");
+            Log.Information("=> TeamCityMonitor.PollStatus");
             if (!Monitor.TryEnter(pollingLock, lockingInterval))
             {
                 Log.Warning("Could not acquire polling lock - skipping attempt");
@@ -81,6 +81,19 @@ namespace Emanate.TeamCity
             try
             {
                 UpdateBuildStates();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Could not update build states");
+                try
+                {
+                    DisplayErrorOnAllOutputs();
+                }
+                catch (Exception ex1)
+                {
+                    Log.Error(ex1, "Could not display error on output devices");
+                    throw;
+                }
             }
             finally
             {
@@ -117,6 +130,16 @@ namespace Emanate.TeamCity
                 var oldState = CurrentState;
                 CurrentState = newState;
                 outputDevice.UpdateStatus(newState, timeStamp);
+            }
+        }
+
+        private void DisplayErrorOnAllOutputs()
+        {
+            foreach (var output in buildStates)
+            {
+                var outputDevice = output.Key;
+                if (outputDevice.IsAvailable)
+                    outputDevice.UpdateStatus(BuildState.Error, DateTime.Now);
             }
         }
 

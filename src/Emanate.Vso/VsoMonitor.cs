@@ -65,7 +65,7 @@ namespace Emanate.Vso
             timer.Stop();
         }
 
-        void PollStatus(object sender, ElapsedEventArgs e)
+        private void PollStatus(object sender, ElapsedEventArgs e)
         {
             Log.Information("=> VsoMonitor.PollStatus");
             if (!Monitor.TryEnter(pollingLock, lockingInterval))
@@ -77,6 +77,19 @@ namespace Emanate.Vso
             try
             {
                 UpdateBuildStates();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Could not update build states");
+                try
+                {
+                    DisplayErrorOnAllOutputs();
+                }
+                catch (Exception ex1)
+                {
+                    Log.Error(ex1, "Could not display error on output devices");
+                    throw;
+                }
             }
             finally
             {
@@ -111,6 +124,16 @@ namespace Emanate.Vso
                 }
 
                 outputDevice.UpdateStatus(newState, timeStamp);
+            }
+        }
+
+        private void DisplayErrorOnAllOutputs()
+        {
+            foreach (var output in buildStates)
+            {
+                var outputDevice = output.Key;
+                if (outputDevice.IsAvailable)
+                    outputDevice.UpdateStatus(BuildState.Error, DateTime.Now);
             }
         }
 
