@@ -90,28 +90,31 @@ namespace Emanate.Service.Admin
 
                 var deviceManager = deviceManagers[inputModule.Key];
                 deviceManager.SetTarget(moduleConfig);
-
+               
                 var inputSelector = inputSelectors[inputModule.Key];
-
-                var moduleConfigInfo = new ModuleViewModel(inputModule.Name, profileManager, deviceManager, inputSelector);
-                Modules.Add(moduleConfigInfo);
+                
+                var moduleViewModel = new ModuleViewModel(inputModule.Name, profileManager, deviceManager, inputSelector);
+                Modules.Add(moduleViewModel);
             }
 
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
                 var moduleConfiguration = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
-                AddActiveDevice(moduleConfiguration, outputDevice);
+                await AddActiveDevice(moduleConfiguration, outputDevice);
             }
             
             return InitializationResult.Succeeded;
         }
 
-        private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
+        private async Task AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
             // HACK: Force an input for a new device without any. Ugly!
             var inputSelector = inputSelectors["vso"];
-            inputSelector.Device = globalConfig.InputDevices.Single(); // Break if more than one to encourage me to handle the scenario
+            await inputSelector.SetDevice(globalConfig.InputDevices.Single()); // Break if more than one to encourage me to handle the scenario
+            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == outputDevice.Id); // Ditto
+            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id); // Ditto
+            inputSelector.SelectInputs(inputGroup.Inputs);
             outputDeviceInfo.InputSelectors.Add(inputSelector);
 
             //foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))

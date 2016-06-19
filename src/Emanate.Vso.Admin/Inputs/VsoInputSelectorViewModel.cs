@@ -20,47 +20,44 @@ namespace Emanate.Vso.Admin.Inputs
 
         public override async Task<InitializationResult> Initialize()
         {
-            return await Task.Run(async () =>
+            Log.Information("=> InputSelectorViewModel.Initialize");
+            ProjectCollection projectCollection;
+            try
             {
-                Log.Information("=> InputSelectorViewModel.Initialize");
-                ProjectCollection projectCollection;
+                projectCollection = await connection.GetProjects();
+            }
+            catch (WebException ex)
+            {
+                Log.Error("Could not get projects: " + ex.Message);
+                HasBadConfiguration = true;
+                return InitializationResult.Failed;
+            }
+
+            foreach (var project in projectCollection.Value)
+            {
+                var projectVm = new ProjectViewModel(project);
+
+                BuildDefinitionCollection buildDefinitionCollection;
                 try
                 {
-                    projectCollection = await connection.GetProjects();
+                    buildDefinitionCollection = await connection.GetBuildDefinitions(projectVm.Id);
                 }
-                catch (WebException ex)
+                catch (Exception ex)
                 {
-                    Log.Error("Could not get projects: " + ex.Message);
+                    Log.Error("Could not get build definitions: " + ex.Message);
                     HasBadConfiguration = true;
                     return InitializationResult.Failed;
                 }
 
-                foreach (var project in projectCollection.Value)
+                foreach (var buildDefinition in buildDefinitionCollection.Value)
                 {
-                    var projectVm = new ProjectViewModel(project);
-
-                    BuildDefinitionCollection buildDefinitionCollection;
-                    try
-                    {
-                        buildDefinitionCollection = await connection.GetBuildDefinitions(projectVm.Id);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Could not get build definitions: " + ex.Message);
-                        HasBadConfiguration = true;
-                        return InitializationResult.Failed;
-                    }
-
-                    foreach (var buildDefinition in buildDefinitionCollection.Value)
-                    {
-                        var configuration = new ProjectConfigurationViewModel(projectVm, buildDefinition);
-                        projectVm.Configurations.Add(configuration);
-                    }
-
-                    Projects.Add(projectVm);
+                    var configuration = new ProjectConfigurationViewModel(projectVm, buildDefinition);
+                    projectVm.Configurations.Add(configuration);
                 }
-                return InitializationResult.Succeeded;
-            });
+
+                Projects.Add(projectVm);
+            }
+            return InitializationResult.Succeeded;
         }
 
         private bool hasBadConfiguration;

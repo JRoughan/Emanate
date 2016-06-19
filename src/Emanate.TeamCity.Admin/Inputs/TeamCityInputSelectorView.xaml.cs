@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Emanate.Core;
-using Emanate.Core.Output;
 
 namespace Emanate.TeamCity.Admin.Inputs
 {
@@ -14,7 +14,7 @@ namespace Emanate.TeamCity.Admin.Inputs
             InitializeComponent();
         }
 
-        protected override async void SetDevice(IDevice device)
+        protected override async Task SetDeviceInternal(IDevice device)
         {
             viewModel = new TeamCityInputSelectorViewModel((TeamCityDevice)device);
             await viewModel.Initialize();
