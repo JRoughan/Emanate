@@ -46,11 +46,11 @@ namespace Emanate.TeamCity
             buildStates.Add(outputDevice, inputs.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
-        public void BeginMonitoring()
+        public Task BeginMonitoring()
         {
             Log.Information("=> TeamCityMonitor.BeginMonitoring");
             isMonitoring = true;
-            Task.Run(() => { UpdateLoop(); });
+            return Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()

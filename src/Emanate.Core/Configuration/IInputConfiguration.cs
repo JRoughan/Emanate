@@ -5,6 +5,6 @@ namespace Emanate.Core.Configuration
     public interface IInputConfiguration : IConfiguration, IOriginator
     {
         string Key { get; }
-        IEnumerable<IDevice> Devices { get; }
+        IEnumerable<IInputDevice> Devices { get; }
     }
 }

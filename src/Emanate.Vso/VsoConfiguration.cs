@@ -54,7 +54,7 @@ namespace Emanate.Vso
         }
 
         private readonly List<VsoDevice> devices = new List<VsoDevice>();
-        public IEnumerable<IDevice> Devices => devices;
+        public IEnumerable<IInputDevice> Devices => devices;
 
         public void RemoveDevice(VsoDevice deviceInfo)
         {

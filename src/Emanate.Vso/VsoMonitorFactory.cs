@@ -6,14 +6,14 @@ namespace Emanate.Vso
 {
     public class VsoMonitorFactory : IBuildMonitorFactory
     {
-        private readonly Func<IDevice, VsoMonitor> monitorFactory;
+        private readonly Func<IInputDevice, VsoMonitor> monitorFactory;
 
-        public VsoMonitorFactory(Func<IDevice, VsoMonitor> monitorFactory)
+        public VsoMonitorFactory(Func<IInputDevice, VsoMonitor> monitorFactory)
         {
             this.monitorFactory = monitorFactory;
         }
 
-        public IBuildMonitor Create(IDevice device)
+        public IBuildMonitor Create(IInputDevice device)
         {
             return monitorFactory(device);
         }

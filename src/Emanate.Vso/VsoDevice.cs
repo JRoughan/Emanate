@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Emanate.Vso
 {
-    public class VsoDevice : IDevice
+    public class VsoDevice : IInputDevice
     {
         public string Key { get; } = "vso";
 

@@ -6,14 +6,14 @@ namespace Emanate.TeamCity
 {
     public class TeamCityMonitorFactory : IBuildMonitorFactory
     {
-        private readonly Func<IDevice, TeamCityMonitor> monitorFactory;
+        private readonly Func<IInputDevice, TeamCityMonitor> monitorFactory;
 
-        public TeamCityMonitorFactory(Func<IDevice, TeamCityMonitor> monitorFactory)
+        public TeamCityMonitorFactory(Func<IInputDevice, TeamCityMonitor> monitorFactory)
         {
             this.monitorFactory = monitorFactory;
         }
 
-        public IBuildMonitor Create(IDevice device)
+        public IBuildMonitor Create(IInputDevice device)
         {
             return monitorFactory(device);
         }

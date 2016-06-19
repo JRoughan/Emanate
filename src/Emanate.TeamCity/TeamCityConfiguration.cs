@@ -52,7 +52,7 @@ namespace Emanate.TeamCity
         }
 
         private readonly List<TeamCityDevice> devices = new List<TeamCityDevice>();
-        public IEnumerable<IDevice> Devices => devices;
+        public IEnumerable<IInputDevice> Devices => devices;
 
         public void RemoveDevice(TeamCityDevice device)
         {

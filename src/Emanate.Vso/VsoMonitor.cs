@@ -23,13 +23,12 @@ namespace Emanate.Vso
         private bool isMonitoring;
         private readonly string name;
 
-        public VsoMonitor(IDevice device)
+        public VsoMonitor(IInputDevice device, VsoConnection.Factory connectionFactory)
         {
             name = device.Name;
-            var vsoDevice = (VsoDevice)device;
-            vsoConnection = new VsoConnection(vsoDevice);
+            vsoConnection = connectionFactory(device);
 
-            var pollingInterval = vsoDevice.PollingInterval > 0 ? vsoDevice.PollingInterval : 30; // default to 30 seconds
+            var pollingInterval = device.PollingInterval > 0 ? device.PollingInterval : 30; // default to 30 seconds
             delayInterval = TimeSpan.FromSeconds(pollingInterval);
         }
 
@@ -44,11 +43,11 @@ namespace Emanate.Vso
             buildStates.Add(outputDevice, buildIds.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
-        public void BeginMonitoring()
+        public Task BeginMonitoring()
         {
             Log.Information($"VsoMonitor[{name}] - BeginMonitoring()");
             isMonitoring = true;
-            Task.Run(() => { UpdateLoop(); });
+            return Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()

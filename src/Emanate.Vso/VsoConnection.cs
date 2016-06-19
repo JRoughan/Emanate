@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Emanate.Core;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -17,6 +18,8 @@ namespace Emanate.Vso
         private readonly VsoDevice device;
         private readonly Uri baseUri;
         private readonly string name;
+
+        public delegate IVsoConnection Factory(IDevice device);
 
         public VsoConnection(VsoDevice device)
         {

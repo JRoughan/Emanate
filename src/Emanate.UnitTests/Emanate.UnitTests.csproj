@@ -74,6 +74,7 @@
     <Compile Include="Core\Configuration\ConfigurationCaretakerTests.cs" />
     <Compile Include="Core\Input\TeamCity\MockTeamCityConnection.cs" />
     <Compile Include="Core\Input\TeamCity\teamcity_monitor.cs" />
+    <Compile Include="Modules\Vso\vso_monitor.cs" />
     <Compile Include="Service\monitoring_service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -93,6 +94,10 @@
     <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{EA0DF8D8-DA80-4089-BF02-598BBC60F70B}</Project>
       <Name>Emanate.TeamCity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emanate.Vso\Emanate.Vso.csproj">
+      <Project>{D02CEB1D-3B90-477D-A8E7-04A62786E704}</Project>
+      <Name>Emanate.Vso</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

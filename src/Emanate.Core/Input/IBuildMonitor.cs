@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Emanate.Core.Output;
 
 namespace Emanate.Core.Input
 {
     public interface IBuildMonitorFactory
     {
-        IBuildMonitor Create(IDevice device);
+        IBuildMonitor Create(IInputDevice device);
     }
 
     public interface IBuildMonitor
     {
-        void BeginMonitoring();
+        Task BeginMonitoring();
         void EndMonitoring();
         void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs);
     }
