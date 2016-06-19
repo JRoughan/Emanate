@@ -28,39 +28,39 @@ namespace Emanate.TeamCity
                                                               };
 
         private bool isMonitoring;
+        private readonly string name;
 
-        public TeamCityMonitor(IDevice device)
+        public TeamCityMonitor(IInputDevice device, TeamCityConnection.Factory connectionFactory)
         {
-            var vsoDevice = (TeamCityDevice)device;
-            teamCityConnection = new TeamCityConnection(vsoDevice);
+            name = device.Name;
+            teamCityConnection = connectionFactory(device);
 
-            var pollingInterval = vsoDevice.PollingInterval > 0 ? vsoDevice.PollingInterval : 30; // default to 30 seconds
+            var pollingInterval = device.PollingInterval > 0 ? device.PollingInterval : 30; // default to 30 seconds
             delayInterval = TimeSpan.FromSeconds(pollingInterval);
         }
 
-        public BuildState CurrentState { get; private set; }
-
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
-            Log.Information("=> TeamCityMonitor.AddBuilds");
+            Log.Information($"=> TeamCityMonitor[{name}].AddBuilds");
             buildStates.Add(outputDevice, inputs.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public Task BeginMonitoring()
         {
-            Log.Information("=> TeamCityMonitor.BeginMonitoring");
+            Log.Information($"=> TeamCityMonitor[{name}].BeginMonitoring");
             isMonitoring = true;
             return Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()
         {
-            Log.Information("=> TeamCityMonitor.EndMonitoring");
+            Log.Information($"=> TeamCityMonitor[{name}].EndMonitoring");
             isMonitoring = false;
         }
 
         private async void UpdateLoop()
         {
+            Log.Information($"=> TeamCityMonitor[{name}].UpdateLoop");
             while (isMonitoring)
             {
                 try
@@ -87,7 +87,7 @@ namespace Emanate.TeamCity
 
         private async Task UpdateBuildStates()
         {
-            Log.Information("=> TeamCityMonitor.UpdateBuildStates");
+            Log.Information($"=> TeamCityMonitor[{name}].UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -97,7 +97,7 @@ namespace Emanate.TeamCity
                     continue;
                 }
 
-                var newStates = GetNewBuildStates(output.Value.Keys).ToList();
+                var newStates = (await GetNewBuildStates(output.Value.Keys)).ToList();
 
                 var newState = BuildState.Unknown;
                 var timeStamp = DateTimeOffset.Now;
@@ -114,15 +114,13 @@ namespace Emanate.TeamCity
                     timeStamp = newStates.Max(s => s.TimeStamp);
                 }
 
-                var oldState = CurrentState;
-                CurrentState = newState;
                 outputDevice.UpdateStatus(newState, timeStamp);
             }
         }
 
         private void DisplayErrorOnAllOutputs()
         {
-            Log.Information("=> TeamCityMonitor.DisplayErrorOnAllOutputs");
+            Log.Information($"=> TeamCityMonitor[{name}].DisplayErrorOnAllOutputs");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -131,12 +129,13 @@ namespace Emanate.TeamCity
             }
         }
 
-        private IEnumerable<BuildInfo> GetNewBuildStates(IEnumerable<string> buildIds)
+        private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<string> buildIds)
         {
             Log.Information("=> TeamCityMonitor.GetNewBuildStates");
+            var buildInfos = new List<BuildInfo>();
             foreach (var buildId in buildIds)
             {
-                var resultXml = teamCityConnection.GetBuild(buildId);
+                var resultXml = await teamCityConnection.GetBuild(buildId);
 
                 var resultRoot = XElement.Parse(resultXml);
                 var buildXml = resultRoot.Elements("build").SingleOrDefault(); // Need to check for null in case build no longer exists
@@ -154,11 +153,12 @@ namespace Emanate.TeamCity
                     if (build.IsRunning && state == BuildState.Succeeded)
                         state = BuildState.Running;
 
-                    yield return new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp};
+                    buildInfos.Add(new BuildInfo { BuildId = buildId, State = state, TimeStamp = build.TimeStamp});
                 }
                 else
                     Log.Warning("Build '{0}' invalid", buildId);
             }
+            return buildInfos;
         }
 
         private BuildState ConvertState(string state)
@@ -172,7 +172,7 @@ namespace Emanate.TeamCity
         }
 
         [DebuggerDisplay("{BuildId} - {State}")]
-        class BuildInfo
+        private class BuildInfo
         {
             public string BuildId { get; set; }
             public BuildState State { get; set; }

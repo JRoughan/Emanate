@@ -21,8 +21,8 @@ namespace Emanate.UnitTests.Modules.Vso
             var connection = Substitute.For<IVsoConnection>();
             var outputDevice = Substitute.For<IOutputDevice>();
             outputDevice.IsAvailable.Returns(true);
-            var monitor = new VsoMonitor(inputDevice, d => connection);
             var inputs = new[] { $"{buildId1}:1" };
+            var monitor = new VsoMonitor(inputDevice, d => connection);
 
             monitor.AddBuilds(outputDevice, inputs);
 
@@ -38,14 +38,14 @@ namespace Emanate.UnitTests.Modules.Vso
             var connection = Substitute.For<IVsoConnection>();
             var outputDevice = Substitute.For<IOutputDevice>();
             outputDevice.IsAvailable.Returns(false);
-            var monitor = new VsoMonitor(inputDevice, d => connection);
             var inputs = new[] { $"{buildId1}:1" };
+            var monitor = new VsoMonitor(inputDevice, d => connection);
 
             monitor.AddBuilds(outputDevice, inputs);
 
             await monitor.BeginMonitoring();
 
-            await connection.DidNotReceive().GetBuild(buildId1, 1);
+            await connection.DidNotReceiveWithAnyArgs().GetBuild(buildId1, 1);
         }
 
         [Fact]
@@ -53,14 +53,16 @@ namespace Emanate.UnitTests.Modules.Vso
         {
             var inputDevice = Substitute.For<IInputDevice>();
             var connection = Substitute.For<IVsoConnection>();
+
             var outputDevice1 = Substitute.For<IOutputDevice>();
             outputDevice1.IsAvailable.Returns(true);
-            var outputDevice2 = Substitute.For<IOutputDevice>();
-            var monitor = new VsoMonitor(inputDevice, d => connection);
-            outputDevice2.IsAvailable.Returns(false);
             var inputs1 = new[] { $"{buildId1}:1", $"{buildId2}:2" };
+
+            var outputDevice2 = Substitute.For<IOutputDevice>();
+            outputDevice2.IsAvailable.Returns(false);
             var inputs2 = new[] { $"{buildId3}:3" };
 
+            var monitor = new VsoMonitor(inputDevice, d => connection);
             monitor.AddBuilds(outputDevice1, inputs1);
             monitor.AddBuilds(outputDevice2, inputs2);
 

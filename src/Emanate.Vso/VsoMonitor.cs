@@ -34,7 +34,7 @@ namespace Emanate.Vso
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
-            Log.Information($"VsoMonitor[{name}] - AddBuilds({outputDevice.Name}, {inputs})");
+            Log.Information($"=> VsoMonitor[{name}] - AddBuilds({outputDevice.Name}, {inputs})");
             var buildIds = inputs.Select(i =>
             {
                 var parts = i.Split(':');
@@ -45,20 +45,20 @@ namespace Emanate.Vso
 
         public Task BeginMonitoring()
         {
-            Log.Information($"VsoMonitor[{name}] - BeginMonitoring()");
+            Log.Information($"=> VsoMonitor[{name}] - BeginMonitoring()");
             isMonitoring = true;
             return Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()
         {
-            Log.Information($"VsoMonitor[{name}] - EndMonitoring()");
+            Log.Information($"=> VsoMonitor[{name}] - EndMonitoring()");
             isMonitoring = false;
         }
 
         private async void UpdateLoop()
         {
-            Log.Information($"VsoMonitor[{name}] - UpdateLoop()");
+            Log.Information($"=> VsoMonitor[{name}] - UpdateLoop()");
             while (isMonitoring)
             {
                 try
@@ -85,13 +85,13 @@ namespace Emanate.Vso
 
         private async Task UpdateBuildStates()
         {
-            Log.Information($"VsoMonitor[{name}] - UpdateBuildStates()");
+            Log.Information($"=> VsoMonitor[{name}] - UpdateBuildStates()");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
                 if (!outputDevice.IsAvailable)
                 {
-                    Log.Warning($"VsoMonitor[{name}] - Output device '{outputDevice.Name}' unavailable - skipping update");
+                    Log.Warning($"=> VsoMonitor[{name}] - Output device '{outputDevice.Name}' unavailable - skipping update");
                     continue;
                 }
 
@@ -118,7 +118,7 @@ namespace Emanate.Vso
 
         private void DisplayErrorOnAllOutputs()
         {
-            Log.Information($"VsoMonitor[{name}] - DisplayErrorOnAllOutputs()");
+            Log.Information($"=> VsoMonitor[{name}] - DisplayErrorOnAllOutputs()");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -129,7 +129,7 @@ namespace Emanate.Vso
 
         private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<BuildKey> buildKeys)
         {
-            Log.Information($"VsoMonitor[{name}] - GetNewBuildStates()");
+            Log.Information($"=> VsoMonitor[{name}] - GetNewBuildStates()");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildKey in buildKeys)
             {
@@ -153,7 +153,7 @@ namespace Emanate.Vso
 
         private BuildState ConvertState(Build build)
         {
-            Log.Information($"VsoMonitor[{name}] - ConvertState({build})");
+            Log.Information($"=> VsoMonitor[{name}] - ConvertState({build})");
             string result = build.Result;
             if (string.IsNullOrWhiteSpace(result) && build.Status == inProgressStatus)
                 return BuildState.Running;

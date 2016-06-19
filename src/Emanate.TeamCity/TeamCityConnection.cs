@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
+using Emanate.Core;
 using Serilog;
 
 namespace Emanate.TeamCity
@@ -10,6 +12,8 @@ namespace Emanate.TeamCity
         private readonly Uri baseUri;
         private readonly NetworkCredential networkCredential;
         private readonly bool requiresAuthentication;
+
+        public delegate ITeamCityConnection Factory(IInputDevice device);
 
         public TeamCityConnection(TeamCityDevice device)
         {
@@ -25,25 +29,25 @@ namespace Emanate.TeamCity
             }
         }
 
-        public string GetProjects()
+        public async Task<string> GetProjects()
         {
             Log.Information("=> TeamCityConnection.GetProjects");
             var uri = CreateUri("/httpAuth/app/rest/projects");
-            return Request(uri);
+            return await Request(uri);
         }
 
-        public string GetProject(string projectId)
+        public async Task<string> GetProject(string projectId)
         {
             Log.Information("=> TeamCityConnection.GetProject({0})", projectId);
             var buildUri = CreateUri($"/httpAuth/app/rest/projects/id:{projectId}");
-            return Request(buildUri);
+            return await Request(buildUri);
         }
 
-        public string GetBuild(string buildId)
+        public async Task<string> GetBuild(string buildId)
         {
             Log.Information("=> TeamCityConnection.GetBuild({0})", buildId);
             var resultUri = CreateUri($"httpAuth/app/rest/builds?locator=running:all,buildType:(id:{buildId}),count:1");
-            return Request(resultUri);
+            return await Request(resultUri);
         }
 
         private Uri CreateUri(string relativeUrl)
@@ -51,7 +55,7 @@ namespace Emanate.TeamCity
             return new Uri(baseUri, relativeUrl.TrimStart('/'));
         }
 
-        private string Request(Uri uri)
+        private async Task<string> Request(Uri uri)
         {
             try
             {
@@ -59,10 +63,10 @@ namespace Emanate.TeamCity
                 var webRequest = CreateWebRequest(uri);
                 webRequest.Accept = "application/xml";
 
-                using (var webResponse = webRequest.GetResponse())
+                using (var webResponse = await webRequest.GetResponseAsync())
                 using (var stream = webResponse.GetResponseStream())
                 using (var reader = new StreamReader(stream))
-                    return reader.ReadToEnd();
+                    return await reader.ReadToEndAsync();
             }
             catch (Exception ex)
             {

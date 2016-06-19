@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
@@ -9,7 +8,7 @@ using Xunit;
 
 namespace Emanate.UnitTests.Core.Configuration
 {
-    public class ConfigurationCaretakerTests
+    public class configuration_caretaker
     {
         public class when_no_config_file_exists
         {
@@ -60,26 +59,6 @@ namespace Emanate.UnitTests.Core.Configuration
                 Assert.Equal(Guid.Parse("30b0091d-6c5c-4460-8da7-8059a5461a41"), inputGroups.InputDeviceId);
                 var input = inputGroups.Inputs.Single();
                 Assert.Equal("MyInput", input);
-            }
-
-            [Fact]
-            public async void should_round_trip_successfully()
-            {
-                XDocument result = null;
-                var diskAccessor = Substitute.For<IDiskAccessor>();
-                diskAccessor.Load(Arg.Any<string>()).Returns((XDocument)null);
-                diskAccessor.Save(Arg.Do<XDocument>(x => result = x), Arg.Any<string>());
-                var caretaker = new ConfigurationCaretakerBuilder()
-                    .SetConfig(ConfigurationSamples.Complete)
-                    .AddModule("module1", Direction.Input) // TODO: Test without modules available
-                    .AddModule("module2", Direction.Output)
-                    .Build();
-
-                var config = await caretaker.Load();
-                caretaker.Save(config);
-
-                var expected = XDocument.Parse(ConfigurationSamples.Complete);
-                Assert.True(XmlComparer.AreEqualNoOrder(expected, result));
             }
         }
     }

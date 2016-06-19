@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Emanate.TeamCity;
 
 namespace Emanate.UnitTests.Core.Input.TeamCity
 {
     internal class MockTeamCityConnection : ITeamCityConnection
     {
-        private readonly int projectInstances;
         private int buildInstances;
 
         private readonly Dictionary<ProjectInfo, List<BuildInfo>> projects = new Dictionary<ProjectInfo, List<BuildInfo>>();
@@ -75,13 +75,13 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
 
         public MockTeamCityConnection(string projectsAndBuilds)
         {
-            projectInstances = 0;
+            var projectInstances = 0;
             buildInstances = 0;
 
-            var pairParts = projectsAndBuilds.Split(new[] { ';' });
+            var pairParts = projectsAndBuilds.Split(';');
             foreach (var pairPart in pairParts)
             {
-                var parts = pairPart.Split(new[] { ':' });
+                var parts = pairPart.Split(':');
 
                 var projectName = parts[0];
                 var projectInfo = projects.Select(kvp => kvp.Key).SingleOrDefault(p => p.Name == projectName) ?? new ProjectInfo(projectName, ++projectInstances);
@@ -93,13 +93,13 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                     projects.Add(projectInfo, builds);
                 }
 
-                var buildNames = parts[1].Split(new[] { ',' });
+                var buildNames = parts[1].Split(',');
                 var newBuildNames = buildNames.Except(builds.Select(x => x.Name));
                 builds.AddRange(newBuildNames.Select(b => new BuildInfo(b, ++buildInstances)));
             }
         }
 
-        public string GetProjects()
+        public Task<string> GetProjects()
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
@@ -109,10 +109,10 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 sb.AppendFormat(@"<project name=""{0}"" id=""{1}"" />{2}", project.Name, project.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</projects>");
-            return sb.ToString();
+            return Task.FromResult(sb.ToString());
         }
 
-        public string GetProject(string projectId)
+        public Task<string> GetProject(string projectId)
         {
             var project = projects.Single(p => p.Key.Id == projectId);
             var sb = new StringBuilder();
@@ -125,10 +125,10 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
             }
             sb.AppendLine(@"</buildTypes>");
             sb.AppendLine(@"</project>");
-            return sb.ToString();
+            return Task.FromResult(sb.ToString());
         }
 
-        public string GetBuild(string buildId)
+        public Task<string> GetBuild(string buildId)
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes"" ?>");
@@ -141,7 +141,7 @@ namespace Emanate.UnitTests.Core.Input.TeamCity
                 sb.AppendFormat(@"<build id=""999"" {0} status=""{1}"" buildTypeId=""{2}"" startDate=""20000101T120000+1300"" /> {3}", runningXml, build.Status, build.Id, Environment.NewLine);
             }
             sb.AppendLine(@"</builds>");
-            return sb.ToString();
+            return Task.FromResult(sb.ToString());
         }
 
         public void SetBuildStatus(string buildName, string status, bool isRunning = false)

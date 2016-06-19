@@ -1,9 +1,11 @@
+using System.Threading.Tasks;
+
 namespace Emanate.TeamCity
 {
     public interface ITeamCityConnection
     {
-        string GetProjects();
-        string GetProject(string projectId);
-        string GetBuild(string buildId);
+        Task<string> GetProjects();
+        Task<string> GetProject(string projectId);
+        Task<string> GetBuild(string buildId);
     }
 }

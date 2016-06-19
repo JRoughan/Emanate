@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
-using Emanate.Core.Output;
 using Emanate.Extensibility;
 using Serilog;
 
@@ -23,48 +22,44 @@ namespace Emanate.TeamCity.Admin.Inputs
 
         public override async Task<InitializationResult> Initialize()
         {
-            return await Task.Run(() =>
+            Log.Information("=> InputSelectorViewModel.Initialize");
+            string projectsXml;
+            try
             {
-                Log.Information("=> InputSelectorViewModel.Initialize");
-                string projectsXml;
-                try
+                projectsXml = await connection.GetProjects();
+            }
+            catch (WebException ex)
+            {
+                Log.Error("Could not get projects: " + ex.Message);
+                HasBadConfiguration = true;
+                return InitializationResult.Failed;
+            }
+
+            var projectsElement = XElement.Parse(projectsXml);
+            foreach (var projectElement in projectsElement.Elements())
+            {
+                var project = new ProjectViewModel();
+                project.Name = projectElement.GetAttributeString("name");
+                var projectId = projectElement.GetAttributeString("id");
+
+                var buildXml = await connection.GetProject(projectId);
+                var buildRoot = XElement.Parse(buildXml);
+
+                var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
+                                    from buildElement in buildTypesElement.Elements("buildType")
+                                    select buildElement;
+
+                foreach (var buildElement in buildElements)
                 {
-                    projectsXml = connection.GetProjects();
-                }
-                catch (WebException ex)
-                {
-                    Log.Error("Could not get projects: " + ex.Message);
-                    HasBadConfiguration = true;
-                    return InitializationResult.Failed;
+                    var configuration = new ProjectConfigurationViewModel(project);
+                    configuration.Id = buildElement.GetAttributeString("id");
+                    configuration.Name = buildElement.GetAttributeString("name");
+                    project.Configurations.Add(configuration);
                 }
 
-                var projectsElement = XElement.Parse(projectsXml);
-                foreach (var projectElement in projectsElement.Elements())
-                {
-                    var project = new ProjectViewModel();
-                    project.Name = projectElement.GetAttributeString("name");
-                    var projectId = projectElement.GetAttributeString("id");
-
-                    var buildXml = connection.GetProject(projectId);
-                    var buildRoot = XElement.Parse(buildXml);
-
-                    var buildElements = from buildTypesElement in buildRoot.Elements("buildTypes")
-                                        from buildElement in buildTypesElement.Elements("buildType")
-                                        select buildElement;
-
-                    foreach (var buildElement in buildElements)
-                    {
-                        var configuration = new ProjectConfigurationViewModel(project);
-                        configuration.Id = buildElement.GetAttributeString("id");
-                        configuration.Name = buildElement.GetAttributeString("name");
-                        project.Configurations.Add(configuration);
-                    }
-
-                    Projects.Add(project);
-                }
-                return InitializationResult.Succeeded;
-            });
-            
+                Projects.Add(project);
+            }
+            return InitializationResult.Succeeded;
         }
 
         private bool hasBadConfiguration;

@@ -19,7 +19,7 @@ namespace Emanate.Vso
         private readonly Uri baseUri;
         private readonly string name;
 
-        public delegate IVsoConnection Factory(IDevice device);
+        public delegate IVsoConnection Factory(IInputDevice device);
 
         public VsoConnection(VsoDevice device)
         {
@@ -31,27 +31,27 @@ namespace Emanate.Vso
 
         public async Task<ProjectCollection> GetProjects(bool forceRefresh = false)
         {
-            Log.Information($"VsoConnection[{name}] - GetProjects({forceRefresh})");
+            Log.Information($"=> VsoConnection[{name}] - GetProjects({forceRefresh})");
             return await GetCachedWebResource("_apis/projects?api-version=2", projectCollectionCache, forceRefresh);
         }
 
         // TODO: Change method to GetBuilds as an optimisation for multiple definitions under the same project
         public async Task<Build> GetBuild(Guid projectId, int definition)
         {
-            Log.Information($"VsoConnection[{name}] - GetBuild({projectId}, {definition})");
+            Log.Information($"=> VsoConnection[{name}] - GetBuild({projectId}, {definition})");
             var buildCollection = await GetWebResource<BuildCollection>($"{projectId}/_apis/build/builds?api-version=2&definitions={definition}&$top=1");
             return buildCollection.Value.Single();
         }
 
         public async Task<BuildDefinitionCollection> GetBuildDefinitions(Guid projectId, bool forceRefresh = false)
         {
-            Log.Information($"VsoConnection[{name}] - GetBuildDefinitions({projectId}, {forceRefresh})");
+            Log.Information($"=> VsoConnection[{name}] - GetBuildDefinitions({projectId}, {forceRefresh})");
             return await GetCachedWebResource($"{projectId}/_apis/build/definitions?api-version=2", buildDefinitionCollectionCache, forceRefresh);
         }
 
         private async Task<TResource> GetCachedWebResource<TResource>(string url, ConcurrentDictionary<string, Task<TResource>> cache, bool forceRefresh)
         {
-            Log.Information($"VsoConnection[{name}] - GetCachedWebResource({url}, cache, {forceRefresh}");
+            Log.Information($"=> VsoConnection[{name}] - GetCachedWebResource({url}, cache, {forceRefresh}");
             if (forceRefresh)
                 return await cache.AddOrUpdate(url, GetWebResource<TResource>, (u, e) => GetWebResource<TResource>(u));
 

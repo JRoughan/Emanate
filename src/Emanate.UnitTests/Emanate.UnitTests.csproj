@@ -68,12 +68,17 @@
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="Builders\ConfigBuilder.cs" />
+    <Compile Include="Builders\DeviceBuilder.cs" />
+    <Compile Include="Builders\InputDeviceBuilder.cs" />
+    <Compile Include="Builders\OutputDeviceBuilder.cs" />
     <Compile Include="Core\Configuration\XmlComparer.cs" />
     <Compile Include="Core\Configuration\ConfigurationSamples.cs" />
     <Compile Include="Core\Configuration\ConfigurationCaretakerBuilder.cs" />
-    <Compile Include="Core\Configuration\ConfigurationCaretakerTests.cs" />
+    <Compile Include="Core\Configuration\configuration_caretaker.cs" />
     <Compile Include="Core\Input\TeamCity\MockTeamCityConnection.cs" />
     <Compile Include="Core\Input\TeamCity\teamcity_monitor.cs" />
+    <Compile Include="Modules\TeamCity\teamcity_monitor.cs" />
     <Compile Include="Modules\Vso\vso_monitor.cs" />
     <Compile Include="Service\monitoring_service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

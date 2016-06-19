@@ -1,20 +1,12 @@
 ﻿using System.Threading;
 using Emanate.Delcom;
-using NUnit.Framework;
+using Xunit;
 
 namespace Emanate.IntegrationTests.Core.Output
 {
-    [TestFixture]
     public class delcom_vdi
     {
-        [Test]
-        public void should_open_single_attached_device()
-        {
-            using (var device = new PhysicalDevice(new DelcomHid()))
-                Assert.DoesNotThrow(() => device.Open());
-        }
-
-        [Test]
+        [Fact]
         public void should_turn_on_green_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -25,7 +17,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_turn_on_yellow_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -36,7 +28,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_turn_on_red_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -47,7 +39,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_flash_green_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -58,7 +50,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_flash_yellow_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -69,7 +61,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_flash_red_light()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -80,7 +72,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_start_buzzer()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -91,7 +83,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_ignore_requests_to_stop_if_buzzer_not_started()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -101,7 +93,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void should_allow_all_lights_and_sound_at_once()
         {
             using (var device = new PhysicalDevice(new DelcomHid()))
@@ -115,7 +107,7 @@ namespace Emanate.IntegrationTests.Core.Output
             }
         }
 
-        [Test]
+        [Fact]
         public void x_should_turn_off_all_lights_and_sounds_when_finalized()
         {
             var device = new PhysicalDevice(new DelcomHid());
