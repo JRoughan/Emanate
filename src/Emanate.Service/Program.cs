@@ -39,7 +39,8 @@ namespace Emanate.Service
                 });
 
                 c.SetServiceName(Settings.ServiceName);
-                c.SetDisplayName("Emanate Monitoring Service");
+                c.SetDisplayName("Emanate");
+                c.SetDescription("Emanate Monitoring Service");
                 c.RunAsLocalSystem();
                 c.StartAutomaticallyDelayed();
 
