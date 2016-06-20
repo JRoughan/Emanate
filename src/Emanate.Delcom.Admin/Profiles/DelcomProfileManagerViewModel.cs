@@ -16,7 +16,7 @@ namespace Emanate.Delcom.Admin.Profiles
         {
             this.delcomConfiguration = delcomConfiguration;
             this.mediator = mediator;
-            mediator.Subscribe<ProfileAddedEvent>(this);
+            mediator.Subscribe(this);
 
             foreach (var profile in delcomConfiguration.Profiles.OfType<MonitoringProfile>())
                 Profiles.Add(new DelcomProfileViewModel(profile));

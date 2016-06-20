@@ -40,8 +40,8 @@ namespace Emanate.Service.Admin
             this.deviceManagers = deviceManagers;
             this.inputSelectors = inputSelectors;
 
-            saveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
-            applyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
+            SaveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
+            ApplyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
         }
 
@@ -72,7 +72,7 @@ namespace Emanate.Service.Admin
                 var moduleViewModel = new ModuleViewModel(outputModule.Name, profileManager, deviceManager, null);
                 Modules.Add(moduleViewModel);
 
-                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => !outputDevices.Any(od => od.Id == d.Id));
+                var unconfiguredDevices = moduleConfig.OutputDevices.Where(d => outputDevices.All(od => od.Id != d.Id));
                 globalConfig.OutputDevices.AddRange(unconfiguredDevices);
             }
 
@@ -131,8 +131,7 @@ namespace Emanate.Service.Admin
 
         public ObservableCollection<DeviceViewModel> ActiveDevices { get; } = new ObservableCollection<DeviceViewModel>();
 
-        private readonly DelegateCommand saveCommand;
-        public DelegateCommand SaveCommand { get { return saveCommand; } }
+        public DelegateCommand SaveCommand { get; }
 
         private void SaveAndExit()
         {
@@ -140,8 +139,7 @@ namespace Emanate.Service.Admin
             OnCloseRequested();
         }
 
-        private readonly DelegateCommand applyCommand;
-        public DelegateCommand ApplyCommand { get { return applyCommand; } }
+        public DelegateCommand ApplyCommand { get; }
 
         private void SaveConfiguration()
         {

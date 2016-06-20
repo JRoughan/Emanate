@@ -13,7 +13,7 @@ namespace Emanate.Delcom
             PowerId = (byte)powerId;
         }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public byte SetId { get; private set; }
         public byte DutyId { get; private set; }
         public byte OffsetId { get; private set; }

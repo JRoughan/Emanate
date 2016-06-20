@@ -8,22 +8,22 @@ namespace Emanate.Extensibility
 {
     public abstract class InputSelector : UserControl
     {
-        private static readonly DependencyPropertyKey DevicePropertyKey = DependencyProperty.RegisterReadOnly("Device", typeof(IDevice), typeof(InputSelector), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey devicePropertyKey = DependencyProperty.RegisterReadOnly("Device", typeof(IDevice), typeof(InputSelector), new PropertyMetadata(null));
         public IDevice Device
         {
-            get { return (IDevice)GetValue(DevicePropertyKey.DependencyProperty); }
+            get { return (IDevice)GetValue(devicePropertyKey.DependencyProperty); }
         }
 
-        private static readonly DependencyPropertyKey DeviceNamePropertyKey = DependencyProperty.RegisterReadOnly("DeviceName", typeof(string), typeof(InputSelector), new PropertyMetadata(null));
+        private static readonly DependencyPropertyKey deviceNamePropertyKey = DependencyProperty.RegisterReadOnly("DeviceName", typeof(string), typeof(InputSelector), new PropertyMetadata(null));
         public string DeviceName
         {
-            get { return (string)GetValue(DeviceNamePropertyKey.DependencyProperty); }
+            get { return (string)GetValue(deviceNamePropertyKey.DependencyProperty); }
         }
 
         public async Task SetDevice(IDevice device)
         {
-            SetValue(DevicePropertyKey, device);
-            SetValue(DeviceNamePropertyKey, device.Name);
+            SetValue(devicePropertyKey, device);
+            SetValue(deviceNamePropertyKey, device.Name);
 
             await SetDeviceInternal(device);
         }

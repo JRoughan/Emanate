@@ -31,7 +31,7 @@ namespace Emanate.UnitTests.Builders
             config.Mappings.Add(mapping);
             if (generateDependencies)
             {
-                if (!config.OutputDevices.Any(d => d.Id == mapping.OutputDeviceId))
+                if (config.OutputDevices.All(d => d.Id != mapping.OutputDeviceId))
                 {
                     var outputDevice = new OutputDeviceBuilder()
                         .WithId(mapping.OutputDeviceId)
@@ -41,7 +41,7 @@ namespace Emanate.UnitTests.Builders
 
                 foreach (var inputGroup in mapping.InputGroups)
                 {
-                    if (!config.InputDevices.Any(d => d.Id == inputGroup.InputDeviceId))
+                    if (config.InputDevices.All(d => d.Id != inputGroup.InputDeviceId))
                     {
                         var inputDevice = new InputDeviceBuilder()
                             .WithId(inputGroup.InputDeviceId)

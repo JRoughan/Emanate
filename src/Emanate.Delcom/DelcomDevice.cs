@@ -27,7 +27,7 @@ namespace Emanate.Delcom
 
         public string Type { get { return key; } }
 
-        public Guid ProfileId { get; set; }
+        public Guid ProfileId { get; private set; }
 
         private MonitoringProfile profile;
         public IProfile Profile
@@ -177,7 +177,6 @@ namespace Emanate.Delcom
             deviceElement.Add(new XAttribute("profile-id", ProfileId));
             return deviceElement;
         }
-
 
         public void SetMemento(XElement deviceElement)
         {

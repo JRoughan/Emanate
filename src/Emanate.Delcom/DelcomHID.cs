@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
+// ReSharper disable All
 
 namespace Emanate.Delcom
 {

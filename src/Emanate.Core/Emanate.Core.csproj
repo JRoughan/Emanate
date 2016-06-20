@@ -61,7 +61,6 @@
     <Compile Include="Configuration\IOutputConfiguration.cs" />
     <Compile Include="Configuration\Mapping.cs" />
     <Compile Include="Configuration\Memento.cs" />
-    <Compile Include="Configuration\OutputDeviceEventArgs.cs" />
     <Compile Include="Configuration\Paths.cs" />
     <Compile Include="Diagnostics.cs" />
     <Compile Include="Direction.cs" />

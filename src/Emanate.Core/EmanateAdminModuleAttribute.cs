@@ -13,6 +13,6 @@ namespace Emanate.Core
             ModuleType = moduleType;
         }
 
-        public Type ModuleType { get; private set; }
+        public Type ModuleType { get; }
     }
 }

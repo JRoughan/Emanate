@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using Autofac.Features.Indexed;
-using Emanate.Core;
-using Emanate.Core.Configuration;
-using NSubstitute;
-
-namespace Emanate.UnitTests.Core.Configuration
+﻿namespace Emanate.UnitTests.Core.Configuration
 {
     public static class ConfigurationSamples
     {

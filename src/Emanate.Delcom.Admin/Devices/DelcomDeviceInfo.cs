@@ -55,7 +55,7 @@ namespace Emanate.Delcom.Admin.Devices
         public DelcomDevice Device
         {
             get { return device; }
-            set { device = value; OnPropertyChanged(); }
+            private set { device = value; OnPropertyChanged(); }
         }
 
         public bool IsMissingPhysicalDevice { get { return device == null || device.PhysicalDevice == null; } }
