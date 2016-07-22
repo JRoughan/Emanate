@@ -15,8 +15,9 @@ namespace Emanate.Core.Configuration
 
         public void Save(XDocument configDoc, string path)
         {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            var directory = Path.GetDirectoryName(path);
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
 
             configDoc.Save(path);
         }

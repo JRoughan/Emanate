@@ -27,7 +27,7 @@ namespace Emanate.TeamCity
             if (RequiresAuthentication)
             {
                 deviceElement.Add(new XAttribute("username", UserName));
-                deviceElement.Add(new XAttribute("password", SimpleCrypto.EncryptDecrypt(Password)));
+                SecureStorage.StoreString(Id, "Password", Password);
             }
             return deviceElement;
         }
@@ -42,7 +42,7 @@ namespace Emanate.TeamCity
             if (RequiresAuthentication)
             {
                 UserName = deviceElement.Attribute("username").Value;
-                Password = SimpleCrypto.EncryptDecrypt(deviceElement.Attribute("password").Value);
+                Password = SecureStorage.GetString(Id, "Password");
             }
         }
     }

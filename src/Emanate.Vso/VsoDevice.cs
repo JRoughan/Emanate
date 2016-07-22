@@ -16,18 +16,6 @@ namespace Emanate.Vso
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public void SetMemento(XElement deviceElement)
-        {
-            Log.Information("=> VsoDevice.SetMemento");
-
-            Id = Guid.Parse(deviceElement.Attribute("id").Value);
-            Name = deviceElement.Attribute("name").Value;
-            Uri = deviceElement.Attribute("uri").Value;
-            PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value);
-            UserName = deviceElement.Attribute("username").Value;
-            Password = SimpleCrypto.EncryptDecrypt(deviceElement.Attribute("password").Value);
-        }
-
         public XElement CreateMemento()
         {
             Log.Information("=> VsoDevice.CreateMemento");
@@ -38,8 +26,20 @@ namespace Emanate.Vso
             deviceElement.Add(new XAttribute("uri", Uri));
             deviceElement.Add(new XAttribute("polling-interval", PollingInterval));
             deviceElement.Add(new XAttribute("username", UserName));
-            deviceElement.Add(new XAttribute("password", SimpleCrypto.EncryptDecrypt(Password)));
+            SecureStorage.StoreString(Id, "Password", Password);
             return deviceElement;
+        }
+
+        public void SetMemento(XElement deviceElement)
+        {
+            Log.Information("=> VsoDevice.SetMemento");
+
+            Id = Guid.Parse(deviceElement.Attribute("id").Value);
+            Name = deviceElement.Attribute("name").Value;
+            Uri = deviceElement.Attribute("uri").Value;
+            PollingInterval = int.Parse(deviceElement.Attribute("polling-interval").Value);
+            UserName = deviceElement.Attribute("username").Value;
+            Password = SecureStorage.GetString(Id, "Password");
         }
     }
 }

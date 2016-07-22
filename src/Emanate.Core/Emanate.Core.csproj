@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -81,7 +82,7 @@
     <Compile Include="Output\IBuildOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\XElementExtensions.cs" />
-    <Compile Include="SimpleCrypto.cs" />
+    <Compile Include="SecureStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
