@@ -38,6 +38,10 @@
                               SelectedItem="{Binding ElementName=DeviceSelector, Path=SelectedItem.Profile}" 
                               DisplayMemberPath="Name"
                               Margin="100,0,0,0" />
+                            <Button Content="Add Input Source" 
+                                    Command="{Binding AddInputSourceCommand}" 
+                                    CommandParameter="{Binding ElementName=DeviceSelector, Path=SelectedItem}" 
+                                    Margin="100,0,0,0" />
                         </StackPanel>
                         <TabControl x:Name="inputTabControl" ItemsSource="{Binding ElementName=DeviceSelector, Path=SelectedItem.InputSelectors}">
                             <TabControl.ItemTemplate>

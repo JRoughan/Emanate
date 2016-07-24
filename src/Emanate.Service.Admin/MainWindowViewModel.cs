@@ -40,6 +40,8 @@ namespace Emanate.Service.Admin
             this.deviceManagers = deviceManagers;
             this.inputSelectors = inputSelectors;
 
+            AddInputSourceCommand = new DelegateCommand<DeviceViewModel>(AddInputSource, CanAddInputSource);
+
             SaveCommand = new DelegateCommand(SaveAndExit, CanFindServiceConfiguration);
             ApplyCommand = new DelegateCommand(SaveConfiguration, CanFindServiceConfiguration);
             cancelCommand = new DelegateCommand(OnCloseRequested);
@@ -100,31 +102,37 @@ namespace Emanate.Service.Admin
             foreach (var outputDevice in globalConfig.OutputDevices)
             {
                 var moduleConfiguration = globalConfig.OutputConfigurations.SingleOrDefault(c => c.Key.Equals(outputDevice.Type, StringComparison.OrdinalIgnoreCase));
-                await AddActiveDevice(moduleConfiguration, outputDevice);
+                AddActiveDevice(moduleConfiguration, outputDevice);
             }
             
             return InitializationResult.Succeeded;
         }
 
-        private async Task AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
+        private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
-            // HACK: Force an input for a new device without any. Ugly!
-            var inputSelector = inputSelectors["vso"];
-            await inputSelector.SetDevice(globalConfig.InputDevices.Single()); // Break if more than one to encourage me to handle the scenario
-            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == outputDevice.Id); // Ditto
-            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id); // Ditto
-            inputSelector.SelectInputs(inputGroup.Inputs);
-            outputDeviceInfo.InputSelectors.Add(inputSelector);
 
-            //foreach (var inputGroup in outputDevice.Inputs.GroupBy(i => i.Source))
-            //{
-            //    var inputSelector = componentContext.ResolveKeyed<InputSelector>(inputGroup.Key);
-            //    inputSelector.SelectInputs(inputGroup);
-            //    outputDeviceInfo.InputSelector = inputSelector;
-            //}
+            // TODO: Wire up inputs (as per AddInputSource)
 
             ActiveDevices.Add(outputDeviceInfo);
+        }
+
+        public DelegateCommand<DeviceViewModel> AddInputSourceCommand { get; }
+
+        private static bool CanAddInputSource(DeviceViewModel device)
+        {
+            return device != null;
+        }
+
+        private async void AddInputSource(DeviceViewModel device)
+        {
+            // HACK: Assume VSO until proper dialog created
+            var inputSelector = inputSelectors["vso"];
+            await inputSelector.SetDevice(globalConfig.InputDevices.Single()); // Break if more than one to encourage me to handle the scenario
+            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == device.OutputDevice.Id); // Ditto
+            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id); // Ditto
+            inputSelector.SelectInputs(inputGroup.Inputs);
+            device.InputSelectors.Add(inputSelector);
         }
 
         public ObservableCollection<ModuleViewModel> Modules { get; } = new ObservableCollection<ModuleViewModel>();
