@@ -108,11 +108,22 @@ namespace Emanate.Service.Admin
             return InitializationResult.Succeeded;
         }
 
-        private void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
+        private async void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
 
-            // TODO: Wire up inputs (as per AddInputSource)
+            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == outputDevice.Id);
+            if (mapping != null)
+            {
+                foreach (var inputGroup in mapping.InputGroups)
+                {
+                    var inputDevice = globalConfig.InputDevices.Single(i => i.Id == inputGroup.InputDeviceId);
+                    var inputSelector = inputSelectors[inputDevice.Key];
+                    await inputSelector.SetDevice(inputDevice);
+                    inputSelector.SelectInputs(inputGroup.Inputs);
+                    outputDeviceInfo.InputSelectors.Add(inputSelector);
+                }
+            }
 
             ActiveDevices.Add(outputDeviceInfo);
         }
