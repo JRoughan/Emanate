@@ -12,16 +12,19 @@ namespace Emanate.Service.Admin
     {
         private readonly IOutputDevice outputDevice;
 
-        public DeviceViewModel(IOutputDevice outputDevice, IOutputConfiguration configuration, IMediator mediator)
+        public DeviceViewModel(IOutputDevice outputDevice, IOutputConfiguration configuration, List<IInputDevice> inputDevices, IMediator mediator)
         {
             this.outputDevice = outputDevice;
             AvailableProfiles = new ObservableCollection<IProfile>(configuration.Profiles);
+            AvailableInputDevices = new ObservableCollection<IInputDevice>(inputDevices);
 
             mediator.Subscribe<ProfileAddedEvent>(this);
             mediator.Subscribe<ProfileDeletedEvent>(this);
         }
 
         public ObservableCollection<IProfile> AvailableProfiles { get; }
+
+        public ObservableCollection<IInputDevice> AvailableInputDevices { get; }
 
         public IProfile Profile
         {

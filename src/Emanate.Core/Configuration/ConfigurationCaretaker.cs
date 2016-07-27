@@ -182,7 +182,7 @@ namespace Emanate.Core.Configuration
                         inputsElement.Add(inputElement);
                     }
 
-                    mappingsElement.Add(inputsElement);
+                    mappingElement.Add(inputsElement);
                 }
                 mappingsElement.Add(mappingElement);
             }

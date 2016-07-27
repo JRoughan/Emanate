@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac.Features.Indexed;
+using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
 using Emanate.Extensibility;
@@ -110,7 +111,7 @@ namespace Emanate.Service.Admin
 
         private async void AddActiveDevice(IOutputConfiguration moduleConfiguration, IOutputDevice outputDevice)
         {
-            var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, mediator);
+            var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, globalConfig.InputDevices, mediator);
 
             var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == outputDevice.Id);
             if (mapping != null)
@@ -122,6 +123,7 @@ namespace Emanate.Service.Admin
                     await inputSelector.SetDevice(inputDevice);
                     inputSelector.SelectInputs(inputGroup.Inputs);
                     outputDeviceInfo.InputSelectors.Add(inputSelector);
+                    outputDeviceInfo.AvailableInputDevices.Remove(inputDevice);
                 }
             }
 
@@ -130,20 +132,27 @@ namespace Emanate.Service.Admin
 
         public DelegateCommand<DeviceViewModel> AddInputSourceCommand { get; }
 
-        private static bool CanAddInputSource(DeviceViewModel device)
+        private bool CanAddInputSource(DeviceViewModel device)
         {
-            return device != null;
+            return device != null && newInputDevice != null;
+        }
+
+        private IInputDevice newInputDevice;
+        public IInputDevice NewInputDevice
+        {
+            get { return newInputDevice; }
+            set { newInputDevice = value; OnPropertyChanged(); }
         }
 
         private async void AddInputSource(DeviceViewModel device)
         {
-            // HACK: Assume VSO until proper dialog created
-            var inputSelector = inputSelectors["vso"];
-            await inputSelector.SetDevice(globalConfig.InputDevices.Single()); // Break if more than one to encourage me to handle the scenario
-            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == device.OutputDevice.Id); // Ditto
-            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id); // Ditto
+            var inputSelector = inputSelectors[newInputDevice.Key];
+            await inputSelector.SetDevice(newInputDevice);
+            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == device.OutputDevice.Id);
+            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id);
             inputSelector.SelectInputs(inputGroup.Inputs);
             device.InputSelectors.Add(inputSelector);
+            device.AvailableInputDevices.Remove(newInputDevice);
         }
 
         public ObservableCollection<ModuleViewModel> Modules { get; } = new ObservableCollection<ModuleViewModel>();
