@@ -9,15 +9,15 @@ namespace Emanate.Api.Controllers
     public class OutputGroupsController : ApiController
     {
         // GET api/values
-        public IEnumerable<OutputGroup> Get()
+        public IEnumerable<Mapping> Get()
         {
-            return Store.Config.OutputGroups;
+            return Store.Config.Mappings;
         }
 
         // GET api/values/5
-        public OutputGroup Get(Guid id)
+        public Mapping Get(Guid id)
         {
-            return Store.Config.OutputGroups.SingleOrDefault(og => og.Id == id);
+            return Store.Config.Mappings.SingleOrDefault(og => og.OutputDeviceId == id);
         }
 
         //// POST api/values
@@ -27,15 +27,15 @@ namespace Emanate.Api.Controllers
         //}
 
         // PUT api/values/5
-        public void Put(int id, OutputGroup value)
+        public void Put(int id, Mapping value)
         {
-            Store.Config.OutputGroups.Add(value);
+            Store.Config.Mappings.Add(value);
         }
 
         // DELETE api/values/5
         public void Delete(Guid id)
         {
-            Store.Config.OutputGroups.RemoveAll(og => og.Id == id);
+            Store.Config.Mappings.RemoveAll(og => og.OutputDeviceId == id);
         }
     }
 }
