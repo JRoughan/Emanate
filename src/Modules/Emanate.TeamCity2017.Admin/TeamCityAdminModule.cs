@@ -4,7 +4,6 @@ using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.TeamCity;
 using Emanate.TeamCity2017.Admin.Devices;
 using Emanate.TeamCity2017.Admin.Inputs;
 using Emanate.TeamCity2017.Admin.Profiles;
@@ -32,8 +31,8 @@ namespace Emanate.TeamCity2017.Admin
         private void RegisterCommon(ContainerBuilder builder)
         {
             Log.Information("=> TeamCityModule.RegisterCommon");
-            builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
+            builder.RegisterType<TeamCity2017Connection>().As<ITeamCityConnection>();
+            builder.RegisterType<TeamCity2017Configuration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }
     }
 }

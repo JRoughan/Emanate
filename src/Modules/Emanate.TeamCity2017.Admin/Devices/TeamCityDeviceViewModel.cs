@@ -3,16 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
-using Emanate.TeamCity;
 using Serilog;
 
 namespace Emanate.TeamCity2017.Admin.Devices
 {
     public class TeamCityDeviceViewModel : ViewModel
     {
-        private readonly TeamCityDevice teamCityDevice;
+        private readonly TeamCity2017Device teamCityDevice;
 
-        public TeamCityDeviceViewModel(TeamCityDevice teamCityDevice)
+        public TeamCityDeviceViewModel(TeamCity2017Device teamCityDevice)
         {
             this.teamCityDevice = teamCityDevice;
             IsEditable = teamCityDevice != null;
@@ -20,7 +19,7 @@ namespace Emanate.TeamCity2017.Admin.Devices
             TestConnectionCommand = new DelegateCommand(TestConnection, CanTestConnection);
         }
 
-        public TeamCityDevice Device => teamCityDevice;
+        public TeamCity2017Device Device => teamCityDevice;
 
         public string Uri
         {
@@ -80,7 +79,7 @@ namespace Emanate.TeamCity2017.Admin.Devices
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;
-            var connection = new TeamCityConnection(teamCityDevice);
+            var connection = new TeamCity2017Connection(teamCityDevice);
             try
             {
                 IsTestSuccessful = connection.GetProjects() != null;

@@ -4,19 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
-using Emanate.TeamCity;
 
 namespace Emanate.TeamCity2017.Admin.Devices
 {
     public class TeamCityDeviceManagerViewModel : ViewModel
     {
-        private readonly TeamCityConfiguration teamCityConfiguration;
+        private readonly TeamCity2017Configuration teamCityConfiguration;
 
-        public TeamCityDeviceManagerViewModel(TeamCityConfiguration teamCityConfiguration)
+        public TeamCityDeviceManagerViewModel(TeamCity2017Configuration teamCityConfiguration)
         {
             this.teamCityConfiguration = teamCityConfiguration;
 
-            var deviceVms = teamCityConfiguration.Devices.Select(d => new TeamCityDeviceViewModel((TeamCityDevice)d));
+            var deviceVms = teamCityConfiguration.Devices.Select(d => new TeamCityDeviceViewModel((TeamCity2017Device)d));
             Devices = new ObservableCollection<TeamCityDeviceViewModel>(deviceVms);
 
             AddDeviceCommand = new DelegateCommand(AddDevice);
@@ -34,7 +33,7 @@ namespace Emanate.TeamCity2017.Admin.Devices
 
         private void AddDevice()
         {
-            var deviceInfo = new TeamCityDevice
+            var deviceInfo = new TeamCity2017Device
             {
                 Id = Guid.NewGuid(),
                 Name = "New"

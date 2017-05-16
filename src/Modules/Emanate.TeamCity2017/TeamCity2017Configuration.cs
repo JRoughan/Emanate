@@ -35,7 +35,7 @@ namespace Emanate.TeamCity2017
         {
             Log.Information("=> TeamCity2017Configuration.SetMemento");
             if (memento.Key != key)
-                throw new ArgumentException("Cannot load non-TeamCity configuration");
+                throw new ArgumentException("Cannot load non-TeamCity 2017 configuration");
 
             // TODO: Error handling
             var element = memento.Element;

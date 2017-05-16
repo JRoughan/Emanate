@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emanate.Core;
-using Emanate.TeamCity;
 
 namespace Emanate.TeamCity2017.Admin.Inputs
 {
@@ -17,7 +16,7 @@ namespace Emanate.TeamCity2017.Admin.Inputs
 
         protected override async Task SetDeviceInternal(IDevice device)
         {
-            viewModel = new TeamCityInputSelectorViewModel((TeamCityDevice)device);
+            viewModel = new TeamCityInputSelectorViewModel((TeamCity2017Device)device);
             await viewModel.Initialize();
             DataContext = viewModel;
         }

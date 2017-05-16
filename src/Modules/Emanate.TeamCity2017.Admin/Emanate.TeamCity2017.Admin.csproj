@@ -85,9 +85,9 @@
       <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
-      <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
-      <Name>Emanate.TeamCity</Name>
+    <ProjectReference Include="..\Emanate.TeamCity2017\Emanate.TeamCity2017.csproj">
+      <Project>{862254b9-084b-46dc-84b3-d3f4c04222df}</Project>
+      <Name>Emanate.TeamCity2017</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

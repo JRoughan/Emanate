@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.TeamCity;
 using Serilog;
 
 namespace Emanate.TeamCity2017.Admin.Inputs
@@ -16,9 +15,9 @@ namespace Emanate.TeamCity2017.Admin.Inputs
     {
         private readonly ITeamCityConnection connection;
 
-        public TeamCityInputSelectorViewModel(TeamCityDevice device)
+        public TeamCityInputSelectorViewModel(TeamCity2017Device device)
         {
-            connection = new TeamCityConnection(device);
+            connection = new TeamCity2017Connection(device);
         }
 
         public override async Task<InitializationResult> Initialize()
