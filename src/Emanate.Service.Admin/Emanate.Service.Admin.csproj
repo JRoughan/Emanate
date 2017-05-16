@@ -179,31 +179,23 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Delcom.Admin\Emanate.Delcom.Admin.csproj">
-      <Project>{efb821b4-1997-457d-be99-3fd64c344f84}</Project>
-      <Name>Emanate.Delcom.Admin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Emanate.Delcom\Emanate.Delcom.csproj">
-      <Project>{d7c53489-a78d-408d-ad21-1d85566a760e}</Project>
-      <Name>Emanate.Delcom</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Emanate.Extensibility\Emanate.Extensibility.csproj">
       <Project>{6047c667-daf8-4666-a6ca-16a7e7482551}</Project>
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.TeamCity.Admin\Emanate.TeamCity.Admin.csproj">
+    <ProjectReference Include="..\Modules\Emanate.TeamCity.Admin\Emanate.TeamCity.Admin.csproj">
       <Project>{7d682147-dfa8-4de4-85bc-37f85896dbe9}</Project>
       <Name>Emanate.TeamCity.Admin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
+    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
       <Name>Emanate.TeamCity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Vso.Admin\Emanate.Vso.Admin.csproj">
+    <ProjectReference Include="..\Modules\Emanate.Vso.Admin\Emanate.Vso.Admin.csproj">
       <Project>{43c8d75b-e435-4bac-a2b0-2ebfdbf8d29e}</Project>
       <Name>Emanate.Vso.Admin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Vso\Emanate.Vso.csproj">
+    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj">
       <Project>{d02ceb1d-3b90-477d-a8e7-04a62786e704}</Project>
       <Name>Emanate.Vso</Name>
     </ProjectReference>

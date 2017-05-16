@@ -124,15 +124,11 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Delcom\Emanate.Delcom.csproj">
-      <Project>{d7c53489-a78d-408d-ad21-1d85566a760e}</Project>
-      <Name>Emanate.Delcom</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
+    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{ea0df8d8-da80-4089-bf02-598bbc60f70b}</Project>
       <Name>Emanate.TeamCity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Vso\Emanate.Vso.csproj">
+    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj">
       <Project>{d02ceb1d-3b90-477d-a8e7-04a62786e704}</Project>
       <Name>Emanate.Vso</Name>
     </ProjectReference>
