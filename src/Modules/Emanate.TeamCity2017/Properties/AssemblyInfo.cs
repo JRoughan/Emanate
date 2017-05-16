@@ -19,4 +19,4 @@ using Emanate.TeamCity2017;
 [assembly: InternalsVisibleTo("Emanate.UnitTests")]
 [assembly: InternalsVisibleTo("Emanate.IntegrationTests")]
 
-[assembly: EmanateModule(typeof(TeamCityModule))]
+[assembly: EmanateModule(typeof(TeamCity2017Module))]

@@ -6,11 +6,11 @@ using Emanate.Core.Input;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityMonitorFactory : IBuildMonitorFactory
+    public class TeamCity2017MonitorFactory : IBuildMonitorFactory
     {
-        private readonly Func<IInputDevice, TeamCityMonitor> monitorFactory;
+        private readonly Func<IInputDevice, TeamCity2017Monitor> monitorFactory;
 
-        public TeamCityMonitorFactory(Func<IInputDevice, TeamCityMonitor> monitorFactory)
+        public TeamCity2017MonitorFactory(Func<IInputDevice, TeamCity2017Monitor> monitorFactory)
         {
             this.monitorFactory = monitorFactory;
         }

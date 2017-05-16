@@ -12,7 +12,7 @@ using Serilog;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityMonitor : IBuildMonitor
+    public class TeamCity2017Monitor : IBuildMonitor
     {
         private const string teamCityDateFormat = "yyyyMMdd'T'HHmmsszzz";
         private readonly TimeSpan delayInterval;
@@ -30,7 +30,7 @@ namespace Emanate.TeamCity2017
         private bool isMonitoring;
         private readonly string name;
 
-        public TeamCityMonitor(IInputDevice device, TeamCityConnection.Factory connectionFactory)
+        public TeamCity2017Monitor(IInputDevice device, TeamCity2017Connection.Factory connectionFactory)
         {
             name = device.Name;
             teamCityConnection = connectionFactory(device);
@@ -41,26 +41,26 @@ namespace Emanate.TeamCity2017
 
         public void AddBuilds(IOutputDevice outputDevice, IEnumerable<string> inputs)
         {
-            Log.Information($"=> TeamCityMonitor[{name}].AddBuilds");
+            Log.Information($"=> TeamCity2017Monitor[{name}].AddBuilds");
             buildStates.Add(outputDevice, inputs.ToDictionary(b => b, b => BuildState.Unknown));
         }
 
         public Task BeginMonitoring()
         {
-            Log.Information($"=> TeamCityMonitor[{name}].BeginMonitoring");
+            Log.Information($"=> TeamCity2017Monitor[{name}].BeginMonitoring");
             isMonitoring = true;
             return Task.Run(() => { UpdateLoop(); });
         }
 
         public void EndMonitoring()
         {
-            Log.Information($"=> TeamCityMonitor[{name}].EndMonitoring");
+            Log.Information($"=> TeamCity2017Monitor[{name}].EndMonitoring");
             isMonitoring = false;
         }
 
         private async void UpdateLoop()
         {
-            Log.Information($"=> TeamCityMonitor[{name}].UpdateLoop");
+            Log.Information($"=> TeamCity2017Monitor[{name}].UpdateLoop");
             while (isMonitoring)
             {
                 try
@@ -87,7 +87,7 @@ namespace Emanate.TeamCity2017
 
         private async Task UpdateBuildStates()
         {
-            Log.Information($"=> TeamCityMonitor[{name}].UpdateBuildStates");
+            Log.Information($"=> TeamCity2017Monitor[{name}].UpdateBuildStates");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -120,7 +120,7 @@ namespace Emanate.TeamCity2017
 
         private void DisplayErrorOnAllOutputs()
         {
-            Log.Information($"=> TeamCityMonitor[{name}].DisplayErrorOnAllOutputs");
+            Log.Information($"=> TeamCity2017Monitor[{name}].DisplayErrorOnAllOutputs");
             foreach (var output in buildStates)
             {
                 var outputDevice = output.Key;
@@ -131,7 +131,7 @@ namespace Emanate.TeamCity2017
 
         private async Task<IEnumerable<BuildInfo>> GetNewBuildStates(IEnumerable<string> buildIds)
         {
-            Log.Information("=> TeamCityMonitor.GetNewBuildStates");
+            Log.Information("=> TeamCity2017Monitor.GetNewBuildStates");
             var buildInfos = new List<BuildInfo>();
             foreach (var buildId in buildIds)
             {

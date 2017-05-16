@@ -8,7 +8,7 @@ using Serilog;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityModule : IEmanateModule, IModule
+    public class TeamCity2017Module : IEmanateModule, IModule
     {
         public string Key { get; } = "teamcity2017";
         public string Name { get; } = "TeamCity (2017)";
@@ -16,17 +16,17 @@ namespace Emanate.TeamCity2017
 
         public void LoadServiceComponents(ContainerBuilder builder)
         {
-            Log.Information("=> TeamCityModule.LoadServiceComponents");
+            Log.Information("=> TeamCity2017Module.LoadServiceComponents");
             RegisterCommon(builder);
-            builder.RegisterType<TeamCityMonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
-            builder.RegisterType<TeamCityMonitor>();
+            builder.RegisterType<TeamCity2017MonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
+            builder.RegisterType<TeamCity2017Monitor>();
         }
 
         private void RegisterCommon(ContainerBuilder builder)
         {
-            Log.Information("=> TeamCityModule.RegisterCommon");
-            builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
+            Log.Information("=> TeamCity2017Module.RegisterCommon");
+            builder.RegisterType<TeamCity2017Connection>().As<ITeamCityConnection>();
+            builder.RegisterType<TeamCity2017Configuration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
         }
     }
 }

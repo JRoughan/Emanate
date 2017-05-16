@@ -6,7 +6,7 @@ using Emanate.Core;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityDevice : IInputDevice
+    public class TeamCity2017Device : IInputDevice
     {
         public string Key { get; } = "teamcity2017";
 

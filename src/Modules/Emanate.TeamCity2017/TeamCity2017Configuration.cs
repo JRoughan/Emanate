@@ -9,7 +9,7 @@ using Serilog;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityConfiguration : IInputConfiguration
+    public class TeamCity2017Configuration : IInputConfiguration
     {
         private const string key = "teamcity2017";
 
@@ -17,7 +17,7 @@ namespace Emanate.TeamCity2017
 
         public Memento CreateMemento()
         {
-            Log.Information("=> TeamCityConfiguration.CreateMemento");
+            Log.Information("=> TeamCity2017Configuration.CreateMemento");
             var moduleElement = new XElement("module");
             moduleElement.Add(new XAttribute("key", key));
             moduleElement.Add(new XAttribute("type", "input"));
@@ -33,7 +33,7 @@ namespace Emanate.TeamCity2017
 
         public void SetMemento(Memento memento)
         {
-            Log.Information("=> TeamCityConfiguration.SetMemento");
+            Log.Information("=> TeamCity2017Configuration.SetMemento");
             if (memento.Key != key)
                 throw new ArgumentException("Cannot load non-TeamCity configuration");
 
@@ -42,21 +42,21 @@ namespace Emanate.TeamCity2017
             var devicesElement = element.Element("devices");
             foreach (var deviceElement in devicesElement.Elements("device"))
             {
-                var device = new TeamCityDevice();
+                var device = new TeamCity2017Device();
                 device.SetMemento(deviceElement);
                 devices.Add(device);
             }
         }
 
-        public void AddDevice(TeamCityDevice device)
+        public void AddDevice(TeamCity2017Device device)
         {
             devices.Add(device);
         }
 
-        private readonly List<TeamCityDevice> devices = new List<TeamCityDevice>();
+        private readonly List<TeamCity2017Device> devices = new List<TeamCity2017Device>();
         public IEnumerable<IInputDevice> Devices => devices;
 
-        public void RemoveDevice(TeamCityDevice device)
+        public void RemoveDevice(TeamCity2017Device device)
         {
             devices.Remove(device);
         }

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-                             mc:Ignorable="d" 
+             xmlns:inputs="clr-namespace:Emanate.TeamCity2017.Admin.Inputs"
+             mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance inputs:TeamCityInputSelectorViewModel}">
     <extensibility:InputSelector.Resources>
 

@@ -8,7 +8,7 @@ using Serilog;
 
 namespace Emanate.TeamCity2017
 {
-    public class TeamCityConnection : ITeamCityConnection
+    public class TeamCity2017Connection : ITeamCityConnection
     {
         private readonly Uri baseUri;
         private readonly NetworkCredential networkCredential;
@@ -16,7 +16,7 @@ namespace Emanate.TeamCity2017
 
         public delegate ITeamCityConnection Factory(IInputDevice device);
 
-        public TeamCityConnection(TeamCityDevice device)
+        public TeamCity2017Connection(TeamCity2017Device device)
         {
             var rawUri = device.Uri ?? "http://localhost";
             baseUri = new Uri(rawUri);
@@ -32,21 +32,21 @@ namespace Emanate.TeamCity2017
 
         public async Task<string> GetProjects()
         {
-            Log.Information("=> TeamCityConnection.GetProjects");
+            Log.Information("=> TeamCity2017Connection.GetProjects");
             var uri = CreateUri("/httpAuth/app/rest/projects");
             return await Request(uri);
         }
 
         public async Task<string> GetProject(string projectId)
         {
-            Log.Information("=> TeamCityConnection.GetProject({0})", projectId);
+            Log.Information("=> TeamCity2017Connection.GetProject({0})", projectId);
             var buildUri = CreateUri($"/httpAuth/app/rest/projects/id:{projectId}");
             return await Request(buildUri);
         }
 
         public async Task<string> GetBuild(string buildId)
         {
-            Log.Information("=> TeamCityConnection.GetBuild({0})", buildId);
+            Log.Information("=> TeamCity2017Connection.GetBuild({0})", buildId);
             var resultUri = CreateUri($"httpAuth/app/rest/builds?locator=running:all,buildType:(id:{buildId}),count:1");
             return await Request(resultUri);
         }
@@ -60,7 +60,7 @@ namespace Emanate.TeamCity2017
         {
             try
             {
-                Log.Information("=> TeamCityConnection.Request({0})", uri);
+                Log.Information("=> TeamCity2017Connection.Request({0})", uri);
                 var webRequest = CreateWebRequest(uri);
                 webRequest.Accept = "application/xml";
 
