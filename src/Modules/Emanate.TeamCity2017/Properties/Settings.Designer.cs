@@ -8,7 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Emanate.TeamCity.Properties {
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Emanate.TeamCity2017.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

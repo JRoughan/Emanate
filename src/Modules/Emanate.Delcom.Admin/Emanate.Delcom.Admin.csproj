@@ -81,6 +81,10 @@
       <Project>{6047C667-DAF8-4666-A6CA-16A7E7482551}</Project>
       <Name>Emanate.Extensibility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Emanate.Delcom\Emanate.Delcom.csproj">
+      <Project>{d7c53489-a78d-408d-ad21-1d85566a760e}</Project>
+      <Name>Emanate.Delcom</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Profiles\AddProfileView.xaml">

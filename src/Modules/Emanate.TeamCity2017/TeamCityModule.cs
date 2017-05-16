@@ -1,10 +1,12 @@
-﻿using Autofac;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Serilog;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public class TeamCityModule : IEmanateModule, IModule
     {

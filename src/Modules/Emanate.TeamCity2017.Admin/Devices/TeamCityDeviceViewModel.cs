@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Emanate.Extensibility;
+using Emanate.TeamCity;
 using Serilog;
 
-namespace Emanate.TeamCity.Admin.Devices
+namespace Emanate.TeamCity2017.Admin.Devices
 {
     public class TeamCityDeviceViewModel : ViewModel
     {

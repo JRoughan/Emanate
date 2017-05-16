@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Emanate.TeamCity.Properties {
-    using System;
-    
-    
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Emanate.TeamCity2017.Properties {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

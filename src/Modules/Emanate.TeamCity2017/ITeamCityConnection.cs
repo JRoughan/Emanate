@@ -1,6 +1,7 @@
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public interface ITeamCityConnection
     {

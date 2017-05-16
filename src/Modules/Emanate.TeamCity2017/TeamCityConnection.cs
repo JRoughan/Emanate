@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Emanate.Core;
 using Serilog;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public class TeamCityConnection : ITeamCityConnection
     {

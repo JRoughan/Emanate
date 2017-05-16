@@ -1,11 +1,10 @@
-﻿<extensibility:InputSelector x:Class="Emanate.TeamCity.Admin.Inputs.TeamCityInputSelectorView"
+﻿<extensibility:InputSelector x:Class="Emanate.TeamCity2017.Admin.Inputs.TeamCityInputSelectorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:extensibility="clr-namespace:Emanate.Extensibility;assembly=Emanate.Extensibility"
-             xmlns:inputs="clr-namespace:Emanate.TeamCity.Admin.Inputs"
-             mc:Ignorable="d" 
+                             mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance inputs:TeamCityInputSelectorViewModel}">
     <extensibility:InputSelector.Resources>
 

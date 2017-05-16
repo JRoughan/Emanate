@@ -1,13 +1,16 @@
-﻿using Autofac;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
-using Emanate.TeamCity.Admin.Devices;
-using Emanate.TeamCity.Admin.Inputs;
-using Emanate.TeamCity.Admin.Profiles;
+using Emanate.TeamCity;
+using Emanate.TeamCity2017.Admin.Devices;
+using Emanate.TeamCity2017.Admin.Inputs;
+using Emanate.TeamCity2017.Admin.Profiles;
 using Serilog;
 
-namespace Emanate.TeamCity.Admin
+namespace Emanate.TeamCity2017.Admin
 {
     public class TeamCityAdminModule : IEmanateAdminModule, IModule
     {

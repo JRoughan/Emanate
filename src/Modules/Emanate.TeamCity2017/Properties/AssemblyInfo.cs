@@ -2,13 +2,13 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Emanate.Core;
-using Emanate.TeamCity;
+using Emanate.TeamCity2017;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Emanate.TeamCity")]
-[assembly: AssemblyDescription("TeamCity module for Emanate build monitor")]
+[assembly: AssemblyTitle("Emanate.TeamCity2017")]
+[assembly: AssemblyDescription("TeamCity module for Emanate build monitor. 2017 Edition")]
 [assembly: AssemblyConfiguration("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -10,7 +10,7 @@ using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Serilog;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public class TeamCityMonitor : IBuildMonitor
     {

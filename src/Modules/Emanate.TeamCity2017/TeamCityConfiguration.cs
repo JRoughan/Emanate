@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Serilog;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public class TeamCityConfiguration : IInputConfiguration
     {

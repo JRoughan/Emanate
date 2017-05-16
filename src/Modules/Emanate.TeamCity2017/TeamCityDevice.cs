@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core;
 
-namespace Emanate.TeamCity
+namespace Emanate.TeamCity2017
 {
     public class TeamCityDevice : IInputDevice
     {

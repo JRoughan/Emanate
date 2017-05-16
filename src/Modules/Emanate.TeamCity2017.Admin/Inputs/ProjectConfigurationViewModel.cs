@@ -1,6 +1,8 @@
+using System.Linq;
+using System.Threading.Tasks;
 using Emanate.Extensibility;
 
-namespace Emanate.TeamCity.Admin.Inputs
+namespace Emanate.TeamCity2017.Admin.Inputs
 {
     public class ProjectConfigurationViewModel : ViewModel
     {

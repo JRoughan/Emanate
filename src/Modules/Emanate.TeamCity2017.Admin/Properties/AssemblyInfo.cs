@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using Emanate.Core;
-using Emanate.TeamCity.Admin;
+using Emanate.TeamCity2017.Admin;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility.Composition;
 
-namespace Emanate.TeamCity.Admin.Profiles
+namespace Emanate.TeamCity2017.Admin.Profiles
 {
     public partial class TeamCityProfileManagerView
     {

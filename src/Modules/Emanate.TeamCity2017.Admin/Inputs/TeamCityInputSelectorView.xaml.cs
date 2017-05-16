@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emanate.Core;
+using Emanate.TeamCity;
 
-namespace Emanate.TeamCity.Admin.Inputs
+namespace Emanate.TeamCity2017.Admin.Inputs
 {
     public partial class TeamCityInputSelectorView
     {

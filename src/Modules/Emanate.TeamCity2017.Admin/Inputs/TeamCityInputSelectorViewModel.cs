@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility;
+using Emanate.TeamCity;
 using Serilog;
 
-namespace Emanate.TeamCity.Admin.Inputs
+namespace Emanate.TeamCity2017.Admin.Inputs
 {
     public class TeamCityInputSelectorViewModel : ViewModel
     {

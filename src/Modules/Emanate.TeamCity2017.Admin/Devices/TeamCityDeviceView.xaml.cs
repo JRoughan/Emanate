@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Emanate.TeamCity.Admin.Devices
+namespace Emanate.TeamCity2017.Admin.Devices
 {
     public partial class TeamCityDeviceView
     {
