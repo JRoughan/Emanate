@@ -17,9 +17,9 @@
                     </Button>
                 </StackPanel>
             </GroupBox.Header>
-            <ListView x:Name="ProfileSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
+            <ListView x:Name="DeviceSelector" ItemsSource="{Binding Devices}" MinWidth="120" Margin="10" DisplayMemberPath="Name" />
         </GroupBox>
-        <devices:TeamCityDeviceView DataContext="{Binding ElementName=ProfileSelector, Path=SelectedItem}" />
+        <devices:TeamCityDeviceView DataContext="{Binding ElementName=DeviceSelector, Path=SelectedItem}" />
     </DockPanel>
 </extensibility:DeviceManager>
 

@@ -75,7 +75,7 @@ namespace Emanate.TeamCity2017.Admin.Devices
 
         private void TestConnection()
         {
-            Log.Information("=> TeamCityConfigurationViewModel.TestConnection");
+            Log.Information("=> TeamCityDeviceViewModel.TestConnection");
             isTesting = true;
             IsEditable = false;
             IsTestSuccessful = null;

@@ -39,7 +39,8 @@ namespace Emanate.TeamCity2017.Admin.Devices
                 Name = "New"
             };
             teamCityConfiguration.AddDevice(deviceInfo);
-            Devices.Add(new TeamCityDeviceViewModel(deviceInfo));
+            var teamCityDeviceViewModel = new TeamCityDeviceViewModel(deviceInfo);
+            Devices.Add(teamCityDeviceViewModel);
         }
 
         public ICommand RemoveDeviceCommand { get; private set; }
