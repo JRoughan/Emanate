@@ -6,7 +6,7 @@ namespace Emanate.TeamCity
 {
     public class TeamCityDevice : IInputDevice
     {
-        public string Key { get; } = "teamcity";
+        public string Key { get; } = "teamcity2017";
 
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -77,7 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
+    <ProjectReference Include="..\..\Emanate.Core\Emanate.Core.csproj">
       <Project>{b5e7e5aa-896a-4b86-b202-23062972f077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>

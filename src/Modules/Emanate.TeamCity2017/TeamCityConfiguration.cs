@@ -9,7 +9,7 @@ namespace Emanate.TeamCity
 {
     public class TeamCityConfiguration : IInputConfiguration
     {
-        private const string key = "teamcity";
+        private const string key = "teamcity2017";
 
         string IInputConfiguration.Key { get { return key; } }
 

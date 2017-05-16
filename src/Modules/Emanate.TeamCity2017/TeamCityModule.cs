@@ -8,8 +8,8 @@ namespace Emanate.TeamCity
 {
     public class TeamCityModule : IEmanateModule, IModule
     {
-        public string Key { get; } = "teamcity";
-        public string Name { get; } = "TeamCity";
+        public string Key { get; } = "teamcity2017";
+        public string Name { get; } = "TeamCity (2017)";
         public Direction Direction { get; } = Direction.Input;
 
         public void LoadServiceComponents(ContainerBuilder builder)
