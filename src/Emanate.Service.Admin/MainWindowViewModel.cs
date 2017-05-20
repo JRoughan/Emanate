@@ -113,7 +113,7 @@ namespace Emanate.Service.Admin
         {
             var outputDeviceInfo = new DeviceViewModel(outputDevice, moduleConfiguration, globalConfig.InputDevices, mediator);
 
-            var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == outputDevice.Id);
+            var mapping = globalConfig.Mappings.SingleOrDefault(m => m.OutputDeviceId == outputDevice.Id);
             if (mapping != null)
             {
                 foreach (var inputGroup in mapping.InputGroups)
@@ -149,7 +149,7 @@ namespace Emanate.Service.Admin
             var inputSelector = inputSelectors[newInputDevice.Key];
             await inputSelector.SetDevice(newInputDevice);
             var mapping = globalConfig.Mappings.Single(m => m.OutputDeviceId == device.OutputDevice.Id);
-            var inputGroup = mapping.InputGroups.Single(ig => ig.InputDeviceId == inputSelector.Device.Id);
+            var inputGroup = mapping.GetOrAddInputGroup(inputSelector.Device.Id);
             inputSelector.SelectInputs(inputGroup.Inputs);
             device.InputSelectors.Add(inputSelector);
             device.AvailableInputDevices.Remove(newInputDevice);
