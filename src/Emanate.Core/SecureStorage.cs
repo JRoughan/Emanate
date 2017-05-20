@@ -35,7 +35,8 @@ namespace Emanate.Core
                 using (var reader = new StreamReader(isoStream))
                 {
                     var encodedString = reader.ReadToEnd();
-
+                    if (string.IsNullOrEmpty(encodedString)) // IsNullOrWhitespace? If someone wants their password to be entirely whitespace then let them.
+                        return encodedString; 
                     var encodedBytes = Convert.FromBase64String(encodedString);
                     byte[] unencodedBytes = ProtectedData.Unprotect(encodedBytes, null, DataProtectionScope.LocalMachine);
                     return Encoding.UTF8.GetString(unencodedBytes);
