@@ -32,3 +32,4 @@ src/Emanate.IntegrationTests/Security.config
 Emanate.Service.exe.config
 [Pp]ackages*/
 src/.vs/config/applicationhost.config
+.vs*/
