@@ -27,6 +27,7 @@ class Admin extends Component {
 function renderDisplayDevices(props) {
     return (
         <div>
+            <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
             <ul>
                 {props.displayDevices.map(device =>
                     <li key={device.id}>{device.name}
@@ -34,7 +35,6 @@ function renderDisplayDevices(props) {
                     </li>
                 )}
             </ul>
-            <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
         </div>
     );
 }

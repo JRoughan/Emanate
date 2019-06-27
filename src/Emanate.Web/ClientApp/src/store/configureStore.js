@@ -1,14 +1,12 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import * as Counter from './Counter';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Admin from './Admin';
 import * as SignalR from '@aspnet/signalr';
 
 export default function configureStore(history, initialState) {
     const reducers = {
-        counter: Counter.reducer,
         weatherForecasts: WeatherForecasts.reducer,
         admin: Admin.reducer
     };
@@ -50,12 +48,6 @@ const connection = new SignalR.HubConnectionBuilder()
 export function signalRInvokeMiddleware(store: any) {
     return (next: any) => async (action: any) => {
         switch (action.type) {
-            case "SIGNALR_INCREMENT_COUNT":
-                connection.invoke('IncrementCounter');
-                break;
-            case "SIGNALR_DECREMENT_COUNT":
-                connection.invoke('DecrementCounter');
-                break;
             case "ADD_DISPLAY_DEVICE":
                 connection.invoke('AddDisplayDevice');
                 break;
@@ -69,14 +61,6 @@ export function signalRInvokeMiddleware(store: any) {
 }
 
 export function signalRRegisterCommands(store: any, callback: Function) {
-
-    connection.on('IncrementCounter', () => {
-        store.dispatch({ type: 'INCREMENT_COUNT' });
-    });
-
-    connection.on('DecrementCounter', () => {
-        store.dispatch({ type: 'DECREMENT_COUNT' });
-    });
 
     connection.on('DisplayDeviceAdded', device => {
         store.dispatch({ type: 'DISPLAY_DEVICE_ADDED', newDisplayDevice: device });
