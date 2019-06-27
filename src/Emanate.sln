@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Core", "Emanate.Core\Emanate.Core.csproj", "{B5E7E5AA-896A-4B86-B202-23062972F077}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Vso.Admin", "Modules\Emanate.Vso.Admin\Emanate.Vso.Admin.csproj", "{43C8D75B-E435-4BAC-A2B0-2EBFDBF8D29E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Extensibility", "Emanate.Extensibility\Emanate.Extensibility.csproj", "{6047C667-DAF8-4666-A6CA-16A7E7482551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Web", "Emanate.Web\Emanate.Web.csproj", "{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,14 @@ Global
 		{6047C667-DAF8-4666-A6CA-16A7E7482551}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6047C667-DAF8-4666-A6CA-16A7E7482551}.Release|x86.ActiveCfg = Release|Any CPU
 		{6047C667-DAF8-4666-A6CA-16A7E7482551}.Release|x86.Build.0 = Release|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Debug|x86.Build.0 = Debug|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Release|x86.ActiveCfg = Release|Any CPU
+		{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,5 +134,8 @@ Global
 		{7D682147-DFA8-4DE4-85BC-37F85896DBE9} = {31A4DDEC-31AB-4FDC-A6DC-2F7F95DE03B4}
 		{D02CEB1D-3B90-477D-A8E7-04A62786E704} = {31A4DDEC-31AB-4FDC-A6DC-2F7F95DE03B4}
 		{43C8D75B-E435-4BAC-A2B0-2EBFDBF8D29E} = {31A4DDEC-31AB-4FDC-A6DC-2F7F95DE03B4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF77E2A5-8510-4217-9DD2-2EB124E5341D}
 	EndGlobalSection
 EndGlobal
