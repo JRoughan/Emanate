@@ -56,6 +56,12 @@ export function signalRInvokeMiddleware(store: any) {
             case "SIGNALR_DECREMENT_COUNT":
                 connection.invoke('DecrementCounter');
                 break;
+            case "ADD_DISPLAY_DEVICE":
+                connection.invoke('AddDisplayDevice');
+                break;
+            case "REMOVE_DISPLAY_DEVICE":
+                connection.invoke('RemoveDisplayDevice');
+                break;
         }
 
         return next(action);
@@ -64,15 +70,21 @@ export function signalRInvokeMiddleware(store: any) {
 
 export function signalRRegisterCommands(store: any, callback: Function) {
 
-    connection.on('IncrementCounter', data => {
-        store.dispatch({ type: 'INCREMENT_COUNT' })
-        console.log("Count has been incremented");
-    })
+    connection.on('IncrementCounter', () => {
+        store.dispatch({ type: 'INCREMENT_COUNT' });
+    });
 
-    connection.on('DecrementCounter', data => {
-        store.dispatch({ type: 'DECREMENT_COUNT' })
-        console.log("Count has been decremented");
-    })
+    connection.on('DecrementCounter', () => {
+        store.dispatch({ type: 'DECREMENT_COUNT' });
+    });
+
+    connection.on('DisplayDeviceAdded', device => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_ADDED', newDisplayDevice: device });
+    });
+
+    connection.on('DisplayDeviceRemoved', id => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_REMOVED', oldDisplayDeviceId: id });
+    });
 
     connection.start().then(function () {
         console.log("connected");

@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../store/Admin';
 
 class Admin extends Component {
+
     componentDidMount() {
-        // This method is called when the component is first added to the document
         this.ensureDataFetched();
     }
 
@@ -26,11 +26,16 @@ class Admin extends Component {
 
 function renderDisplayDevices(props) {
     return (
-        <ul>
-            {props.displayDevices.map(device =>
-                <li key={device.id}>{device.name}</li>
-            )}
-        </ul>
+        <div>
+            <ul>
+                {props.displayDevices.map(device =>
+                    <li key={device.id}>{device.name}
+                        <button className="btn btn-primary" onClick={() => props.removeDisplayDevice(device.id)}>X</button>
+                    </li>
+                )}
+            </ul>
+            <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
+        </div>
     );
 }
 
