@@ -1,68 +1,110 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Emanate.Web.Data;
+using Emanate.Web.Model;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Emanate.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class DisplayDevicesController : Controller
+    [ApiController]
+    public class DisplayDevicesController : ControllerBase
     {
-        private readonly IHubContext<CounterHub> context;
+        private readonly AdminDbContext db;
+        private readonly IHubContext<CounterHub> hub;
 
-        private static readonly List<DisplayDevice> devices = new List<DisplayDevice>
+        public DisplayDevicesController(AdminDbContext db, IHubContext<CounterHub> hub)
         {
-            new DisplayDevice { Id = Guid.NewGuid(), Name = "Device 1" }, 
-            new DisplayDevice { Id = Guid.NewGuid(), Name = "Device 2" }, 
-            new DisplayDevice { Id = Guid.NewGuid(), Name = "Device 3" }, 
-            new DisplayDevice { Id = Guid.NewGuid(), Name = "Device 4" }, 
-            new DisplayDevice { Id = Guid.NewGuid(), Name = "Device 5" },
-        };
-
-        public class DisplayDevice
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
+            this.db = db;
+            this.hub = hub;
         }
 
-        public DisplayDevicesController(IHubContext<CounterHub> context)
-        {
-            this.context = context;
-        }
-
+        // GET: api/DisplayDevices
         [HttpGet]
-        public IEnumerable<DisplayDevice> Get()
+        public async Task<ActionResult<IEnumerable<DisplayDevice>>> GetDisplayDevices()
         {
-            return devices;
+            return await db.DisplayDevices.ToListAsync();
         }
 
-        [HttpGet("{id}", Name = "Get")]
-        public DisplayDevice Get(Guid id)
+        // GET: api/DisplayDevices/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DisplayDevice>> GetDisplayDevice(Guid id)
         {
-            return devices.Single(d => d.Id == id);
+            var displayDevice = await db.DisplayDevices.FindAsync(id);
+
+            if (displayDevice == null)
+            {
+                return NotFound();
+            }
+
+            return displayDevice;
         }
 
-        [HttpPost]
-        public async Task Post([FromBody] DisplayDevice displayDevice)
-        {
-            displayDevice.Id = Guid.NewGuid();
-            devices.Add(displayDevice);
-            await context.Clients.All.SendAsync("DisplayDeviceAdded", displayDevice);
-        }
-
+        // PUT: api/DisplayDevices/5
         [HttpPut("{id}")]
-        public void Put(Guid id, [FromBody] DisplayDevice displayDevice)
+        public async Task<IActionResult> PutDisplayDevice(Guid id, DisplayDevice displayDevice)
         {
-            devices[devices.FindIndex(d => d.Id == id)] = displayDevice;
+            if (id != displayDevice.Id)
+            {
+                return BadRequest();
+            }
+
+            db.Entry(displayDevice).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DisplayDeviceExists(id))
+                {
+                    return NotFound();
+                }
+
+                throw;
+            }
+
+            return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task Delete(Guid id)
+        // POST: api/DisplayDevices
+        [HttpPost]
+        public async Task<ActionResult<DisplayDevice>> PostDisplayDevice(DisplayDevice displayDevice)
         {
-            devices.RemoveAll(d => d.Id == id);
-            await context.Clients.All.SendAsync("DisplayDeviceRemoved", id);
+            db.DisplayDevices.Add(displayDevice);
+            await db.SaveChangesAsync();
+
+            await hub.Clients.All.SendAsync("DisplayDeviceAdded", displayDevice);
+
+            return CreatedAtAction("GetDisplayDevice", new { id = displayDevice.Id }, displayDevice);
+        }
+
+        // DELETE: api/DisplayDevices/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<DisplayDevice>> DeleteDisplayDevice(Guid id)
+        {
+            var displayDevice = await db.DisplayDevices.FindAsync(id);
+            if (displayDevice == null)
+            {
+                return NotFound();
+            }
+
+            db.DisplayDevices.Remove(displayDevice);
+            await db.SaveChangesAsync();
+
+            await hub.Clients.All.SendAsync("DisplayDeviceRemoved", id);
+
+            return displayDevice;
+        }
+
+        private bool DisplayDeviceExists(Guid id)
+        {
+            return db.DisplayDevices.Any(e => e.Id == id);
         }
     }
 }
