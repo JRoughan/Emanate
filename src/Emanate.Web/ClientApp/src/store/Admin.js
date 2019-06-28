@@ -5,6 +5,7 @@ const requestDisplayDevicesType = 'REQUEST_DISPLAY_DEVICES';
 const receiveDisplayDevicesType = 'RECEIVE_DISPLAY_DEVICES';
 const displayDeviceAddedType = 'DISPLAY_DEVICE_ADDED';
 const displayDeviceRemovedType = 'DISPLAY_DEVICE_REMOVED';
+const displayDeviceUpdatedType = 'DISPLAY_DEVICE_UPDATED';
 const initialState = { displayDevices: [], isLoadingDisplayDevices: false };
 
 export const actionCreators = {
@@ -71,11 +72,33 @@ export const reducer = (state, action) => {
     }
 
     if (action.type === displayDeviceAddedType) {
-        return { ...state, displayDevices: [...state.displayDevices, action.newDisplayDevice] };
+        return {
+            ...state,
+            displayDevices: [...state.displayDevices, action.newDisplayDevice]
+        };
     }
 
     if (action.type === displayDeviceRemovedType) {
-        return { ...state, displayDevices: [...state.displayDevices.filter(d => d.id !== action.oldDisplayDeviceId)] };
+        return {
+            ...state,
+            displayDevices: [...state.displayDevices.filter(d => d.id !== action.oldDisplayDeviceId)]
+        };
+    }
+
+    if (action.type === displayDeviceUpdatedType) {
+        return {
+            ...state,
+            displayDevices: state.displayDevices.map((device) => {
+                if (device.id === action.updatedDevice.id) {
+                    return {
+                        ...device,
+                        ...action.updatedDevice
+                    }
+                }
+
+                return device;
+            })
+        };
     }
 
     return state;
