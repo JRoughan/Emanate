@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/Admin';
+import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 
 class Admin extends Component {
 
     componentDidMount() {
-        this.ensureDataFetched();
-    }
-
-    ensureDataFetched() {
         this.props.requestDisplayDevices();
     }
 
@@ -30,8 +27,9 @@ function renderDisplayDevices(props) {
             <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
             <ul>
                 {props.displayDevices.map(device =>
-                    <li key={device.id}>{device.name}
-                        <button className="btn btn-primary" onClick={() => props.removeDisplayDevice(device.id)}>X</button>
+                    <li key={device.id}>
+                        <h3>{device.name}<button className="btn btn-danger" onClick={() => props.removeDisplayDevice(device.id)}>X</button></h3>
+                        <DisplayDeviceProfilePicker />
                     </li>
                 )}
             </ul>

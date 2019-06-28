@@ -3,18 +3,33 @@ using System;
 using Emanate.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Emanate.Web.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    partial class AdminDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190628035435_AddDeviceProfiles")]
+    partial class AddDeviceProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+
+            modelBuilder.Entity("Emanate.Web.Model.DeviceProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeviceProfiles");
+                });
 
             modelBuilder.Entity("Emanate.Web.Model.DisplayDevice", b =>
                 {
@@ -27,19 +42,6 @@ namespace Emanate.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DisplayDevices");
-                });
-
-            modelBuilder.Entity("Emanate.Web.Model.DisplayDeviceProfile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DisplayDeviceProfiles");
                 });
 #pragma warning restore 612, 618
         }

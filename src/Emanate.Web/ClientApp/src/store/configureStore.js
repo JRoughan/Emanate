@@ -3,12 +3,14 @@ import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Admin from './Admin';
+import * as DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 import * as SignalR from '@aspnet/signalr';
 
 export default function configureStore(history, initialState) {
     const reducers = {
         weatherForecasts: WeatherForecasts.reducer,
-        admin: Admin.reducer
+        admin: Admin.reducer,
+        displayDeviceProfilePicker: DisplayDeviceProfilePicker.reducer
     };
 
     const middleware = [
@@ -68,6 +70,14 @@ export function signalRRegisterCommands(store: any, callback: Function) {
 
     connection.on('DisplayDeviceRemoved', id => {
         store.dispatch({ type: 'DISPLAY_DEVICE_REMOVED', oldDisplayDeviceId: id });
+    });
+
+    connection.on('DisplayDeviceProfileAdded', profile => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_PROFILE_ADDED', newDisplayDeviceProfile: profile });
+    });
+
+    connection.on('DisplayDeviceProfileRemoved', id => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_PROFILE_REMOVED', oldDisplayDeviceProfileId: id });
     });
 
     connection.start().then(function () {

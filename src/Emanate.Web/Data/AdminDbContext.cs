@@ -9,5 +9,7 @@ namespace Emanate.Web.Data
             : base(options) { }
 
         public DbSet<DisplayDevice> DisplayDevices { get; set; }
+
+        public DbSet<DisplayDeviceProfile> DisplayDeviceProfiles { get; set; }
     }
 }
