@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/Admin';
 import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
+import deviceIcon from '../images/deviceIcon.png'
 
 class Admin extends Component {
 
@@ -25,14 +26,21 @@ function renderDisplayDevices(props) {
     return (
         <div>
             <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
-            <ul>
+            <div className="card-group">
                 {props.displayDevices.map(device =>
-                    <li key={device.id}>
-                        <h3>{device.name}<button className="btn btn-danger" onClick={() => props.removeDisplayDevice(device.id)}>X</button></h3>
-                        <DisplayDeviceProfilePicker />
-                    </li>
+                    <div className="card" key={device.id}>
+                        <img className="card-img-top" src={deviceIcon} alt="Device type" />
+                        <div className="card-body">
+                            <h3 className="card-title">{device.name}<button className="btn btn-danger" onClick={() => props.removeDisplayDevice(device.id)}>X</button></h3>
+                            Profile
+                            <DisplayDeviceProfilePicker />
+                        </div>
+                        <div className="card-footer">
+                            <small className="text-muted">Active</small>
+                        </div>
+                    </div>
                 )}
-            </ul>
+            </div>
         </div>
     );
 }
