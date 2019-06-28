@@ -69,6 +69,8 @@ namespace Emanate.Web.Controllers
                 throw;
             }
 
+            await hub.Clients.All.SendAsync("DisplayDeviceProfileUpdated", displayDeviceProfile);
+
             return NoContent();
         }
 

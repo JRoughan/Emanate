@@ -2,6 +2,8 @@ const requestDisplayDeviceProfilesType = 'REQUEST_DISPLAY_DEVICE_PROFILES';
 const receiveDisplayDeviceProfilesType = 'RECEIVE_DISPLAY_DEVICE_PROFILES';
 const displayDeviceProfileAddedType = 'DISPLAY_DEVICE_PROFILE_ADDED';
 const displayDeviceProfileRemovedType = 'DISPLAY_DEVICE_PROFILE_REMOVED';
+const displayDeviceProfileUpdatedType = 'DISPLAY_DEVICE_PROFILE_UPDATED';
+
 const initialState = { displayDeviceProfiles: [], isLoadingDisplayDeviceProfiles: false };
 
 export const actionCreators = {
@@ -45,6 +47,22 @@ export const reducer = (state, action) => {
         return {
             ...state,
             displayDeviceProfiles: [...state.displayDeviceProfiles.filter(p => p.id !== action.oldDisplayDeviceProfileId)]
+        };
+    }
+
+    if (action.type === displayDeviceProfileUpdatedType) {
+        return {
+            ...state,
+            displayDeviceProfiles: state.displayDeviceProfiles.map((profile) => {
+                if (profile.id === action.updatedProfile.id) {
+                    return {
+                        ...profile,
+                        ...action.updatedProfile
+                    }
+                }
+
+                return profile;
+            })
         };
     }
 

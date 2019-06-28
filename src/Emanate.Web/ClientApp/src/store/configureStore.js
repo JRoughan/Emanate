@@ -84,6 +84,10 @@ export function signalRRegisterCommands(store: any, callback: Function) {
         store.dispatch({ type: 'DISPLAY_DEVICE_PROFILE_REMOVED', oldDisplayDeviceProfileId: id });
     });
 
+    connection.on('DisplayDeviceProfileUpdated', profile => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_PROFILE_UPDATED', updatedDisplayDeviceProfile: profile });
+    });
+
     connection.start().then(function () {
         console.log("connected");
     });

@@ -9,6 +9,7 @@ const displayDeviceUpdatedType = 'DISPLAY_DEVICE_UPDATED';
 const initialState = { displayDevices: [], isLoadingDisplayDevices: false };
 
 export const actionCreators = {
+
     requestDisplayDevices: () => async (dispatch) => {
         dispatch({ type: requestDisplayDevicesType });
 
