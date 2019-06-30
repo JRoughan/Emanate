@@ -17,20 +17,28 @@ class DisplayDeviceGroup extends Component {
             <div>
                 <h2>Display Devices</h2>
                 <NewDisplayDeviceDialog />
-                {renderDisplayDevices(this.props)}
+                { renderDisplayDevices(this.props) }
             </div>
         );
     }
 }
 
 function renderDisplayDevices(props) {
-    return (
-        <div className="card-group">
-            {props.displayDevices.map(device =>
-                <DisplayDevice key={device.id} device={device} displayDeviceProfiles={props.displayDeviceProfiles} />
-            )}
-        </div>
-    );
+    if (props.isLoadingDisplayDevices) {
+        return (
+            <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+        );
+    } else {
+        return (
+            <div className="card-group">
+                {props.displayDevices.map(device =>
+                    <DisplayDevice key={device.id} device={device} displayDeviceProfiles={props.displayDeviceProfiles} />
+                )}
+            </div>
+        );
+    };
 }
 
 export default connect(
