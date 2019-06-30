@@ -9,9 +9,13 @@ class DisplayDeviceProfilePicker extends Component {
         this.props.requestDisplayDeviceProfiles();
     }
 
+    change = (event) => {
+        this.props.setDisplayDeviceProfile(this.props.device, event.target.value);
+    }
+
     render() {
         return (
-            <select value={this.props.currentProfileId}>
+            <select value={this.props.device.profileId} onChange={this.change}>
                 {this.props.displayDeviceProfiles.map(profile =>
                     <option key={profile.id} value={profile.id}>{profile.name}</option>
                 )}

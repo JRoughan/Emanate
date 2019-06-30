@@ -17,7 +17,7 @@ class DisplayDeviceGroup extends Component {
                 <div className="card-body">
                     <img className="card-img-top" src={deviceIcon} alt="Device type" />
                     Profile
-                    <DisplayDeviceProfilePicker currentProfileId={this.props.device.profileId} />
+                    <DisplayDeviceProfilePicker device={this.props.device} />
                 </div>
                 <div className="card-footer">
                     <small className="text-muted">Active</small>

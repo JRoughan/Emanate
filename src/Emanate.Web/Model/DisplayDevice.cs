@@ -9,5 +9,7 @@ namespace Emanate.Web.Model
 
         [Required]
         public string Name { get; set; }
+
+        public Guid? ProfileId { get; set; }
     }
 }
