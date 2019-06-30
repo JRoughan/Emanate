@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Admin from './Admin';
+import * as NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
 import * as DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 import * as SignalR from '@aspnet/signalr';
 
@@ -10,6 +11,7 @@ export default function configureStore(history, initialState) {
     const reducers = {
         weatherForecasts: WeatherForecasts.reducer,
         admin: Admin.reducer,
+        newDisplayDeviceDialog: NewDisplayDeviceDialog.reducer,
         displayDeviceProfilePicker: DisplayDeviceProfilePicker.reducer
     };
 

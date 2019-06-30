@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/Admin';
+import NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
 import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 import deviceIcon from '../images/deviceIcon.png'
 
@@ -16,6 +17,7 @@ class Admin extends Component {
             <div>
                 <h1>Admin</h1>
                 <h2>Display Devices</h2>
+                <NewDisplayDeviceDialog />
                 {renderDisplayDevices(this.props)}
             </div>
         );
@@ -25,7 +27,6 @@ class Admin extends Component {
 function renderDisplayDevices(props) {
     return (
         <div>
-            <button className="btn btn-primary" onClick={() => props.addDisplayDevice({ name: 'New Device' })}>+</button>
             <div className="card-group">
                 {props.displayDevices.map(device =>
                     <div className="card" key={device.id}>

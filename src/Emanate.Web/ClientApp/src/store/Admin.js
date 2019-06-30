@@ -20,18 +20,6 @@ export const actionCreators = {
         dispatch({ type: receiveDisplayDevicesType, devices });
     },
 
-    addDisplayDevice: (device) => async () => {
-
-        const url = 'api/DisplayDevices/';
-        await fetch(url, {
-            method: 'post',
-            body: JSON.stringify(device),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    },
-
     removeDisplayDevice: (id) => async () => {
         confirmAlert({
             title: 'Delete Display Device?',
