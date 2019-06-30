@@ -9,16 +9,13 @@ class NewDisplayDeviceDialog extends Component {
     constructor(props) {
         super(props);
         this.state = { newDisplayDeviceName: '' };
-
-        this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleNameChange(event) {
+    handleNameChange = (event) => {
         this.setState({ newDisplayDeviceName: event.target.value });
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         this.props.addDisplayDevice({ name: this.state.newDisplayDeviceName });
         event.preventDefault();
     }
