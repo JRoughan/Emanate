@@ -15,9 +15,9 @@ namespace Emanate.Web.Controllers
     public class DisplayDevicesController : ControllerBase
     {
         private readonly AdminDbContext db;
-        private readonly IHubContext<CounterHub> hub;
+        private readonly IHubContext<NotificationHub> hub;
 
-        public DisplayDevicesController(AdminDbContext db, IHubContext<CounterHub> hub)
+        public DisplayDevicesController(AdminDbContext db, IHubContext<NotificationHub> hub)
         {
             this.db = db;
             this.hub = hub;

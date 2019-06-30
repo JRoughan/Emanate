@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="ClientApp\.gitignore" />
     <None Remove="Emanate.db" />
   </ItemGroup>
 

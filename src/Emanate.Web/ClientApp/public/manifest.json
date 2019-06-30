@@ -1,10 +1,10 @@
 {
-  "short_name": "Emanate.Web",
-  "name": "Emanate.Web",
+  "short_name": "Emanate",
+  "name": "Emanate",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "128x128 64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
   ],

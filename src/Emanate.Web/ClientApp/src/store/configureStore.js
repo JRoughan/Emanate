@@ -1,16 +1,15 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import * as WeatherForecasts from './WeatherForecasts';
+import * as SignalR from '@aspnet/signalr';
+
 import * as Admin from './Admin';
 import * as DisplayDeviceGroup from './DisplayDeviceGroup';
 import * as DisplayDevice from './DisplayDevice';
 import * as NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
-import * as SignalR from '@aspnet/signalr';
 
 export default function configureStore(history, initialState) {
     const reducers = {
-        weatherForecasts: WeatherForecasts.reducer,
         admin: Admin.reducer,
         displayDeviceGroup: DisplayDeviceGroup.reducer,
         displayDevice: DisplayDevice.reducer,
@@ -47,7 +46,7 @@ export default function configureStore(history, initialState) {
 }
 
 const connection = new SignalR.HubConnectionBuilder()
-    .withUrl("/counterx")
+    .withUrl("/notifications")
     .configureLogging(SignalR.LogLevel.Information)
     .build();
 

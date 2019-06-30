@@ -55,7 +55,7 @@ namespace Emanate.Web
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<CounterHub>("/counterx");
+                routes.MapHub<NotificationHub>("/notifications");
             });
 
             app.UseMvc(routes =>
