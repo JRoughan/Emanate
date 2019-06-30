@@ -9,6 +9,7 @@ class DisplayDeviceGroup extends Component {
 
     componentDidMount() {
         this.props.requestDisplayDevices();
+        this.props.requestDisplayDeviceProfiles();
     }
 
     render() {
@@ -26,7 +27,7 @@ function renderDisplayDevices(props) {
     return (
         <div className="card-group">
             {props.displayDevices.map(device =>
-                <DisplayDevice key={device.id} device={device} />
+                <DisplayDevice key={device.id} device={device} displayDeviceProfiles={props.displayDeviceProfiles} />
             )}
         </div>
     );

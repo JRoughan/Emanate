@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actionCreators } from '../store/DisplayDeviceProfilePicker';
 
 class DisplayDeviceProfilePicker extends Component {
-
-    componentDidMount() {
-        this.props.requestDisplayDeviceProfiles();
-    }
 
     change = (event) => {
         this.props.setDisplayDeviceProfile(this.props.device, event.target.value);
@@ -24,7 +19,4 @@ class DisplayDeviceProfilePicker extends Component {
     }
 }
 
-export default connect(
-    state => state.displayDeviceProfilePicker,
-    dispatch => bindActionCreators(actionCreators, dispatch)
-)(DisplayDeviceProfilePicker);
+export default connect()(DisplayDeviceProfilePicker);

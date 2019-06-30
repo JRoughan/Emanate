@@ -6,7 +6,6 @@ import * as Admin from './Admin';
 import * as DisplayDeviceGroup from './DisplayDeviceGroup';
 import * as DisplayDevice from './DisplayDevice';
 import * as NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
-import * as DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 import * as SignalR from '@aspnet/signalr';
 
 export default function configureStore(history, initialState) {
@@ -15,8 +14,7 @@ export default function configureStore(history, initialState) {
         admin: Admin.reducer,
         displayDeviceGroup: DisplayDeviceGroup.reducer,
         displayDevice: DisplayDevice.reducer,
-        newDisplayDeviceDialog: NewDisplayDeviceDialog.reducer,
-        displayDeviceProfilePicker: DisplayDeviceProfilePicker.reducer
+        newDisplayDeviceDialog: NewDisplayDeviceDialog.reducer
     };
 
     const middleware = [

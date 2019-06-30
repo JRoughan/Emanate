@@ -3,7 +3,19 @@ const receiveDisplayDevicesType = 'RECEIVE_DISPLAY_DEVICES';
 const displayDeviceAddedType = 'DISPLAY_DEVICE_ADDED';
 const displayDeviceRemovedType = 'DISPLAY_DEVICE_REMOVED';
 const displayDeviceUpdatedType = 'DISPLAY_DEVICE_UPDATED';
-const initialState = { displayDevices: [], isLoadingDisplayDevices: false };
+
+const requestDisplayDeviceProfilesType = 'REQUEST_DISPLAY_DEVICE_PROFILES';
+const receiveDisplayDeviceProfilesType = 'RECEIVE_DISPLAY_DEVICE_PROFILES';
+const displayDeviceProfileAddedType = 'DISPLAY_DEVICE_PROFILE_ADDED';
+const displayDeviceProfileRemovedType = 'DISPLAY_DEVICE_PROFILE_REMOVED';
+const displayDeviceProfileUpdatedType = 'DISPLAY_DEVICE_PROFILE_UPDATED';
+
+const initialState = {
+    displayDevices: [],
+    isLoadingDisplayDevices: false,
+    displayDeviceProfiles: [],
+    isLoadingDisplayDeviceProfiles: false
+};
 
 export const actionCreators = {
 
@@ -15,6 +27,16 @@ export const actionCreators = {
         const devices = await response.json();
 
         dispatch({ type: receiveDisplayDevicesType, devices });
+    },
+
+    requestDisplayDeviceProfiles: () => async (dispatch) => {
+        dispatch({ type: requestDisplayDeviceProfilesType });
+
+        const url = 'api/DisplayDeviceProfiles';
+        const response = await fetch(url);
+        const profiles = await response.json();
+
+        dispatch({ type: receiveDisplayDeviceProfilesType, profiles });
     }
 };
 
@@ -62,6 +84,51 @@ export const reducer = (state, action) => {
                 }
 
                 return device;
+            })
+        };
+    }
+
+    if (action.type === requestDisplayDeviceProfilesType) {
+        return {
+            ...state,
+            isLoadingDisplayDeviceProfiles: true
+        };
+    }
+
+    if (action.type === receiveDisplayDeviceProfilesType) {
+        return {
+            ...state,
+            displayDeviceProfiles: action.profiles,
+            isLoadingDisplayDeviceProfiles: false
+        };
+    }
+
+    if (action.type === displayDeviceProfileAddedType) {
+        return {
+            ...state,
+            displayDeviceProfiles: [...state.displayDeviceProfiles, action.newDisplayDeviceProfile]
+        };
+    }
+
+    if (action.type === displayDeviceProfileRemovedType) {
+        return {
+            ...state,
+            displayDeviceProfiles: [...state.displayDeviceProfiles.filter(p => p.id !== action.oldDisplayDeviceProfileId)]
+        };
+    }
+
+    if (action.type === displayDeviceProfileUpdatedType) {
+        return {
+            ...state,
+            displayDeviceProfiles: state.displayDeviceProfiles.map((profile) => {
+                if (profile.id === action.updatedProfile.id) {
+                    return {
+                        ...profile,
+                        ...action.updatedProfile
+                    }
+                }
+
+                return profile;
             })
         };
     }
