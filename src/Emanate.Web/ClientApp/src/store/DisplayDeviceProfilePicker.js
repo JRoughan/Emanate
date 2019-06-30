@@ -7,6 +7,7 @@ const displayDeviceProfileUpdatedType = 'DISPLAY_DEVICE_PROFILE_UPDATED';
 const initialState = { displayDeviceProfiles: [], isLoadingDisplayDeviceProfiles: false };
 
 export const actionCreators = {
+
     requestDisplayDeviceProfiles: () => async (dispatch) => {
         dispatch({ type: requestDisplayDeviceProfilesType });
 

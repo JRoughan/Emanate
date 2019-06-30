@@ -2,48 +2,18 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/Admin';
-import NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
-import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
-import deviceIcon from '../images/deviceIcon.png'
+import DisplayDeviceGroup from './DisplayDeviceGroup';
 
 class Admin extends Component {
-
-    componentDidMount() {
-        this.props.requestDisplayDevices();
-    }
 
     render() {
         return (
             <div>
                 <h1>Admin</h1>
-                <h2>Display Devices</h2>
-                <NewDisplayDeviceDialog />
-                {renderDisplayDevices(this.props)}
+                <DisplayDeviceGroup displayDevices={this.props.displayDevices} />
             </div>
         );
     }
-}
-
-function renderDisplayDevices(props) {
-    return (
-        <div>
-            <div className="card-group">
-                {props.displayDevices.map(device =>
-                    <div className="card" key={device.id}>
-                        <img className="card-img-top" src={deviceIcon} alt="Device type" />
-                        <div className="card-body">
-                            <h3 className="card-title">{device.name}<button className="btn btn-danger" onClick={() => props.removeDisplayDevice(device.id)}>X</button></h3>
-                            Profile
-                            <DisplayDeviceProfilePicker />
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-muted">Active</small>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
 }
 
 export default connect(

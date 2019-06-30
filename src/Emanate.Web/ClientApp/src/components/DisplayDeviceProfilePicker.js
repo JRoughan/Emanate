@@ -11,22 +11,13 @@ class DisplayDeviceProfilePicker extends Component {
 
     render() {
         return (
-            <div>
-                <h4>Device Profile</h4>
-                {renderDisplayDeviceProfiles(this.props)}
-            </div>
+            <select value={this.props.currentProfileId}>
+                {this.props.displayDeviceProfiles.map(profile =>
+                    <option key={profile.id} value={profile.id}>{profile.name}</option>
+                )}
+            </select>
         );
     }
-}
-
-function renderDisplayDeviceProfiles(props) {
-    return (
-        <select>
-            {props.displayDeviceProfiles.map(profile =>
-                <option key={profile.id} value={profile.id}>{profile.name}</option>
-        )}
-        </select>
-    );
 }
 
 export default connect(
