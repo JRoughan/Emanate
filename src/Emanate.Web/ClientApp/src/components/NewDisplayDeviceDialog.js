@@ -6,6 +6,23 @@ import Modal from 'react-modal';
 
 class NewDisplayDeviceDialog extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = { newDisplayDeviceName: '' };
+
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleNameChange(event) {
+        this.setState({ newDisplayDeviceName: event.target.value });
+    }
+
+    handleSubmit(event) {
+        this.props.addDisplayDevice({ name: this.state.newDisplayDeviceName });
+        event.preventDefault();
+    }
+
     render() {
         return (
             <div>
@@ -15,8 +32,16 @@ class NewDisplayDeviceDialog extends Component {
                     onRequestClose={this.props.closeNewDisplayDeviceDialog}
                     shouldCloseOnOverlayClick={false}
                     style={customStyles}>
-                    <button className="btn btn-primary" onClick={() => this.props.addDisplayDevice({ name: 'New Device' })}>Add Device</button>
-                    <button className="btn btn-secondary" onClick={this.props.closeNewDisplayDeviceDialog}>Cancel</button>
+
+                    <form onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="newDisplayDeviceName">Name </label>
+                            <input type="text" className="form-control" placeholder="My Device" value={this.state.newDisplayDeviceName} onChange={this.handleNameChange} />
+                        </div>
+                        <button type="submit" className="btn btn-primary">Add Device</button>
+                        <button className="btn btn-secondary" onClick={this.props.closeNewDisplayDeviceDialog}>Cancel</button>
+                    </form>
+
                 </Modal>
             </div>
         );

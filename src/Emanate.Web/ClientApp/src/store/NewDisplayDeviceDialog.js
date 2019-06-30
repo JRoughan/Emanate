@@ -6,7 +6,6 @@ const initialState = { newDisplayDeviceDialogIsOpen: false };
 export const actionCreators = {
 
     openNewDisplayDeviceDialog: () => async (dispatch) => {
-        console.log('Opening dialog');
         dispatch({ type: openNewDisplayDeviceDialogType });
     },
 
@@ -25,7 +24,6 @@ export const actionCreators = {
     },
 
     closeNewDisplayDeviceDialog: () => async (dispatch) => {
-        console.log('Clsing dialog');
         dispatch({ type: closeNewDisplayDeviceDialogType });
     }
 };
