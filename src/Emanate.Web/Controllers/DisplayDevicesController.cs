@@ -28,6 +28,7 @@ namespace Emanate.Web.Controllers
         public async Task<ActionResult<IEnumerable<DisplayDevice>>> GetDisplayDevices()
         {
             return await db.DisplayDevices
+                .Include(d => d.Type)
                 .Include(d => d.Profile)
                 .ToListAsync();
         }

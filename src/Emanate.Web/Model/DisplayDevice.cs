@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Emanate.Web.Model
 {
-    public class DisplayDevice
+    public class DisplayDevice : Entity
     {
-        public Guid Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 

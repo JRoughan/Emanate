@@ -14,7 +14,7 @@ class DisplayDeviceGroup extends Component {
                     <h3 className="card-title">{this.props.device.name}</h3>
                 </div>
                 <div className="card-body">
-                    <img className="card-img-top" src={"images/" + this.props.device.profile.icon} alt={this.props.device.profile.name} />
+                    <img className="card-img-top" src={"/images/" + this.props.device.type.icon} alt={this.props.device.profile.name} />
                     Profile
                     <DisplayDeviceProfilePicker device={this.props.device} displayDeviceProfiles={this.props.displayDeviceProfiles} />
                 </div>

@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emanate.Web.Model
 {
-    public class DisplayDeviceType
+    public class DisplayDeviceType : Entity
     {
-        public Guid Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 
