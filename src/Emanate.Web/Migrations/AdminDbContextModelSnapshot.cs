@@ -42,10 +42,14 @@ namespace Emanate.Web.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid?>("DisplayDeviceTypeId");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DisplayDeviceTypeId");
 
                     b.ToTable("DisplayDeviceProfiles");
                 });
@@ -75,6 +79,13 @@ namespace Emanate.Web.Migrations
                     b.HasOne("Emanate.Web.Model.DisplayDeviceType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.DisplayDeviceProfile", b =>
+                {
+                    b.HasOne("Emanate.Web.Model.DisplayDeviceType")
+                        .WithMany("Profiles")
+                        .HasForeignKey("DisplayDeviceTypeId");
                 });
 #pragma warning restore 612, 618
         }

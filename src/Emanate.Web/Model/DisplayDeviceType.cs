@@ -13,5 +13,7 @@ namespace Emanate.Web.Model
 
         [Required]
         public string Icon { get; set; }
+
+        public ICollection<DisplayDeviceProfile> Profiles { get; set; }
     }
 }

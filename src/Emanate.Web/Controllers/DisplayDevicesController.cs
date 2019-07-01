@@ -27,7 +27,9 @@ namespace Emanate.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DisplayDevice>>> GetDisplayDevices()
         {
-            return await db.DisplayDevices.ToListAsync();
+            return await db.DisplayDevices
+                .Include(d => d.Profile)
+                .ToListAsync();
         }
 
         // GET: api/DisplayDevices/5

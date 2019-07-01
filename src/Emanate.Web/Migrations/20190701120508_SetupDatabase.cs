@@ -8,18 +8,6 @@ namespace Emanate.Web.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DisplayDeviceProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DisplayDeviceProfiles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DisplayDeviceType",
                 columns: table => new
                 {
@@ -33,13 +21,32 @@ namespace Emanate.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DisplayDeviceProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    DisplayDeviceTypeId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisplayDeviceProfiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DisplayDeviceProfiles_DisplayDeviceType_DisplayDeviceTypeId",
+                        column: x => x.DisplayDeviceTypeId,
+                        principalTable: "DisplayDeviceType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DisplayDevices",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    ProfileId = table.Column<Guid>(nullable: true),
-                    TypeId = table.Column<Guid>(nullable: true)
+                    TypeId = table.Column<Guid>(nullable: true),
+                    ProfileId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,6 +64,11 @@ namespace Emanate.Web.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DisplayDeviceProfiles_DisplayDeviceTypeId",
+                table: "DisplayDeviceProfiles",
+                column: "DisplayDeviceTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DisplayDevices_ProfileId",

@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/DisplayDevice';
 import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
-import deviceIcon from '../images/deviceIcon.png'
 
 class DisplayDeviceGroup extends Component {
 
@@ -15,7 +14,7 @@ class DisplayDeviceGroup extends Component {
                     <h3 className="card-title">{this.props.device.name}</h3>
                 </div>
                 <div className="card-body">
-                    <img className="card-img-top" src={deviceIcon} alt="Device type" />
+                    <img className="card-img-top" src={"images/" + this.props.device.profile.icon} alt={this.props.device.profile.name} />
                     Profile
                     <DisplayDeviceProfilePicker device={this.props.device} displayDeviceProfiles={this.props.displayDeviceProfiles} />
                 </div>
