@@ -10,11 +10,19 @@ const displayDeviceProfileAddedType = 'DISPLAY_DEVICE_PROFILE_ADDED';
 const displayDeviceProfileRemovedType = 'DISPLAY_DEVICE_PROFILE_REMOVED';
 const displayDeviceProfileUpdatedType = 'DISPLAY_DEVICE_PROFILE_UPDATED';
 
+const requestDisplayDeviceTypesType = 'REQUEST_DISPLAY_DEVICE_TYPES';
+const receiveDisplayDeviceTypesType = 'RECEIVE_DISPLAY_DEVICE_TYPES';
+const displayDeviceTypeAddedType = 'DISPLAY_DEVICE_TYPE_ADDED';
+const displayDeviceTypeRemovedType = 'DISPLAY_DEVICE_TYPE_REMOVED';
+const displayDeviceTypeUpdatedType = 'DISPLAY_DEVICE_TYPE_UPDATED';
+
 const initialState = {
     displayDevices: [],
     isLoadingDisplayDevices: false,
     displayDeviceProfiles: [],
-    isLoadingDisplayDeviceProfiles: false
+    isLoadingDisplayDeviceProfiles: false,
+    displayDeviceTypes: [],
+    isLoadingDisplayDeviceTypes: false
 };
 
 export const actionCreators = {
@@ -37,11 +45,23 @@ export const actionCreators = {
         const profiles = await response.json();
 
         dispatch({ type: receiveDisplayDeviceProfilesType, profiles });
+    },
+
+    requestDisplayDeviceTypes: () => async (dispatch) => {
+        dispatch({ type: requestDisplayDeviceTypesType });
+
+        const url = 'api/DisplayDeviceTypes';
+        const response = await fetch(url);
+        const types = await response.json();
+
+        dispatch({ type: receiveDisplayDeviceTypesType, types });
     }
 };
 
 export const reducer = (state, action) => {
     state = state || initialState;
+
+    // Display Devices
 
     if (action.type === requestDisplayDevicesType) {
         return {
@@ -88,6 +108,8 @@ export const reducer = (state, action) => {
         };
     }
 
+    // Display Device Profiles
+
     if (action.type === requestDisplayDeviceProfilesType) {
         return {
             ...state,
@@ -129,6 +151,53 @@ export const reducer = (state, action) => {
                 }
 
                 return profile;
+            })
+        };
+    }
+
+    // Display Device Types
+
+    if (action.type === requestDisplayDeviceTypesType) {
+        return {
+            ...state,
+            isLoadingDisplayDeviceTypes: true
+        };
+    }
+
+    if (action.type === receiveDisplayDeviceTypesType) {
+        return {
+            ...state,
+            displayDeviceTypes: action.types,
+            isLoadingDisplayDeviceTypes: false
+        };
+    }
+
+    if (action.type === displayDeviceTypeAddedType) {
+        return {
+            ...state,
+            displayDeviceTypes: [...state.displayDeviceTypes, action.newDisplayDeviceType]
+        };
+    }
+
+    if (action.type === displayDeviceTypeRemovedType) {
+        return {
+            ...state,
+            displayDeviceTypes: [...state.displayDeviceTypes.filter(p => p.id !== action.oldDisplayDeviceTypeId)]
+        };
+    }
+
+    if (action.type === displayDeviceTypeUpdatedType) {
+        return {
+            ...state,
+            displayDeviceTypes: state.displayDeviceTypes.map((type) => {
+                if (type.id === action.updatedType.id) {
+                    return {
+                        ...type,
+                        ...action.updatedType
+                    }
+                }
+
+                return type;
             })
         };
     }

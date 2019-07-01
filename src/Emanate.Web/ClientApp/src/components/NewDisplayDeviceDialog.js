@@ -8,15 +8,25 @@ class NewDisplayDeviceDialog extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { newDisplayDeviceName: '' };
+        this.state = {
+            newDisplayDeviceName: '',
+            newDisplayTypeId: ''
+        };
     }
 
     handleNameChange = (event) => {
         this.setState({ newDisplayDeviceName: event.target.value });
     }
 
+    handleTypeChange = (event) => {
+        this.setState({ newDisplayTypeId: event.target.value });
+    }
+
     handleSubmit = (event) => {
-        this.props.addDisplayDevice({ name: this.state.newDisplayDeviceName });
+        this.props.addDisplayDevice({
+            name: this.state.newDisplayDeviceName,
+            typeId: this.state.newDisplayTypeId
+        });
         event.preventDefault();
     }
 
@@ -35,10 +45,18 @@ class NewDisplayDeviceDialog extends Component {
                             <label htmlFor="newDisplayDeviceName">Name </label>
                             <input type="text" className="form-control" placeholder="My Device" value={this.state.newDisplayDeviceName} onChange={this.handleNameChange} />
                         </div>
-                        <button type="submit" className="btn btn-primary">Add Device</button>
+                        <div className="form-group">
+                            <label htmlFor="newDisplayDeviceName">Name </label>
+                            <select className="form-control" value={this.state.newDisplayTypeId} onChange={this.handleTypeChange}>
+                                <option hidden>Select Type</option>
+                                {this.props.displayDeviceTypes.map(type =>
+                                    <option key={type.id} value={type.id}>{type.name}</option>
+                                )}
+                            </select>
+                        </div>
                         <button className="btn btn-secondary" onClick={this.props.closeNewDisplayDeviceDialog}>Cancel</button>
+                        <button type="submit" className="btn btn-primary">Add Device</button>
                     </form>
-
                 </Modal>
             </div>
         );

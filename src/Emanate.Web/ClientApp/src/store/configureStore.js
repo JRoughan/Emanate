@@ -59,6 +59,8 @@ export function signalRInvokeMiddleware(store: any) {
             case "REMOVE_DISPLAY_DEVICE":
                 connection.invoke('RemoveDisplayDevice');
                 break;
+            default:
+                break;
         }
 
         return next(action);
@@ -89,6 +91,18 @@ export function signalRRegisterCommands(store: any, callback: Function) {
 
     connection.on('DisplayDeviceProfileUpdated', profile => {
         store.dispatch({ type: 'DISPLAY_DEVICE_PROFILE_UPDATED', updatedDisplayDeviceProfile: profile });
+    });
+
+    connection.on('DisplayDeviceTypeAdded', profile => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_TYPE_ADDED', newDisplayDeviceProfile: profile });
+    });
+
+    connection.on('DisplayDeviceTypeRemoved', id => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_TYPE_REMOVED', oldDisplayDeviceProfileId: id });
+    });
+
+    connection.on('DisplayDeviceTypeUpdated', profile => {
+        store.dispatch({ type: 'DISPLAY_DEVICE_TYPE_UPDATED', updatedDisplayDeviceProfile: profile });
     });
 
     connection.start().then(function () {

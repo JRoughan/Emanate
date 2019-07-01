@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emanate.Web.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    [Migration("20190628043614_RenameDeviceProfiles")]
-    partial class RenameDeviceProfiles
+    [Migration("20190701104930_SetupDatabase")]
+    partial class SetupDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,15 @@ namespace Emanate.Web.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<Guid?>("ProfileId");
+
+                    b.Property<Guid?>("TypeId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("DisplayDevices");
                 });
@@ -42,6 +50,33 @@ namespace Emanate.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DisplayDeviceProfiles");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.DisplayDeviceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Icon")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DisplayDeviceType");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.DisplayDevice", b =>
+                {
+                    b.HasOne("Emanate.Web.Model.DisplayDeviceProfile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId");
+
+                    b.HasOne("Emanate.Web.Model.DisplayDeviceType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
                 });
 #pragma warning restore 612, 618
         }

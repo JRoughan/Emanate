@@ -10,13 +10,14 @@ class DisplayDeviceGroup extends Component {
     componentDidMount() {
         this.props.requestDisplayDevices();
         this.props.requestDisplayDeviceProfiles();
+        this.props.requestDisplayDeviceTypes();
     }
 
     render() {
         return (
             <div>
                 <h2>Display Devices</h2>
-                <NewDisplayDeviceDialog />
+                <NewDisplayDeviceDialog displayDeviceTypes={this.props.displayDeviceTypes} />
                 { renderDisplayDevices(this.props) }
             </div>
         );
@@ -38,7 +39,7 @@ function renderDisplayDevices(props) {
                 )}
             </div>
         );
-    };
+    }
 }
 
 export default connect(
