@@ -6,6 +6,15 @@ import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
 
 class DisplayDeviceGroup extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            type: props.displayDeviceTypes.filter((t) => t.id === props.device.typeId)[0],
+            profile: props.displayDeviceProfiles.filter((p) => p.id === props.device.profileId)[0],
+            availableProfiles: props.displayDeviceProfiles.filter((p) => p.typeId === props.device.typeId)
+        };
+    }
+
     render() {
         return (
             <div className="card" key={this.props.device.id}>
@@ -14,9 +23,9 @@ class DisplayDeviceGroup extends Component {
                     <h3 className="card-title">{this.props.device.name}</h3>
                 </div>
                 <div className="card-body">
-                    <img className="card-img-top" src={"/images/" + this.props.device.type.icon} alt={this.props.device.profile.name} />
+                    <img className="card-img-top" src={"/images/" + this.state.type.icon} alt={this.state.profile.name} />
                     Profile
-                    <DisplayDeviceProfilePicker device={this.props.device} displayDeviceProfiles={this.props.displayDeviceProfiles} />
+                    <DisplayDeviceProfilePicker device={this.props.device} displayDeviceProfiles={this.state.availableProfiles} />
                 </div>
                 <div className="card-footer">
                     <small className="text-muted">Active</small>

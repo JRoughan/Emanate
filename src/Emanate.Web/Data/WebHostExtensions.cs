@@ -36,7 +36,8 @@ namespace Emanate.Web.Data
             AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Emanate", Icon = "Emanate.png", Profiles = new List<DisplayDeviceProfile>{ defaultProfile } });
 
             defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Default" });
-            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Delcom", Icon = "Delcom.jpg", Profiles = new List<DisplayDeviceProfile> { defaultProfile } });
+            var otherProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Other" });
+            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Delcom", Icon = "Delcom.jpg", Profiles = new List<DisplayDeviceProfile> { defaultProfile, otherProfile } });
 
             context.SaveChanges(true);
         }
@@ -56,7 +57,7 @@ namespace Emanate.Web.Data
             AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 3", Type = type, Profile = type.Profiles.Single() });
 
             type = context.DisplayDeviceType.Single(d => d.Name == "Delcom");
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dash 1", Type = type, Profile = type.Profiles.Single() });
+            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dash 1", Type = type, Profile = type.Profiles.First() });
 
             context.SaveChanges(true);
         }

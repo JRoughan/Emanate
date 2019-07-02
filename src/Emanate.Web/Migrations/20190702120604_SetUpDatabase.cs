@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Emanate.Web.Migrations
 {
-    public partial class SetupDatabase : Migration
+    public partial class SetUpDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,17 +26,17 @@ namespace Emanate.Web.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    DisplayDeviceTypeId = table.Column<Guid>(nullable: true)
+                    TypeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DisplayDeviceProfiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DisplayDeviceProfiles_DisplayDeviceType_DisplayDeviceTypeId",
-                        column: x => x.DisplayDeviceTypeId,
+                        name: "FK_DisplayDeviceProfiles_DisplayDeviceType_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "DisplayDeviceType",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,9 +66,9 @@ namespace Emanate.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DisplayDeviceProfiles_DisplayDeviceTypeId",
+                name: "IX_DisplayDeviceProfiles_TypeId",
                 table: "DisplayDeviceProfiles",
-                column: "DisplayDeviceTypeId");
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DisplayDevices_ProfileId",

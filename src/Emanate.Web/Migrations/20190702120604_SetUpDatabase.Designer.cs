@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emanate.Web.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    [Migration("20190701120508_SetupDatabase")]
-    partial class SetupDatabase
+    [Migration("20190702120604_SetUpDatabase")]
+    partial class SetUpDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,14 +44,14 @@ namespace Emanate.Web.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("DisplayDeviceTypeId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<Guid>("TypeId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DisplayDeviceTypeId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("DisplayDeviceProfiles");
                 });
@@ -85,9 +85,10 @@ namespace Emanate.Web.Migrations
 
             modelBuilder.Entity("Emanate.Web.Model.DisplayDeviceProfile", b =>
                 {
-                    b.HasOne("Emanate.Web.Model.DisplayDeviceType")
+                    b.HasOne("Emanate.Web.Model.DisplayDeviceType", "Type")
                         .WithMany("Profiles")
-                        .HasForeignKey("DisplayDeviceTypeId");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
