@@ -33,10 +33,10 @@ namespace Emanate.Web.Data
         private static void SeedProductionData(AdminDbContext context)
         {
             var defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Default" });
-            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Web", Icon = "Web.png", Profiles = new List<DisplayDeviceProfile>{ defaultProfile } });
+            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Emanate", Icon = "Emanate.png", Profiles = new List<DisplayDeviceProfile>{ defaultProfile } });
 
             defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Default" });
-            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Delcom", Icon = "Delcom.png", Profiles = new List<DisplayDeviceProfile> { defaultProfile } });
+            AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Delcom", Icon = "Delcom.jpg", Profiles = new List<DisplayDeviceProfile> { defaultProfile } });
 
             context.SaveChanges(true);
         }
@@ -50,13 +50,13 @@ namespace Emanate.Web.Data
         [Conditional("DEBUG")]
         private static void SeedTestData(AdminDbContext context)
         {
-            var type = context.DisplayDeviceType.Single(d => d.Name == "Web");
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Web Dashboard 1", Type = type, Profile = type.Profiles.Single() });
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Web Dashboard 2", Type = type, Profile = type.Profiles.Single() });
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Web Dashboard 3", Type = type, Profile = type.Profiles.Single() });
+            var type = context.DisplayDeviceType.Single(d => d.Name == "Emanate");
+            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 1", Type = type, Profile = type.Profiles.Single() });
+            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 2", Type = type, Profile = type.Profiles.Single() });
+            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 3", Type = type, Profile = type.Profiles.Single() });
 
             type = context.DisplayDeviceType.Single(d => d.Name == "Delcom");
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dashboard 1", Type = type, Profile = type.Profiles.Single() });
+            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dash 1", Type = type, Profile = type.Profiles.Single() });
 
             context.SaveChanges(true);
         }
