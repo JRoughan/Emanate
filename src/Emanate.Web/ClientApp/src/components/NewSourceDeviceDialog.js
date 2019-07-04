@@ -33,7 +33,7 @@ class NewSourceDeviceDialog extends Component {
     render() {
         return (
             <div>
-                <button className="btn btn-primary" onClick={this.props.openNewSourceDeviceDialog}>Add Display Device</button>
+                <button className="btn btn-primary" onClick={this.props.openNewSourceDeviceDialog}>Add Source Device</button>
                 <Modal
                     isOpen={this.props.newSourceDeviceDialogIsOpen}
                     onRequestClose={this.props.closeNewSourceDeviceDialog}

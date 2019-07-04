@@ -8,7 +8,7 @@ class SourceDeviceGroup extends Component {
 
     render() {
         return (
-            <div className="card" key={this.props.device.id}>
+            <div className="card" key={this.props.device.id} >
                 <div className="card-header">
                     <button className="btn btn-danger float-right" onClick={() => this.props.removeSourceDevice(this.props.device.id)}>X</button>
                     <h3 className="card-title">{this.props.device.name}</h3>

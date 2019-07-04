@@ -8,7 +8,7 @@ class DisplayDeviceGroup extends Component {
 
     render() {
         return (
-            <div className="card" key={this.props.device.id}>
+            <div className="card" key={this.props.device.id} >
                 <div className="card-header">
                     <button className="btn btn-danger float-right" onClick={() => this.props.removeDisplayDevice(this.props.device.id)}>X</button>
                     <h3 className="card-title">{this.props.device.name}</h3>
