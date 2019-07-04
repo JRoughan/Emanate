@@ -13,5 +13,11 @@ namespace Emanate.Web.Data
         public DbSet<DisplayDeviceProfile> DisplayDeviceProfiles { get; set; }
 
         public DbSet<DisplayDeviceType> DisplayDeviceType { get; set; }
+
+        public DbSet<SourceDeviceProfile> SourceDeviceProfiles { get; set; }
+
+        public DbSet<SourceDeviceType> SourceDeviceTypes { get; set; }
+
+        public DbSet<SourceDevice> SourceDevices { get; set; }
     }
 }

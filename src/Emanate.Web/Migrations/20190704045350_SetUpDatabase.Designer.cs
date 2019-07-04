@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emanate.Web.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    [Migration("20190702120604_SetUpDatabase")]
+    [Migration("20190704045350_SetUpDatabase")]
     partial class SetUpDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,6 +72,60 @@ namespace Emanate.Web.Migrations
                     b.ToTable("DisplayDeviceType");
                 });
 
+            modelBuilder.Entity("Emanate.Web.Model.SourceDevice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<Guid?>("ProfileId");
+
+                    b.Property<Guid?>("TypeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("SourceDevices");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.SourceDeviceProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<Guid>("TypeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("SourceDeviceProfiles");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.SourceDeviceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Icon")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SourceDeviceTypes");
+                });
+
             modelBuilder.Entity("Emanate.Web.Model.DisplayDevice", b =>
                 {
                     b.HasOne("Emanate.Web.Model.DisplayDeviceProfile", "Profile")
@@ -86,6 +140,25 @@ namespace Emanate.Web.Migrations
             modelBuilder.Entity("Emanate.Web.Model.DisplayDeviceProfile", b =>
                 {
                     b.HasOne("Emanate.Web.Model.DisplayDeviceType", "Type")
+                        .WithMany("Profiles")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.SourceDevice", b =>
+                {
+                    b.HasOne("Emanate.Web.Model.SourceDeviceProfile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId");
+
+                    b.HasOne("Emanate.Web.Model.SourceDeviceType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
+                });
+
+            modelBuilder.Entity("Emanate.Web.Model.SourceDeviceProfile", b =>
+                {
+                    b.HasOne("Emanate.Web.Model.SourceDeviceType", "Type")
                         .WithMany("Profiles")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -32,12 +32,15 @@ namespace Emanate.Web.Data
 
         private static void SeedProductionData(AdminDbContext context)
         {
-            var defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Default" });
+            var defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Em-Default" });
             AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Emanate", Icon = "Emanate.png", Profiles = new List<DisplayDeviceProfile>{ defaultProfile } });
 
-            defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Default" });
-            var otherProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Other" });
+            defaultProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Del-Default" });
+            var otherProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "Del-Other" });
             AddIfNew(context.DisplayDeviceType, new DisplayDeviceType { Name = "Delcom", Icon = "Delcom.jpg", Profiles = new List<DisplayDeviceProfile> { defaultProfile, otherProfile } });
+
+            var defaultSourceProfile = AddIfNew(context.SourceDeviceProfiles, new SourceDeviceProfile { Name = "TC-Default" });
+            AddIfNew(context.SourceDeviceTypes, new SourceDeviceType { Name = "TeamCity", Icon = "TeamCity.svg", Profiles = new List<SourceDeviceProfile> { defaultSourceProfile } });
 
             context.SaveChanges(true);
         }
@@ -59,10 +62,11 @@ namespace Emanate.Web.Data
             type = context.DisplayDeviceType.Single(d => d.Name == "Delcom");
             AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dash 1", Type = type, Profile = type.Profiles.First() });
 
+            var sourceType = context.SourceDeviceTypes.Single(d => d.Name == "TeamCity");
+            AddIfNew(context.SourceDevices, new SourceDevice { Name = "TC Dash 1", Type = sourceType, Profile = sourceType.Profiles.First() });
+
             context.SaveChanges(true);
         }
-
-
 
         private static T AddIfNew<T>(DbSet<T> dbSet, T item)
             where T : Entity

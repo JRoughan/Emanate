@@ -7,13 +7,19 @@ import * as Admin from './Admin';
 import * as DisplayDeviceGroup from './DisplayDeviceGroup';
 import * as DisplayDevice from './DisplayDevice';
 import * as NewDisplayDeviceDialog from './NewDisplayDeviceDialog';
+import * as SourceDeviceGroup from './SourceDeviceGroup';
+import * as SourceDevice from './SourceDevice';
+import * as NewSourceDeviceDialog from './NewSourceDeviceDialog';
 
 export default function configureStore(history, initialState) {
     const reducers = {
         admin: Admin.reducer,
         displayDeviceGroup: DisplayDeviceGroup.reducer,
         displayDevice: DisplayDevice.reducer,
-        newDisplayDeviceDialog: NewDisplayDeviceDialog.reducer
+        newDisplayDeviceDialog: NewDisplayDeviceDialog.reducer,
+        sourceDeviceGroup: SourceDeviceGroup.reducer,
+        sourceDevice: SourceDevice.reducer,
+        newSourceDeviceDialog: NewSourceDeviceDialog.reducer
     };
 
     const middleware = [
@@ -105,12 +111,43 @@ export function signalRRegisterCommands(store: any, callback: Function) {
         store.dispatch({ type: 'DISPLAY_DEVICE_TYPE_UPDATED', updatedDisplayDeviceProfile: profile });
     });
 
+    connection.on('SourceDeviceAdded', device => {
+        store.dispatch({ type: 'SOURCE_DEVICE_ADDED', newSourceDevice: device });
+    });
+
+    connection.on('SourceDeviceRemoved', id => {
+        store.dispatch({ type: 'SOURCE_DEVICE_REMOVED', oldSourceDeviceId: id });
+    });
+
+    connection.on('SourceDeviceUpdated', device => {
+        store.dispatch({ type: 'SOURCE_DEVICE_UPDATED', updatedDevice: device });
+    });
+
+    connection.on('SourceDeviceProfileAdded', profile => {
+        store.dispatch({ type: 'SOURCE_DEVICE_PROFILE_ADDED', newSourceDeviceProfile: profile });
+    });
+
+    connection.on('SourceDeviceProfileRemoved', id => {
+        store.dispatch({ type: 'SOURCE_DEVICE_PROFILE_REMOVED', oldSourceDeviceProfileId: id });
+    });
+
+    connection.on('SourceDeviceProfileUpdated', profile => {
+        store.dispatch({ type: 'SOURCE_DEVICE_PROFILE_UPDATED', updatedSourceDeviceProfile: profile });
+    });
+
+    connection.on('SourceDeviceTypeAdded', profile => {
+        store.dispatch({ type: 'SOURCE_DEVICE_TYPE_ADDED', newSourceDeviceProfile: profile });
+    });
+
+    connection.on('SourceDeviceTypeRemoved', id => {
+        store.dispatch({ type: 'SOURCE_DEVICE_TYPE_REMOVED', oldSourceDeviceProfileId: id });
+    });
+
+    connection.on('SourceDeviceTypeUpdated', profile => {
+        store.dispatch({ type: 'SOURCE_DEVICE_TYPE_UPDATED', updatedSourceDeviceProfile: profile });
+    });
+
     connection.start().then(function () {
         console.log("connected");
     });
 }
-
-
-
-
-

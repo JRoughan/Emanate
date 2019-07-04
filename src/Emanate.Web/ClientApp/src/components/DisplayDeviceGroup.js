@@ -7,13 +7,6 @@ import DisplayDevice from './DisplayDevice';
 
 class DisplayDeviceGroup extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: props.isLoadingDisplayDevices || props.isLoadingDisplayDeviceProfiles || props.isLoadingDisplayDeviceTypes
-        };
-    }
-
     componentDidMount() {
         this.props.requestDisplayDevices();
         this.props.requestDisplayDeviceProfiles();
@@ -32,21 +25,13 @@ class DisplayDeviceGroup extends Component {
 }
 
 function renderDisplayDevices(state, props) {
-    if (state.isLoading) {
-        return (
-            <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-        );
-    } else {
-        return (
-            <div className="card-group">
-                {props.displayDevices.map(device =>
-                    <DisplayDevice key={device.id} device={device} displayDeviceProfiles={props.displayDeviceProfiles} displayDeviceTypes={props.displayDeviceTypes} />
-                )}
-            </div>
-        );
-    }
+    return (
+        <div className="card-group">
+            {props.displayDevices.map(device =>
+                <DisplayDevice key={device.id} device={device} displayDeviceProfiles={props.displayDeviceProfiles} displayDeviceTypes={props.displayDeviceTypes} />
+            )}
+        </div>
+    );
 }
 
 export default connect(
