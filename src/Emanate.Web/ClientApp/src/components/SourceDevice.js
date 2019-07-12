@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { actionCreators } from '../store/SourceDeviceGroup';
 import SourceDeviceProfilePicker from './SourceDeviceProfilePicker';
 
-class SourceDeviceGroup extends Component {
+class SourceDevice extends Component {
 
     render() {
         return (
@@ -29,4 +29,4 @@ class SourceDeviceGroup extends Component {
 export default connect(
     state => state.sourceDevice,
     dispatch => bindActionCreators(actionCreators, dispatch)
-)(SourceDeviceGroup);
+)(SourceDevice);

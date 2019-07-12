@@ -54,16 +54,21 @@ namespace Emanate.Web.Data
         [Conditional("DEBUG")]
         private static void SeedTestData(AdminDbContext context)
         {
-            var type = context.DisplayDeviceType.Single(d => d.Name == "Emanate");
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 1", Type = type, Profile = type.Profiles.Single() });
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 2", Type = type, Profile = type.Profiles.Single() });
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Dash 3", Type = type, Profile = type.Profiles.Single() });
+            // Device Types
+            var testDisplayProfile = AddIfNew(context.DisplayDeviceProfiles, new DisplayDeviceProfile { Name = "<<Test-Display-Default>>" });
+            var testDisplayDeviceType = new DisplayDeviceType { Name = "<<Test-Display-Type>>", Icon = "Test-Display.png", Profiles = new List<DisplayDeviceProfile> { testDisplayProfile } };
+            AddIfNew(context.DisplayDeviceType, testDisplayDeviceType);
 
-            type = context.DisplayDeviceType.Single(d => d.Name == "Delcom");
-            AddIfNew(context.DisplayDevices, new DisplayDevice { Name = "Delcom Dash 1", Type = type, Profile = type.Profiles.First() });
+            var testSourceProfile = AddIfNew(context.SourceDeviceProfiles, new SourceDeviceProfile { Name = "<<Test-Source-Default>>" });
+            var testSourceDeviceType = new SourceDeviceType { Name = "<<Test-Source-Type>>", Icon = "Test-Source.png", Profiles = new List<SourceDeviceProfile> { testSourceProfile } };
+            AddIfNew(context.SourceDeviceTypes, testSourceDeviceType);
 
-            var sourceType = context.SourceDeviceTypes.Single(d => d.Name == "TeamCity");
-            AddIfNew(context.SourceDevices, new SourceDevice { Name = "TC Dash 1", Type = sourceType, Profile = sourceType.Profiles.First() });
+            // Devices
+            var testSourceDevice = new SourceDevice { Name = "<<Test-Source>>", Type = testSourceDeviceType, Profile = testSourceProfile };
+            AddIfNew(context.SourceDevices, testSourceDevice);
+
+            var testDisplayDevice = new DisplayDevice { Name = "<<Test-Display>>", Type = testDisplayDeviceType, Profile = testDisplayProfile };
+            AddIfNew(context.DisplayDevices, testDisplayDevice);
 
             context.SaveChanges(true);
         }

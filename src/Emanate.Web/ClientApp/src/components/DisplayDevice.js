@@ -3,8 +3,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { actionCreators } from '../store/DisplayDevice';
 import DisplayDeviceProfilePicker from './DisplayDeviceProfilePicker';
+import './DisplayDevice.css';
 
-class DisplayDeviceGroup extends Component {
+
+class DisplayDevice extends Component {
 
     render() {
         return (
@@ -29,4 +31,4 @@ class DisplayDeviceGroup extends Component {
 export default connect(
     state => state.displayDevice,
     dispatch => bindActionCreators(actionCreators, dispatch)
-)(DisplayDeviceGroup);
+)(DisplayDevice);
