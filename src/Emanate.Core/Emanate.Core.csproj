@@ -1,98 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B5E7E5AA-896A-4B86-B202-23062972F077}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Emanate.Core</RootNamespace>
-    <AssemblyName>Emanate.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Autofac" Version="3.5.2" />
+    <PackageReference Include="Serilog" Version="2.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\ProductInfo.cs">
-      <Link>Properties\ProductInfo.cs</Link>
-    </Compile>
-    <Compile Include="Configuration\ConfigurationCaretaker.cs" />
-    <Compile Include="Configuration\DiskAccessor.cs" />
-    <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Configuration\IInputConfiguration.cs" />
-    <Compile Include="Configuration\IOriginator.cs" />
-    <Compile Include="Configuration\GlobalConfig.cs" />
-    <Compile Include="Configuration\IOutputConfiguration.cs" />
-    <Compile Include="Configuration\Mapping.cs" />
-    <Compile Include="Configuration\Memento.cs" />
-    <Compile Include="Configuration\Paths.cs" />
-    <Compile Include="Diagnostics.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="EmanateAdminModuleAttribute.cs" />
-    <Compile Include="IDevice.cs" />
-    <Compile Include="IEmanateAdminModule.cs" />
-    <Compile Include="IModule.cs" />
-    <Compile Include="IModuleType.cs" />
-    <Compile Include="IProfile.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="Input\IBuildMonitor.cs" />
-    <Compile Include="Input\BuildState.cs" />
-    <Compile Include="IEmanateModule.cs" />
-    <Compile Include="EmanateModuleAttribute.cs" />
-    <Compile Include="ModuleLoader.cs" />
-    <Compile Include="Output\InputGroup.cs" />
-    <Compile Include="Output\IOutputDevice.cs" />
-    <Compile Include="Output\IBuildOutput.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Configuration\XElementExtensions.cs" />
-    <Compile Include="SecureStorage.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
