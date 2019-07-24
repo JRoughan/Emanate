@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using Autofac;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Extensibility.Composition;
 using Serilog;
-using Serilog.Sinks.RollingFile;
 
 namespace Emanate.Service.Admin
 {
@@ -16,11 +14,7 @@ namespace Emanate.Service.Admin
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (Debugger.IsAttached)
-                Diagnostics.InitialiseConsole();
-
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.ColoredConsole()
                 .WriteTo.RollingFile(Paths.AdminLogFilePath)
                 .CreateLogger();
 
