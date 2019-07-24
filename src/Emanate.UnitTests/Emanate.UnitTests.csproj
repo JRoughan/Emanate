@@ -96,11 +96,11 @@
       <Project>{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}</Project>
       <Name>Emanate.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.TeamCity\Emanate.TeamCity.csproj">
+    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{EA0DF8D8-DA80-4089-BF02-598BBC60F70B}</Project>
       <Name>Emanate.TeamCity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Vso\Emanate.Vso.csproj">
+    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj">
       <Project>{D02CEB1D-3B90-477D-A8E7-04A62786E704}</Project>
       <Name>Emanate.Vso</Name>
     </ProjectReference>
