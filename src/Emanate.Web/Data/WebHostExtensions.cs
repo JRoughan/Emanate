@@ -70,6 +70,26 @@ namespace Emanate.Web.Data
             var testDisplayDevice = new DisplayDevice { Name = "<<Test-Display>>", Type = testDisplayDeviceType, Profile = testDisplayProfile };
             AddIfNew(context.DisplayDevices, testDisplayDevice);
 
+            var displayConfig = new DisplayConfiguration
+            {
+                DisplayDevice = testDisplayDevice,
+                SourceGroups = new List<SourceGroup>
+                {
+                    new SourceGroup
+                    {
+                        SourceDevice = testSourceDevice,
+                        SourceConfiguration = new List<SourceConfiguration>
+                        {
+                            new SourceConfiguration
+                            {
+                                Builds = "Build1"
+                            }
+                        }
+                    }
+                }
+            };
+            AddIfNew(context.DisplayConfigurations, displayConfig);
+
             context.SaveChanges(true);
         }
 
