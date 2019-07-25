@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.TeamCity", "Modules
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.Vso", "Modules\Emanate.Vso\Emanate.Vso.csproj", "{D02CEB1D-3B90-477D-A8E7-04A62786E704}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emanate.Web", "Emanate.Web\Emanate.Web.csproj", "{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emanate", "Emanate\Emanate.csproj", "{8279F86C-39E1-48ED-BBFD-A276C6E54BC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emanate.UnitTests", "Emanate.UnitTests\Emanate.UnitTests.csproj", "{1C5DDBEC-CBE2-48CA-B75C-2DCDC5F6DC3E}"
 EndProject
