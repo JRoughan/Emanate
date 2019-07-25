@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as SignalR from '@aspnet/signalr';
 
+import * as Dashboard from './Dashboard';
+
 import * as Admin from './Admin';
 import * as DisplayDeviceGroup from './DisplayDeviceGroup';
 import * as DisplayDevice from './DisplayDevice';
@@ -13,6 +15,8 @@ import * as NewSourceDeviceDialog from './NewSourceDeviceDialog';
 
 export default function configureStore(history, initialState) {
     const reducers = {
+        dashboard: Dashboard.reducer,
+
         admin: Admin.reducer,
         displayDeviceGroup: DisplayDeviceGroup.reducer,
         displayDevice: DisplayDevice.reducer,
@@ -56,8 +60,8 @@ const connection = new SignalR.HubConnectionBuilder()
     .configureLogging(SignalR.LogLevel.Information)
     .build();
 
-export function signalRInvokeMiddleware(store: any) {
-    return (next: any) => async (action: any) => {
+export function signalRInvokeMiddleware(store) {
+    return (next) => async (action) => {
         switch (action.type) {
             case "ADD_DISPLAY_DEVICE":
                 connection.invoke('AddDisplayDevice');
@@ -73,7 +77,7 @@ export function signalRInvokeMiddleware(store: any) {
     }
 }
 
-export function signalRRegisterCommands(store: any, callback: Function) {
+export function signalRRegisterCommands(store, callback) {
 
     connection.on('DisplayDeviceAdded', device => {
         store.dispatch({ type: 'DISPLAY_DEVICE_ADDED', newDisplayDevice: device });
@@ -145,6 +149,18 @@ export function signalRRegisterCommands(store: any, callback: Function) {
 
     connection.on('SourceDeviceTypeUpdated', profile => {
         store.dispatch({ type: 'SOURCE_DEVICE_TYPE_UPDATED', updatedSourceDeviceProfile: profile });
+    });
+
+    connection.on('DisplayConfigurationAdded', configuration => {
+        store.dispatch({ type: 'DISPLAY_CONFIGURATION_ADDED', newDisplayConfiguration: configuration });
+    });
+
+    connection.on('DisplayConfigurationRemoved', id => {
+        store.dispatch({ type: 'DISPLAY_CONFIGURATION_REMOVED', oldDisplayConfigurationId: id });
+    });
+
+    connection.on('DisplayConfigurationUpdated', configuration => {
+        store.dispatch({ type: 'DISPLAY_CONFIGURATION_UPDATED', updatedConfiguration: configuration });
     });
 
     connection.start().then(function () {

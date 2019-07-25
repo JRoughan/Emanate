@@ -27,7 +27,7 @@ namespace Emanate.Web.Model
         public Guid SourceDeviceId { get; set; }
         public SourceDevice SourceDevice { get; set; }
 
-        public List<SourceConfiguration> SourceConfiguration { get; set; }
+        public SourceConfiguration SourceConfiguration { get; set; }
     }
 
     public class SourceConfiguration : Entity

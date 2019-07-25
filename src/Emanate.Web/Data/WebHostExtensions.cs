@@ -78,12 +78,9 @@ namespace Emanate.Web.Data
                     new SourceGroup
                     {
                         SourceDevice = testSourceDevice,
-                        SourceConfiguration = new List<SourceConfiguration>
+                        SourceConfiguration = new SourceConfiguration
                         {
-                            new SourceConfiguration
-                            {
-                                Builds = "Build1"
-                            }
+                            Builds = "Build1"
                         }
                     }
                 }

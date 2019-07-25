@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emanate.Web.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    [Migration("20190725020004_AddDisplayAndSourceConfigs")]
+    [Migration("20190725051246_AddDisplayAndSourceConfigs")]
     partial class AddDisplayAndSourceConfigs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,11 +93,7 @@ namespace Emanate.Web.Migrations
 
                     b.Property<string>("Builds");
 
-                    b.Property<Guid?>("SourceGroupId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SourceGroupId");
 
                     b.ToTable("SourceConfiguration");
                 });
@@ -163,11 +159,15 @@ namespace Emanate.Web.Migrations
 
                     b.Property<Guid?>("DisplayConfigurationId");
 
+                    b.Property<Guid?>("SourceConfigurationId");
+
                     b.Property<Guid>("SourceDeviceId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DisplayConfigurationId");
+
+                    b.HasIndex("SourceConfigurationId");
 
                     b.HasIndex("SourceDeviceId");
 
@@ -201,13 +201,6 @@ namespace Emanate.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Emanate.Web.Model.SourceConfiguration", b =>
-                {
-                    b.HasOne("Emanate.Web.Model.SourceGroup")
-                        .WithMany("SourceConfiguration")
-                        .HasForeignKey("SourceGroupId");
-                });
-
             modelBuilder.Entity("Emanate.Web.Model.SourceDevice", b =>
                 {
                     b.HasOne("Emanate.Web.Model.SourceDeviceProfile", "Profile")
@@ -232,6 +225,10 @@ namespace Emanate.Web.Migrations
                     b.HasOne("Emanate.Web.Model.DisplayConfiguration")
                         .WithMany("SourceGroups")
                         .HasForeignKey("DisplayConfigurationId");
+
+                    b.HasOne("Emanate.Web.Model.SourceConfiguration", "SourceConfiguration")
+                        .WithMany()
+                        .HasForeignKey("SourceConfigurationId");
 
                     b.HasOne("Emanate.Web.Model.SourceDevice", "SourceDevice")
                         .WithMany()

@@ -26,11 +26,24 @@ namespace Emanate.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SourceConfiguration",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Builds = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SourceConfiguration", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SourceGroup",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     SourceDeviceId = table.Column<Guid>(nullable: false),
+                    SourceConfigurationId = table.Column<Guid>(nullable: true),
                     DisplayConfigurationId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -43,30 +56,17 @@ namespace Emanate.Web.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_SourceGroup_SourceConfiguration_SourceConfigurationId",
+                        column: x => x.SourceConfigurationId,
+                        principalTable: "SourceConfiguration",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_SourceGroup_SourceDevices_SourceDeviceId",
                         column: x => x.SourceDeviceId,
                         principalTable: "SourceDevices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SourceConfiguration",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Builds = table.Column<string>(nullable: true),
-                    SourceGroupId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SourceConfiguration", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SourceConfiguration_SourceGroup_SourceGroupId",
-                        column: x => x.SourceGroupId,
-                        principalTable: "SourceGroup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -75,14 +75,14 @@ namespace Emanate.Web.Migrations
                 column: "DisplayDeviceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SourceConfiguration_SourceGroupId",
-                table: "SourceConfiguration",
-                column: "SourceGroupId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SourceGroup_DisplayConfigurationId",
                 table: "SourceGroup",
                 column: "DisplayConfigurationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SourceGroup_SourceConfigurationId",
+                table: "SourceGroup",
+                column: "SourceConfigurationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SourceGroup_SourceDeviceId",
@@ -93,13 +93,13 @@ namespace Emanate.Web.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SourceConfiguration");
-
-            migrationBuilder.DropTable(
                 name: "SourceGroup");
 
             migrationBuilder.DropTable(
                 name: "DisplayConfigurations");
+
+            migrationBuilder.DropTable(
+                name: "SourceConfiguration");
         }
     }
 }
