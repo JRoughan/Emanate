@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Emanate.Web.Controllers
+namespace Emanate.Controllers
 {
     public class NotificationHub : Hub
     {

@@ -25,15 +25,15 @@ namespace Emanate.UnitTests.Core.Configuration
 
                 Assert.NotNull(config);
 
-                Assert.Collection(config.Mappings);
+                Assert.Empty(config.Mappings);
 
-                Assert.Collection(config.InputModules);
-                Assert.Collection(config.InputDevices);
-                Assert.Collection(config.InputConfigurations);
+                Assert.Empty(config.InputModules);
+                Assert.Empty(config.InputDevices);
+                Assert.Empty(config.InputConfigurations);
 
-                Assert.Collection(config.OutputModules);
-                Assert.Collection(config.OutputDevices);
-                Assert.Collection(config.OutputConfigurations);
+                Assert.Empty(config.OutputModules);
+                Assert.Empty(config.OutputDevices);
+                Assert.Empty(config.OutputConfigurations);
             }
         }
 

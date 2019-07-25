@@ -1,5 +1,7 @@
-using Emanate.Web.Controllers;
-using Emanate.Web.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using Emanate.Controllers;
+using Emanate.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Emanate.Web
+namespace Emanate
 {
     public class Startup
     {

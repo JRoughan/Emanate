@@ -1,7 +1,9 @@
-﻿using Emanate.Web.Model;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Emanate.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Emanate.Web.Data
+namespace Emanate.Data
 {
     public class AdminDbContext : DbContext
     {

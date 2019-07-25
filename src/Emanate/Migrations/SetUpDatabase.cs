@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Emanate.Web.Migrations
+namespace Emanate.Migrations
 {
     public partial class SetUpDatabase : Migration
     {

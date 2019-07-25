@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Emanate.Web.Model
+namespace Emanate.Model
 {
     public class DisplayDeviceProfile : Entity
     {

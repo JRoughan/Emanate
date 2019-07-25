@@ -6,7 +6,6 @@ using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Emanate.UnitTests.Builders;
-using Emanate.Web;
 using NSubstitute;
 using Xunit;
 

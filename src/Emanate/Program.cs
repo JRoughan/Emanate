@@ -1,12 +1,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Emanate.Web.Data;
+using System.Threading.Tasks;
+using Emanate.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 
-namespace Emanate.Web
+namespace Emanate
 {
     public class Program
     {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Emanate.Core.Input;
 using Microsoft.Extensions.Hosting;
 
-namespace Emanate.Web
+namespace Emanate
 {
     public class SourceMonitoringService : IHostedService
     {

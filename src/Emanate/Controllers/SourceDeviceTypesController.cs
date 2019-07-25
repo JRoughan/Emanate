@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Emanate.Data;
+using Emanate.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Emanate.Web.Data;
-using Emanate.Web.Model;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Emanate.Web.Controllers
+namespace Emanate.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
