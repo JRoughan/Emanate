@@ -52,8 +52,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.9.3.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.3\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
@@ -92,8 +92,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Topshelf.Autofac, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Topshelf.Autofac.2.0.1\lib\net452\Topshelf.Autofac.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Topshelf.Autofac.3.0.0\lib\net452\Topshelf.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Topshelf.Serilog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <HintPath>..\packages\Topshelf.Serilog.4.0.1\lib\net452\Topshelf.Serilog.dll</HintPath>
