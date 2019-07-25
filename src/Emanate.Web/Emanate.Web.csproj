@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -30,6 +30,10 @@
     <None Remove=".gitignore" />
     <None Remove="ClientApp\.gitignore" />
     <None Remove="Emanate.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

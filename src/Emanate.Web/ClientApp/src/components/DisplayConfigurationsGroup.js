@@ -16,7 +16,7 @@ class DisplayConfigurationsGroup extends Component {
                             <div className="card-body">
                                 {config.sourceGroups.map(sourceGroup => {
                                     return (
-                                        <div>
+                                        <div key={sourceGroup.id}>
                                             <h4>{sourceGroup.sourceDevice.name}</h4>
                                             {sourceGroup.sourceConfiguration.builds}
                                         </div>

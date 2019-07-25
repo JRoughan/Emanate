@@ -91,10 +91,6 @@
       <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
       <Name>Emanate.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emanate.Service\Emanate.Service.csproj">
-      <Project>{E21FCC5A-F3A7-4F23-A4D8-9AF385317253}</Project>
-      <Name>Emanate.Service</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj">
       <Project>{EA0DF8D8-DA80-4089-BF02-598BBC60F70B}</Project>
       <Name>Emanate.TeamCity</Name>
