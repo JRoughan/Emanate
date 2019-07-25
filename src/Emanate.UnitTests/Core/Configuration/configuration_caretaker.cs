@@ -15,8 +15,6 @@ namespace Emanate.UnitTests.Core.Configuration
             [Fact]
             public async void should_return_empty_configuration()
             {
-                var diskAccessor = Substitute.For<IDiskAccessor>();
-                diskAccessor.Load(Arg.Any<string>()).Returns((XDocument)null);
                 var caretaker = new ConfigurationCaretakerBuilder()
                     .SetConfig(null)
                     .Build();

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Autofac;
-using Autofac.Features.Indexed;
 using Emanate.Core.Output;
 using Serilog;
 
@@ -14,24 +12,18 @@ namespace Emanate.Core.Configuration
     {
         private readonly IDiskAccessor diskAccessor;
         private readonly IEnumerable<IModule> modules;
-        private readonly IIndex<string, IOutputConfiguration> outputConfigurations;
-        private readonly IIndex<string, IInputConfiguration> inputConfigurations;
-        private readonly IEnumerable<Lazy<IOutputConfiguration>> lazyOutputConfigurations;
-        private readonly IEnumerable<Lazy<IInputConfiguration>> lazyInputConfigurations;
+        private readonly IEnumerable<IOutputConfiguration> outputConfigurations;
+        private readonly IEnumerable<IInputConfiguration> inputConfigurations;
 
-        public ConfigurationCaretaker(IDiskAccessor diskAccessor,
+        public ConfigurationCaretaker(IDiskAccessor diskAccessor, 
             IEnumerable<IModule> modules,
-            IIndex<string, IOutputConfiguration> outputConfigurations,
-            IIndex<string, IInputConfiguration> inputConfigurations,
-            IEnumerable<Lazy<IOutputConfiguration>> lazyOutputConfigurations,
-            IEnumerable<Lazy<IInputConfiguration>> lazyInputConfigurations)
+            IEnumerable<IOutputConfiguration> outputConfigurations,
+            IEnumerable<IInputConfiguration> inputConfigurations)
         {
             this.diskAccessor = diskAccessor;
             this.modules = modules;
             this.outputConfigurations = outputConfigurations;
             this.inputConfigurations = inputConfigurations;
-            this.lazyOutputConfigurations = lazyOutputConfigurations;
-            this.lazyInputConfigurations = lazyInputConfigurations;
         }
 
         public async Task<GlobalConfig> Load()
@@ -43,7 +35,7 @@ namespace Emanate.Core.Configuration
                 if (configDoc == null)
                 {
                     Log.Information("No config file found");
-                    return GenerateDefaultConfiguration();
+                    return null;
                 }
 
                 var globalConfig = new GlobalConfig();
@@ -66,13 +58,13 @@ namespace Emanate.Core.Configuration
                             switch (moduleMemento.Type)
                             {
                                 case "output":
-                                    var outputConfig = outputConfigurations[moduleMemento.Key];
+                                    var outputConfig = outputConfigurations.Single(c => c.Key == moduleMemento.Key);
                                     globalConfig.OutputConfigurations.Add(outputConfig);
                                     outputConfig.SetMemento(moduleMemento);
                                     globalConfig.OutputDevices.AddRange(outputConfig.OutputDevices);
                                     break;
                                 case "input":
-                                    var inputConfig = inputConfigurations[moduleMemento.Key];
+                                    var inputConfig = inputConfigurations.Single(c => c.Key == moduleMemento.Key);
                                     globalConfig.InputConfigurations.Add(inputConfig);
                                     inputConfig.SetMemento(moduleMemento);
                                     globalConfig.InputDevices.AddRange(inputConfig.Devices);
@@ -118,26 +110,6 @@ namespace Emanate.Core.Configuration
 
                 return globalConfig;
             });
-        }
-
-        private GlobalConfig GenerateDefaultConfiguration()
-        {
-            Log.Information("=> ConfigurationCaretaker.GenerateDefaultConfiguration");
-            var builder = new ContainerBuilder();
-
-            var config = new GlobalConfig();
-            foreach (var moduleConfiguration in lazyOutputConfigurations.Select(c => c.Value))
-            {
-                builder.RegisterInstance(moduleConfiguration).AsSelf();
-                config.OutputConfigurations.Add(moduleConfiguration);
-            }
-            foreach (var moduleConfiguration in lazyInputConfigurations.Select(c => c.Value))
-            {
-                builder.RegisterInstance(moduleConfiguration).AsSelf();
-                config.InputConfigurations.Add(moduleConfiguration);
-            }
-
-            return config;
         }
 
         public void Save(GlobalConfig globalConfig)

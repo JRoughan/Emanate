@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Emanate.Core;
+﻿using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Emanate.Delcom
@@ -12,17 +12,17 @@ namespace Emanate.Delcom
         public string Name { get; } = "Delcom";
         public Direction Direction { get; } = Direction.Output;
 
-        public void LoadServiceComponents(ContainerBuilder builder)
+        public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> DelcomModule.LoadServiceComponents");
-            RegisterCommon(builder);
+            RegisterCommon(services);
         }
 
-        private void RegisterCommon(ContainerBuilder builder)
+        private void RegisterCommon(IServiceCollection services)
         {
             Log.Information("=> DelcomModule.RegisterCommon");
-            builder.RegisterType<DelcomDevice>().Keyed<IOutputDevice>(Key);
-            builder.RegisterType<DelcomConfiguration>().As<IOutputConfiguration>().Keyed<IOutputConfiguration>(Key);
+            services.AddTransient<IOutputDevice, DelcomDevice>();
+            services.AddTransient<IOutputConfiguration, DelcomConfiguration>();
         }
     }
 }

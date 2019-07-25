@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Emanate.Core;
+﻿using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Emanate.TeamCity
@@ -12,19 +12,19 @@ namespace Emanate.TeamCity
         public string Name { get; } = "TeamCity";
         public Direction Direction { get; } = Direction.Input;
 
-        public void LoadServiceComponents(ContainerBuilder builder)
+        public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> TeamCityModule.LoadServiceComponents");
-            RegisterCommon(builder);
-            builder.RegisterType<TeamCityMonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
-            builder.RegisterType<TeamCityMonitor>();
+            RegisterCommon(services);
+            services.AddSingleton<IBuildMonitorFactory, TeamCityMonitorFactory>();
+            services.AddTransient<TeamCityMonitor>();
         }
 
-        private void RegisterCommon(ContainerBuilder builder)
+        private void RegisterCommon(IServiceCollection services)
         {
             Log.Information("=> TeamCityModule.RegisterCommon");
-            builder.RegisterType<TeamCityConnection>().As<ITeamCityConnection>();
-            builder.RegisterType<TeamCityConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
+            services.AddTransient<ITeamCityConnection, TeamCityConnection>();
+            services.AddTransient<IInputConfiguration, TeamCityConfiguration>();
         }
     }
 }

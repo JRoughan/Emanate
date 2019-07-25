@@ -2,31 +2,25 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Emanate.Core
 {
-    public class ModuleLoader
+    public static class ModuleLoader
     {
-        public void LoadAdminModules(ContainerBuilder builder)
-        {
-            Log.Information("=> ModuleLoader.LoadAdminModules");
-            Load<IEmanateAdminModule, EmanateAdminModuleAttribute>(builder, m => m.LoadAdminComponents(builder));
-        }
-
-        public void LoadServiceModules(ContainerBuilder builder)
+        public static void LoadModules(this IServiceCollection services)
         {
             Log.Information("=> ModuleLoader.LoadServiceModules");
-            Load<IEmanateModule, EmanateModuleAttribute>(builder, m => m.LoadServiceComponents(builder));
+            Load<IEmanateModule, EmanateModuleAttribute>(services);
         }
 
-        private static void Load<TModule, TAttribute>(ContainerBuilder builder, Action<TModule> moduleAction)
-            where TModule : class
+        private static void Load<TModule, TAttribute>(IServiceCollection services)
+            where TModule : class, IEmanateModule
             where TAttribute : IModuleType
         {
             Log.Information("=> ModuleLoader.Load");
-            var dlls = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "Emanate*.dll");
+            var dlls = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "Emanate.*.dll");
             foreach (var dll in dlls)
             {
                 Log.Information("Scanning DLL '{0}'", Path.GetFileNameWithoutExtension(dll));
@@ -39,8 +33,8 @@ namespace Emanate.Core
                 var module = Activator.CreateInstance(moduleAttribute.ModuleType) as TModule;
                 if (module != null)
                 {
-                    builder.RegisterInstance(module).As<IModule>();
-                    moduleAction(module);
+                    services.AddSingleton<IEmanateModule>(module);
+                    module.LoadServiceComponents(services);
                 }
                 else
                     Log.Error("Loading module '{0}'", moduleAttribute.ModuleType);

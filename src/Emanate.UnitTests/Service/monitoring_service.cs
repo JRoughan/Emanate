@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Autofac.Features.Indexed;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
@@ -19,8 +18,6 @@ namespace Emanate.UnitTests.Service
             var buildMonitor = Substitute.For<IBuildMonitor>();
             var buildMonitorFactory = Substitute.For<IBuildMonitorFactory>();
             buildMonitorFactory.Create(Arg.Any<IInputDevice>()).Returns(buildMonitor);
-            var buildMonitorFactories = Substitute.For<IIndex<string, IBuildMonitorFactory>>();
-            buildMonitorFactories["key"].Returns(buildMonitorFactory);
 
             var service = new SourceMonitoringService(new [] { buildMonitor });
 
@@ -35,8 +32,6 @@ namespace Emanate.UnitTests.Service
             var buildMonitor = Substitute.For<IBuildMonitor>();
             var buildMonitorFactory = Substitute.For<IBuildMonitorFactory>();
             buildMonitorFactory.Create(Arg.Any<IInputDevice>()).Returns(buildMonitor);
-            var buildMonitorFactories = Substitute.For<IIndex<string, IBuildMonitorFactory>>();
-            buildMonitorFactories["key"].ReturnsForAnyArgs(buildMonitorFactory);
 
             var outputDevice = new OutputDeviceBuilder().Build();
 

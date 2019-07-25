@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Emanate.Core;
+﻿using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Emanate.Vso
@@ -12,19 +12,19 @@ namespace Emanate.Vso
         public string Name { get; } = "Visual Studio Online";
         public Direction Direction { get; } = Direction.Input;
 
-        public void LoadServiceComponents(ContainerBuilder builder)
+        public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> VsoModule.LoadServiceComponents");
-            RegisterCommon(builder);
-            builder.RegisterType<VsoMonitorFactory>().Keyed<IBuildMonitorFactory>(Key).SingleInstance();
-            builder.RegisterType<VsoMonitor>();
+            RegisterCommon(services);
+            services.AddSingleton<IBuildMonitorFactory, VsoMonitorFactory>();
+            services.AddTransient<VsoMonitor>();
         }
 
-        private void RegisterCommon(ContainerBuilder builder)
+        private void RegisterCommon(IServiceCollection services)
         {
             Log.Information("=> VsoModule.RegisterCommon");
-            builder.RegisterType<VsoConnection>().As<IVsoConnection>();
-            builder.RegisterType<VsoConfiguration>().As<IInputConfiguration>().Keyed<IInputConfiguration>(Key);
+            services.AddTransient<IVsoConnection, VsoConnection>();
+            services.AddTransient<IInputConfiguration, VsoConfiguration>();
         }
     }
 }
