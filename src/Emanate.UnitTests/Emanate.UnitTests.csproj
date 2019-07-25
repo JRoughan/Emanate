@@ -1,112 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1C5DDBEC-CBE2-48CA-B75C-2DCDC5F6DC3E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Emanate.UnitTests</RootNamespace>
-    <AssemblyName>Emanate.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.9.3.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.9.3\lib\net45\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\ProductInfo.cs">
-      <Link>Properties\ProductInfo.cs</Link>
-    </Compile>
-    <Compile Include="Builders\ConfigBuilder.cs" />
-    <Compile Include="Builders\DeviceBuilder.cs" />
-    <Compile Include="Builders\InputDeviceBuilder.cs" />
-    <Compile Include="Builders\OutputDeviceBuilder.cs" />
-    <Compile Include="Core\Configuration\XmlComparer.cs" />
-    <Compile Include="Core\Configuration\ConfigurationSamples.cs" />
-    <Compile Include="Core\Configuration\ConfigurationCaretakerBuilder.cs" />
-    <Compile Include="Core\Configuration\configuration_caretaker.cs" />
-    <Compile Include="Core\Input\TeamCity\MockTeamCityConnection.cs" />
-    <Compile Include="Core\Input\TeamCity\teamcity_monitor.cs" />
-    <Compile Include="Modules\TeamCity\teamcity_monitor.cs" />
-    <Compile Include="Modules\Vso\vso_monitor.cs" />
-    <Compile Include="Service\monitoring_service.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj" />
+    <ProjectReference Include="..\Emanate\Emanate.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.Delcom\Emanate.Delcom.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj">
-      <Project>{B5E7E5AA-896A-4B86-B202-23062972F077}</Project>
-      <Name>Emanate.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj">
-      <Project>{EA0DF8D8-DA80-4089-BF02-598BBC60F70B}</Project>
-      <Name>Emanate.TeamCity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj">
-      <Project>{D02CEB1D-3B90-477D-A8E7-04A62786E704}</Project>
-      <Name>Emanate.Vso</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
