@@ -27,11 +27,9 @@ namespace Emanate.UnitTests.Core.Configuration
 
                 Assert.Empty(config.InputModules);
                 Assert.Empty(config.InputDevices);
-                Assert.Empty(config.InputConfigurations);
 
                 Assert.Empty(config.OutputModules);
                 Assert.Empty(config.OutputDevices);
-                Assert.Empty(config.OutputConfigurations);
             }
         }
 

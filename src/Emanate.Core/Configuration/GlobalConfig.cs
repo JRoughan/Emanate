@@ -10,8 +10,6 @@ namespace Emanate.Core.Configuration
         {
             InputModules = new List<IModule>();
             OutputModules = new List<IModule>();
-            InputConfigurations = new List<IInputConfiguration>();
-            OutputConfigurations = new List<IOutputConfiguration>();
             InputDevices = new List<SourceDevice>();
             OutputDevices = new List<DisplayDevice>();
             Mappings = new List<Mapping>();
@@ -20,9 +18,6 @@ namespace Emanate.Core.Configuration
 
         public List<IModule> InputModules { get; private set; }
         public List<IModule> OutputModules { get; private set; }
-
-        public List<IInputConfiguration> InputConfigurations { get; private set; }
-        public List<IOutputConfiguration> OutputConfigurations { get; private set; }
 
         public List<SourceDevice> InputDevices { get; private set; }
         public List<DisplayDevice> OutputDevices { get; private set; }

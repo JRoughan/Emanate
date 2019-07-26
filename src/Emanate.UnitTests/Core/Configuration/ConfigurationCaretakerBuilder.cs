@@ -11,10 +11,6 @@ namespace Emanate.UnitTests.Core.Configuration
     {
         private readonly IDiskAccessor diskAccessor = Substitute.For<IDiskAccessor>();
         private readonly List<IModule> modules = new List<IModule>();
-        private readonly IEnumerable<IOutputConfiguration> outputConfigurations = Substitute.For<IEnumerable<IOutputConfiguration>>();
-        private readonly IEnumerable<IInputConfiguration> inputConfigurations = Substitute.For<IEnumerable<IInputConfiguration>>();
-        private readonly List<Lazy<IOutputConfiguration>> lazyOutputConfigurations = new List<Lazy<IOutputConfiguration>>();
-        private readonly List<Lazy<IInputConfiguration>> lazyInputConfigurations = new List<Lazy<IInputConfiguration>>();
 
         public ConfigurationCaretakerBuilder SetConfig(string xml)
         {
@@ -39,21 +35,9 @@ namespace Emanate.UnitTests.Core.Configuration
             return this;
         }
 
-        public ConfigurationCaretakerBuilder AddInputConfiguration(string key, IInputConfiguration inputConfiguration)
-        {
-            lazyInputConfigurations.Add(new Lazy<IInputConfiguration>(() => inputConfiguration));
-            return this;
-        }
-
-        public ConfigurationCaretakerBuilder AddOutputConfiguration(string key, IOutputConfiguration outputConfiguration)
-        {
-            lazyOutputConfigurations.Add(new Lazy<IOutputConfiguration>(() => outputConfiguration));
-            return this;
-        }
-
         public ConfigurationCaretaker Build()
         {
-            return new ConfigurationCaretaker(diskAccessor, modules, outputConfigurations, inputConfigurations);
+            return new ConfigurationCaretaker(diskAccessor, modules);
         }
     }
 }

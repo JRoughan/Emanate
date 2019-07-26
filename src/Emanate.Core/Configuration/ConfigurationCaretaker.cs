@@ -12,18 +12,11 @@ namespace Emanate.Core.Configuration
     {
         private readonly IDiskAccessor diskAccessor;
         private readonly IEnumerable<IModule> modules;
-        private readonly IEnumerable<IOutputConfiguration> outputConfigurations;
-        private readonly IEnumerable<IInputConfiguration> inputConfigurations;
 
-        public ConfigurationCaretaker(IDiskAccessor diskAccessor, 
-            IEnumerable<IModule> modules,
-            IEnumerable<IOutputConfiguration> outputConfigurations,
-            IEnumerable<IInputConfiguration> inputConfigurations)
+        public ConfigurationCaretaker(IDiskAccessor diskAccessor, IEnumerable<IModule> modules)
         {
             this.diskAccessor = diskAccessor;
             this.modules = modules;
-            this.outputConfigurations = outputConfigurations;
-            this.inputConfigurations = inputConfigurations;
         }
 
         public async Task<GlobalConfig> Load()
@@ -49,34 +42,6 @@ namespace Emanate.Core.Configuration
 
                 if (rootNode != null)
                 {
-                    // Modules
-                    var modulesElement= rootNode.Element("modules");
-                    if (modulesElement != null)
-                    {
-                        foreach (var moduleMemento in modulesElement.Elements("module").Select(e => new Memento(e)))
-                        {
-                            switch (moduleMemento.Type)
-                            {
-                                case "output":
-                                    var outputConfig = outputConfigurations.Single(c => c.Key == moduleMemento.Key);
-                                    globalConfig.OutputConfigurations.Add(outputConfig);
-                                    outputConfig.SetMemento(moduleMemento);
-                                    globalConfig.OutputDevices.AddRange(outputConfig.OutputDevices);
-                                    break;
-                                case "input":
-                                    var inputConfig = inputConfigurations.Single(c => c.Key == moduleMemento.Key);
-                                    globalConfig.InputConfigurations.Add(inputConfig);
-                                    inputConfig.SetMemento(moduleMemento);
-                                    globalConfig.InputDevices.AddRange(inputConfig.Devices);
-                                    break;
-                                default:
-                                    throw new Exception("Unknown module type");
-                            }
-                        }
-                    }
-                    else
-                        Log.Warning("Missing element: modules");
-
                     // Mappings
                     var mappingsElement = rootNode.Element("mappings");
                     if (mappingsElement != null)
@@ -118,20 +83,6 @@ namespace Emanate.Core.Configuration
             var configDoc = new XDocument();
             var rootElement = new XElement("emanate");
             configDoc.Add(rootElement);
-
-            // Modules
-            var modulesElement = new XElement("modules");
-            foreach (var configuration in globalConfig.OutputConfigurations)
-            {
-                var moduleMemento = configuration.CreateMemento();
-                modulesElement.Add(moduleMemento.Element);
-            }
-            foreach (var configuration in globalConfig.InputConfigurations)
-            {
-                var moduleMemento = configuration.CreateMemento();
-                modulesElement.Add(moduleMemento.Element);
-            }
-            rootElement.Add(modulesElement);
 
             // Mappings
             var mappingsElement = new XElement("mappings");
