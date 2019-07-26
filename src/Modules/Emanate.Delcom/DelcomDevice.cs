@@ -5,6 +5,7 @@ using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
+using Emanate.Model;
 using Serilog;
 
 namespace Emanate.Delcom
@@ -30,7 +31,7 @@ namespace Emanate.Delcom
         public Guid ProfileId { get; private set; }
 
         private MonitoringProfile profile;
-        public IProfile Profile
+        public DisplayDeviceProfile Profile
         {
             get { return profile; }
             set { profile = value as MonitoringProfile; }

@@ -4,15 +4,12 @@ using System.Xml.Linq;
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
+using Emanate.Model;
 
 namespace Emanate.Delcom
 {
-    public class MonitoringProfile : IProfile
+    public class MonitoringProfile : DisplayDeviceProfile
     {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
-
         public List<ProfileState> States { get; } = new List<ProfileState>();
 
         public uint Decay { get; set; }
