@@ -1,5 +1,4 @@
 ﻿using Emanate.Core;
-using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -15,16 +14,9 @@ namespace Emanate.TeamCity
         public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> TeamCityModule.LoadServiceComponents");
-            RegisterCommon(services);
+            services.AddTransient<ITeamCityConnection, TeamCityConnection>();
             services.AddSingleton<IBuildMonitorFactory, TeamCityMonitorFactory>();
             services.AddTransient<TeamCityMonitor>();
-        }
-
-        private void RegisterCommon(IServiceCollection services)
-        {
-            Log.Information("=> TeamCityModule.RegisterCommon");
-            services.AddTransient<ITeamCityConnection, TeamCityConnection>();
-            services.AddTransient<IInputConfiguration, TeamCityConfiguration>();
         }
     }
 }

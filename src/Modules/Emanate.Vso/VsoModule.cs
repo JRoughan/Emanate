@@ -1,5 +1,4 @@
 ﻿using Emanate.Core;
-using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -15,16 +14,9 @@ namespace Emanate.Vso
         public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> VsoModule.LoadServiceComponents");
-            RegisterCommon(services);
+            services.AddTransient<IVsoConnection, VsoConnection>();
             services.AddSingleton<IBuildMonitorFactory, VsoMonitorFactory>();
             services.AddTransient<VsoMonitor>();
-        }
-
-        private void RegisterCommon(IServiceCollection services)
-        {
-            Log.Information("=> VsoModule.RegisterCommon");
-            services.AddTransient<IVsoConnection, VsoConnection>();
-            services.AddTransient<IInputConfiguration, VsoConfiguration>();
         }
     }
 }
