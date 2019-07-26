@@ -34,6 +34,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Emanate.Core\Emanate.Core.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.Delcom\Emanate.Delcom.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.TeamCity\Emanate.TeamCity.csproj" />
+    <ProjectReference Include="..\Modules\Emanate.Vso\Emanate.Vso.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -1,7 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Emanate.Controllers;
+using Emanate.Core;
 using Emanate.Data;
+using Emanate.Delcom;
+using Emanate.TeamCity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +45,8 @@ namespace Emanate
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.LoadModules(new TeamCityModule(), new DelcomModule());
 
             services.AddHostedService<SourceMonitoringService>();
         }
