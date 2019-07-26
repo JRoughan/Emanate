@@ -47,8 +47,8 @@ namespace Emanate.UnitTests.Core.Configuration
                 Assert.Single(config.OutputModules, m => m.Key == "module2");
 
                 var mapping = config.Mappings.Single();
-                Assert.Equal(Guid.Parse("59e491aa-58cc-4a50-b6af-0975d8708833"), mapping.OutputDeviceId);
-                var inputGroups = mapping.InputGroups.Single();
+                Assert.Equal(Guid.Parse("59e491aa-58cc-4a50-b6af-0975d8708833"), mapping.DisplayDeviceId);
+                var inputGroups = mapping.SourceGroups.Single();
                 Assert.Equal(Guid.Parse("30b0091d-6c5c-4460-8da7-8059a5461a41"), inputGroups.SourceDeviceId);
                 var input = inputGroups.SourceConfiguration.Builds;
                 Assert.Equal("MyInput", input);

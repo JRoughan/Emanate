@@ -27,20 +27,20 @@ namespace Emanate.UnitTests.Builders
             return this;
         }
 
-        public ConfigBuilder WithMapping(Mapping mapping, bool generateDependencies = true)
+        public ConfigBuilder WithMapping(DisplayConfiguration mapping, bool generateDependencies = true)
         {
             config.Mappings.Add(mapping);
             if (generateDependencies)
             {
-                if (config.OutputDevices.All(d => d.Id != mapping.OutputDeviceId))
+                if (config.OutputDevices.All(d => d.Id != mapping.DisplayDeviceId))
                 {
                     var outputDevice = new OutputDeviceBuilder()
-                        .WithId(mapping.OutputDeviceId)
+                        .WithId(mapping.DisplayDeviceId)
                         .Build();
                     WithOutputDevice(outputDevice);
                 }
 
-                foreach (var inputGroup in mapping.InputGroups)
+                foreach (var inputGroup in mapping.SourceGroups)
                 {
                     if (config.InputDevices.All(d => d.Id != inputGroup.SourceDeviceId))
                     {

@@ -12,7 +12,7 @@ namespace Emanate.Core.Configuration
             OutputModules = new List<IModule>();
             InputDevices = new List<SourceDevice>();
             OutputDevices = new List<DisplayDevice>();
-            Mappings = new List<Mapping>();
+            Mappings = new List<DisplayConfiguration>();
         }
 
 
@@ -22,6 +22,6 @@ namespace Emanate.Core.Configuration
         public List<SourceDevice> InputDevices { get; private set; }
         public List<DisplayDevice> OutputDevices { get; private set; }
 
-        public List<Mapping> Mappings { get; private set; }
+        public List<DisplayConfiguration> Mappings { get; private set; }
     }
 }

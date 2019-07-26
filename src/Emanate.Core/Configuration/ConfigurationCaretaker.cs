@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Emanate.Core.Output;
 using Emanate.Model;
 using Serilog;
 
@@ -49,8 +47,8 @@ namespace Emanate.Core.Configuration
                     {
                         foreach (var mappingElement in mappingsElement.Elements("mapping"))
                         {
-                            var mapping = new Mapping();
-                            mapping.OutputDeviceId = mappingElement.GetAttributeGuid("output-device-id");
+                            var mapping = new DisplayConfiguration();
+                            mapping.DisplayDeviceId = mappingElement.GetAttributeGuid("output-device-id");
 
                             foreach (var inputsElements in mappingElement.Elements("inputs"))
                             {
@@ -61,7 +59,7 @@ namespace Emanate.Core.Configuration
                                     var inputId = inputElement.GetAttributeString("input-id");
                                     inputGroup.SourceConfiguration.Builds += ("^^" + inputId);
                                 }
-                                mapping.InputGroups.Add(inputGroup);
+                                mapping.SourceGroups.Add(inputGroup);
                             }
 
                             globalConfig.Mappings.Add(mapping);
@@ -90,10 +88,10 @@ namespace Emanate.Core.Configuration
             foreach (var mapping in globalConfig.Mappings)
             {
                 var mappingElement = new XElement("mapping");
-                mappingElement.Add(new XAttribute("output-device-id", mapping.OutputDeviceId));
+                mappingElement.Add(new XAttribute("output-device-id", mapping.DisplayDeviceId));
 
                 
-                foreach (var inputGroup in mapping.InputGroups)
+                foreach (var inputGroup in mapping.SourceGroups)
                 {
                     var inputsElement = new XElement("inputs");
                     inputsElement.Add(new XAttribute("input-device-id", inputGroup.SourceDeviceId));
