@@ -1,19 +1,18 @@
 using System;
-using Emanate.Core;
 using Emanate.Core.Input;
 
 namespace Emanate.TeamCity
 {
-    public class TeamCityMonitorFactory : IBuildMonitorFactory
+    public class TeamCityMonitorFactory : IBuildMonitorFactory<TeamCityDevice>
     {
-        private readonly Func<IInputDevice, TeamCityMonitor> monitorFactory;
+        private readonly Func<TeamCityDevice, TeamCityMonitor> monitorFactory;
 
-        public TeamCityMonitorFactory(Func<IInputDevice, TeamCityMonitor> monitorFactory)
+        public TeamCityMonitorFactory(Func<TeamCityDevice, TeamCityMonitor> monitorFactory)
         {
             this.monitorFactory = monitorFactory;
         }
 
-        public IBuildMonitor Create(IInputDevice device)
+        public IBuildMonitor Create(TeamCityDevice device)
         {
             return monitorFactory(device);
         }

@@ -15,14 +15,7 @@ namespace Emanate.Delcom
         public void LoadServiceComponents(IServiceCollection services)
         {
             Log.Information("=> DelcomModule.LoadServiceComponents");
-            RegisterCommon(services);
-        }
-
-        private void RegisterCommon(IServiceCollection services)
-        {
-            Log.Information("=> DelcomModule.RegisterCommon");
             services.AddTransient<IOutputDevice, DelcomDevice>();
-            services.AddTransient<IOutputConfiguration, DelcomConfiguration>();
         }
     }
 }

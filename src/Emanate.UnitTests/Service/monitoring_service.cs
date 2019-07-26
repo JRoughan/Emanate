@@ -1,9 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Emanate.Core;
+﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
+using Emanate.Model;
 using Emanate.UnitTests.Builders;
 using NSubstitute;
 using Xunit;
@@ -16,8 +15,8 @@ namespace Emanate.UnitTests.Service
         public async Task should_not_begin_monitoring_when_started_if_no_mapping()
         {
             var buildMonitor = Substitute.For<IBuildMonitor>();
-            var buildMonitorFactory = Substitute.For<IBuildMonitorFactory>();
-            buildMonitorFactory.Create(Arg.Any<IInputDevice>()).Returns(buildMonitor);
+            var buildMonitorFactory = Substitute.For<IBuildMonitorFactory<SourceDevice>>();
+            buildMonitorFactory.Create(Arg.Any<SourceDevice>()).Returns(buildMonitor);
 
             var service = new SourceMonitoringService(new [] { buildMonitor });
 
@@ -30,8 +29,8 @@ namespace Emanate.UnitTests.Service
         public async Task should_begin_monitoring_when_started_if_mapping_exists()
         {
             var buildMonitor = Substitute.For<IBuildMonitor>();
-            var buildMonitorFactory = Substitute.For<IBuildMonitorFactory>();
-            buildMonitorFactory.Create(Arg.Any<IInputDevice>()).Returns(buildMonitor);
+            var buildMonitorFactory = Substitute.For<IBuildMonitorFactory<SourceDevice>>();
+            buildMonitorFactory.Create(Arg.Any<SourceDevice>()).Returns(buildMonitor);
 
             var outputDevice = new OutputDeviceBuilder().Build();
 

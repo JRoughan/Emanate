@@ -1,19 +1,18 @@
 using System;
-using Emanate.Core;
 using Emanate.Core.Input;
 
 namespace Emanate.Vso
 {
-    public class VsoMonitorFactory : IBuildMonitorFactory
+    public class VsoMonitorFactory : IBuildMonitorFactory<VsoDevice>
     {
-        private readonly Func<IInputDevice, VsoMonitor> monitorFactory;
+        private readonly Func<VsoDevice, VsoMonitor> monitorFactory;
 
-        public VsoMonitorFactory(Func<IInputDevice, VsoMonitor> monitorFactory)
+        public VsoMonitorFactory(Func<VsoDevice, VsoMonitor> monitorFactory)
         {
             this.monitorFactory = monitorFactory;
         }
 
-        public IBuildMonitor Create(IInputDevice device)
+        public IBuildMonitor Create(VsoDevice device)
         {
             return monitorFactory(device);
         }

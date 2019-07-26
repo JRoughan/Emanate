@@ -17,7 +17,7 @@ namespace Emanate.UnitTests.Modules.Vso
         [Fact]
         public async void should_retrieve_builds_if_output_device_available()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<VsoDevice>();
             var connection = Substitute.For<IVsoConnection>();
             var outputDevice = Substitute.For<IOutputDevice>();
             outputDevice.IsAvailable.Returns(true);
@@ -34,7 +34,7 @@ namespace Emanate.UnitTests.Modules.Vso
         [Fact]
         public async void should_not_retrieve_builds_if_output_device_unavailable()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<VsoDevice>();
             var connection = Substitute.For<IVsoConnection>();
             var outputDevice = Substitute.For<IOutputDevice>();
             outputDevice.IsAvailable.Returns(false);
@@ -51,7 +51,7 @@ namespace Emanate.UnitTests.Modules.Vso
         [Fact]
         public async void should_retrieve_builds_for_all_available_devices()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<VsoDevice>();
             var connection = Substitute.For<IVsoConnection>();
 
             var outputDevice1 = Substitute.For<IOutputDevice>();

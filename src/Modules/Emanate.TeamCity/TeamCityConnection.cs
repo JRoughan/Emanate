@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using Emanate.Core;
+using Emanate.Model;
 using Serilog;
 
 namespace Emanate.TeamCity
@@ -13,7 +13,7 @@ namespace Emanate.TeamCity
         private readonly NetworkCredential networkCredential;
         private readonly bool requiresAuthentication;
 
-        public delegate ITeamCityConnection Factory(IInputDevice device);
+        public delegate ITeamCityConnection Factory(SourceDevice device);
 
         public TeamCityConnection(TeamCityDevice device)
         {

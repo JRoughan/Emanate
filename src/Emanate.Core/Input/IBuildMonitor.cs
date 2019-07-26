@@ -4,9 +4,9 @@ using Emanate.Core.Output;
 
 namespace Emanate.Core.Input
 {
-    public interface IBuildMonitorFactory
+    public interface IBuildMonitorFactory<TDevice>
     {
-        IBuildMonitor Create(IInputDevice device);
+        IBuildMonitor Create(TDevice device);
     }
 
     public interface IBuildMonitor

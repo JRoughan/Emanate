@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Emanate.Core.Output;
+using Emanate.Model;
 
 namespace Emanate.Core.Configuration
 {
@@ -9,6 +9,6 @@ namespace Emanate.Core.Configuration
 
         IEnumerable<IProfile> Profiles { get; }
 
-        IEnumerable<IOutputDevice> OutputDevices { get; }
+        IEnumerable<DisplayDevice> OutputDevices { get; }
     }
 }

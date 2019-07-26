@@ -1,11 +1,11 @@
 using System;
-using Emanate.Core;
+using Emanate.Model;
 using NSubstitute;
 
 namespace Emanate.UnitTests.Builders
 {
     internal class DeviceBuilder<TDevice>
-        where TDevice : class, IDevice
+        where TDevice : Entity
     {
         protected TDevice Device { get; }
 
@@ -17,12 +17,6 @@ namespace Emanate.UnitTests.Builders
         public DeviceBuilder<TDevice> WithId(Guid id)
         {
             Device.Id.Returns(id);
-            return this;
-        }
-
-        public DeviceBuilder<TDevice> WithName(string name)
-        {
-            Device.Name.Returns(name);
             return this;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Emanate.Core.Output;
+using Emanate.Model;
 
 namespace Emanate.Core.Configuration
 {
@@ -11,8 +12,8 @@ namespace Emanate.Core.Configuration
             OutputModules = new List<IModule>();
             InputConfigurations = new List<IInputConfiguration>();
             OutputConfigurations = new List<IOutputConfiguration>();
-            InputDevices = new List<IInputDevice>();
-            OutputDevices = new List<IOutputDevice>();
+            InputDevices = new List<SourceDevice>();
+            OutputDevices = new List<DisplayDevice>();
             Mappings = new List<Mapping>();
         }
 
@@ -23,8 +24,8 @@ namespace Emanate.Core.Configuration
         public List<IInputConfiguration> InputConfigurations { get; private set; }
         public List<IOutputConfiguration> OutputConfigurations { get; private set; }
 
-        public List<IInputDevice> InputDevices { get; private set; }
-        public List<IOutputDevice> OutputDevices { get; private set; }
+        public List<SourceDevice> InputDevices { get; private set; }
+        public List<DisplayDevice> OutputDevices { get; private set; }
 
         public List<Mapping> Mappings { get; private set; }
     }

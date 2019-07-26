@@ -12,9 +12,4 @@ namespace Emanate.Core
         XElement CreateMemento();
         void SetMemento(XElement deviceElement);
     }
-
-    public interface IInputDevice : IDevice
-    {
-        int PollingInterval { get; }
-    }
 }

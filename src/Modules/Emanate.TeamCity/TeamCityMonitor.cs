@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
@@ -30,7 +29,7 @@ namespace Emanate.TeamCity
         private bool isMonitoring;
         private readonly string name;
 
-        public TeamCityMonitor(IInputDevice device, TeamCityConnection.Factory connectionFactory)
+        public TeamCityMonitor(TeamCityDevice device, TeamCityConnection.Factory connectionFactory)
         {
             name = device.Name;
             teamCityConnection = connectionFactory(device);

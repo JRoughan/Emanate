@@ -15,7 +15,7 @@ namespace Emanate.Vso
         {
             Log.Information("=> VsoModule.LoadServiceComponents");
             services.AddTransient<IVsoConnection, VsoConnection>();
-            services.AddSingleton<IBuildMonitorFactory, VsoMonitorFactory>();
+            services.AddSingleton<IBuildMonitorFactory<VsoDevice>, VsoMonitorFactory>();
             services.AddTransient<VsoMonitor>();
         }
     }

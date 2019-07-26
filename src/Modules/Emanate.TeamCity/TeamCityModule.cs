@@ -15,7 +15,7 @@ namespace Emanate.TeamCity
         {
             Log.Information("=> TeamCityModule.LoadServiceComponents");
             services.AddTransient<ITeamCityConnection, TeamCityConnection>();
-            services.AddSingleton<IBuildMonitorFactory, TeamCityMonitorFactory>();
+            services.AddSingleton<IBuildMonitorFactory<TeamCityDevice>, TeamCityMonitorFactory>();
             services.AddTransient<TeamCityMonitor>();
         }
     }

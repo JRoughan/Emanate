@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Emanate.Core;
 using Emanate.Core.Input;
 using Emanate.Core.Output;
 using Serilog;
@@ -23,7 +22,7 @@ namespace Emanate.Vso
         private bool isMonitoring;
         private readonly string name;
 
-        public VsoMonitor(IInputDevice device, VsoConnection.Factory connectionFactory)
+        public VsoMonitor(VsoDevice device, VsoConnection.Factory connectionFactory)
         {
             name = device.Name;
             vsoConnection = connectionFactory(device);

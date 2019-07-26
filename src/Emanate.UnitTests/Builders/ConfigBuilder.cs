@@ -2,6 +2,7 @@
 using Emanate.Core;
 using Emanate.Core.Configuration;
 using Emanate.Core.Output;
+using Emanate.Model;
 
 namespace Emanate.UnitTests.Builders
 {
@@ -14,13 +15,13 @@ namespace Emanate.UnitTests.Builders
             config = new GlobalConfig();
         }
 
-        public ConfigBuilder WithInputDevice(IInputDevice device)
+        public ConfigBuilder WithInputDevice(SourceDevice device)
         {
             config.InputDevices.Add(device);
             return this;
         }
 
-        public ConfigBuilder WithOutputDevice(IOutputDevice device)
+        public ConfigBuilder WithOutputDevice(DisplayDevice device)
         {
             config.OutputDevices.Add(device);
             return this;

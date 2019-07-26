@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Emanate.Core;
 using Emanate.Core.Output;
 using Emanate.TeamCity;
 using NSubstitute;
@@ -16,7 +15,7 @@ namespace Emanate.UnitTests.Modules.TeamCity
         [Fact]
         public async void should_retrieve_builds_if_output_device_available()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<TeamCityDevice>();
             var connection = Substitute.For<ITeamCityConnection>();
             connection.GetBuild(Arg.Any<string>()).ReturnsForAnyArgs("<builds />");
             var outputDevice = Substitute.For<IOutputDevice>();
@@ -34,7 +33,7 @@ namespace Emanate.UnitTests.Modules.TeamCity
         [Fact]
         public async void should_not_retrieve_builds_if_output_device_unavailable()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<TeamCityDevice>();
             var connection = Substitute.For<ITeamCityConnection>();
             connection.GetBuild(Arg.Any<string>()).ReturnsForAnyArgs("<builds />");
             var outputDevice = Substitute.For<IOutputDevice>();
@@ -51,7 +50,7 @@ namespace Emanate.UnitTests.Modules.TeamCity
         [Fact]
         public async void should_retrieve_builds_for_all_available_devices()
         {
-            var inputDevice = Substitute.For<IInputDevice>();
+            var inputDevice = Substitute.For<TeamCityDevice>();
             var connection = Substitute.For<ITeamCityConnection>();
             connection.GetBuild(Arg.Any<string>()).ReturnsForAnyArgs("<builds />");
 
