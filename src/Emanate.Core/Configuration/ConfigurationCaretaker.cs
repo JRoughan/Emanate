@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Model;
@@ -10,12 +9,10 @@ namespace Emanate.Core.Configuration
     public class ConfigurationCaretaker
     {
         private readonly IDiskAccessor diskAccessor;
-        private readonly IEnumerable<IModule> modules;
 
-        public ConfigurationCaretaker(IDiskAccessor diskAccessor, IEnumerable<IModule> modules)
+        public ConfigurationCaretaker(IDiskAccessor diskAccessor)
         {
             this.diskAccessor = diskAccessor;
-            this.modules = modules;
         }
 
         public async Task<GlobalConfig> Load()
@@ -31,9 +28,6 @@ namespace Emanate.Core.Configuration
                 }
 
                 var globalConfig = new GlobalConfig();
-
-                globalConfig.InputModules.AddRange(modules.Where(m => m.Direction == Direction.Input));
-                globalConfig.OutputModules.AddRange(modules.Where(m => m.Direction == Direction.Output));
 
 
                 Log.Information("Loading config file from '{0}'", Paths.ConfigFilePath);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Emanate.Core;
 using Xunit;
 
 namespace Emanate.UnitTests.Core.Configuration
@@ -22,10 +21,7 @@ namespace Emanate.UnitTests.Core.Configuration
 
                 Assert.Empty(config.Mappings);
 
-                Assert.Empty(config.InputModules);
                 Assert.Empty(config.InputDevices);
-
-                Assert.Empty(config.OutputModules);
                 Assert.Empty(config.OutputDevices);
             }
         }
@@ -37,14 +33,9 @@ namespace Emanate.UnitTests.Core.Configuration
             {
                 var caretaker = new ConfigurationCaretakerBuilder()
                     .SetConfig(ConfigurationSamples.Complete)
-                    .AddModule("module1", Direction.Input)
-                    .AddModule("module2", Direction.Output)
                     .Build();
 
                 var config = await caretaker.Load();
-
-                Assert.Single(config.InputModules, m => m.Key == "module1");
-                Assert.Single(config.OutputModules, m => m.Key == "module2");
 
                 var mapping = config.Mappings.Single();
                 Assert.Equal(Guid.Parse("59e491aa-58cc-4a50-b6af-0975d8708833"), mapping.DisplayDeviceId);

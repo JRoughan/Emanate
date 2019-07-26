@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Emanate.TeamCity
 {
-    public class TeamCityModule : IEmanateModule, IModule
+    public class TeamCityModule : IEmanateModule
     {
         public string Key { get; } = "teamcity";
         public string Name { get; } = "TeamCity";

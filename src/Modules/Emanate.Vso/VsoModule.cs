@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Emanate.Vso
 {
-    public class VsoModule : IEmanateModule, IModule
+    public class VsoModule : IEmanateModule
     {
         public string Key { get; } = "vso";
         public string Name { get; } = "Visual Studio Online";
