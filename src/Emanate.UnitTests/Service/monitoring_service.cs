@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Emanate.Core.Configuration;
 using Emanate.Core.Input;
-using Emanate.Core.Output;
 using Emanate.Model;
 using Emanate.UnitTests.Builders;
 using NSubstitute;
@@ -37,7 +36,7 @@ namespace Emanate.UnitTests.Service
             var inputDevice = new InputDeviceBuilder().Build();
 
             var mapping = new Mapping { OutputDeviceId = outputDevice.Id };
-            mapping.InputGroups.Add(new InputGroup { InputDeviceId = inputDevice.Id, Inputs = { "Build1", "Build2" } });
+            mapping.InputGroups.Add(new SourceGroup { SourceDeviceId = inputDevice.Id, SourceConfiguration = new SourceConfiguration { Builds = "Build1^^Build2" } });
 
             var config = new ConfigBuilder()
                 .WithOutputDevice(outputDevice)

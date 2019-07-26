@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Emanate.Core.Output;
+using Emanate.Model;
 using Serilog;
 
 namespace Emanate.Core.Configuration
@@ -53,17 +54,16 @@ namespace Emanate.Core.Configuration
 
                             foreach (var inputsElements in mappingElement.Elements("inputs"))
                             {
-                                var inputGroup = new InputGroup();
-                                inputGroup.InputDeviceId = inputsElements.GetAttributeGuid("input-device-id");
+                                var inputGroup = new SourceGroup();
+                                inputGroup.SourceDeviceId = inputsElements.GetAttributeGuid("input-device-id");
                                 foreach (var inputElement in inputsElements.Elements("input"))
                                 {
                                     var inputId = inputElement.GetAttributeString("input-id");
-                                    inputGroup.Inputs.Add(inputId);
+                                    inputGroup.SourceConfiguration.Builds += ("^^" + inputId);
                                 }
                                 mapping.InputGroups.Add(inputGroup);
                             }
 
-                            Log.Information("Adding mapping for Output:'{0}' from {1}", mapping.OutputDeviceId, string.Join(", ", mapping.InputGroups.SelectMany(g => g.Inputs)));
                             globalConfig.Mappings.Add(mapping);
                         }
                     }
@@ -96,14 +96,11 @@ namespace Emanate.Core.Configuration
                 foreach (var inputGroup in mapping.InputGroups)
                 {
                     var inputsElement = new XElement("inputs");
-                    inputsElement.Add(new XAttribute("input-device-id", inputGroup.InputDeviceId));
+                    inputsElement.Add(new XAttribute("input-device-id", inputGroup.SourceDeviceId));
 
-                    foreach (var inputId in inputGroup.Inputs)
-                    {
-                        var inputElement = new XElement("input");
-                        inputElement.Add(new XAttribute("input-id", inputId));
-                        inputsElement.Add(inputElement);
-                    }
+                    var inputElement = new XElement("input");
+                    inputElement.Add(new XAttribute("input-id", inputGroup.SourceConfiguration.Builds));
+                    inputsElement.Add(inputElement);
 
                     mappingElement.Add(inputsElement);
                 }

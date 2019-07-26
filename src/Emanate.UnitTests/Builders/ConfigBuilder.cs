@@ -42,10 +42,10 @@ namespace Emanate.UnitTests.Builders
 
                 foreach (var inputGroup in mapping.InputGroups)
                 {
-                    if (config.InputDevices.All(d => d.Id != inputGroup.InputDeviceId))
+                    if (config.InputDevices.All(d => d.Id != inputGroup.SourceDeviceId))
                     {
                         var inputDevice = new InputDeviceBuilder()
-                            .WithId(inputGroup.InputDeviceId)
+                            .WithId(inputGroup.SourceDeviceId)
                             .Build();
                         WithInputDevice(inputDevice);
                     }

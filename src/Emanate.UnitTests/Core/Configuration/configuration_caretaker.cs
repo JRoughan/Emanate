@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Linq;
 using Emanate.Core;
-using Emanate.Core.Configuration;
-using NSubstitute;
 using Xunit;
 
 namespace Emanate.UnitTests.Core.Configuration
@@ -52,8 +49,8 @@ namespace Emanate.UnitTests.Core.Configuration
                 var mapping = config.Mappings.Single();
                 Assert.Equal(Guid.Parse("59e491aa-58cc-4a50-b6af-0975d8708833"), mapping.OutputDeviceId);
                 var inputGroups = mapping.InputGroups.Single();
-                Assert.Equal(Guid.Parse("30b0091d-6c5c-4460-8da7-8059a5461a41"), inputGroups.InputDeviceId);
-                var input = inputGroups.Inputs.Single();
+                Assert.Equal(Guid.Parse("30b0091d-6c5c-4460-8da7-8059a5461a41"), inputGroups.SourceDeviceId);
+                var input = inputGroups.SourceConfiguration.Builds;
                 Assert.Equal("MyInput", input);
             }
         }
